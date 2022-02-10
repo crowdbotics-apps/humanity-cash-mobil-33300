@@ -950,9 +950,6 @@
 "@modules/app-menu@file:./modules/app-menu":
   version "1.0.0"
 
-"@modules/app-menu@file:./modules/app-menu/":
-  version "1.0.0"
-
 "@modules/camera@file:./modules/camera":
   version "1.0.1"
   dependencies:
