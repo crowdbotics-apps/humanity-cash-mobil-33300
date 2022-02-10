@@ -952,6 +952,13 @@
   dependencies:
     react-native-actionsheet "^2.4.2"
 
+"@modules/login@file:./modules/login":
+  version "1.0.0"
+  dependencies:
+    "@react-navigation/native" "^5.9.2"
+    "@react-navigation/stack" "^5.14.2"
+    react-native-keyboard-aware-scroll-view "^0.9.3"
+
 "@modules/login@file:./modules/login/":
   version "1.0.0"
   dependencies:
