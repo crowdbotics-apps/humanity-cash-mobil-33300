@@ -947,6 +947,9 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@modules/app-menu@file:./modules/app-menu/":
+  version "1.0.0"
+
 "@modules/camera@file:./modules/camera":
   version "1.0.1"
   dependencies:
@@ -964,7 +967,7 @@
   dependencies:
     react-native-render-html "^5.1.0"
 
-"@modules/splash@file:./modules/splash/":
+"@modules/splash@file:./modules/splash":
   version "1.0.0"
 
 "@modules/user-profile@file:./modules/user-profile":

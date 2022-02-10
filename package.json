@@ -12,6 +12,7 @@
     "web-build": "react-app-rewired build && mkdir -p backend/web_build && cp -R build/* backend/web_build"
   },
   "dependencies": {
+    "@modules/app-menu": "file:./modules/app-menu/",
     "@modules/camera": "file:./modules/camera",
     "@modules/login": "file:./modules/login/",
     "@modules/privacy-policy": "file:./modules/privacy-policy",
