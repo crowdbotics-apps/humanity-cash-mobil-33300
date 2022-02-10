@@ -12,34 +12,37 @@
     "web-build": "react-app-rewired build && mkdir -p backend/web_build && cp -R build/* backend/web_build"
   },
   "dependencies": {
-    "react": "17.0.1",
-    "react-native": "0.64.0",
-    "axios": "^0.21.1",
+    "@modules/camera": "file:./modules/camera",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.9.3",
+    "@react-navigation/stack": "^5.14.3",
+    "@reduxjs/toolkit": "^1.5.0",
+    "axios": "^0.21.1",
+    "react": "17.0.1",
+    "react-native": "0.64.0",
+    "react-native-dotenv": "^2.5.3",
+    "react-native-elements": "^3.3.1",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-image-crop-picker": "0.36.2",
+    "react-native-permissions": "3.0.4",
     "react-native-reanimated": "^2.0.0",
+    "react-native-responsive-screen": "^1.4.2",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^2.18.1",
-    "@react-navigation/stack": "^5.14.3",
-    "redux": "^4.0.5",
+    "react-native-vector-icons": "^8.1.0",
     "react-redux": "^7.2.2",
-    "@reduxjs/toolkit": "^1.5.0",
-    "react-native-dotenv": "^2.5.3",
-    "react-native-responsive-screen": "^1.4.2",
-    "react-native-elements": "^3.3.1",
-    "react-native-vector-icons": "^8.1.0"
+    "redux": "^4.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
     "babel-jest": "^26.6.3",
+    "babel-plugin-import-glob-meta": "github:crowdbotics/babel-plugin-import-glob-meta",
     "eslint": "7.14.0",
     "jest": "^26.6.3",
     "metro-react-native-babel-preset": "^0.64.0",
-    "react-test-renderer": "17.0.1",
-    "babel-plugin-import-glob-meta": "github:crowdbotics/babel-plugin-import-glob-meta"
+    "react-test-renderer": "17.0.1"
   },
   "jest": {
     "preset": "react-native"
