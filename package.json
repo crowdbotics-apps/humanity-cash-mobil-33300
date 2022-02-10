@@ -17,6 +17,7 @@
     "@modules/login": "file:./modules/login/",
     "@modules/privacy-policy": "file:./modules/privacy-policy",
     "@modules/splash": "file:./modules/splash/",
+    "@modules/terms-and-conditions": "file:./modules/terms-and-conditions",
     "@modules/user-profile": "file:./modules/user-profile/",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.9.3",
