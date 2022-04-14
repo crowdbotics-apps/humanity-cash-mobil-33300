@@ -1,29 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { StatusBar, View, Keyboard } from 'react-native';
+import { TextInput, View, TouchableOpacity, ScrollView } from 'react-native';
 import {
   Text,
-  TextField,
-  Icon,
   Button,
   Screen,
-  Checkbox,
+  Checkbox
 } from '../../components';
+import Icon from "react-native-vector-icons/MaterialIcons"
+import Entypo from "react-native-vector-icons/Entypo"
+import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from './signup-style';
-import { StackActions, useNavigation } from '@react-navigation/native';
-import { ButtonBase } from '../../components/button-base/button-base';
-import { TouchableOpacity } from 'react-native';
-import { COLOR, IMAGES, TYPOGRAPHY } from '../../theme';
-import { FooterAuth } from '../../components/footer-auth/footer-auth';
-import { LeftImageCard } from '../../components/left-image-card/left-image-card';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import {isEmpty} from 'lodash'
-import {useStores} from "../../models";
-import {runInAction} from "mobx";
-import {notifyMessage, processApiResult} from "../../utils/helpers";
-import {keys as getKeys} from "lodash"
-import {useLoginStore, useUserApi} from "../../utils/custom_hooks";
+import { COLOR, TYPOGRAPHY } from '../../theme';
+import { StackActions, useNavigation } from "@react-navigation/native"
 interface SignupFields {
   email: string;
   password: string;
@@ -40,250 +29,373 @@ const INITIAL_VALUES = {
   name: ''
 }
 
-const SignupSchema = Yup.object().shape({
-  phone_number: Yup.number().required('Required'),
-  password: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-  password_confirm: Yup.string()
-    .min(2, 'Too Short!')
-    .max(50, 'Too Long!')
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    .required('Required'),
-  email: Yup.string().email('Invalid email').required('Required'),
-  name: Yup.string().required('Required'),
-});
+const steps = ['email', 'legal', 'verify_email', 'help', 'email_confirmed', 'create_password', 'touch_id']
 
 export const SignupScreen = observer(function SignupScreen() {
   const navigation = useNavigation()
-  const userApi = useUserApi()
-  const [AcceptTerms, setAcceptTerms] = useState(false)
-  const [Loading,setLoading] = useState(false)
-  const [errors, setErrors] = useState<SignupFields>(INITIAL_VALUES)
-  const loginStore = useLoginStore()
 
-  // const [keyboardStatus, setKeyboardStatus] = useState(true)
+  const [Step, setStep] = useState(steps[0])
+  const [ButtonDisabled, setButtonDisabled] = useState(true)
 
-  // useEffect(() => {
-  //   const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
-  //     setKeyboardStatus(true)
-  //   })
-  //   const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-  //     setKeyboardStatus(false)
-  //   })
-  //
-  //   return () => {
-  //     showSubscription.remove()
-  //     hideSubscription.remove()
-  //   }
-  // }, [])
-  //
+  let EmailInput
+  const [Email, setEmail] = useState('')
+  const [EmailError, setEmailError] = useState(false)
+  const [Agree, setAgree] = useState(false)
 
+  const [ShowTerms, setShowTerms] = useState(false)
+  const [ShowPolicy, setShowPolicy] = useState(false)
 
-  const onAccept = () => {
-    setAcceptTerms(!AcceptTerms)
+  let CodeInp1, CodeInp2, CodeInp3, CodeInp4, CodeInp5, CodeInp6
+  const [Code1, setCode1] = useState('')
+  const [Code2, setCode2] = useState('')
+  const [Code3, setCode3] = useState('')
+  const [Code4, setCode4] = useState('')
+  const [Code5, setCode5] = useState('')
+  const [Code6, setCode6] = useState('')
+
+  const [Pass, setPass] = useState('')
+  const [PassConfirm, setPassConfirm] = useState('')
+  const [HidePass, setHidePass] = useState(true)
+  const [HidePassConfirm, setHidePassConfirm] = useState(true)
+  const [MatchPassword, setMatchPassword] = useState(true)
+
+  const renderStep = () => {
+    let render
+    switch (Step) {
+      case 'email':
+        render = EmailStep()
+        break;
+      case 'legal':
+        render = LegalStep()
+        break;
+      case 'verify_email':
+        render = VerifyEmailStep()
+        break;
+      case 'help':
+        render = HelpStep()
+        break;
+      case 'email_confirmed':
+        render = EmailConfirmedStep()
+        break;
+      case 'create_password':
+        render = CreatePasswordStep()
+        break;
+    }
+    return render
   }
 
-  const onSuccess = (result:any)=>{
-    runInAction(() => {
-      loginStore.setUser(result.response)
-      loginStore.setApiToken(result.response.token.access)
-      loginStore.setRegistered(true)
-    })
-    setLoading(false)
-    navigation.navigate("userStatus")
-  }
-  const onBadData = (result:any)=>{
-    setErrors(result.errors)
-    setLoading(false)
-  }
+  const validateEmail = (email, agree) => {
+    let valid = String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+    if (valid) {
+      agree ? setButtonDisabled(false) : setButtonDisabled(true)
+      return true
+    }
+    else {
+      setButtonDisabled(true)
+      return false
+    }
+  };
 
-  const onError = ()=>{
-    setLoading(false)
-  }
+  const EmailStep = () => (
+    <View style={styles.STEP_CONTAINER}>
+      <Text style={styles.STEP_TITLE}>Create account</Text>
+      <Text style={styles.STEP_SUB_TITLE}>Hello! Tell us how to reach you. We will send a verification code to your email.</Text>
+      <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+        <Text style={styles.INPUT_LABEL_STYLE}>Email address</Text>
+        <Text style={styles.INPUT_LABEL_ERROR}>{EmailError ? 'ENTER EMAIL ADDRESS' : ''}</Text>
+      </View>
+      <View style={EmailError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+        <TextInput
+          ref={ref => EmailInput = ref}
+          style={styles.INPUT_STYLE}
+          onChangeText={t => [setEmail(t), setEmailError(!validateEmail(t, Agree))]}
+          value={Email}
+          placeholder={'myname@mail.com'}
+        />
+      </View>
+    </View>
+  )
+  const LegalStep = () => (
+    <View style={styles.STEP_CONTAINER}>
+      <Text style={styles.STEP_TITLE}>Legal</Text>
+      <View style={styles.LINE} />
+    <ScrollView>
+      {!ShowTerms
+        ? <TouchableOpacity onPress={() => setShowTerms(!ShowTerms)} style={styles.TERMS_CLOSE_CONTAINER}>
+          <Text style={styles.TERMS_TITLE}>{`Terms & Conditions`}</Text>
+          <Entypo name={"chevron-down"} size={23} color={'black'} style={{marginRight: 20}} />
+        </TouchableOpacity>
+        : <View style={styles.TERMS_OPEN_CONTAINER}>
+          <TouchableOpacity onPress={() => setShowTerms(!ShowTerms)} style={styles.TERMS_OPEN_TITLE_CONTAINER}>
+            <Text style={styles.TERMS_TITLE}>{`Terms & Conditions`}</Text>
+            <Entypo name={"chevron-up"} size={23} color={'black'} style={{marginRight: 20}} />
+          </TouchableOpacity>
+          <Text style={styles.TERMS_OPEN_CONTENT}>
+            {`
+ARTICLE I: General
 
+Section 1: Name -  The name of the corporation will be BerkShares, Inc., a non-profit corporation organized under the laws of the Commonwealth of Massachusetts.
+Section 2: Area - The corporation will focus its activities in the Berkshire Region.
+Section 3: Offices - The principal office of the corporation will be at 140 Jug End Road, South Egremont, Massachusetts 01258 (mailing address: P O Box 125, Great Barrington, MA 01230) or at some other physical location as determined by the Board of Trustees.
 
-  const submit = (values:any)=>{
-    setLoading(true)
-    userApi.userRegister(values).then(result => {
-      processApiResult(result, onSuccess, onBadData, onError)
-    }).catch(reason => {
-      console.log(reason)
-      setLoading(false)
-    })
-  }
+ARTICLE II: Purpose
 
-  const doSignUp = (validateForm:any, handleSubmit:any)=>{
-    // navigation.navigate({ key: 'primaryStack' })
-    validateForm().then((result:any) => {
-      setErrors(result)
-      if(isEmpty(result)){
-        handleSubmit()
+Section 1: Purpose - The Purpose of BerkShares, Inc. is to initiate, encourage and administer educational and practical programs for the furtherance of regional economic self-reliance in the Berkshire Region.
+
+By pooling capital and human resources, BerkShares, Inc. seeks to facilitate the formation of small businesses, cottage industries, farms and cooperatives that would enable local communities to develop greater self-reliance. Basic human needs in the areas of food, shelter, energy, environment, employment, transportation, health care, education, cultural activities and social services could thus be increasingly met through local efforts. It is intended that such a program would encourage use of land in harmony with ecological principles. It would also encourage the development of alternative exchange instruments and of community associations that would foster and support initiative in these areas.
+
+ARTICLE III: Membership
+
+Section 1: General Membership - The membership of BerkShares, Inc. will be open to all residents of the Berkshire Region who are interested in the promotion of local and regional economic self-sufficiency. All Members will be considered in good standing if they have paid an annual membership fee as established by the Board of Trustees.
+            `}
+          </Text>
+        </View>
       }
-    });
+      {!ShowPolicy
+        ? <TouchableOpacity onPress={() => setShowPolicy(!ShowPolicy)} style={styles.POLICY_CLOSE_CONTAINER}>
+          <Text style={styles.TERMS_TITLE}>{`Privacy Policy`}</Text>
+          <Entypo name={"chevron-down"} size={23} color={'black'} style={{marginRight: 20}} />
+        </TouchableOpacity>
+        : <View style={styles.POLICY_OPEN_CONTAINER}>
+          <TouchableOpacity onPress={() => setShowPolicy(!ShowPolicy)} style={styles.TERMS_OPEN_TITLE_CONTAINER}>
+            <Text style={styles.TERMS_TITLE}>{`Privacy Policy`}</Text>
+            <Entypo name={"chevron-up"} size={23} color={'black'} style={{marginRight: 20}} />
+          </TouchableOpacity>
+          <Text style={styles.TERMS_OPEN_CONTENT}>
+            {`
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse.
 
+            `}
+          </Text>
+        </View>
+      }
+</ScrollView>
+    </View>
+  )
+  const VerifyEmailStep = () => (
+    <View style={styles.STEP_CONTAINER}>
+      <Text style={styles.STEP_TITLE}>Verify your email</Text>
+      <Text style={styles.STEP_SUB_TITLE}>{`We have sent an email with a verification code to ${Email}. Please check your spam if you haven’t received it.`}</Text>
+      <View style={styles.CODE_CONFIRMATION_CONTAINER}>
+        <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
+          <TextInput
+            keyboardType='numeric'
+            style={styles.CODE_CONFIRMATION_INPUT}
+            ref={ref => CodeInp1 = ref}
+            onFocus={() => setCode1('')}
+            onChangeText={t => [setCode1(t), CodeInp2.focus()]}
+            value={Code1}
+          />
+        </View>
+        <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
+          <TextInput
+            keyboardType='numeric'
+            style={styles.CODE_CONFIRMATION_INPUT}
+             ref={ref => CodeInp2 = ref}
+            onFocus={() => setCode2('')}
+             onChangeText={t => [setCode2(t), CodeInp3.focus()]}
+            value={Code2}
+          />
+        </View>
+        <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
+          <TextInput
+            keyboardType='numeric'
+            style={styles.CODE_CONFIRMATION_INPUT}
+             ref={ref => CodeInp3 = ref}
+            onFocus={() => setCode3('')}
+             onChangeText={t => [setCode3(t), CodeInp4.focus()]}
+            value={Code3}
+          />
+        </View>
+        <View style={styles.SHORT_LINE} />
+        <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
+          <TextInput
+            keyboardType='numeric'
+            style={styles.CODE_CONFIRMATION_INPUT}
+             ref={ref => CodeInp4 = ref}
+            onFocus={() => setCode4('')}
+             onChangeText={t => [setCode4(t), CodeInp5.focus()]}
+            value={Code4}
+          />
+        </View>
+        <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
+          <TextInput
+            keyboardType='numeric'
+            style={styles.CODE_CONFIRMATION_INPUT}
+             ref={ref => CodeInp5 = ref}
+            onFocus={() => setCode5('')}
+             onChangeText={t => [setCode5(t), CodeInp6.focus()]}
+            value={Code5}
+          />
+        </View>
+        <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
+          <TextInput
+            keyboardType='numeric'
+            style={styles.CODE_CONFIRMATION_INPUT}
+             ref={ref => CodeInp6 = ref}
+            onFocus={() => setCode6('')}
+             onChangeText={t => [setCode6(t)]}
+            value={Code6}
+          />
+        </View>
+      </View>
+    </View>
+  )
+  const HelpStep = () => (
+    <View style={styles.STEP_CONTAINER}>
+      <Text style={styles.STEP_TITLE}>Need help?</Text>
+      <Text style={styles.STEP_SUB_TITLE}>{`If you need help, have questions, complaints, remarks, or just like to chat, please send an email to berkshares@humanitycash.com`}</Text>      
+    </View>
+  )
+  const EmailConfirmedStep = () => (
+    <View style={styles.STEP_CONTAINER}>
+      <Text style={styles.STEP_TITLE}>You email address is confirmed!</Text>
+    </View>
+  )
+  const CreatePasswordStep = () => (
+    <View style={styles.STEP_CONTAINER}>
+      <Text style={styles.STEP_TITLE}>Create a password</Text>
+      <Text style={styles.STEP_SUB_TITLE}>{`Create a password to secure your account.`}</Text>
+      
+
+
+      <View style={styles.PASS_REQUIREMENTS_CONTAINER}>
+        <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
+        <Text style={styles.PASS_REQUIREMENTS}>AT LEAST 12 CHARACTERS LONG,  1 NUMBER AND 1 SYMBOL</Text>
+      </View>
+      {/* green */}
+
+      <View style={styles.INPUT_STYLE_CONTAINER}>
+        <TextInput
+          // ref={ref => EmailInput = ref}
+          style={styles.PASS_INPUT_STYLE}
+          onChangeText={t => [setPass(t)]}
+          value={Pass}
+          secureTextEntry={HidePass}
+          placeholder={'*********'}
+        />
+        <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+          <Ionicons name='eye' color={'#39534440'} size={20} />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+        <Text style={styles.INPUT_LABEL_STYLE}>CONFIRM PASSWORD</Text>
+        <Text style={styles.INPUT_LABEL_ERROR}>{!MatchPassword ? 'NO MATCH' : ''}</Text>
+      </View>
+      <View style={!MatchPassword ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+        <TextInput
+          // ref={ref => EmailInput = ref}
+          style={styles.PASS_INPUT_STYLE}
+          onChangeText={t => [setPassConfirm(t)]}
+          value={PassConfirm}
+          placeholder={'*********'}
+          secureTextEntry={HidePassConfirm}
+        />
+        <TouchableOpacity onPress={() => setHidePassConfirm(!HidePassConfirm)}>
+          <Ionicons name='eye' color={'#39534440'} size={20} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
+
+  const backButtonHandler = () => {
+    switch (Step) {
+      case 'email':
+        navigation.navigate("splash", {})
+        break;
+      case 'legal':
+        setStep('email') 
+        break;
+      case 'verify_email':
+        setStep('email')
+        break;
+      case 'help':
+        setStep('verify_email')
+        break;
+      case 'email_confirmed':
+        setStep('verify_email')
+        break;
+      case 'email_confirmed':
+        setStep('verify_email')
+        break;
+      case 'touch_id':
+        setStep('create_password')
+        break;
+    }
+  }
+
+  const nextButtonHandler = () => {
+    switch (Step) {
+      case 'email':
+        setStep('verify_email')
+        break;
+      case 'verify_email':
+        if (Code1 && Code2 && Code3 && Code4 && Code5 && Code6) setStep('email_confirmed')
+        break;
+      case 'email_confirmed':
+        setStep('create_password')
+        break;
+      case 'create_password':
+        if (Pass !== PassConfirm) setMatchPassword(false)
+        else {setMatchPassword(true), console.log('touch id')}
+        // setStep('touch_id')
+        break;
+    }
   }
 
   return (
     <Screen
-      style={styles.ROOT}
-      preset='scroll'
+      // preset='scroll'
+      preset="fixed"
       statusBar={'dark-content'}
-      showHeader={false}
+      unsafe={true}
     >
-      <View style={styles.MAIN_CONTAINER}>
-        <View style={{ marginTop: '20%' }} />
-        <View style={{ flexDirection: 'column', display: 'flex' }}>
-          <Text style={styles.TITLE}>Create your account</Text>
+      <View style={styles.ROOT}>
+        <View>
+          <TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
+          <Icon name={"arrow-back"} size={23} color={'black'} />
+            <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+          </TouchableOpacity>
+          {renderStep()}
         </View>
+        <View>
+          {(Step === 'email') &&
+            <View style={styles.AGREE_CONTAINER}>
+              <Checkbox
+                value={Agree}
+                onToggle={value => [setAgree(value), validateEmail(Email, value)]}
+                fillStyle={styles.CHECKBOX_FILL}
+                outlineStyle={styles.CHECKBOX_OUTLINE}
+              />
+              <Text style={styles.AGREE_LABEL}>{`By checking this box, you agree to our partner Humanity Cash's`}
+                <Text style={styles.AGREE_LABEL_LINK} onPress={() => setStep('legal')}> {` Terms & Conditions `}</Text>
+                and
+                <Text style={styles.AGREE_LABEL_LINK} onPress={() => setStep('legal')}> {` Privacy Policy`}</Text>
+              </Text>
+            </View>
+          }
+           {(Step === 'verify_email') &&
+            <View style={styles.NEED_HELP_CONTAINER}>
+              <Text onPress={() => setStep('help')} style={styles.NEED_HELP_LINK}>Need help?</Text>
+            </View>
+          }
+          {Step !== 'legal' &&
+            <TouchableOpacity
+              disabled={ButtonDisabled}
+              onPress={() => nextButtonHandler()}
+              style={ButtonDisabled ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
+            >
 
-        <View style={{ display: 'flex', flexDirection: 'column' }}>
-          <Formik
-            initialValues={INITIAL_VALUES}
-            validationSchema={SignupSchema}
-            onSubmit={values =>  submit(values)}
-            // validate={values => {
-            //   console.log('VALIDATE', values)
-            // }}
-          >
-
-
-            {
-              ({
-              validateForm,
-              handleSubmit,
-              handleChange,
-              values,
-            }) => (
-              <>
-                <TextField
-                  style={[{ width: '100%', marginTop: 30 }]}
-                  value={values.name}
-                  label='username'
-                  errorText={errors.name ? errors.name : null}
-                  onChangeText={handleChange('name')}
-                  keyboardType={'default'}
-                  autoCapitalize={'none'}
-                  returnKeyType='done'
-                />
-
-                <TextField
-                  style={[{ width: '100%', marginTop: 10 }]}
-                  value={values.email}
-                  label='email'
-                  errorText={errors.email ? errors.email : null}
-                  onChangeText={handleChange('email')}
-                  keyboardType={'email-address'}
-                  autoCapitalize={'none'}
-                  returnKeyType='done'
-                />
-
-                <TextField
-                  style={[{ width: '100%', marginTop: 10 }]}
-                  value={values.phone_number}
-                  label='phone number'
-                  errorText={errors.phone_number ? errors.phone_number : null}
-                  onChangeText={handleChange('phone_number')}
-                  keyboardType={'phone-pad'}
-                  autoCapitalize={'none'}
-                  returnKeyType='done'
-                />
-
-                <TextField
-                  style={[{ width: '100%', marginTop: 10 }]}
-                  value={values.password}
-                  onChangeText={handleChange('password')}
-                  secureTextEntry={true}
-                  label='password'
-                  errorText={errors.password ? errors.password : null}
-                  keyboardType={'default'}
-                  autoCapitalize={'none'}
-                  returnKeyType='done'
-                />
-
-                <TextField
-                  style={[{ width: '100%', marginTop: 10 }]}
-                  value={values.password_confirm}
-                  secureTextEntry={true}
-                  label='password confirm'
-                  errorText={
-                    errors.password_confirm ? errors.password_confirm : null
-                  }
-                  keyboardType={'default'}
-                  onChangeText={handleChange('password_confirm')}
-                  autoCapitalize={'none'}
-                  returnKeyType='done'
-                />
-
-                <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                  <View style={{ margin: 10, alignSelf: 'center' }}>
-                    <Checkbox
-                      textLabel={false}
-                      fillStyle={{ width: 15, height: 15 }}
-                      outlineStyle={{
-                        borderColor: COLOR.PALETTE.gray,
-                        width: 22,
-                        height: 22,
-                      }}
-                      value={AcceptTerms}
-                      onToggle={() => {
-                        onAccept()
-                      }}
-                    />
-                  </View>
-
-                  <View style={[styles.TEXT_CONTAINER, { width: '85%' }]}>
-                    <View>
-                      <Text style={[styles.TEXT]}>I accept </Text>
-                    </View>
-                    <TouchableOpacity
-                      onPress={() => alert('not implemented yet!!!')}
-                    >
-                      <Text style={[styles.ACTION_TEXT]}>
-                        The Privacy Policy
-                      </Text>
-                    </TouchableOpacity>
-                    <View>
-                      <Text style={[styles.TEXT]}> and </Text>
-                    </View>
-                    <TouchableOpacity
-                      onPress={() => alert('not implemented yet!!!')}
-                    >
-                      <Text style={[styles.ACTION_TEXT]}>Terms & </Text>
-                    </TouchableOpacity>
-                    <View style={{ flexGrow: 1 }} />
-                    <TouchableOpacity
-                      style={[]}
-                      onPress={() => alert('not implemented yet!!!')}
-                    >
-                      <Text style={[styles.ACTION_TEXT]}> Conditions </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-
-                <LeftImageCard
-                  source={IMAGES.icon_paper_plane}
-                  style={{ height: 75, marginBottom: 40 }}
-                  showRightIcon={false}
-                  title='Send your friends a magic link to join our community'
-                  onPress={() => alert('not implemented yet!!!')}
-                />
-                <FooterAuth
-                  onPress={() => doSignUp(validateForm, handleSubmit)}
-                  loading={Loading}
-                  text='Already have an account?'
-                  actionText='sign in'
-                  onPressText={() => navigation.navigate('login')}
-                  title='sign up'
-                  preset={AcceptTerms ? 'primary' : 'disabled'}
-                />
-              </>
-            )}
-          </Formik>
+              <Text style={styles.SUBMIT_BUTTON_LABEL}>Next</Text>
+            </TouchableOpacity>
+          }
         </View>
       </View>
-      <View style={{ display: 'flex', flexGrow: 1 }} />
     </Screen>
   )
 })
