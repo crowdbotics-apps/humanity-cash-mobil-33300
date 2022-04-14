@@ -123,19 +123,19 @@ export const SignupScreen = observer(function SignupScreen() {
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Legal</Text>
       <View style={styles.LINE} />
-    <ScrollView>
-      {!ShowTerms
-        ? <TouchableOpacity onPress={() => setShowTerms(!ShowTerms)} style={styles.TERMS_CLOSE_CONTAINER}>
-          <Text style={styles.TERMS_TITLE}>{`Terms & Conditions`}</Text>
-          <Entypo name={"chevron-down"} size={23} color={'black'} style={{marginRight: 20}} />
-        </TouchableOpacity>
-        : <View style={styles.TERMS_OPEN_CONTAINER}>
-          <TouchableOpacity onPress={() => setShowTerms(!ShowTerms)} style={styles.TERMS_OPEN_TITLE_CONTAINER}>
+      <ScrollView>
+        {!ShowTerms
+          ? <TouchableOpacity onPress={() => setShowTerms(!ShowTerms)} style={styles.TERMS_CLOSE_CONTAINER}>
             <Text style={styles.TERMS_TITLE}>{`Terms & Conditions`}</Text>
-            <Entypo name={"chevron-up"} size={23} color={'black'} style={{marginRight: 20}} />
+            <Entypo name={"chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
           </TouchableOpacity>
-          <Text style={styles.TERMS_OPEN_CONTENT}>
-            {`
+          : <View style={styles.TERMS_OPEN_CONTAINER}>
+            <TouchableOpacity onPress={() => setShowTerms(!ShowTerms)} style={styles.TERMS_OPEN_TITLE_CONTAINER}>
+              <Text style={styles.TERMS_TITLE}>{`Terms & Conditions`}</Text>
+              <Entypo name={"chevron-up"} size={23} color={'black'} style={{ marginRight: 20 }} />
+            </TouchableOpacity>
+            <Text style={styles.TERMS_OPEN_CONTENT}>
+              {`
 ARTICLE I: General
 
 Section 1: Name -  The name of the corporation will be BerkShares, Inc., a non-profit corporation organized under the laws of the Commonwealth of Massachusetts.
@@ -152,29 +152,29 @@ ARTICLE III: Membership
 
 Section 1: General Membership - The membership of BerkShares, Inc. will be open to all residents of the Berkshire Region who are interested in the promotion of local and regional economic self-sufficiency. All Members will be considered in good standing if they have paid an annual membership fee as established by the Board of Trustees.
             `}
-          </Text>
-        </View>
-      }
-      {!ShowPolicy
-        ? <TouchableOpacity onPress={() => setShowPolicy(!ShowPolicy)} style={styles.POLICY_CLOSE_CONTAINER}>
-          <Text style={styles.TERMS_TITLE}>{`Privacy Policy`}</Text>
-          <Entypo name={"chevron-down"} size={23} color={'black'} style={{marginRight: 20}} />
-        </TouchableOpacity>
-        : <View style={styles.POLICY_OPEN_CONTAINER}>
-          <TouchableOpacity onPress={() => setShowPolicy(!ShowPolicy)} style={styles.TERMS_OPEN_TITLE_CONTAINER}>
+            </Text>
+          </View>
+        }
+        {!ShowPolicy
+          ? <TouchableOpacity onPress={() => setShowPolicy(!ShowPolicy)} style={styles.POLICY_CLOSE_CONTAINER}>
             <Text style={styles.TERMS_TITLE}>{`Privacy Policy`}</Text>
-            <Entypo name={"chevron-up"} size={23} color={'black'} style={{marginRight: 20}} />
+            <Entypo name={"chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
           </TouchableOpacity>
-          <Text style={styles.TERMS_OPEN_CONTENT}>
-            {`
+          : <View style={styles.POLICY_OPEN_CONTAINER}>
+            <TouchableOpacity onPress={() => setShowPolicy(!ShowPolicy)} style={styles.TERMS_OPEN_TITLE_CONTAINER}>
+              <Text style={styles.TERMS_TITLE}>{`Privacy Policy`}</Text>
+              <Entypo name={"chevron-up"} size={23} color={'black'} style={{ marginRight: 20 }} />
+            </TouchableOpacity>
+            <Text style={styles.TERMS_OPEN_CONTENT}>
+              {`
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse.
 
             `}
-          </Text>
-        </View>
-      }
-</ScrollView>
+            </Text>
+          </View>
+        }
+      </ScrollView>
     </View>
   )
   const VerifyEmailStep = () => (
@@ -196,9 +196,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           <TextInput
             keyboardType='numeric'
             style={styles.CODE_CONFIRMATION_INPUT}
-             ref={ref => CodeInp2 = ref}
+            ref={ref => CodeInp2 = ref}
             onFocus={() => setCode2('')}
-             onChangeText={t => [setCode2(t), CodeInp3.focus()]}
+            onChangeText={t => [setCode2(t), CodeInp3.focus()]}
             value={Code2}
           />
         </View>
@@ -206,9 +206,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           <TextInput
             keyboardType='numeric'
             style={styles.CODE_CONFIRMATION_INPUT}
-             ref={ref => CodeInp3 = ref}
+            ref={ref => CodeInp3 = ref}
             onFocus={() => setCode3('')}
-             onChangeText={t => [setCode3(t), CodeInp4.focus()]}
+            onChangeText={t => [setCode3(t), CodeInp4.focus()]}
             value={Code3}
           />
         </View>
@@ -217,9 +217,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           <TextInput
             keyboardType='numeric'
             style={styles.CODE_CONFIRMATION_INPUT}
-             ref={ref => CodeInp4 = ref}
+            ref={ref => CodeInp4 = ref}
             onFocus={() => setCode4('')}
-             onChangeText={t => [setCode4(t), CodeInp5.focus()]}
+            onChangeText={t => [setCode4(t), CodeInp5.focus()]}
             value={Code4}
           />
         </View>
@@ -227,9 +227,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           <TextInput
             keyboardType='numeric'
             style={styles.CODE_CONFIRMATION_INPUT}
-             ref={ref => CodeInp5 = ref}
+            ref={ref => CodeInp5 = ref}
             onFocus={() => setCode5('')}
-             onChangeText={t => [setCode5(t), CodeInp6.focus()]}
+            onChangeText={t => [setCode5(t), CodeInp6.focus()]}
             value={Code5}
           />
         </View>
@@ -237,9 +237,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           <TextInput
             keyboardType='numeric'
             style={styles.CODE_CONFIRMATION_INPUT}
-             ref={ref => CodeInp6 = ref}
+            ref={ref => CodeInp6 = ref}
             onFocus={() => setCode6('')}
-             onChangeText={t => [setCode6(t)]}
+            onChangeText={t => [setCode6(t)]}
             value={Code6}
           />
         </View>
@@ -249,7 +249,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const HelpStep = () => (
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Need help?</Text>
-      <Text style={styles.STEP_SUB_TITLE}>{`If you need help, have questions, complaints, remarks, or just like to chat, please send an email to berkshares@humanitycash.com`}</Text>      
+      <Text style={styles.STEP_SUB_TITLE}>{`If you need help, have questions, complaints, remarks, or just like to chat, please send an email to berkshares@humanitycash.com`}</Text>
     </View>
   )
   const EmailConfirmedStep = () => (
@@ -261,7 +261,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Create a password</Text>
       <Text style={styles.STEP_SUB_TITLE}>{`Create a password to secure your account.`}</Text>
-      
+
 
 
       <View style={styles.PASS_REQUIREMENTS_CONTAINER}>
@@ -309,7 +309,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         navigation.navigate("splash", {})
         break;
       case 'legal':
-        setStep('email') 
+        setStep('email')
         break;
       case 'verify_email':
         setStep('email')
@@ -342,7 +342,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         break;
       case 'create_password':
         if (Pass !== PassConfirm) setMatchPassword(false)
-        else {setMatchPassword(true), console.log('touch id')}
+        else { setMatchPassword(true), console.log('touch id'), navigation.navigate("setupProfile", {}) }
         // setStep('touch_id')
         break;
     }
@@ -358,7 +358,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       <View style={styles.ROOT}>
         <View>
           <TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
-          <Icon name={"arrow-back"} size={23} color={'black'} />
+            <Icon name={"arrow-back"} size={23} color={'black'} />
             <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
           </TouchableOpacity>
           {renderStep()}
@@ -379,7 +379,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
               </Text>
             </View>
           }
-           {(Step === 'verify_email') &&
+          {(Step === 'verify_email') &&
             <View style={styles.NEED_HELP_CONTAINER}>
               <Text onPress={() => setStep('help')} style={styles.NEED_HELP_LINK}>Need help?</Text>
             </View>
