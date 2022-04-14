@@ -4,6 +4,7 @@ const LOGO_HEADER = require("../../../assets/images/logo.png")
 const BG_WAVES =  require("../../../assets/images/bg_waves.png")
 const LOGO_FULL =  require("../../../assets/images/logo_full.png")
 const HUMANITY_CASH_WATERMARK =  require("../../../assets/images/humanity_cash_watermark.png")
+const NO_IMAGE =  require("../../../assets/images/no_image.png")
 
 export const IMAGES = {
   // icon_contractor: ICON_CONTRACTOR,
@@ -15,6 +16,7 @@ export const IMAGES = {
   logoHeader: LOGO_HEADER,
   bgWaves: BG_WAVES,
   humanityCashWatermark: HUMANITY_CASH_WATERMARK,
+  noImage: NO_IMAGE,
   // logoOnboarding: LOGO_ONBOARDING,
   // bell: BELL,
   // search: SEARCH,

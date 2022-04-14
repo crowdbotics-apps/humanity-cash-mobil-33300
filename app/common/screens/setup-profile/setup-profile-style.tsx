@@ -8,13 +8,33 @@ export default StyleSheet.create({
     marginTop: 50,
     justifyContent: 'space-between'
   },
-  STEP_CONTAINER: {
-
+  ROOT_MODAL: {
+    flex: 1,
+    backgroundColor: COLOR.PALETTE.modalBackgroundColor,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  STEP_CONTAINER: {},
+  HEADER_ACTIONS: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   STEP_TITLE: {
     fontSize: 32,
     color: COLOR.PALETTE.green,
     marginLeft: 10
+  },
+   STEP_TITLE_BLACK: {
+    fontSize: 32,
+    color: COLOR.PALETTE.black,
+    marginLeft: 10,
+    width: METRICS.screenWidth * 0.7,
+  },
+  STEP_SUB_TITLE_MODAL: {
+    fontSize: 16,
+    color: COLOR.PALETTE.black,
+    marginLeft: 10,
+    width: METRICS.screenWidth * 0.7,
   },
   STEP_SUB_TITLE: {
     fontSize: 16,
@@ -22,18 +42,26 @@ export default StyleSheet.create({
     marginLeft: 10,
     width: METRICS.screenWidth * 0.90,
   },
+  MODAL_BUTTON: {
+    width: METRICS.screenWidth * 0.70,
+    height: 55,
+    backgroundColor: COLOR.PALETTE.green,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderRadius: 27.5,
+  },
   BACK_BUTON_CONTAINER: {
     flexDirection: 'row',
     width: 80,
     height: 30,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginLeft: 10,
+    marginHorizontal: 10,
     marginVertical: 10
   },
   BACK_BUTON_LABEL: {
     fontSize: 16,
-    color: COLOR.PALETTE.black
+    color: COLOR.PALETTE.green
   },
   SUBMIT_BUTTON_OUTLINE: {
     width: METRICS.screenWidth * 0.95,
@@ -126,7 +154,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10
   },
-  CHECKBOX_OUTLINE: {  },
+  CHECKBOX_OUTLINE: {},
   CHECKBOX_FILL: {
     backgroundColor: `${COLOR.PALETTE.strongGreen}`,
     borderWidth: 0
@@ -193,7 +221,7 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.strongGreen,
     fontSize: 10,
     width: METRICS.screenWidth * 0.80,
-    alignSelf:'center'
+    alignSelf: 'center'
   },
   POLICY_CLOSE_CONTAINER: {
     width: METRICS.screenWidth * 0.95,
@@ -248,4 +276,22 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80,
     alignSelf: 'center',
   },
+  IMAGE_CONTAINER: {
+    marginTop: 15,
+    alignItems: 'center',
+    width: METRICS.screenWidth,
+  },
+  IMAGE_BOX: {
+    width: 150,
+    height: 150,
+    borderRadius: 75
+  },
+  MODAL_CONTENT: {
+    backgroundColor: 'white',
+    width: METRICS.screenWidth*0.85,
+    height: 230,
+    alignItems: 'center',
+    borderRadius: 10,
+    justifyContent: 'space-evenly'
+  }
 })
