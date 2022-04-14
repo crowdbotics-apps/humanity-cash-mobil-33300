@@ -81,13 +81,12 @@ function App() {
   // otherwise, we're ready to render the app
   return (
     <RootStoreProvider value={rootStore}>
-      {/*<SafeAreaProvider initialMetrics={initialWindowMetrics}>*/}
-      {/*  /!*<ReactNativeText>holaa</ReactNativeText>*!/*/}
-      {/*  <AppNavigator*/}
-      {/*    initialState={initialNavigationState}*/}
-      {/*    onStateChange={onNavigationStateChange}*/}
-      {/*  />*/}
-      {/*</SafeAreaProvider>*/}
+       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <AppNavigator
+          initialState={initialNavigationState}
+          onStateChange={onNavigationStateChange}
+        />
+      </SafeAreaProvider>
       <Toast config={toastConfig} />
     </RootStoreProvider>
   )
