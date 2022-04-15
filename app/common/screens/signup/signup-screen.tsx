@@ -116,17 +116,60 @@ export const SignupScreen = observer(function SignupScreen() {
       setLoading(false)
       if (result.kind === "ok") {
         runInAction(() => {
-          loginStore.setUser(result.response)
+          loginStore.setUser(result.response.user)
           loginStore.setApiToken(result.response.access_token)
         })
+        setStep("verify_email")
       } else if (result.kind === "bad-data") {
         notifyMessage("Please correct the errors and try again")
         setEmailError(true)
         setEmailErrorMessage(result.errors.email[0])
       } else {
+        loginStore.reset()
         notifyMessage(null)
       }
     })
+  }
+
+  const verifyUserAuthenticationCode = () => {
+    const code = Code1 + Code2 + Code3 + Code4 + Code5 + Code6
+    console.log("code ===> ", code)
+    setLoading(true)
+    loginStore.environment.api
+      .verifyUserAuthenticationCode({ verification_code: code })
+      .then(result => {
+        console.log("result ", result)
+        setLoading(false)
+        if (result.kind === "ok") {
+          notifyMessage("Email verified", "success")
+          setStep("email_confirmed")
+        } else if (result.kind === "bad-data") {
+          notifyMessage(result.errors.verification_code[0])
+        } else {
+          notifyMessage(null)
+        }
+      })
+  }
+
+  const setPassword = () => {
+    setLoading(true)
+    loginStore.environment.api
+      .setUserPassword({ password: Pass, password_confirm: PassConfirm })
+      .then(result => {
+        console.log("result ", result)
+        setLoading(false)
+        if (result.kind === "ok") {
+          runInAction(() => {
+            loginStore.setUser(result.response.user)
+            loginStore.setApiToken(result.response.access_token)
+          })
+        } else if (result.kind === "bad-data") {
+          notifyMessage(result.errors.password)
+        } else {
+          loginStore.reset()
+          notifyMessage(null)
+        }
+      })
   }
 
   const EmailStep = () => (
@@ -436,7 +479,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         break
       case "verify_email":
         if (Code1 && Code2 && Code3 && Code4 && Code5 && Code6) {
-          setStep("email_confirmed")
+          verifyUserAuthenticationCode()
         }
         break
       case "email_confirmed":
@@ -448,6 +491,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         } else {
           setMatchPassword(true), console.log("touch id")
         }
+        setPassword()
         // setStep('touch_id')
         break
     }

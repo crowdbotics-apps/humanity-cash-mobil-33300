@@ -39,7 +39,7 @@ export const LoginScreen = observer(function LoginScreen( ) {
     const onSuccess = (result:any)=>{
         runInAction(() => {
             loginStore.setUser(result.response)
-            loginStore.setApiToken(result.response.token.access)
+            loginStore.setApiToken(result.response.access_token)
             loginStore.setRegistered(true)
         })
 
