@@ -14,6 +14,12 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  THANK_MODAL: {
+    flex: 1,
+    backgroundColor: COLOR.PALETTE.white,
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
   STEP_CONTAINER: {},
   HEADER_ACTIONS: {
     flexDirection: 'row',
@@ -179,7 +185,8 @@ export default StyleSheet.create({
     fontSize: 16,
     color: COLOR.PALETTE.darkYellow,
     textDecorationLine: 'underline',
-    textAlign: 'center'
+    textAlign: 'center',
+    marginBottom: 20
   },
   LINE: {
     width: METRICS.screenWidth * 0.95,
@@ -279,12 +286,17 @@ export default StyleSheet.create({
   IMAGE_CONTAINER: {
     marginTop: 15,
     alignItems: 'center',
-    width: METRICS.screenWidth,
+    alignSelf: 'center',
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    backgroundColor: COLOR.PALETTE.lightGreen,
+    justifyContent: 'center',    
   },
   IMAGE_BOX: {
-    width: 150,
-    height: 150,
-    borderRadius: 75
+    width: 84,
+    height: 84,
+    borderRadius: 42
   },
   MODAL_CONTENT: {
     backgroundColor: 'white',
@@ -293,5 +305,19 @@ export default StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
     justifyContent: 'space-evenly'
-  }
+  },
+  IMAGE_BOX_LABEL: {
+    fontSize: 16,
+    color: COLOR.PALETTE.black,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    marginTop: 15
+  },
+  IMAGE_BOX_VALIDATION: {
+    fontSize: 12,
+    color: `${COLOR.PALETTE.strongGreen}70`,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    marginBottom: 15
+  },
 })
