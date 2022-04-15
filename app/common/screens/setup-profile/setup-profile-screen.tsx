@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { TextInput, View, TouchableOpacity, Image, Modal, TouchableWithoutFeedback } from 'react-native';
+import { TextInput, View, TouchableOpacity, Image, Modal, TouchableWithoutFeedback, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
 import {
 	Text,
 	Button,
@@ -48,7 +48,16 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [Name, setName] = useState('')
 	const [LastName, setLastName] = useState('')
 
-	function selectImage() {
+	// business
+	const [BusinessName, setBusinessName] = React.useState(null);
+	const [BusinessStory, setBusinessStory] = React.useState(null);
+	const [BusinessType, setBusinessType] = React.useState(null);
+	const [BusinessExecName, setBusinessExecName] = React.useState(null);
+	const [BusinessExecLastName, setBusinessExecLastName] = React.useState(null);
+	const [BusinessImageSource, setBusinessImageSource] = React.useState<any>(null);
+	const [BackBusinessImageSource, setBackBusinessImageSource] = React.useState<any>(null);
+
+	function selectImage(type: string) {
 		let options = {
 			mediaType: 'photo',
 			maxWidth: 300,
@@ -67,7 +76,10 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			} else if (response.errorCode == 'others') {
 				return;
 			}
-			setImageSource(response.assets[0]);
+			if (type === 'user_image') 			setImageSource(response.assets[0]);
+			if (type === 'business')setBusinessImageSource(response.assets[0]);
+			if (type === 'business_back')setBackBusinessImageSource(response.assets[0]);
+
 		});
 	}
 
@@ -120,7 +132,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			<Text style={styles.STEP_SUB_TITLE}>*Required fields</Text>
 
 			<TouchableOpacity
-				onPress={selectImage}
+				onPress={() => selectImage('user_image')}
 				style={styles.IMAGE_CONTAINER}
 			>
 				{!imageSource?.uri
@@ -196,21 +208,71 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>*Required fields</Text>
 
-			<TouchableOpacity
-				onPress={selectImage}
-				style={styles.IMAGE_CONTAINER}
+
+		<View style={styles.BUSINESS_IMAGES_CONTAINER}>
+		<TouchableOpacity
+				onPress={() => selectImage('business_back')}
+				style={styles.BACK_IMAGE_CONTAINER}
 			>
-				{!imageSource?.uri
-					? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
+				{!BackBusinessImageSource?.uri
+					? <FontAwesome name={"camera"} size={23} color={'#39534440'} style={{marginTop: 15, marginRight: 15}} />
 					: <Image
-						source={{ uri: imageSource.uri }
+						source={{ uri: BackBusinessImageSource.uri }
 						}
-						style={styles.IMAGE_BOX}
+						style={styles.BACK_IMAGE_BOX}
 					/>
 				}
 			</TouchableOpacity>
+			<View style={styles.IMAGE_CONTAINER_MARGIN}>
+				<TouchableOpacity
+					onPress={() => selectImage('business')}
+					style={styles.IMAGE_CONTAINER}
+				>
+					{!BusinessImageSource?.uri
+						? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
+						: <Image
+							source={{ uri: BusinessImageSource.uri }
+							}
+							style={styles.IMAGE_BOX}
+						/>
+					}
+				</TouchableOpacity>
+				</View>
+			</View>
+			<Text style={styles.IMAGE_BOX_LABEL}>Upload profile picture</Text>
+			<Text style={styles.IMAGE_BOX_VALIDATION}>(Max 200 MB / .jpeg, .jpg, .png)</Text>
 
-			
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+        <Text style={styles.INPUT_LABEL_STYLE}>BUSINESS NAME - THIS NAME WILL BE PUBLIC*</Text>
+				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
+      </View>
+			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setBusinessName(t)}
+					value={BusinessName}
+					placeholder={'Business name'}
+				/>
+			</View>
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+        <Text style={styles.INPUT_LABEL_STYLE}>TELL US YOUR STORY (50 WORDS MAX)</Text>
+				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
+      </View>
+			<View style={UsernameError ? styles.BIG_INPUT_STYLE_CONTAINER_ERROR : styles.BIG_INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.BIG_INPUT_STYLE}
+					onChangeText={t => setBusinessStory(t)}
+					value={BusinessStory}
+					multiline
+					numberOfLines={4}
+					placeholder={'Business name'}
+				/>
+			</View>
+
+
+
 		</View>
 	)
 	const renderBusinessType = () => (
@@ -282,8 +344,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			case 'name':
 				setStep('pic_username')
 				break;
-			case 'verify_email':
-				setStep('email')
+			case 'pic_bname':
+				setStep('profile_type')
 				break;
 			case 'help':
 				setStep('verify_email')
@@ -326,7 +388,13 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			statusBar={'dark-content'}
 			unsafe={true}
 		>
-			<View style={styles.ROOT}>
+			<KeyboardAvoidingView
+      enabled
+      behavior={Platform.OS === 'ios' ? 'padding' : null}
+      style={styles.ROOT}
+			>
+				      <ScrollView bounces={false}>
+			<View style={styles.ROOT_CONTAINER}>
 				<View>
 					<View style={styles.HEADER_ACTIONS}>
 						<TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
@@ -356,6 +424,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			{confirmLogoutModal()}
 			{thankyouModal()}
+			</ScrollView>
+			</KeyboardAvoidingView>
 		</Screen>
 	)
 })

@@ -34,6 +34,7 @@
     "@types/react-native-dotenv": "^0.2.0",
     "apisauce": "^2.1.5",
     "axios": "^0.26.0",
+    "expo-local-authentication": "^12.1.1",
     "formik": "^2.2.9",
     "jsc-android": "^250230.2.1",
     "lottie-ios": "3.2.3",

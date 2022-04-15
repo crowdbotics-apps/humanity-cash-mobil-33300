@@ -4,9 +4,17 @@ import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 export default StyleSheet.create({
   ROOT: {
     flex: 1,
-    backgroundColor: COLOR.PALETTE.white,
     marginTop: 50,
-    justifyContent: 'space-between'
+  },
+  FULL_SCREEN: {
+    height: METRICS.screenHeight,
+    backgroundColor: 'red'
+  },
+  ROOT_CONTAINER: {
+    flex: 1,
+    backgroundColor: COLOR.PALETTE.white,
+    justifyContent: 'space-between',
+    height: METRICS.screenHeight,
   },
   ROOT_MODAL: {
     flex: 1,
@@ -129,6 +137,30 @@ export default StyleSheet.create({
     alignSelf: 'center',
     marginTop: 30
   },
+  BIG_INPUT_STYLE_CONTAINER_ERROR: {
+    borderRadius: 5,
+    height: 120,
+    width: METRICS.screenWidth * 0.95,
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    alignSelf: 'center',
+    marginTop: 10,
+    borderColor: COLOR.PALETTE.pink,
+    borderWidth: 0.8,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  BIG_INPUT_STYLE_CONTAINER: {
+    borderRadius: 5,
+    height: 120,
+    width: METRICS.screenWidth * 0.95,
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    alignSelf: 'center',
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   INPUT_STYLE_CONTAINER: {
     borderRadius: 5,
     height: 55,
@@ -142,6 +174,11 @@ export default StyleSheet.create({
   },
   INPUT_STYLE: {
     height: 55,
+    width: METRICS.screenWidth * 0.90,
+    alignSelf: 'center',
+  },
+  BIG_INPUT_STYLE: {
+    height: 120,
     width: METRICS.screenWidth * 0.90,
     alignSelf: 'center',
   },
@@ -283,15 +320,41 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80,
     alignSelf: 'center',
   },
-  IMAGE_CONTAINER: {
+  BUSINESS_IMAGES_CONTAINER: {
+
+  },
+  BACK_IMAGE_CONTAINER: {
     marginTop: 15,
-    alignItems: 'center',
+    alignItems: 'flex-end',
     alignSelf: 'center',
+    width: METRICS.screenWidth * 0.95,
+    height: 100,
+    borderRadius: 3,
+    backgroundColor: COLOR.PALETTE.lightGreen,
+  },
+  IMAGE_CONTAINER_MARGIN: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: COLOR.PALETTE.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: -45
+  },
+  IMAGE_CONTAINER: {
+    alignItems: 'center',
     width: 84,
     height: 84,
     borderRadius: 42,
     backgroundColor: COLOR.PALETTE.lightGreen,
-    justifyContent: 'center',    
+    justifyContent: 'center', 
+    alignSelf: 'center',   
+  },
+  BACK_IMAGE_BOX: {
+    width: METRICS.screenWidth * 0.95,
+    height: 100,
+    borderRadius: 3,
   },
   IMAGE_BOX: {
     width: 84,
