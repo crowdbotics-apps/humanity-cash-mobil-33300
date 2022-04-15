@@ -5,13 +5,11 @@ from django.http import HttpRequest
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from allauth.account import app_settings as allauth_settings
-from allauth.account.forms import ResetPasswordForm
-from allauth.utils import email_address_exists, generate_unique_username
+from allauth.utils import email_address_exists
 from allauth.account.adapter import get_adapter
-from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 
-from home.helpers import send_email
+from home.helpers import send_verification_email
 from users.models import UserVerificationCode
 
 User = get_user_model()
@@ -42,18 +40,7 @@ class SignupSerializer(serializers.ModelSerializer):
             username=validated_data.get('email')
         )
         user.save()
-        code = random.randint(100000, 999999)
-        UserVerificationCode.objects.create(user=user, verification_code=code)
-        subject = "Verification code"
-        text_content = f"""<h5>Hello!</h5><br/>
-        Please use the Verification code bellow to complete the verification process<br/>
-        <b>{code}</b><br/>
-        Thank you."""
-        send_email(
-            subject=subject,
-            text_content=text_content,
-            user_email=[user.email]
-        )
+        send_verification_email(user)
         return user
 
     def save(self, request=None):
@@ -72,14 +59,12 @@ class SetPasswordSerializer(serializers.Serializer):
 
 
 class VerificationCodeSerializer(serializers.Serializer):
-    verification_code = serializers.CharField(required=True)
+    verification_code = serializers.CharField(required=True, min_length=6, max_length=6)
 
     def validate(self, attrs):
         request = self.context['request']
         user = request.user
         verification_code = attrs['verification_code']
-        if len(verification_code) < 6:
-            raise serializers.ValidationError({"verification_code": "Invalid code"})
         verification_code_object = UserVerificationCode.objects.filter(
             user=user,
             verification_code=verification_code,

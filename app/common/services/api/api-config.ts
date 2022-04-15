@@ -1,5 +1,5 @@
 
-const {API_URL} = require("../../../config/env");
+const {API_URL} = require("../../../config/env")
 
 /**
  * The options used to configure the API.

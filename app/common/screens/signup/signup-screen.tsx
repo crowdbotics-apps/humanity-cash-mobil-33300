@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { observer } from 'mobx-react-lite';
-import { TextInput, View, TouchableOpacity, ScrollView } from 'react-native';
-import {
-  Text,
-  Button,
-  Screen,
-  Checkbox
-} from '../../components';
+import React, { useEffect, useState } from "react"
+import { observer } from "mobx-react-lite"
+import { TextInput, View, TouchableOpacity, ScrollView } from "react-native"
+import { Text, Screen, Checkbox } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
 import Ionicons from "react-native-vector-icons/Ionicons"
-import styles from './signup-style';
-import { COLOR, TYPOGRAPHY } from '../../theme';
-import { StackActions, useNavigation } from "@react-navigation/native"
+import styles from "./signup-style"
+import { useNavigation } from "@react-navigation/native"
+import { useStores } from "../../models"
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
 interface SignupFields {
   email: string;
   password: string;
@@ -22,39 +19,52 @@ interface SignupFields {
 }
 
 const INITIAL_VALUES = {
-  email: '',
-  password: '',
-  password_confirm: '',
-  phone_number: '',
-  name: ''
+  email: "",
+  password: "",
+  password_confirm: "",
+  phone_number: "",
+  name: ""
 }
 
-const steps = ['email', 'legal', 'verify_email', 'help', 'email_confirmed', 'create_password', 'touch_id']
+const steps = [
+  "email",
+  "legal",
+  "verify_email",
+  "help",
+  "email_confirmed",
+  "create_password",
+  "touch_id"
+]
 
 export const SignupScreen = observer(function SignupScreen() {
+  const rootStore = useStores()
   const navigation = useNavigation()
+  const { loginStore } = rootStore
+
+  const [Loading, setLoading] = useState(false)
 
   const [Step, setStep] = useState(steps[0])
   const [ButtonDisabled, setButtonDisabled] = useState(true)
 
   let EmailInput
-  const [Email, setEmail] = useState('')
+  const [Email, setEmail] = useState("")
   const [EmailError, setEmailError] = useState(false)
+  const [EmailErrorMessage, setEmailErrorMessage] = useState("")
   const [Agree, setAgree] = useState(false)
 
   const [ShowTerms, setShowTerms] = useState(false)
   const [ShowPolicy, setShowPolicy] = useState(false)
 
   let CodeInp1, CodeInp2, CodeInp3, CodeInp4, CodeInp5, CodeInp6
-  const [Code1, setCode1] = useState('')
-  const [Code2, setCode2] = useState('')
-  const [Code3, setCode3] = useState('')
-  const [Code4, setCode4] = useState('')
-  const [Code5, setCode5] = useState('')
-  const [Code6, setCode6] = useState('')
+  const [Code1, setCode1] = useState("")
+  const [Code2, setCode2] = useState("")
+  const [Code3, setCode3] = useState("")
+  const [Code4, setCode4] = useState("")
+  const [Code5, setCode5] = useState("")
+  const [Code6, setCode6] = useState("")
 
-  const [Pass, setPass] = useState('')
-  const [PassConfirm, setPassConfirm] = useState('')
+  const [Pass, setPass] = useState("")
+  const [PassConfirm, setPassConfirm] = useState("")
   const [HidePass, setHidePass] = useState(true)
   const [HidePassConfirm, setHidePassConfirm] = useState(true)
   const [MatchPassword, setMatchPassword] = useState(true)
@@ -62,24 +72,24 @@ export const SignupScreen = observer(function SignupScreen() {
   const renderStep = () => {
     let render
     switch (Step) {
-      case 'email':
+      case "email":
         render = EmailStep()
-        break;
-      case 'legal':
+        break
+      case "legal":
         render = LegalStep()
-        break;
-      case 'verify_email':
+        break
+      case "verify_email":
         render = VerifyEmailStep()
-        break;
-      case 'help':
+        break
+      case "help":
         render = HelpStep()
-        break;
-      case 'email_confirmed':
+        break
+      case "email_confirmed":
         render = EmailConfirmedStep()
-        break;
-      case 'create_password':
+        break
+      case "create_password":
         render = CreatePasswordStep()
-        break;
+        break
     }
     return render
   }
@@ -89,32 +99,70 @@ export const SignupScreen = observer(function SignupScreen() {
       .toLowerCase()
       .match(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
+      )
     if (valid) {
       agree ? setButtonDisabled(false) : setButtonDisabled(true)
       return true
-    }
-    else {
+    } else {
       setButtonDisabled(true)
       return false
     }
-  };
+  }
+
+  const register = () => {
+    setLoading(true)
+    loginStore.environment.api.userRegister({ email: Email }).then(result => {
+      console.log("result ", result)
+      setLoading(false)
+      if (result.kind === "ok") {
+        runInAction(() => {
+          loginStore.setUser(result.response)
+          loginStore.setApiToken(result.response.access_token)
+        })
+      } else if (result.kind === "bad-data") {
+        notifyMessage("Please correct the errors and try again")
+        setEmailError(true)
+        setEmailErrorMessage(result.errors.email[0])
+      } else {
+        notifyMessage(null)
+      }
+    })
+  }
 
   const EmailStep = () => (
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Create account</Text>
-      <Text style={styles.STEP_SUB_TITLE}>Hello! Tell us how to reach you. We will send a verification code to your email.</Text>
+      <Text style={styles.STEP_SUB_TITLE}>
+        Hello! Tell us how to reach you. We will send a verification code to
+        your email.
+      </Text>
       <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
         <Text style={styles.INPUT_LABEL_STYLE}>Email address</Text>
-        <Text style={styles.INPUT_LABEL_ERROR}>{EmailError ? 'ENTER EMAIL ADDRESS' : ''}</Text>
+        <Text style={styles.INPUT_LABEL_ERROR}>
+          {EmailError
+            ? EmailErrorMessage === ""
+              ? "ENTER EMAIL ADDRESS"
+              : EmailErrorMessage
+            : ""}
+        </Text>
       </View>
-      <View style={EmailError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+      <View
+        style={
+          EmailError
+            ? styles.INPUT_STYLE_CONTAINER_ERROR
+            : styles.INPUT_STYLE_CONTAINER
+        }
+      >
         <TextInput
-          ref={ref => EmailInput = ref}
+          ref={ref => (EmailInput = ref)}
           style={styles.INPUT_STYLE}
-          onChangeText={t => [setEmail(t), setEmailError(!validateEmail(t, Agree))]}
+          onChangeText={t => [
+            setEmail(t),
+            setEmailError(!validateEmail(t, Agree))
+          ]}
           value={Email}
-          placeholder={'myname@mail.com'}
+          placeholder={"myname@mail.com"}
+          autoCapitalize={"none"}
         />
       </View>
     </View>
@@ -123,19 +171,36 @@ export const SignupScreen = observer(function SignupScreen() {
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Legal</Text>
       <View style={styles.LINE} />
-    <ScrollView>
-      {!ShowTerms
-        ? <TouchableOpacity onPress={() => setShowTerms(!ShowTerms)} style={styles.TERMS_CLOSE_CONTAINER}>
-          <Text style={styles.TERMS_TITLE}>{`Terms & Conditions`}</Text>
-          <Entypo name={"chevron-down"} size={23} color={'black'} style={{marginRight: 20}} />
-        </TouchableOpacity>
-        : <View style={styles.TERMS_OPEN_CONTAINER}>
-          <TouchableOpacity onPress={() => setShowTerms(!ShowTerms)} style={styles.TERMS_OPEN_TITLE_CONTAINER}>
-            <Text style={styles.TERMS_TITLE}>{`Terms & Conditions`}</Text>
-            <Entypo name={"chevron-up"} size={23} color={'black'} style={{marginRight: 20}} />
+      <ScrollView>
+        {!ShowTerms ? (
+          <TouchableOpacity
+            onPress={() => setShowTerms(!ShowTerms)}
+            style={styles.TERMS_CLOSE_CONTAINER}
+          >
+            <Text style={styles.TERMS_TITLE}>{"Terms & Conditions"}</Text>
+            <Entypo
+              name={"chevron-down"}
+              size={23}
+              color={"black"}
+              style={{ marginRight: 20 }}
+            />
           </TouchableOpacity>
-          <Text style={styles.TERMS_OPEN_CONTENT}>
-            {`
+        ) : (
+          <View style={styles.TERMS_OPEN_CONTAINER}>
+            <TouchableOpacity
+              onPress={() => setShowTerms(!ShowTerms)}
+              style={styles.TERMS_OPEN_TITLE_CONTAINER}
+            >
+              <Text style={styles.TERMS_TITLE}>{"Terms & Conditions"}</Text>
+              <Entypo
+                name={"chevron-up"}
+                size={23}
+                color={"black"}
+                style={{ marginRight: 20 }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.TERMS_OPEN_CONTENT}>
+              {`
 ARTICLE I: General
 
 Section 1: Name -  The name of the corporation will be BerkShares, Inc., a non-profit corporation organized under the laws of the Commonwealth of Massachusetts.
@@ -152,94 +217,113 @@ ARTICLE III: Membership
 
 Section 1: General Membership - The membership of BerkShares, Inc. will be open to all residents of the Berkshire Region who are interested in the promotion of local and regional economic self-sufficiency. All Members will be considered in good standing if they have paid an annual membership fee as established by the Board of Trustees.
             `}
-          </Text>
-        </View>
-      }
-      {!ShowPolicy
-        ? <TouchableOpacity onPress={() => setShowPolicy(!ShowPolicy)} style={styles.POLICY_CLOSE_CONTAINER}>
-          <Text style={styles.TERMS_TITLE}>{`Privacy Policy`}</Text>
-          <Entypo name={"chevron-down"} size={23} color={'black'} style={{marginRight: 20}} />
-        </TouchableOpacity>
-        : <View style={styles.POLICY_OPEN_CONTAINER}>
-          <TouchableOpacity onPress={() => setShowPolicy(!ShowPolicy)} style={styles.TERMS_OPEN_TITLE_CONTAINER}>
-            <Text style={styles.TERMS_TITLE}>{`Privacy Policy`}</Text>
-            <Entypo name={"chevron-up"} size={23} color={'black'} style={{marginRight: 20}} />
+            </Text>
+          </View>
+        )}
+        {!ShowPolicy ? (
+          <TouchableOpacity
+            onPress={() => setShowPolicy(!ShowPolicy)}
+            style={styles.POLICY_CLOSE_CONTAINER}
+          >
+            <Text style={styles.TERMS_TITLE}>{"Privacy Policy"}</Text>
+            <Entypo
+              name={"chevron-down"}
+              size={23}
+              color={"black"}
+              style={{ marginRight: 20 }}
+            />
           </TouchableOpacity>
-          <Text style={styles.TERMS_OPEN_CONTENT}>
-            {`
+        ) : (
+          <View style={styles.POLICY_OPEN_CONTAINER}>
+            <TouchableOpacity
+              onPress={() => setShowPolicy(!ShowPolicy)}
+              style={styles.TERMS_OPEN_TITLE_CONTAINER}
+            >
+              <Text style={styles.TERMS_TITLE}>{"Privacy Policy"}</Text>
+              <Entypo
+                name={"chevron-up"}
+                size={23}
+                color={"black"}
+                style={{ marginRight: 20 }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.TERMS_OPEN_CONTENT}>
+              {`
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse.
 
             `}
-          </Text>
-        </View>
-      }
-</ScrollView>
+            </Text>
+          </View>
+        )}
+      </ScrollView>
     </View>
   )
   const VerifyEmailStep = () => (
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Verify your email</Text>
-      <Text style={styles.STEP_SUB_TITLE}>{`We have sent an email with a verification code to ${Email}. Please check your spam if you haven’t received it.`}</Text>
+      <Text
+        style={styles.STEP_SUB_TITLE}
+      >{`We have sent an email with a verification code to ${Email}. Please check your spam if you haven’t received it.`}</Text>
       <View style={styles.CODE_CONFIRMATION_CONTAINER}>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
-            keyboardType='numeric'
+            keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
-            ref={ref => CodeInp1 = ref}
-            onFocus={() => setCode1('')}
+            ref={ref => (CodeInp1 = ref)}
+            onFocus={() => setCode1("")}
             onChangeText={t => [setCode1(t), CodeInp2.focus()]}
             value={Code1}
           />
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
-            keyboardType='numeric'
+            keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
-             ref={ref => CodeInp2 = ref}
-            onFocus={() => setCode2('')}
-             onChangeText={t => [setCode2(t), CodeInp3.focus()]}
+            ref={ref => (CodeInp2 = ref)}
+            onFocus={() => setCode2("")}
+            onChangeText={t => [setCode2(t), CodeInp3.focus()]}
             value={Code2}
           />
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
-            keyboardType='numeric'
+            keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
-             ref={ref => CodeInp3 = ref}
-            onFocus={() => setCode3('')}
-             onChangeText={t => [setCode3(t), CodeInp4.focus()]}
+            ref={ref => (CodeInp3 = ref)}
+            onFocus={() => setCode3("")}
+            onChangeText={t => [setCode3(t), CodeInp4.focus()]}
             value={Code3}
           />
         </View>
         <View style={styles.SHORT_LINE} />
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
-            keyboardType='numeric'
+            keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
-             ref={ref => CodeInp4 = ref}
-            onFocus={() => setCode4('')}
-             onChangeText={t => [setCode4(t), CodeInp5.focus()]}
+            ref={ref => (CodeInp4 = ref)}
+            onFocus={() => setCode4("")}
+            onChangeText={t => [setCode4(t), CodeInp5.focus()]}
             value={Code4}
           />
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
-            keyboardType='numeric'
+            keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
-             ref={ref => CodeInp5 = ref}
-            onFocus={() => setCode5('')}
-             onChangeText={t => [setCode5(t), CodeInp6.focus()]}
+            ref={ref => (CodeInp5 = ref)}
+            onFocus={() => setCode5("")}
+            onChangeText={t => [setCode5(t), CodeInp6.focus()]}
             value={Code5}
           />
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
-            keyboardType='numeric'
+            keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
-             ref={ref => CodeInp6 = ref}
-            onFocus={() => setCode6('')}
-             onChangeText={t => [setCode6(t)]}
+            ref={ref => (CodeInp6 = ref)}
+            onFocus={() => setCode6("")}
+            onChangeText={t => [setCode6(t)]}
             value={Code6}
           />
         </View>
@@ -249,7 +333,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const HelpStep = () => (
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Need help?</Text>
-      <Text style={styles.STEP_SUB_TITLE}>{`If you need help, have questions, complaints, remarks, or just like to chat, please send an email to berkshares@humanitycash.com`}</Text>      
+      <Text style={styles.STEP_SUB_TITLE}>
+        {
+          "If you need help, have questions, complaints, remarks, or just like to chat, please send an email to berkshares@humanitycash.com"
+        }
+      </Text>
     </View>
   )
   const EmailConfirmedStep = () => (
@@ -260,13 +348,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const CreatePasswordStep = () => (
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Create a password</Text>
-      <Text style={styles.STEP_SUB_TITLE}>{`Create a password to secure your account.`}</Text>
-      
-
+      <Text style={styles.STEP_SUB_TITLE}>
+        {"Create a password to secure your account."}
+      </Text>
 
       <View style={styles.PASS_REQUIREMENTS_CONTAINER}>
         <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
-        <Text style={styles.PASS_REQUIREMENTS}>AT LEAST 12 CHARACTERS LONG,  1 NUMBER AND 1 SYMBOL</Text>
+        <Text style={styles.PASS_REQUIREMENTS}>
+          AT LEAST 12 CHARACTERS LONG, 1 NUMBER AND 1 SYMBOL
+        </Text>
       </View>
       {/* green */}
 
@@ -277,27 +367,35 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           onChangeText={t => [setPass(t)]}
           value={Pass}
           secureTextEntry={HidePass}
-          placeholder={'*********'}
+          placeholder={"*********"}
         />
         <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
-          <Ionicons name='eye' color={'#39534440'} size={20} />
+          <Ionicons name="eye" color={"#39534440"} size={20} />
         </TouchableOpacity>
       </View>
       <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
         <Text style={styles.INPUT_LABEL_STYLE}>CONFIRM PASSWORD</Text>
-        <Text style={styles.INPUT_LABEL_ERROR}>{!MatchPassword ? 'NO MATCH' : ''}</Text>
+        <Text style={styles.INPUT_LABEL_ERROR}>
+          {!MatchPassword ? "NO MATCH" : ""}
+        </Text>
       </View>
-      <View style={!MatchPassword ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+      <View
+        style={
+          !MatchPassword
+            ? styles.INPUT_STYLE_CONTAINER_ERROR
+            : styles.INPUT_STYLE_CONTAINER
+        }
+      >
         <TextInput
           // ref={ref => EmailInput = ref}
           style={styles.PASS_INPUT_STYLE}
           onChangeText={t => [setPassConfirm(t)]}
           value={PassConfirm}
-          placeholder={'*********'}
+          placeholder={"*********"}
           secureTextEntry={HidePassConfirm}
         />
         <TouchableOpacity onPress={() => setHidePassConfirm(!HidePassConfirm)}>
-          <Ionicons name='eye' color={'#39534440'} size={20} />
+          <Ionicons name="eye" color={"#39534440"} size={20} />
         </TouchableOpacity>
       </View>
     </View>
@@ -305,95 +403,126 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
   const backButtonHandler = () => {
     switch (Step) {
-      case 'email':
+      case "email":
         navigation.navigate("splash", {})
-        break;
-      case 'legal':
-        setStep('email') 
-        break;
-      case 'verify_email':
-        setStep('email')
-        break;
-      case 'help':
-        setStep('verify_email')
-        break;
-      case 'email_confirmed':
-        setStep('verify_email')
-        break;
-      case 'email_confirmed':
-        setStep('verify_email')
-        break;
-      case 'touch_id':
-        setStep('create_password')
-        break;
+        break
+      case "legal":
+        setStep("email")
+        break
+      case "verify_email":
+        setStep("email")
+        break
+      case "help":
+        setStep("verify_email")
+        break
+      case "email_confirmed":
+        setStep("verify_email")
+        break
+      case "email_confirmed":
+        setStep("verify_email")
+        break
+      case "touch_id":
+        setStep("create_password")
+        break
     }
   }
 
   const nextButtonHandler = () => {
     switch (Step) {
-      case 'email':
-        setStep('verify_email')
-        break;
-      case 'verify_email':
-        if (Code1 && Code2 && Code3 && Code4 && Code5 && Code6) setStep('email_confirmed')
-        break;
-      case 'email_confirmed':
-        setStep('create_password')
-        break;
-      case 'create_password':
-        if (Pass !== PassConfirm) setMatchPassword(false)
-        else {setMatchPassword(true), console.log('touch id')}
+      case "email":
+        console.log("stepppppp ", Step)
+        register()
+        // setStep("verify_email")
+        break
+      case "verify_email":
+        if (Code1 && Code2 && Code3 && Code4 && Code5 && Code6) {
+          setStep("email_confirmed")
+        }
+        break
+      case "email_confirmed":
+        setStep("create_password")
+        break
+      case "create_password":
+        if (Pass !== PassConfirm) {
+          setMatchPassword(false)
+        } else {
+          setMatchPassword(true), console.log("touch id")
+        }
         // setStep('touch_id')
-        break;
+        break
     }
   }
 
   return (
-    <Screen
-      // preset='scroll'
-      preset="fixed"
-      statusBar={'dark-content'}
-      unsafe={true}
-    >
+    <Screen preset="fixed" statusBar={"dark-content"} unsafe={true} showHeader>
       <View style={styles.ROOT}>
         <View>
-          <TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
-          <Icon name={"arrow-back"} size={23} color={'black'} />
-            <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+          <TouchableOpacity
+            onPress={() => backButtonHandler()}
+            style={styles.BACK_BUTON_CONTAINER}
+          >
+            <Icon name={"arrow-back"} size={23} color={"black"} />
+            <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
           </TouchableOpacity>
           {renderStep()}
         </View>
         <View>
-          {(Step === 'email') &&
+          {Step === "email" && (
             <View style={styles.AGREE_CONTAINER}>
               <Checkbox
                 value={Agree}
-                onToggle={value => [setAgree(value), validateEmail(Email, value)]}
+                onToggle={value => [
+                  setAgree(value),
+                  validateEmail(Email, value)
+                ]}
                 fillStyle={styles.CHECKBOX_FILL}
                 outlineStyle={styles.CHECKBOX_OUTLINE}
               />
-              <Text style={styles.AGREE_LABEL}>{`By checking this box, you agree to our partner Humanity Cash's`}
-                <Text style={styles.AGREE_LABEL_LINK} onPress={() => setStep('legal')}> {` Terms & Conditions `}</Text>
+              <Text style={styles.AGREE_LABEL}>
+                {
+                  "By checking this box, you agree to our partner Humanity Cash's"
+                }
+                <Text
+                  style={styles.AGREE_LABEL_LINK}
+                  onPress={() => setStep("legal")}
+                >
+                  {" "}
+                  {" Terms & Conditions "}
+                </Text>
                 and
-                <Text style={styles.AGREE_LABEL_LINK} onPress={() => setStep('legal')}> {` Privacy Policy`}</Text>
+                <Text
+                  style={styles.AGREE_LABEL_LINK}
+                  onPress={() => setStep("legal")}
+                >
+                  {" "}
+                  {" Privacy Policy"}
+                </Text>
               </Text>
             </View>
-          }
-           {(Step === 'verify_email') &&
+          )}
+          {Step === "verify_email" && (
             <View style={styles.NEED_HELP_CONTAINER}>
-              <Text onPress={() => setStep('help')} style={styles.NEED_HELP_LINK}>Need help?</Text>
+              <Text
+                onPress={() => setStep("help")}
+                style={styles.NEED_HELP_LINK}
+              >
+                Need help?
+              </Text>
             </View>
-          }
-          {Step !== 'legal' &&
+          )}
+          {Step !== "legal" && (
             <TouchableOpacity
-              disabled={ButtonDisabled}
+              disabled={ButtonDisabled || Loading}
               onPress={() => nextButtonHandler()}
-              style={ButtonDisabled ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
+              style={
+                ButtonDisabled
+                  ? styles.SUBMIT_BUTTON_DISABLED
+                  : styles.SUBMIT_BUTTON
+              }
             >
-
               <Text style={styles.SUBMIT_BUTTON_LABEL}>Next</Text>
             </TouchableOpacity>
-          }
+          )}
         </View>
       </View>
     </Screen>
