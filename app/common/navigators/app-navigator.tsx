@@ -63,7 +63,7 @@ const AppStack = () => {
                 headerShown: false,
                 contentStyle: { backgroundColor: COLOR.PALETTE.background }
             }}
-            initialRouteName={"setupProfile"}
+            initialRouteName={"splash"}
         >
             <Stack.Screen name="splash" component={SplashScreen} />
             <Stack.Screen name="signup" component={SignupScreen} />

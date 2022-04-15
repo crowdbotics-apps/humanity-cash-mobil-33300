@@ -87,7 +87,7 @@ export const SplashScreen = observer(function SplashScreen() {
       />
     </View>
     <View>
-      <TouchableOpacity style={styles.LOGIN_BUTTON}>
+      <TouchableOpacity onPress={() => navigation.navigate("login", {})} style={styles.LOGIN_BUTTON}>
         <Text style={styles.LOGIN_LABEL}>Log in</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("signup", {})} style={styles.CREATE_ACCOUNT_BUTTON}>
