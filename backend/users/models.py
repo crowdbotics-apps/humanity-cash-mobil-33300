@@ -1,7 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+
+
+def code_live_time():
+    return timezone.now() + timezone.timedelta(hours=1)
 
 
 class User(AbstractUser):
@@ -21,6 +26,23 @@ class User(AbstractUser):
     # First Name and Last Name do not cover name patterns
     # around the globe.
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
+    verified_email = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
+
+
+class PasswordReset(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    pass_reset_token = models.CharField(_("Password Reset Token"), max_length=10, null=True)
+    expires_on = models.DateTimeField(_("Expires On"), default=code_live_time)
+    timestamp = models.DateTimeField(_("Timestamp"), auto_now_add=True)
+    active = models.BooleanField(default=True)
+
+
+class UserVerificationCode(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    verification_code = models.CharField(_("Verification code"), max_length=6)
+    expires_on = models.DateTimeField(_("Expires On"), default=code_live_time)
+    timestamp = models.DateTimeField(_("Timestamp"), auto_now_add=True)
+    active = models.BooleanField(default=True)

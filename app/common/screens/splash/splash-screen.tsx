@@ -91,7 +91,7 @@ export const SplashScreen = observer(function SplashScreen() {
         <Text style={styles.LOGIN_LABEL}>Log in</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate("signup", {})} style={styles.CREATE_ACCOUNT_BUTTON}>
-        <Text style={styles.CREATE_ACCOUNT_LABEL}>Create an account</Text>
+          <Text style={styles.CREATE_ACCOUNT_LABEL}>Create an account</Text>
       </TouchableOpacity>
     </View>
   </View>
@@ -105,6 +105,6 @@ export const SplashScreen = observer(function SplashScreen() {
     >
       {Loading ? LoadingSetp() : LoginSetp()}
     </Screen>
-  ) 
+  )
 
 })
