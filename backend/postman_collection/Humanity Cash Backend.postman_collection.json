@@ -46,6 +46,129 @@
 							]
 						}
 					},
+					"response": [
+						{
+							"name": "Sign up",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"hassankarimbittar@gmail.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/dj-rest-auth/registration/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"dj-rest-auth",
+										"registration",
+										""
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 15 Apr 2022 22:41:09 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.13"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Cookie"
+								},
+								{
+									"key": "Allow",
+									"value": "POST, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "668"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "messages=.eJyLjlaKj88qzs-Lz00tLk5MT1XSMdAxMtVRCi5NTgaKpJXm5FQqFGem56WmKGTmKSQWK2QkAhXmZScWZeYmZZaUJBY5pOcmZuboJefn6inF6lDbwFgAkq06YQ:1nfUcn:P6hwADYHxRw62c6xA3Y692cy58CFaUP2c2fxEvRPG54; HttpOnly; Path=/; SameSite=Lax"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "csrftoken=rSsgFvDGjl58b0a7dl41YE6NSpOKx2c6xqa2Erpfh98WXQIxXPNKYrpaimP3VwWW; expires=Fri, 14 Apr 2023 22:41:09 GMT; Max-Age=31449600; Path=/; SameSite=Lax"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "sessionid=n23sjrafhbuazbkebaig7b534q52tnmk; expires=Fri, 29 Apr 2022 22:41:09 GMT; HttpOnly; Max-Age=1209600; Path=/; SameSite=Lax"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjUwMTQ4ODY4LCJpYXQiOjE2NTAwNjI0NjgsImp0aSI6IjQzN2JjMjE2MWJjYzRjZTI4MmIwZjc3YWY2NzI3NzRmIiwidXNlcl9pZCI6MjB9.Z1IxZiWEsXx4ERVnr_Ey6AvWP202sjbVmLNtYvsgsT0\",\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1MDE0ODg2OCwiaWF0IjoxNjUwMDYyNDY4LCJqdGkiOiJjYTNmY2RiMWU0NjE0NjA1ODE0NDQ3ODgyMWIyODVmYiIsInVzZXJfaWQiOjIwfQ.SkOHqy_Lk03WrsVIP1gzwVChvyCoiQQGm8oqo0R1OGM\",\n    \"user\": {\n        \"id\": 20,\n        \"verified_email\": false,\n        \"first_name\": \"\",\n        \"last_name\": \"\",\n        \"email\": \"hassankarimbittar@gmail.com\",\n        \"username\": \"hassankarimbittar@gmail.com\",\n        \"password_set\": true\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Verify User Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"verification_code\": \"747246\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/registration/verify-user-account/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"registration",
+								"verify-user-account",
+								""
+							]
+						}
+					},
 					"response": []
 				},
 				{
@@ -65,7 +188,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"password\": \"admin123\",\n    \"password_confirm\": \"admin123\"\n}",
+							"raw": "{\n    \"password\": \"admin123admin123\",\n    \"password_confirm\": \"admin123admin123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -89,13 +212,23 @@
 					"response": []
 				},
 				{
-					"name": "Reset Password",
+					"name": "Resend Verification Code",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"otp\": \"41673\",\n    \"password\": \"admin123\",\n    \"password2\": \"admin123\"\n}",
+							"raw": "{\"otp\": \"64640\"}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -103,14 +236,15 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/api/v1/reset-password/",
+							"raw": "{{BASE_URL}}/api/v1/registration/send-verification-code/",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"reset-password",
+								"registration",
+								"send-verification-code",
 								""
 							]
 						}
@@ -125,7 +259,7 @@
 							"script": {
 								"exec": [
 									"var res = pm.response.json();",
-									"pm.environment.set('TOKEN', res.token.access);"
+									"pm.environment.set('TOKEN', res.access_token);"
 								],
 								"type": "text/javascript"
 							}
@@ -136,7 +270,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"hassan.bittar@hotmail.com\",\n    \"password\": \"admin123\"\n}",
+							"raw": "{\n    \"email\": \"hassankarimbittar@gmail.com\",\n    \"password\": \"admin123admin123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -163,7 +297,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"hassan.bittar@hotmail.com\",\n    \"password\": \"admin123\"\n}",
+									"raw": "{\n    \"email\": \"hassankarimbittar@gmail.com\",\n    \"password\": \"admin123admin123\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -171,12 +305,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/rest-auth/login/",
+									"raw": "{{BASE_URL}}/dj-rest-auth/login/",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
-										"rest-auth",
+										"dj-rest-auth",
 										"login",
 										""
 									]
@@ -188,11 +322,11 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Tue, 23 Nov 2021 11:52:14 GMT"
+									"value": "Fri, 15 Apr 2022 22:41:43 GMT"
 								},
 								{
 									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.6.9"
+									"value": "WSGIServer/0.2 CPython/3.8.13"
 								},
 								{
 									"key": "Content-Type",
@@ -200,7 +334,7 @@
 								},
 								{
 									"key": "Vary",
-									"value": "Accept, Cookie, Origin"
+									"value": "Accept, Cookie"
 								},
 								{
 									"key": "Allow",
@@ -208,181 +342,33 @@
 								},
 								{
 									"key": "X-Frame-Options",
-									"value": "SAMEORIGIN"
+									"value": "DENY"
 								},
 								{
 									"key": "Content-Length",
-									"value": "1076"
+									"value": "668"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
 								},
 								{
 									"key": "Set-Cookie",
-									"value": "csrftoken=cofs1KhuqBtlrZ8Ec45IFy10OuZCx9n3z2mEeo0iQsnx17wF2JKXzkHkywCuRT7d; expires=Tue, 22 Nov 2022 11:52:14 GMT; Max-Age=31449600; Path=/; SameSite=Lax"
+									"value": "csrftoken=lRWJ3OSo46jBQhfU4uBwF1Hfuduaff8BBhGzcQxrNXXobdyeanWH4BWlqcgZo8Q9; expires=Fri, 14 Apr 2023 22:41:43 GMT; Max-Age=31449600; Path=/; SameSite=Lax"
 								},
 								{
 									"key": "Set-Cookie",
-									"value": "sessionid=9jq20usxt39a3p4ybumyrkwtj6gbce0u; expires=Tue, 07 Dec 2021 11:52:14 GMT; HttpOnly; Max-Age=1209600; Path=/; SameSite=Lax"
+									"value": "sessionid=asyjbs0nw36fd9otxgg29msljtde348a; expires=Fri, 29 Apr 2022 22:41:43 GMT; HttpOnly; Max-Age=1209600; Path=/; SameSite=Lax"
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"id\": 24,\n    \"role\": 3,\n    \"is_removed\": false,\n    \"email_verified\": true,\n    \"is_active\": true,\n    \"created\": \"2021-11-02T13:32:45.464284Z\",\n    \"modified\": \"2021-11-23T11:51:51.961092Z\",\n    \"image\": \"http://192.168.0.14:8000/mediafiles/backend/profile/24/asid4640089982680038height200width200ext1638451961hashAeQw11rV24rFaWUg24c\",\n    \"birth_date\": \"2000-10-01\",\n    \"address\": null,\n    \"contact_info\": null,\n    \"phone\": \"+595972269119\",\n    \"gender\": \"Male\",\n    \"short_description\": \"\",\n    \"first_name\": \"Hassan \",\n    \"last_name\": \"Bittar\",\n    \"email\": \"hassan.bittar@hotmail.com\",\n    \"number_of_connections\": 0,\n    \"number_of_following\": 0,\n    \"number_of_followers\": 0,\n    \"token\": {\n        \"refresh\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYzNzc1NDczNCwianRpIjoiZjk2YWM3ZjVlZTNmNGVlMGE4OWYxMTcwNjU1NjQ4YWEiLCJ1c2VyX2lkIjoyMn0.4yjL0l1vgp43VbEWZj63vMY0TStkjESO5hn_lrRvtto\",\n        \"access\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjM3NzU0NzM0LCJqdGkiOiI5NTNhZTFhNzRjNGQ0MjQ0YTZhNjhjNmYwOGM5N2QwNyIsInVzZXJfaWQiOjIyfQ.x9vPW9JjpUc-PNVS5CUzaOlWqefKcIBJEQeiogQNtv4\"\n    },\n    \"username\": \"hassan.bittar@hotmail.com\",\n    \"user_id\": 22\n}"
+							"body": "{\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjUwMTQ4OTAzLCJpYXQiOjE2NTAwNjI1MDMsImp0aSI6Ijg2NzhjZTNmMGJkMTRhYzRiMTRkMzBjMTgxZDkzODE3IiwidXNlcl9pZCI6MjB9.vUd9492JoNQrVtp68somUxZt2QW0WE4pg2na_ZxPY0Y\",\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1MDE0ODkwMywiaWF0IjoxNjUwMDYyNTAzLCJqdGkiOiJjMzg2OGQ3NjJiZjc0MTQwYjU3NDkzZmUyYmY3NGFhNiIsInVzZXJfaWQiOjIwfQ.RC39TUulPkNGuzSzyWA0KGKxfRrdXsb5ZBv2NdkwDr0\",\n    \"user\": {\n        \"id\": 20,\n        \"verified_email\": false,\n        \"first_name\": \"\",\n        \"last_name\": \"\",\n        \"email\": \"hassankarimbittar@gmail.com\",\n        \"username\": \"hassankarimbittar@gmail.com\",\n        \"password_set\": true\n    }\n}"
 						}
 					]
-				},
-				{
-					"name": "Refresh Token",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"refresh\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTYzNDkzMzM3MSwianRpIjoiYjU5NDBlYjc4NDM4NGE1N2JjN2IzYzlhZDE0NjQ3MzYiLCJ1c2VyX2lkIjoxM30.hjOzyCKA-7zD6u66qvhEW4gJZAbe1AYcUWYrO63b0aU\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/token/refresh/",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"token",
-								"refresh",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Resend Verification Email",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/email-confirmation-send/",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"email-confirmation-send",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Forgot Password",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\"email\": \"hassankarimbittar@gmail.com\"}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/forgot-password/",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"forgot-password",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Verify OTP",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\"otp\": \"64640\"}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/verify-otp/",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"verify-otp",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Verify User Account",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\"otp\": \"64640\"}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/verify-otp/",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"verify-otp",
-								""
-							]
-						}
-					},
-					"response": []
 				}
 			],
 			"auth": {

@@ -228,6 +228,7 @@ REST_FRAMEWORK = {
 REST_AUTH_SERIALIZERS = {
     # Replace password reset serializer to fix 500 error
     # "PASSWORD_RESET_SERIALIZER": "home.api.v1.serializers.PasswordSerializer",
+    "USER_DETAILS_SERIALIZER": "home.api.v1.serializers.signup_signin_serializers.UserDetailSerializer",
 }
 REST_AUTH_REGISTER_SERIALIZERS = {
     # Use custom serializer that has no username and matches web signup

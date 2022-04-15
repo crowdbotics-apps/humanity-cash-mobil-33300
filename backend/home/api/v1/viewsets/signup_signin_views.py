@@ -1,15 +1,16 @@
 
 from django.core import exceptions
 import django.contrib.auth.password_validation as validators
-from django.utils import timezone
 from rest_framework import status, serializers
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from home.helpers import AuthenticatedAPIView, send_verification_email
 import home.api.v1.serializers.signup_signin_serializers as signup_signin_serializers
 
 
 class SetPasswordView(AuthenticatedAPIView):
+    """
+    Endpoint to set user password after the sign in
+    """
     serializer_class = signup_signin_serializers.SetPasswordSerializer
 
     def post(self, request):

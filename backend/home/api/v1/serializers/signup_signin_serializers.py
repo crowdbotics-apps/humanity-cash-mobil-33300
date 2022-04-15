@@ -8,6 +8,7 @@ from allauth.account import app_settings as allauth_settings
 from allauth.utils import email_address_exists
 from allauth.account.adapter import get_adapter
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from home.helpers import send_verification_email
 from users.models import UserVerificationCode
@@ -74,3 +75,14 @@ class VerificationCodeSerializer(serializers.Serializer):
         if not verification_code_object:
             raise serializers.ValidationError({"verification_code": "Invalid code"})
         return verification_code_object
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    password_set = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ['id', 'verified_email', 'first_name', 'last_name',  'email', 'username', 'password_set']
+
+    def get_password_set(self, obj):
+        return obj.password is not None
