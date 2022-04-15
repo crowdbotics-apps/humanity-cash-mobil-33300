@@ -35,7 +35,7 @@ export const PALETTE = {
   primaryDisabled: "#A6D4DD",
   angry: "#B00020",
 
-
+  modalBackgroundColor: "rgba(246, 246, 241, 0.95)",
   ligthGray: '#F6F5F0',
   background: '#F7F5F0',
   blue: '#008ABA',

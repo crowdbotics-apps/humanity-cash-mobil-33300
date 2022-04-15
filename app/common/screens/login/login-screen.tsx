@@ -1,127 +1,94 @@
-import React, {useEffect, useState} from 'react';
-import {observer} from 'mobx-react-lite';
-import {TouchableOpacity, View} from 'react-native';
-import {Screen, Text, TextField} from '../../components';
+import React, { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { TextInput, View, TouchableOpacity, Image } from 'react-native';
+import {
+  Text,
+  Button,
+  Screen,
+  Checkbox
+} from '../../components';
+import Icon from "react-native-vector-icons/MaterialIcons"
+import Entypo from "react-native-vector-icons/Entypo"
+import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from './login-style';
-import {useNavigation} from "@react-navigation/native";
-import {FooterAuth} from "../../components/footer-auth/footer-auth";
-import {processApiResult} from "../../utils/helpers";
-import {useLoginStore, useUserApi} from "../../utils/custom_hooks";
-import {runInAction} from "mobx";
-import {USER_PROFILE} from "../../models/login-store/login-store";
+import { COLOR, TYPOGRAPHY } from '../../theme';
+import { StackActions, useNavigation } from "@react-navigation/native"
+import { IMAGES } from "../../theme"
 
+export const LoginScreen = observer(function LoginScreen() {
+  const navigation = useNavigation()
 
-export const LoginScreen = observer(function LoginScreen( ) {
-    const [Email, setEmail] = useState("")
-    const [Password, setPassword] = useState("")
-    const [errors, setErrors] = useState<{email:string, password:string}| any>({})
-    const navigation = useNavigation()
-    const [isValid, setisValid] = useState(true)
-    const [Loading, setLoading] = useState(false)
-    const loginStore = useLoginStore()
-    const userApi = useUserApi()
+  const [Username, setUsername] = useState('')
+  const [Pass, setPass] = useState('')
+  const [HidePass, setHidePass] = useState(true)
 
-    useEffect(() => {
-        if (loginStore.id){
-            if(loginStore.hasProfile){
-                navigation.navigate("home")
-            }else{
-                navigation.navigate("userStatus")
-            }
-        }
-
-    }, [])
-
-    const validateForm = ()=>{
-        setisValid(!!Email && !!Password)
-    }
-
-    const onSuccess = (result:any)=>{
-        runInAction(() => {
-            loginStore.setUser(result.response)
-            loginStore.setApiToken(result.response.access_token)
-            loginStore.setRegistered(true)
-        })
-
-        if(loginStore.hasProfile){
-            navigation.navigate("home")
-        }else{
-            navigation.navigate("userStatus")
-        }
-    }
-
-    const onBadData = (result:any)=>{
-        setErrors(result.errors)
-        setLoading(false)
-    }
-
-    const onError = ()=>{
-        setLoading(false)
-    }
-
-    const submit = ()=>{
-        userApi.login({email: Email, password: Password}).then(result => {
-            processApiResult(result, onSuccess, onBadData, onError)
-        }).catch(reason => {
-            setLoading(false)
-        })
-    }
-
-
-    useEffect(() => {
-        validateForm()
-
-    }, [Email, Password])
-
-    return (
-        <Screen style={styles.ROOT} preset="scroll" statusBar={"dark-content"} showHeader={false}>
-            <View style={styles.MAIN_CONTAINER}>
-                <View style={{marginTop: "50%"}}/>
-                <View style={{flexDirection:"column", display: "flex"}}>
-                    <Text style={styles.TITLE}>Welcome back!!!</Text>
-                </View>
-                <View style={{display:"flex", flexDirection:"column"}}>
-                    <TextField style={[{width: "100%", marginTop:30}]}
-                               value={Email}
-                               label="email"
-                               errorText={errors.email? errors.email : undefined}
-                               onChangeText={text => setEmail(text)}
-                               keyboardType={"email-address"}
-                               autoCapitalize={"none"}
-                               returnKeyType="done"
-                    />
-
-                    <TextField style={[{width: "100%", marginTop:30}]}
-                               value={Password}
-                               secureTextEntry={true}
-                               label="password"
-                               errorText={errors.password? errors.password : undefined}
-                               onChangeText={text => setPassword(text)}
-                               keyboardType={"default"}
-                               autoCapitalize={"none"}
-                               returnKeyType="done"
-                    />
-                    <TouchableOpacity style={{marginTop:20,   alignSelf:"flex-end",}} onPress={()=>{
-                        navigation.navigate("resetPassword")
-                    }}>
-                        <Text style={styles.FORGOT_PASSWORD} >Forgot password?</Text>
-                    </TouchableOpacity>
-
-                </View>
-                <View style={{marginTop: "50%"}}/>
-
-
+  return (
+    <Screen
+      // preset='scroll'
+      preset="fixed"
+      statusBar={'dark-content'}
+      unsafe={true}
+    >
+      <View style={styles.ROOT}>
+        <View>
+          <TouchableOpacity onPress={() => navigation.navigate("splash", {})} style={styles.BACK_BUTON_CONTAINER}>
+            <Icon name={"arrow-back"} size={23} color={'#8B9555'} />
+            <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+          </TouchableOpacity>
+          <View style={styles.STEP_CONTAINER}>
+            <Text style={styles.STEP_TITLE}>Log in</Text>
+            <Text style={styles.STEP_SUB_TITLE}>{`Welcome back`}</Text>
+            <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+              <Text style={styles.INPUT_LABEL_STYLE}>EMAIL ADDRESS OR USER NAME</Text>
             </View>
+            <View style={styles.INPUT_STYLE_CONTAINER}>
+              <TextInput
+                style={styles.INPUT_STYLE}
+                onChangeText={t => setUsername(t)}
+                value={Username}
+                placeholder={'EMAIL ADDRESS OR USER NAME'}
+              />
+            </View>
+            <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+              <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
+              {/* <Text style={styles.PASS_REQUIREMENTS}>AT LEAST 12 CHARACTERS LONG,  1 NUMBER AND 1 SYMBOL</Text> */}
+            </View>
+            <View style={styles.INPUT_STYLE_CONTAINER}>
+              <TextInput
+                // ref={ref => EmailInput = ref}
+                style={styles.PASS_INPUT_STYLE}
+                onChangeText={t => [setPass(t)]}
+                value={Pass}
+                secureTextEntry={HidePass}
+                placeholder={'*********'}
+              />
+              <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+                <Ionicons name='eye' color={'#39534440'} size={20} />
+              </TouchableOpacity>
+            </View>
+          </View>
 
-                <View style={{width: "100%"}}>
-                    <FooterAuth onPress={()=>submit()}
-                                title="sign in" text="Don’t have an account?"
-                                actionText="sign up" onPressText={()=>navigation.navigate("signup")}
-                                preset={isValid?'primary':'disabled'}
-                    />
-                </View>
 
+          <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
+          <View style={styles.LOGIN_TYPES_CONTAINER}>
+          <Image source={IMAGES.appleIcon} resizeMode='contain' style={styles.LOGIN_TYPE} />
+          <Image source={IMAGES.googleIcon} resizeMode='contain' style={styles.LOGIN_TYPE} />
+          <Image source={IMAGES.facebookIcon} resizeMode='contain' style={styles.LOGIN_TYPE} />
+          </View>
+        </View>
 
-        </Screen>
-    )
+        <View>
+          <View style={styles.NEED_HELP_CONTAINER}>
+            <Text onPress={() => { }} style={styles.NEED_HELP_LINK}>Forgot password</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => { }}
+            style={styles.SUBMIT_BUTTON}
+          >
+            <Text style={styles.SUBMIT_BUTTON_LABEL}>Next</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Screen>
+  )
 })
