@@ -3,7 +3,6 @@ export const PALETTE = {
   blackShadow: "rgba(0,0,0,0.35)",
 
   offWhite: "#f5f5f5",
-  orange: "#FBA928",
   orangeDarker: "#EB9918",
   lightGrey: "#B9B9B9",
   gray2: "#858585",
@@ -44,5 +43,6 @@ export const PALETTE = {
   lightGreen: '#D1D5BE',
   green: '#8B9555',
   strongGreen: '#395344',
-  pink: '#DF9BB9'
+  pink: '#DF9BB9',
+  orange: '#D59B76'
 }

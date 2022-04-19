@@ -35,7 +35,7 @@ export default StyleSheet.create({
   },
   STEP_TITLE: {
     fontSize: 32,
-    color: COLOR.PALETTE.green,
+    color: COLOR.PALETTE.orange,
     marginLeft: 10
   },
    STEP_TITLE_BLACK: {
@@ -75,7 +75,7 @@ export default StyleSheet.create({
   },
   BACK_BUTON_LABEL: {
     fontSize: 16,
-    color: COLOR.PALETTE.green
+    color: COLOR.PALETTE.black
   },
   SUBMIT_BUTTON_OUTLINE: {
     width: METRICS.screenWidth * 0.95,
@@ -117,8 +117,37 @@ export default StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
+  SELECT_INPUT_STYLE_CONTAINER_OPEN: {
+    borderRadius: 3,
+    width: METRICS.screenWidth * 0.95,
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    alignSelf: 'center',
+    marginTop: 10,
+    borderColor: COLOR.PALETTE.orange,
+    borderWidth: 0.8,
+  },
+  SELECT_INPUT_STYLE_CONTAINER: {
+    borderRadius: 3,
+    height: 55,
+    width: METRICS.screenWidth * 0.95,
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  SELECT_ICON: {
+    width: METRICS.screenWidth * 0.95,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 55,
+  },
+  SELECT_LABEL: {
+    color: COLOR.PALETTE.orange,
+    fontSize: 16,
+    marginLeft: 20
+  },
   INPUT_STYLE_CONTAINER_ERROR: {
-    borderRadius: 5,
+    borderRadius: 3,
     height: 55,
     width: METRICS.screenWidth * 0.95,
     backgroundColor: `${COLOR.PALETTE.green}25`,
@@ -135,10 +164,10 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
     justifyContent: 'space-between',
     alignSelf: 'center',
-    marginTop: 30
+    marginTop: 20
   },
   BIG_INPUT_STYLE_CONTAINER_ERROR: {
-    borderRadius: 5,
+    borderRadius: 3,
     height: 120,
     width: METRICS.screenWidth * 0.95,
     backgroundColor: `${COLOR.PALETTE.green}25`,
@@ -151,7 +180,7 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   BIG_INPUT_STYLE_CONTAINER: {
-    borderRadius: 5,
+    borderRadius: 3,
     height: 120,
     width: METRICS.screenWidth * 0.95,
     backgroundColor: `${COLOR.PALETTE.green}25`,
@@ -162,7 +191,7 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   INPUT_STYLE_CONTAINER: {
-    borderRadius: 5,
+    borderRadius: 3,
     height: 55,
     width: METRICS.screenWidth * 0.95,
     backgroundColor: `${COLOR.PALETTE.green}25`,
@@ -292,7 +321,7 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.ligthGray,
     width: 50,
     height: 55,
-    borderRadius: 5,
+    borderRadius: 3,
     justifyContent: 'center',
     alignItems: 'center'
   },
