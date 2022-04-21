@@ -9,6 +9,7 @@ const APPLE_ICON =  require("../../../assets/images/apple_icon.png")
 const FACEBOOK_ICON =  require("../../../assets/images/facebook_icon.png")
 const GOOGLE_ICON =  require("../../../assets/images/google_icon.png")
 
+
 export const IMAGES = {
   // icon_contractor: ICON_CONTRACTOR,
   // icon_marina_staff: ICON_MARINA_STAFF,
