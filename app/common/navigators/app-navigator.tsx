@@ -19,6 +19,8 @@ import { SplashScreen } from "../screens";
 import { SignupScreen } from "../screens/signup/signup-screen";
 import { SetupProfileScreen } from "../screens/setup-profile/setup-profile-screen";
 import { LoginScreen } from "../screens/login/login-screen";
+import { LinkBankScreen } from "../screens/link-bank/link-bank-screen";
+import { HomeScreen } from "../screens/home/home-screen";
 
 import { ResetPasswordScreen } from "../screens/reset-password/reset-password-screen";
 import { CheckEmailScreen } from "../screens/check-email/check-email-screen";
@@ -36,11 +38,12 @@ import { PrimaryNavigator } from "./primary-navigator";
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type NavigatorParamList = {
-    splash: any
-    signup: any
-    setupProfile: any
-    login: any
-    home: any
+	splash: any
+	signup: any
+	setupProfile: any
+	login: any
+	home: any
+	linkBank: any
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -48,59 +51,49 @@ const Stack = createNativeStackNavigator<NavigatorParamList>()
 
 
 const defaultHeaderOptions = {
-    headerStyle: {
-        backgroundColor: '#742ddd',
-    },
-    headerTintColor: '#fff',
+	headerStyle: {
+		backgroundColor: '#742ddd',
+	},
+	headerTintColor: '#fff',
 };
 
 
 
 const AppStack = () => {
-    return (
-        <Stack.Navigator
-            screenOptions={{
-                headerShown: false,
-                contentStyle: { backgroundColor: COLOR.PALETTE.background }
-            }}
-            initialRouteName={"splash"}
-        >
-            <Stack.Screen name="splash" component={SplashScreen} />
-            <Stack.Screen name="signup" component={SignupScreen} />
-            <Stack.Screen name="setupProfile" component={SetupProfileScreen} />
+	return (
+		<Stack.Navigator
+			screenOptions={{
+				headerShown: false,
+				contentStyle: { backgroundColor: COLOR.PALETTE.background }
+			}}
+			initialRouteName={"splash"}
+		>
+			<Stack.Screen name="splash" component={SplashScreen} />
+			<Stack.Screen name="signup" component={SignupScreen} />
+			<Stack.Screen name="setupProfile" component={SetupProfileScreen} />
 
-            <Stack.Screen name="login" component={LoginScreen} />
-            {/* <Stack.Screen name="resetPassword" component={ResetPasswordScreen} /> */}
-            {/* <Stack.Screen name="checkEmail" component={CheckEmailScreen} /> */}
-            <Stack.Screen
-                name="home"
-                component={PrimaryNavigator}
-                options={{
-                    headerShown: false,
-                }}
-            />
+			<Stack.Screen name="login" component={LoginScreen} />
+			<Stack.Screen name="home" component={HomeScreen} />
+			<Stack.Screen name="linkBank" component={LinkBankScreen} />
+		</Stack.Navigator>
 
-
-            {/*<Stack.Screen name="termsAndConditions" component={TermsConditionsScreen} />*/}
-        </Stack.Navigator>
-
-    )
+	)
 }
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> { }
 
 export const AppNavigator = (props: NavigationProps) => {
-    const colorScheme = useColorScheme()
-    const navigationRef = useNavigationContainerRef()
-    return (
-        <NavigationContainer
-            ref={navigationRef}
-            theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-            {...props}
-        >
-            <AppStack />
-        </NavigationContainer>
-    )
+	const colorScheme = useColorScheme()
+	const navigationRef = useNavigationContainerRef()
+	return (
+		<NavigationContainer
+			ref={navigationRef}
+			theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+			{...props}
+		>
+			<AppStack />
+		</NavigationContainer>
+	)
 }
 
 AppNavigator.displayName = "AppNavigator"

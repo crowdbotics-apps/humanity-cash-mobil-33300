@@ -85,8 +85,8 @@ export const LoginScreen = observer(function LoginScreen() {
             buttonStyle={{
               backgroundColor: COLOR.PALETTE.green,
             }}
-            onPress={() => { }}
-            buttonLabel={'Next'}
+            onPress={() => navigation.navigate("home", {})}
+            buttonLabel={'Log in'}
           />
         </View>
       </View>

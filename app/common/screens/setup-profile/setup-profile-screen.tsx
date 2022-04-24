@@ -20,6 +20,7 @@ import Entypo from "react-native-vector-icons/Entypo"
 
 const steps_user = ['pic_username', 'name']
 const steps_business = ['pic_bname', 'business_type', 'business_exec', 'business_data', 'business_addresss']
+const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
 const profile_types = [
 	{
 		label: 'Personal',
@@ -144,7 +145,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const renderSelectBusinessType = () => (
 		<View style={styles.STEP_CONTAINER}>
-			<Text style={styles.STEP_TITLE}>Hi XXX</Text>
+			<Text style={styles.STEP_TITLE}>Hi</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>Select the profile you’d like to create. If you’re a business owner, you can automatically set up a personal profile. You can have one account login with two profiles.</Text>
 			{profile_types.map((t, key) => (
@@ -165,7 +166,12 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				style={styles.IMAGE_CONTAINER}
 			>
 				{!imageSource?.uri
-					? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
+					// ? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
+					? <Image
+						source={randomImages[Math.round(Math.random() * 3)]}
+						style={styles.IMAGE_BOX}
+						resizeMode='contain'
+					/>
 					: <Image
 						source={{ uri: imageSource.uri }
 						}
@@ -442,7 +448,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					<View style={styles.MODAL_CONTENT}>
 						<Text style={styles.STEP_TITLE_BLACK}>Are you sure you want to log out?</Text>
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text>
-						<TouchableOpacity style={styles.MODAL_BUTTON}>
+						<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => navigation.navigate("splash", {})}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
 					</View>
@@ -459,7 +465,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				<View>
 					<Text onPress={() => [setShowThankyouModal(false), setStep('profile_type')]} style={styles.NEED_HELP_LINK}>Skip for now</Text>
 					<TouchableOpacity style={styles.SUBMIT_BUTTON}>
-						<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
+						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my personal bank account</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -467,14 +473,15 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	)
 
 	const backButtonHandler = () => {
-		console.log('step')
 		switch (Step) {
+			case 'profile_type':
+				navigation.navigate("login", {})
 			case 'pic_username':
 				setStep('profile_type')
 				break;
 			case 'name':
 				setStep('pic_username')
-				break;
+				break;	
 			case 'pic_bname':
 				setStep('profile_type')
 				break;
