@@ -14,9 +14,12 @@ import styles from './login-style';
 import { COLOR, TYPOGRAPHY } from '../../theme';
 import { StackActions, useNavigation } from "@react-navigation/native"
 import { IMAGES } from "../../theme"
+import { useStores } from "../../models"
 
 export const LoginScreen = observer(function LoginScreen() {
   const navigation = useNavigation()
+  const rootStore = useStores()
+  const { loginStore } = rootStore
 
   const [Username, setUsername] = useState('')
   const [Pass, setPass] = useState('')
@@ -85,7 +88,10 @@ export const LoginScreen = observer(function LoginScreen() {
             buttonStyle={{
               backgroundColor: COLOR.PALETTE.green,
             }}
-            onPress={() => navigation.navigate("home", {})}
+            onPress={() => [
+              navigation.navigate("home", {}),
+              loginStore.setApiToken('123')
+            ]}
             buttonLabel={'Log in'}
           />
         </View>

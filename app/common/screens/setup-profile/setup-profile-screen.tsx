@@ -17,6 +17,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { IMAGES, METRICS } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { CheckBox } from 'react-native-elements'
+import { useStores } from "../../models"
 
 
 const steps_user = ['pic_username', 'name']
@@ -54,7 +55,9 @@ const industry_types = [
 ]
 
 export const SetupProfileScreen = observer(function SetupProfileScreen() {
-	const navigation = useNavigation()
+	const rootStore = useStores()
+  const navigation = useNavigation()
+  const { loginStore } = rootStore
 
 	const [Step, setStep] = useState('profile_type')
 	const [ButtonDisabled, setButtonDisabled] = useState(true)
@@ -62,6 +65,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [ShowThankyouModal, setShowThankyouModal] = useState(false)
 
 	const [ProfileType, setProfileType] = useState('personal')
+	const [RandoPic, setRandoPic] = useState(null)
 
 	// personal
 	const [Username, setUsername] = useState('')
@@ -91,7 +95,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
-	const [City, setCity] = React.useState('');
+	const [City, setCity] = React.useState(1);
 	const states = ["AL","AK","AS","AZ","AR","CA","CO","CT","DE","DC"]
 	const [State, setState] = React.useState(states[1]);
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
@@ -179,7 +183,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				{!imageSource?.uri
 					// ? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
 					? <Image
-						source={randomImages[Math.round(Math.random() * 3)]}
+						source={RandoPic}
 						style={styles.IMAGE_BOX}
 						resizeMode='contain'
 					/>
@@ -489,8 +493,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			<View style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
 				<TextInput
 					style={[styles.INPUT_STYLE, , { width: METRICS.screenWidth * 0.6 }]}
-					onChangeText={t => setBusinessRegName(t)}
-					value={BusinessRegName}
+					onChangeText={t => setCity(t)}
+					value={City}
 					placeholder={'City'}
 				/>
 			</View>
@@ -568,7 +572,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					<View style={styles.MODAL_CONTENT}>
 						<Text style={styles.STEP_TITLE_BLACK}>Are you sure you want to log out?</Text>
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text>
-						<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => navigation.navigate("splash", {})}>
+						<TouchableOpacity 
+							style={styles.MODAL_BUTTON} 
+							onPress={() => [navigation.navigate("splash", {}), loginStore.setApiToken(null) ]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
 					</View>
@@ -621,6 +627,31 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	}
 
 	const nextButtonHandler = () => {
+		let setupData = { 
+			Username,
+			imageSource,
+			Name,
+			LastName,
+			BusinessName,
+			BusinessStory,
+			BusinessType,
+			BusinessExecName,
+			BusinessExecLastName,
+			BusinessImageSource,
+			BackBusinessImageSource,
+			BusinessRegName,
+			BusinessIndustryType,
+			IndentifierType,
+			EmployerId,
+			SocialSecurityNumber,
+			Address1,
+			Address2,
+			City,
+			State,
+			PostalCode,
+			PhoneNumber,
+		 }
+    loginStore.setSetupData(setupData)
 		switch (Step) {
 			case 'pic_username':
 				setStep('name')
@@ -646,6 +677,40 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				
 		}
 	}
+
+	useEffect(() => {
+		let data = loginStore.getSetupData
+		console.log(' data -> ', data)
+		if (data?.Username) {
+			setUsername(data.Username)
+			setButtonDisabled(false)
+		}
+		if (data?.imageSource) setImageSource(data.imageSource)
+		if (data?.Name) setName(data.Name)
+		if (data?.LastName) setLastName(data.LastName)
+		if (data?.BusinessName) {
+			setBusinessName(data.BusinessName)
+			setButtonDisabled(false)
+		}
+		if (data?.BusinessStory) setBusinessStory(data.BusinessStory)
+		if (data?.BusinessType) setBusinessType(data.BusinessType)
+		if (data?.BusinessExecName) setBusinessExecName(data.BusinessExecName)
+		if (data?.BusinessExecLastName) setBusinessExecLastName(data.BusinessExecLastName)
+		if (data?.BusinessImageSource) setBusinessImageSource(data.BusinessImageSource)
+		if (data?.BackBusinessImageSource) setBackBusinessImageSource(data.BackBusinessImageSource)
+		if (data?.BusinessRegName) setBusinessRegName(data.BusinessRegName)
+		if (data?.BusinessIndustryType) setBusinessIndustryType(data.BusinessIndustryType)
+		if (data?.IndentifierType) setIndentifierType(data.IndentifierType)
+		if (data?.EmployerId) setEmployerId(data.EmployerId)
+		if (data?.SocialSecurityNumber) setSocialSecurityNumber(data.SocialSecurityNumber)
+		if (data?.Address1) setAddress1(data.Address1)
+		if (data?.Address2) setAddress2(data.Address2)
+		if (data?.City) setCity(data.City)
+		if (data?.State) setState(data.State)
+		if (data?.PostalCode) setPostalCode(data.PostalCode)
+		if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
+		setRandoPic(randomImages[Math.round(Math.random() * 3)])
+	}, [])
 
 	return (
 		<Screen
@@ -682,7 +747,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 									onPress={() => nextButtonHandler()}
 									style={ButtonDisabled ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
 								>
-
 									<Text style={styles.SUBMIT_BUTTON_LABEL}>
 										{Step === 'business_exec'
 											? 'Confirm'

@@ -442,7 +442,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const backButtonHandler = () => {
     switch (Step) {
       case "email":
-        navigation.navigate("splash", {})
+        navigation.navigate("home", {})
         break
       case "legal":
         setStep("email")
@@ -466,9 +466,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   }
 
   const nextButtonHandler = () => {
+    let signupData = { Email, Phone, Code1, Code2, Code3, Code4, Code5, Code6, }
+    loginStore.setSignupData(signupData)
     switch (Step) {
       case "email":
         // register()
+        loginStore.setStep('signup')
         setStep("verify_email")
         break
       case "verify_email":
@@ -491,9 +494,22 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         break;
       case "touch_id":
         navigation.navigate("setupProfile", {})
+        loginStore.setStep('')
         break;
     }
   }
+
+    useEffect(() => {
+      let data = loginStore.getSignupData
+      if(data?.Email) setEmail(data.Email)
+      if(data?.Phone) setPhone(data.Phone)
+      if(data?.Code1) setCode1(data.Code1)
+      if(data?.Code2) setCode2(data.Code2)
+      if(data?.Code3) setCode3(data.Code3)
+      if(data?.Code4) setCode4(data.Code4)
+      if(data?.Code5) setCode5(data.Code5)
+      if(data?.Code6) setCode6(data.Code6)
+  }, [])
 
   return (
     <Screen preset="fixed" statusBar={"dark-content"} unsafe={true}>
