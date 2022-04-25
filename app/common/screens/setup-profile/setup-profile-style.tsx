@@ -412,4 +412,26 @@ export default StyleSheet.create({
     textAlignVertical: 'center',
     marginBottom: 15
   },
+  CHECK_OUTSIDE: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderColor: COLOR.PALETTE.gray,
+    borderWidth: 0.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    backgroundColor: COLOR.PALETTE.white,
+    elevation: 5,
+    marginRight: 15
+  },
+CHECK_INSIDE: {
+  width: 16,
+  height: 16,
+  borderRadius: 8,
+  backgroundColor: COLOR.PALETTE.black
+},
 })
