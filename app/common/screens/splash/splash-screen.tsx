@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { TouchableOpacity, Image, View } from "react-native"
-import { Screen, Text } from "../../components"
+import { Screen, Text, Button } from "../../components"
 
 import styles from "./splash-styles"
 import { IMAGES } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
+import { COLOR, METRICS } from "../../theme";
 // import OneSignal from 'react-native-onesignal';
 
 export const SplashScreen = observer(function SplashScreen() {
@@ -66,23 +67,28 @@ export const SplashScreen = observer(function SplashScreen() {
         />
       </View>
       <View>
-        <TouchableOpacity style={styles.LOGIN_BUTTON}
-                          onPress={() => navigation.navigate("login", {})}
-        >
-          <Text style={styles.LOGIN_LABEL}>Log in</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        <Button
+          buttonStyle={{
+            backgroundColor: COLOR.PALETTE.blue,
+            marginBottom: 10
+          }}
+          onPress={() => navigation.navigate("login", {})}
+          buttonLabel={'Log in'}
+        />
+        <Button
+          buttonStyle={{
+            backgroundColor: COLOR.PALETTE.white,
+          }}
+          buttonLabelStyle={{ color: COLOR.PALETTE.black }}
           onPress={() => navigation.navigate("signup", {})}
-          style={styles.CREATE_ACCOUNT_BUTTON}
-        >
-          <Text style={styles.CREATE_ACCOUNT_LABEL}>Create an account</Text>
-        </TouchableOpacity>
+          buttonLabel={'Create an account'}
+        />
       </View>
     </View>
   )
 
   return (
-    <Screen preset="fixed" statusBar={"dark-content"} unsafe={true} showHeader>
+    <Screen preset="fixed" statusBar={"dark-content"} unsafe={true}>
       {Loading ? LoadingSetp() : LoginSetp()}
     </Screen>
   )

@@ -102,28 +102,4 @@ export default StyleSheet.create({
     textDecorationLine: 'underline',
     textAlign: 'center'
   },
-	SUBMIT_BUTTON: {
-    width: METRICS.screenWidth * 0.95,
-    height: 55,
-    backgroundColor: COLOR.PALETTE.green,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    borderRadius: 27.5,
-    marginBottom: 30
-  },
-  SUBMIT_BUTTON_DISABLED: {
-    width: METRICS.screenWidth * 0.95,
-    height: 55,
-    backgroundColor: `${COLOR.PALETTE.green}40`,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    borderRadius: 27.5,
-    marginBottom: 30
-  },
-  SUBMIT_BUTTON_LABEL: {
-    fontSize: 16,
-    color: COLOR.PALETTE.white,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-  },
 })

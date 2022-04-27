@@ -81,12 +81,13 @@ export const LoginScreen = observer(function LoginScreen() {
           <View style={styles.NEED_HELP_CONTAINER}>
             <Text onPress={() => { }} style={styles.NEED_HELP_LINK}>Forgot password</Text>
           </View>
-          <TouchableOpacity
+          <Button
+            buttonStyle={{
+              backgroundColor: COLOR.PALETTE.green,
+            }}
             onPress={() => { }}
-            style={styles.SUBMIT_BUTTON}
-          >
-            <Text style={styles.SUBMIT_BUTTON_LABEL}>Next</Text>
-          </TouchableOpacity>
+            buttonLabel={'Next'}
+          />
         </View>
       </View>
     </Screen>

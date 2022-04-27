@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { TextInput, View, TouchableOpacity, ScrollView } from "react-native"
-import { Text, Screen, Checkbox } from "../../components"
+import { Text, Screen, Checkbox, Button, TextInputComponent } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -10,6 +10,7 @@ import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
+import { COLOR } from '../../theme';
 interface SignupFields {
   email: string;
   password: string;
@@ -46,8 +47,8 @@ export const SignupScreen = observer(function SignupScreen() {
   const [Step, setStep] = useState(steps[0])
   const [ButtonDisabled, setButtonDisabled] = useState(true)
 
-  let EmailInput
   const [Email, setEmail] = useState("")
+  const [Phone, setPhone] = useState("")
   const [EmailError, setEmailError] = useState(false)
   const [EmailErrorMessage, setEmailErrorMessage] = useState("")
   const [Agree, setAgree] = useState(false)
@@ -93,6 +94,7 @@ export const SignupScreen = observer(function SignupScreen() {
     }
     return render
   }
+
 
   const validateEmail = (email, agree) => {
     let valid = String(email)
@@ -179,35 +181,29 @@ export const SignupScreen = observer(function SignupScreen() {
         Hello! Tell us how to reach you. We will send a verification code to
         your email.
       </Text>
-      <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-        <Text style={styles.INPUT_LABEL_STYLE}>Email address</Text>
-        <Text style={styles.INPUT_LABEL_ERROR}>
-          {EmailError
-            ? EmailErrorMessage === ""
-              ? "ENTER EMAIL ADDRESS"
-              : EmailErrorMessage
-            : ""}
-        </Text>
-      </View>
-      <View
-        style={
-          EmailError
-            ? styles.INPUT_STYLE_CONTAINER_ERROR
-            : styles.INPUT_STYLE_CONTAINER
-        }
-      >
-        <TextInput
-          ref={ref => (EmailInput = ref)}
-          style={styles.INPUT_STYLE}
-          onChangeText={t => [
-            setEmail(t),
-            setEmailError(!validateEmail(t, Agree))
-          ]}
-          value={Email}
-          placeholder={"myname@mail.com"}
-          autoCapitalize={"none"}
-        />
-      </View>
+
+      <TextInputComponent
+        label='EMAIL ADDRESS'
+        errorLabel={EmailError
+          ? EmailErrorMessage === ""
+            ? "ENTER EMAIL ADDRESS"
+            : EmailErrorMessage
+          : ""}
+        error={EmailError}
+        onChangeText={t => [
+          setEmail(t),
+          setEmailError(!validateEmail(t, Agree))
+        ]}
+        value={Email}
+        placeholder={"myname@mail.com"}
+      />
+      <TextInputComponent
+        label='PHONE NUMBER'
+        onChangeText={t => setPhone(t)}
+        value={Phone}
+        placeholder={"(555) 555-1234"}
+      />
+
     </View>
   )
   const LegalStep = () => (
@@ -405,7 +401,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
       <View style={styles.INPUT_STYLE_CONTAINER}>
         <TextInput
-          // ref={ref => EmailInput = ref}
           style={styles.PASS_INPUT_STYLE}
           onChangeText={t => [setPass(t)]}
           value={Pass}
@@ -430,7 +425,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         }
       >
         <TextInput
-          // ref={ref => EmailInput = ref}
           style={styles.PASS_INPUT_STYLE}
           onChangeText={t => [setPassConfirm(t)]}
           value={PassConfirm}
@@ -498,7 +492,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   }
 
   return (
-    <Screen preset="fixed" statusBar={"dark-content"} unsafe={true} showHeader>
+    <Screen preset="fixed" statusBar={"dark-content"} unsafe={true}>
       <View style={styles.ROOT}>
         <View>
           <TouchableOpacity
@@ -555,17 +549,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             </View>
           )}
           {Step !== "legal" && (
-            <TouchableOpacity
-              disabled={ButtonDisabled || Loading}
+            <Button
+              buttonStyle={{
+                backgroundColor: (ButtonDisabled || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green,
+              }}
               onPress={() => nextButtonHandler()}
-              style={
-                ButtonDisabled
-                  ? styles.SUBMIT_BUTTON_DISABLED
-                  : styles.SUBMIT_BUTTON
-              }
-            >
-              <Text style={styles.SUBMIT_BUTTON_LABEL}>Next</Text>
-            </TouchableOpacity>
+              buttonLabel={'Next'}
+              disabled={ButtonDisabled || Loading}
+              loading={Loading}
+            />
           )}
         </View>
       </View>

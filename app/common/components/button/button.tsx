@@ -1,64 +1,36 @@
-import * as React from "react"
-import { ActivityIndicator, TouchableOpacity, View } from "react-native"
-import { Text } from "../text/text"
-import { viewPresets, textPresets } from "./button.presets"
-import { ButtonProps } from "./button.props"
+import React, { useEffect, useState } from "react"
+import { Text, TouchableOpacity, ActivityIndicator } from "react-native"
+import Icon from "react-native-vector-icons/MaterialIcons"
+import styles from "./styles"
+import { IMAGES } from "../../theme"
 
-/**
- * For your text displaying needs.
- *
- * This component is a HOC over the built-in React Native one.
- */
+type ButtonProps = {
+  onPress?: any
+  buttonStyle?: any
+  buttonLabelStyle?: any
+  buttonLabel?: string | ''
+  disabled?: boolean | false
+  loading?: boolean | false
+}
+
+
 export function Button(props: ButtonProps) {
-  // grab the props
-  const {
-    preset = "primary",
-    tx,
-    text,
-    style: styleOverride,
-    textStyle: textStyleOverride,
-    children,
-    loading,
-    iconLeft,
-      iconRight,
-    ...rest
-  } = props
+  // const [SelectedValue, setSelectedValue] = useState(null)
 
-  const viewStyle = viewPresets[preset] || viewPresets.primary
-  const viewStyles = [viewStyle, styleOverride]
-  const textStyle = textPresets[preset] || textPresets.primary
-  const textStyles = [textStyle, textStyleOverride]
-  let content
-  content = children || <Text tx={tx} text={text} style={textStyles} />
-  if (iconLeft) {
-    content = (
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        {iconLeft}
-        {content}
-
-      </View>
-    )
-  }
-  if (iconRight) {
-
-    content = (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          {content}
-          {iconRight}
-        </View>
-    )
-  }
+  // useEffect(() => {
+  //   if (props.value === null) {
+  //     setSelectedValue(null)
+  //   }
+  // }, [props.value])
 
   return (
-    <TouchableOpacity style={viewStyles} {...rest}>
-      {!loading ? (
-        content
-      ) : (
-        <ActivityIndicator
-          size="small"
-          color={preset === "primary" || preset === "disabled" ? "#ffffff" : "#000000"}
-        />
-      )}
+    <TouchableOpacity disabled={props.disabled} style={[styles.BUTTON, props.buttonStyle]}
+      onPress={props.onPress}
+    >
+      {props.loading
+        ? <ActivityIndicator size="small" color={'black'} />
+        : <Text style={[styles.BUTTON_LABEL, props.buttonLabelStyle]}>{props.buttonLabel}</Text>
+      }
     </TouchableOpacity>
   )
 }
