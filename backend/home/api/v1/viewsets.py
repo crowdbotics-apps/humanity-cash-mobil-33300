@@ -1,17 +1,17 @@
 from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.viewsets import ModelViewSet, ViewSet
+from rest_framework.viewsets import ViewSet
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
-from home.api.v1.serializers import (
-    SignupSerializer,
+from home.api.v1.serializers.serializers import (
+    # SignupSerializer,
     UserSerializer,
 )
 
 
-class SignupViewSet(ModelViewSet):
-    serializer_class = SignupSerializer
-    http_method_names = ["post"]
+# class SignupViewSet(ModelViewSet):
+#     serializer_class = SignupSerializer
+#     http_method_names = ["post"]
 
 
 class LoginViewSet(ViewSet):
