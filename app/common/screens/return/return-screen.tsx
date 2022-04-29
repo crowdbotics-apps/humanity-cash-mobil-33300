@@ -5,7 +5,7 @@ import { Button, Screen, Text } from "../../components";
 import { Image, TouchableOpacity, View, Modal } from "react-native";
 import { COLOR, IMAGES } from "../../theme";
 import { ButtonIcon } from "../../components/button-icon/button-icon";
-import styles from './home-style';
+import styles from './return-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { CheckBox } from 'react-native-elements'
 
@@ -18,7 +18,7 @@ const userData = {
 	bankInfo: {}
 }
 
-export const HomeScreen = observer(function HomeScreen() {
+export const ReturnScreen = observer(function ReturnScreen() {
 	const navigation = useNavigation()
 
 	const [ShowBankModal, setShowBankModal] = useState(false)

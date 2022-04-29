@@ -1,5 +1,4 @@
 const LOGO = require("../../../assets/images/logo.png")
-const LOGO_MIN = require("../../../assets/images/logo.png")
 const LOGO_HEADER = require("../../../assets/images/logo.png")
 const BG_WAVES =  require("../../../assets/images/bg_waves.png")
 const LOGO_FULL =  require("../../../assets/images/logo_full.png")
@@ -9,12 +8,12 @@ const APPLE_ICON =  require("../../../assets/images/apple_icon.png")
 const FACEBOOK_ICON =  require("../../../assets/images/facebook_icon.png")
 const GOOGLE_ICON =  require("../../../assets/images/google_icon.png")
 
+const AV_BASS =  require("../../../assets/images/av_bass.png")
+const AV_BEE =  require("../../../assets/images/av_bee.png")
+const AV_BIRD =  require("../../../assets/images/av_bird.png")
+const AV_SALAMANDER =  require("../../../assets/images/av_salamander.png")
 
 export const IMAGES = {
-  // icon_contractor: ICON_CONTRACTOR,
-  // icon_marina_staff: ICON_MARINA_STAFF,
-  // icon_boater: ICON_BOATER,
-  // icon_paper_plane: ICON_PAPER_PLANE,
   logo: LOGO,
   logoFull: LOGO_FULL,
   logoHeader: LOGO_HEADER,
@@ -24,23 +23,8 @@ export const IMAGES = {
   appleIcon: APPLE_ICON,
   facebookIcon: FACEBOOK_ICON,
   googleIcon: GOOGLE_ICON,
-  // logoOnboarding: LOGO_ONBOARDING,
-  // bell: BELL,
-  // search: SEARCH,
-  // backgroundImage: BACKGROUND_IMAGE,
-  // backgroundImageSmall: BACKGROUND_IMAGE_SMALL,
-  // fpLogo: FP_LOGO,
-  // bankAmerica: BANK_AMERICA,
-  // chase: CHASE,
-  // paypal: PAYPAL,
-  // splash_logo:SPLASH_LOGO,
-  // active_dot: ACTIVE_DOT,
-  // inactive_dot: INACTIVE_DOT,
-  // boatWheel: BOAT_WHEEL,
-  // uploadBox: UPLOAD_BOX,
-  // marina1: MARINA1,
-  // marina2: MARINA2,
-  // gallery1: require("../../../assets/images/gallery1.png"),
-  // gallery2: require("../../../assets/images/gallery2.png"),
-
+  avBass: AV_BASS,
+  avBee: AV_BEE,
+  avBird: AV_BIRD,
+  avSalamander: AV_SALAMANDER,
 }

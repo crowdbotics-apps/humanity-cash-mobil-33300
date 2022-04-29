@@ -14,12 +14,15 @@ import styles from './setup-profile-style';
 import { COLOR, TYPOGRAPHY } from '../../theme';
 import { StackActions, useNavigation } from "@react-navigation/native"
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { IMAGES } from "../../theme"
+import { IMAGES, METRICS } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
+import { CheckBox } from 'react-native-elements'
+import { useStores } from "../../models"
 
 
 const steps_user = ['pic_username', 'name']
 const steps_business = ['pic_bname', 'business_type', 'business_exec', 'business_data', 'business_addresss']
+const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
 const profile_types = [
 	{
 		label: 'Personal',
@@ -52,14 +55,17 @@ const industry_types = [
 ]
 
 export const SetupProfileScreen = observer(function SetupProfileScreen() {
-	const navigation = useNavigation()
+	const rootStore = useStores()
+  const navigation = useNavigation()
+  const { loginStore } = rootStore
 
 	const [Step, setStep] = useState('profile_type')
 	const [ButtonDisabled, setButtonDisabled] = useState(true)
 	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false)
 	const [ShowThankyouModal, setShowThankyouModal] = useState(false)
-	
+
 	const [ProfileType, setProfileType] = useState('personal')
+	const [RandoPic, setRandoPic] = useState(null)
 
 	// personal
 	const [Username, setUsername] = useState('')
@@ -82,9 +88,19 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [BusinessIndustryType, setBusinessIndustryType] = React.useState('');
 	const [SelectIndustryOpen, setSelectIndustryOpen] = useState(false)
 
-	const [IndentifierType, setIndentifierType] = useState(false)
+
+	const [IndentifierType, setIndentifierType] = useState('')
 	const [EmployerId, setEmployerId] = React.useState('');
 	const [SocialSecurityNumber, setSocialSecurityNumber] = React.useState('');
+
+	const [Address1, setAddress1] = React.useState('');
+	const [Address2, setAddress2] = React.useState('');
+	const [City, setCity] = React.useState(1);
+	const states = ["AL","AK","AS","AZ","AR","CA","CO","CT","DE","DC"]
+	const [State, setState] = React.useState(states[1]);
+	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
+	const [PostalCode, setPostalCode] = React.useState('');
+	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
 	function selectImage(type: string) {
 		let options = {
@@ -144,7 +160,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const renderSelectBusinessType = () => (
 		<View style={styles.STEP_CONTAINER}>
-			<Text style={styles.STEP_TITLE}>Hi XXX</Text>
+			<Text style={styles.STEP_TITLE}>Hi</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>Select the profile you’d like to create. If you’re a business owner, you can automatically set up a personal profile. You can have one account login with two profiles.</Text>
 			{profile_types.map((t, key) => (
@@ -165,7 +181,12 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				style={styles.IMAGE_CONTAINER}
 			>
 				{!imageSource?.uri
-					? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
+					// ? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
+					? <Image
+						source={RandoPic}
+						style={styles.IMAGE_BOX}
+						resizeMode='contain'
+					/>
 					: <Image
 						source={{ uri: imageSource.uri }
 						}
@@ -219,9 +240,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>LAST NAME</Text>
-				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setLastName(t)}
@@ -274,9 +294,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS NAME - THIS NAME WILL BE PUBLIC*</Text>
-				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
@@ -290,9 +309,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>TELL US YOUR STORY (50 WORDS MAX)</Text>
-				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
 			</View>
-			<View style={UsernameError ? styles.BIG_INPUT_STYLE_CONTAINER_ERROR : styles.BIG_INPUT_STYLE_CONTAINER}>
+			<View style={styles.BIG_INPUT_STYLE_CONTAINER}>
 				<TextInput
 					style={styles.BIG_INPUT_STYLE}
 					onChangeText={t => setBusinessStory(t)}
@@ -312,20 +330,19 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			<Text style={styles.STEP_TITLE}>Business details</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>We use your business information to set up your wallet. The type of entity determines the required information. </Text>
-			
+
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>TYPE OF BUSINESS</Text>
-				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
 			</View>
 			<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
 				<TouchableOpacity style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setBusinessType('')]}>
-				<Text style={styles.SELECT_LABEL}>{BusinessType !== '' ? BusinessType : 'Select'}</Text>
-				<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
+					<Text style={styles.SELECT_LABEL}>{BusinessType !== '' ? BusinessType : 'Select'}</Text>
+					<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
 				</TouchableOpacity>
 				{SelectOpen && business_types.map((t, key) => (
-						<TouchableOpacity key={key + 'btype'} style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setBusinessType(t)]}>
+					<TouchableOpacity key={key + 'btype'} style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setBusinessType(t)]}>
 						<Text style={styles.SELECT_LABEL}>{t}</Text>
-						</TouchableOpacity>
+					</TouchableOpacity>
 				))}
 			</View>
 
@@ -340,7 +357,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>FIRST NAME OF THE BUSINESS OWNER OR EXECUTIVE</Text>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessExecName(t)}
@@ -351,7 +368,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>LAST NAME OF THE BUSINESS OWNER OR EXECUTIVE</Text>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessExecLastName(t)}
@@ -365,12 +382,10 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		<View style={styles.STEP_CONTAINER}>
 			<Text style={styles.STEP_TITLE}>Business information</Text>
 			<View style={styles.LINE} />
-
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>REGISTRED BUSINESS NAME</Text>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessRegName(t)}
@@ -378,19 +393,18 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					placeholder={'Registered business name'}
 				/>
 			</View>
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>INDUSTRY</Text>
 			</View>
 			<View style={SelectIndustryOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
 				<TouchableOpacity style={styles.SELECT_ICON} onPress={() => [setSelectIndustryOpen(!SelectIndustryOpen), setBusinessIndustryType('')]}>
-				<Text style={styles.SELECT_LABEL}>{BusinessIndustryType !== '' ? BusinessIndustryType : 'Select'}</Text>
-				<Entypo name={SelectIndustryOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
+					<Text style={styles.SELECT_LABEL}>{BusinessIndustryType !== '' ? BusinessIndustryType : 'Select'}</Text>
+					<Entypo name={SelectIndustryOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
 				</TouchableOpacity>
 				{SelectIndustryOpen && industry_types.map((t, key) => (
-						<TouchableOpacity key={key + 'itype'} style={styles.SELECT_ICON} onPress={() => [setSelectIndustryOpen(!SelectIndustryOpen), setBusinessIndustryType(t)]}>
+					<TouchableOpacity key={key + 'itype'} style={styles.SELECT_ICON} onPress={() => [setSelectIndustryOpen(!SelectIndustryOpen), setBusinessIndustryType(t)]}>
 						<Text style={styles.SELECT_LABEL}>{t}</Text>
-						</TouchableOpacity>
+					</TouchableOpacity>
 				))}
 			</View>
 
@@ -402,36 +416,152 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>{'Employer Identification Number (EIN)'}</Text>
+				<TouchableOpacity style={styles.CHECK_OUTSIDE} onPress={() => setIndentifierType('EIN')}>
+					{ IndentifierType === 'EIN' && <View style={styles.CHECK_INSIDE} />}
+				</TouchableOpacity>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					editable={IndentifierType === 'EIN'}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setEmployerId(t)}
 					value={EmployerId}
 					placeholder={'XX-XXXXXXX'}
 				/>
 			</View>
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>{'Social Security Number (SSN)'}</Text>
+				<TouchableOpacity style={styles.CHECK_OUTSIDE} onPress={() => setIndentifierType('SSN')}>
+					{ IndentifierType === 'SSN' && <View style={styles.CHECK_INSIDE} />}
+				</TouchableOpacity>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					editable={IndentifierType === 'SSN'}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setSocialSecurityNumber(t)}
 					value={SocialSecurityNumber}
 					placeholder={'XXX-XX-XXXX'}
 				/>
 			</View>
-
-
 		</View>
 	)
 	const renderbusinessAddresss = () => (
 		<View style={styles.STEP_CONTAINER}>
-			<Text style={styles.STEP_TITLE}>TITLE</Text>
+			<Text style={styles.STEP_TITLE}>Business information</Text>
 			<View style={styles.LINE} />
-			<Text style={styles.STEP_SUB_TITLE}>SubTitle</Text>
+			<Text style={styles.STEP_SUB_TITLE}>Where can customers find you?</Text>
+
+
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 1</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setAddress1(t)}
+					value={Address1}
+					placeholder={'Street number, street name'}
+				/>
+			</View>
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 2</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setAddress2(t)}
+					value={Address2}
+					placeholder={'Street number, street name'}
+				/>
+			</View>
+
+
+		<View style={{
+			// backgroundColor: 'red'
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			width: METRICS.screenWidth * 0.95,
+			alignSelf: 'center',
+		}}>
+			<View>
+			<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65}]}>
+				<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
+			</View>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
+				<TextInput
+					style={[styles.INPUT_STYLE, , { width: METRICS.screenWidth * 0.6 }]}
+					onChangeText={t => setCity(t)}
+					value={City}
+					placeholder={'City'}
+				/>
+			</View>
+			</View>
+			<View>
+			<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2}]}>
+				<Text style={styles.INPUT_LABEL_STYLE}>STATE</Text>
+			</View>
+				<View style={[
+					SelectStateOpen ?
+						styles.SELECT_INPUT_STYLE_CONTAINER_OPEN
+						: styles.SELECT_INPUT_STYLE_CONTAINER,
+					{ width: METRICS.screenWidth * 0.25 }
+				]}>
+					<TouchableOpacity
+						style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
+						onPress={() => [setSelectStateOpen(!SelectStateOpen), setState('')]}
+					>
+						<Text style={styles.SELECT_LABEL}>{State}</Text>
+						<Entypo
+							name={SelectStateOpen ? "chevron-up" : "chevron-down"}
+							size={23} color={'black'}
+							style={{ marginRight: 20 }}
+						/>
+					</TouchableOpacity>
+					{SelectStateOpen && states.map((t, key) => (
+						<TouchableOpacity
+							key={key + 'stype'}
+							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
+							onPress={() => [setSelectStateOpen(!SelectStateOpen), setState(t)]}
+						>
+							<Text style={styles.SELECT_LABEL}>{t}</Text>
+						</TouchableOpacity>
+					))}
+				</View>
+				</View>
+		</View>
+
+
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>POSTAL CODE</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setPostalCode(t)}
+					value={PostalCode}
+					placeholder={'xxxxxxxxx'}
+				/>
+			</View>
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setPhoneNumber(t)}
+					value={PhoneNumber}
+					placeholder={'Phone number'}
+				/>
+			</View>
+
+
+
+
 		</View>
 	)
 
@@ -442,7 +572,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					<View style={styles.MODAL_CONTENT}>
 						<Text style={styles.STEP_TITLE_BLACK}>Are you sure you want to log out?</Text>
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text>
-						<TouchableOpacity style={styles.MODAL_BUTTON}>
+						<TouchableOpacity 
+							style={styles.MODAL_BUTTON} 
+							onPress={() => [navigation.navigate("splash", {}), loginStore.setApiToken(null) ]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
 					</View>
@@ -459,7 +591,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				<View>
 					<Text onPress={() => [setShowThankyouModal(false), setStep('profile_type')]} style={styles.NEED_HELP_LINK}>Skip for now</Text>
 					<TouchableOpacity style={styles.SUBMIT_BUTTON}>
-						<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
+						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my personal bank account</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -467,8 +599,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	)
 
 	const backButtonHandler = () => {
-		console.log('step')
 		switch (Step) {
+			case 'profile_type':
+				navigation.navigate("login", {})
 			case 'pic_username':
 				setStep('profile_type')
 				break;
@@ -487,10 +620,38 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			case 'business_data':
 				setStep('business_exec')
 				break;
+			case 'business_addresss':
+				setStep('business_data')
+				break;
 		}
 	}
 
 	const nextButtonHandler = () => {
+		let setupData = { 
+			Username,
+			imageSource,
+			Name,
+			LastName,
+			BusinessName,
+			BusinessStory,
+			BusinessType,
+			BusinessExecName,
+			BusinessExecLastName,
+			BusinessImageSource,
+			BackBusinessImageSource,
+			BusinessRegName,
+			BusinessIndustryType,
+			IndentifierType,
+			EmployerId,
+			SocialSecurityNumber,
+			Address1,
+			Address2,
+			City,
+			State,
+			PostalCode,
+			PhoneNumber,
+		 }
+    loginStore.setSetupData(setupData)
 		switch (Step) {
 			case 'pic_username':
 				setStep('name')
@@ -504,11 +665,52 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			case 'business_type':
 				setStep('business_exec')
 				break;
-				case 'business_exec':
+			case 'business_exec':
 				setStep('business_data')
 				break;
+			case 'business_data':
+				setStep('business_addresss')
+				break;
+				case 'business_addresss':
+					setShowThankyouModal(true)
+					break;
+				
 		}
 	}
+
+	useEffect(() => {
+		let data = loginStore.getSetupData
+		console.log(' data -> ', data)
+		if (data?.Username) {
+			setUsername(data.Username)
+			setButtonDisabled(false)
+		}
+		if (data?.imageSource) setImageSource(data.imageSource)
+		if (data?.Name) setName(data.Name)
+		if (data?.LastName) setLastName(data.LastName)
+		if (data?.BusinessName) {
+			setBusinessName(data.BusinessName)
+			setButtonDisabled(false)
+		}
+		if (data?.BusinessStory) setBusinessStory(data.BusinessStory)
+		if (data?.BusinessType) setBusinessType(data.BusinessType)
+		if (data?.BusinessExecName) setBusinessExecName(data.BusinessExecName)
+		if (data?.BusinessExecLastName) setBusinessExecLastName(data.BusinessExecLastName)
+		if (data?.BusinessImageSource) setBusinessImageSource(data.BusinessImageSource)
+		if (data?.BackBusinessImageSource) setBackBusinessImageSource(data.BackBusinessImageSource)
+		if (data?.BusinessRegName) setBusinessRegName(data.BusinessRegName)
+		if (data?.BusinessIndustryType) setBusinessIndustryType(data.BusinessIndustryType)
+		if (data?.IndentifierType) setIndentifierType(data.IndentifierType)
+		if (data?.EmployerId) setEmployerId(data.EmployerId)
+		if (data?.SocialSecurityNumber) setSocialSecurityNumber(data.SocialSecurityNumber)
+		if (data?.Address1) setAddress1(data.Address1)
+		if (data?.Address2) setAddress2(data.Address2)
+		if (data?.City) setCity(data.City)
+		if (data?.State) setState(data.State)
+		if (data?.PostalCode) setPostalCode(data.PostalCode)
+		if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
+		setRandoPic(randomImages[Math.round(Math.random() * 3)])
+	}, [])
 
 	return (
 		<Screen
@@ -545,11 +747,10 @@ IDENTIFICATION NUMBER (ENTER ONE)
 									onPress={() => nextButtonHandler()}
 									style={ButtonDisabled ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
 								>
-
 									<Text style={styles.SUBMIT_BUTTON_LABEL}>
 										{Step === 'business_exec'
-										? 'Confirm'
-										: 'Next'
+											? 'Confirm'
+											: 'Next'
 										}
 									</Text>
 								</TouchableOpacity>
