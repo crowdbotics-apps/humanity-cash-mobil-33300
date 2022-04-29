@@ -15,7 +15,9 @@ const userData = {
 		last_name: 'Clemente',
 		mail: 'rafael@mail.com'
 	},
-	bankInfo: {}
+	bankInfo: {
+		bankName: 'nombre'
+	}
 }
 
 export const HomeScreen = observer(function HomeScreen() {
@@ -28,6 +30,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	useEffect(() => {
 		if (!userData.profile.name) navigation.navigate("setupProfile", {})
 		else if (!userData.bankInfo.bankName) setShowBankModal(true)
+		navigation.navigate("return", {})
 		console.log(' ===>>> ', IMAGES.avBass)
 	}, [])
 
