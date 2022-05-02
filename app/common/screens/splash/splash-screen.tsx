@@ -28,7 +28,10 @@ export const SplashScreen = observer(function SplashScreen() {
     console.log(' step => ', step)
     setupDatosIniciales()
     setTimeout(function () {
-      if (step !== '') navigation.navigate(step, {})
+      if (step !== '' && step !== null) {
+        console.log(' entre aca ', step)
+        navigation.navigate(step, {})
+      } 
       if (loginStore.isLoggedIn) navigation.navigate('home', {})
       setLoading(false)
     }, 2000)
