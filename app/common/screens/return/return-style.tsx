@@ -36,6 +36,10 @@ export default StyleSheet.create({
     fontSize: 16,
     color: COLOR.PALETTE.green
   },
+  BACK_BUTON_LABEL_MODAL: {
+    fontSize: 16,
+    color: COLOR.PALETTE.white
+  },
   BACK_BUTON_CONTAINER: {
     flexDirection: 'row',
     width: 80,
@@ -70,7 +74,7 @@ export default StyleSheet.create({
     height: 350,
     alignItems: 'center',
     justifyContent: 'space-around',
-    borderRadius: 10,
+    borderRadius: 20,
   },
   MODAL_CONTENT: {
     width: METRICS.screenWidth * 0.70,
@@ -190,6 +194,34 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.90,
     alignSelf: 'center',
   },
+  SEARCH_INPUT_CONTAINER: {
+    width: METRICS.screenWidth * 0.95,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'space-between'
+  },
+  SEARCH_INPUT_STYLE_CONTAINER: {
+    borderRadius: 3,
+    height: 55,
+    width: METRICS.screenWidth * 0.75,
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  SEARCH_INPUT_STYLE: {
+    height: 55,
+    width: METRICS.screenWidth * 0.65,
+    alignSelf: 'center',
+  },
+  SEARCH_INPUT_ADJUSTMENTS: {
+    height: 55,
+    width: METRICS.screenWidth * 0.15,
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   LOADING_RETURN: {
     marginTop: 50,
     height: METRICS.screenHeight - 50
@@ -231,6 +263,12 @@ export default StyleSheet.create({
   },
   RETURN_ITEM_AMOUNT: {
     color: '#681D39',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 20
+  },
+  RETURN_ITEM_AMOUNT_CREDIT: {
+    color: COLOR.PALETTE.black,
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 20

@@ -7,10 +7,39 @@ import { COLOR, IMAGES, METRICS } from "../../theme";
 import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from './return-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
+import Entypo from "react-native-vector-icons/Entypo"
 import { CheckBox } from 'react-native-elements'
+import { PALETTE } from "../../theme/palette";
 
 export const ReturnScreen = observer(function ReturnScreen() {
 	const navigation = useNavigation()
+
+	const returns = {
+		TODAY : [
+			{
+				item: 'Customer sale',
+				time: '7 min ago',
+				credit: '10.00'
+			},
+			{
+				item: 'Carr Hardware',
+				time: '3:51, Jun 17, 2021',
+				debit: '10.00'
+			},
+			{
+				item: 'Cash out',
+				time: '4:51, Jun 17, 2021',
+				debit: '10.00'
+			},
+		],
+		YESTERDAY: [
+			{
+				item: 'Customer return',
+				time: '3:51, Jun 16, 2021',
+				debit: '10.00'
+			},
+		]
+	}
 
 	const [ShowIndex, setShowIndex] = useState(true)
 	const [ShowScanModal, setShowScanModal] = useState(false)
@@ -28,57 +57,59 @@ export const ReturnScreen = observer(function ReturnScreen() {
 	}, [])
 
 	const ReturnIndex = () => <View>
-<Image
-        resizeMode="contain"
-        source={IMAGES.logoFull}
-        style={styles.LOGO_STYLE}
-      />
-			<Text style={styles.AMOUNT}>C$ 382.91</Text>
-			<View style={styles.LINE} />
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					style={styles.INPUT_STYLE}
-					onChangeText={t => 	setSearch(t)}
-					value={Search}
-					placeholder={`Search`}
-				/>
+		<Image
+			resizeMode="contain"
+			source={IMAGES.logoFull}
+			style={styles.LOGO_STYLE}
+		/>
+		<Text style={styles.AMOUNT}>C$ 382.91</Text>
+		<View style={styles.LINE} />
+<View style={styles.SEARCH_INPUT_CONTAINER}>
+		<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
+		<Icon name={"search"} size={25} color={COLOR.PALETTE.black}/>
+			<TextInput
+				style={styles.SEARCH_INPUT_STYLE}
+				onChangeText={t => setSearch(t)}
+				value={Search}
+				placeholder={`Search`}
+			/>
 		</View>
-		
-		<Text style={styles.RETURNS_LABEL}>TODAY</Text>
-		{[1,2,3].map((t, key) => (
-			<View key={key + '_today'} style={styles.RETURN_ITEM}>
-				<View style={{ marginLeft: 15 }}>
-				<Text style={styles.RETURN_ITEM_CUSTOMER}>Customer sale</Text>
-				<Text style={styles.RETURN_ITEM_TIME}>7 min ago</Text>
-				</View>
-				<View>
-					<Text style={styles.RETURN_ITEM_AMOUNT}>+ C$ 10.00</Text>
-				</View>
-			</View>
-		))}
-			<Text style={styles.RETURNS_LABEL}>YESTERDAY</Text>
-		{[1].map((t, key) => (
-			<View key={key + '_yesterday'} style={styles.RETURN_ITEM}>
-				<View style={{ marginLeft: 15 }}>
-				<Text style={styles.RETURN_ITEM_CUSTOMER}>Customer sale</Text>
-				<Text style={styles.RETURN_ITEM_TIME}>7 min ago</Text>
-				</View>
-				<View>
-					<Text style={styles.RETURN_ITEM_AMOUNT}>+ C$ 10.00</Text>
-				</View>
-			</View>
-		))}
+		<View style={styles.SEARCH_INPUT_ADJUSTMENTS}>
+		<Image source={IMAGES.shortIcon} resizeMode='contain' style={{ width: 20, height: 20 }} />
+		</View>
+		</View>
+		{
+			Object.keys(returns).map((r, key) => ([
+				<Text key={key + '_label'} style={styles.RETURNS_LABEL}>TODAY</Text>,
+				returns[r].map((i, key2) => (
+					<View key={key2 + '_values'} style={styles.RETURN_ITEM}>
+						<View style={{ marginLeft: 15 }}>
+							<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
+							<Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text>
+						</View>
+						<View>
+							{i.credit
+								? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
+								: <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
+							}
+							
+						</View>
+					</View>
+				))
+			]))
+		}
 
-<Button
+		<Button
 			buttonStyle={{
 				backgroundColor: COLOR.PALETTE.green,
 				marginVertical: 20
 			}}
+			buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
 			onPress={() => [setShowIndex(false), setShowScanModal(true)]}
 			buttonLabel={'Receive or Scan to pay'}
-			/>
-			</View>
-	
+		/>
+	</View>
+
 
 	const ScanModal = () => (
 		<Modal visible={ShowScanModal} transparent>
@@ -216,7 +247,10 @@ Thank you
 						<View>
 							{(!ShowScanModal && !Loading && !Finish && !ShowIndex) &&
 								<View style={styles.HEADER_ACTIONS}>
-									<TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
+									<TouchableOpacity
+									  onPress={() => [ setShowIndex(true)]}
+									  style={styles.BACK_BUTON_CONTAINER}
+									>
 										<Icon name={"arrow-back"} size={23} color={'#8B9555'} />
 										<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
 									</TouchableOpacity>

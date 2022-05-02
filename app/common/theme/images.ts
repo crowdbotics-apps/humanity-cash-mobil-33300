@@ -12,6 +12,7 @@ const AV_BASS =  require("../../../assets/images/av_bass.png")
 const AV_BEE =  require("../../../assets/images/av_bee.png")
 const AV_BIRD =  require("../../../assets/images/av_bird.png")
 const AV_SALAMANDER =  require("../../../assets/images/av_salamander.png")
+const SHORT_ICON =  require("../../../assets/images/shortIcon.png")
 
 export const IMAGES = {
   logo: LOGO,
@@ -27,4 +28,5 @@ export const IMAGES = {
   avBee: AV_BEE,
   avBird: AV_BIRD,
   avSalamander: AV_SALAMANDER,
+  shortIcon: SHORT_ICON
 }
