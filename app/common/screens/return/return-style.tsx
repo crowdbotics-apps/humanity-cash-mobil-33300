@@ -230,7 +230,7 @@ export default StyleSheet.create({
     marginTop: METRICS.screenHeight - 200
   },
   LOGO_STYLE: {
-    width: 100,
+    width: 120,
     alignSelf: 'center'
   },
   RETURNS_LABEL: {

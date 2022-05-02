@@ -15,7 +15,7 @@ export const ReturnScreen = observer(function ReturnScreen() {
 	const navigation = useNavigation()
 
 	const returns = {
-		TODAY : [
+		TODAY: [
 			{
 				item: 'Customer sale',
 				time: '7 min ago',
@@ -52,10 +52,6 @@ export const ReturnScreen = observer(function ReturnScreen() {
 	const [Finish, setFinish] = useState(false)
 	const [Search, setSearch] = useState('')
 
-	useEffect(() => {
-		console.log(' ===>>> ', IMAGES.avBass)
-	}, [])
-
 	const ReturnIndex = () => <View>
 		<Image
 			resizeMode="contain"
@@ -64,52 +60,40 @@ export const ReturnScreen = observer(function ReturnScreen() {
 		/>
 		<Text style={styles.AMOUNT}>C$ 382.91</Text>
 		<View style={styles.LINE} />
-<View style={styles.SEARCH_INPUT_CONTAINER}>
-		<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
-		<Icon name={"search"} size={25} color={COLOR.PALETTE.black}/>
-			<TextInput
-				style={styles.SEARCH_INPUT_STYLE}
-				onChangeText={t => setSearch(t)}
-				value={Search}
-				placeholder={`Search`}
-			/>
+		<View style={styles.SEARCH_INPUT_CONTAINER}>
+			<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
+				<Icon name={"search"} size={25} color={COLOR.PALETTE.black} />
+				<TextInput
+					style={styles.SEARCH_INPUT_STYLE}
+					onChangeText={t => setSearch(t)}
+					value={Search}
+					placeholder={`Search`}
+				/>
+			</View>
+			<View style={styles.SEARCH_INPUT_ADJUSTMENTS}>
+				<Image source={IMAGES.shortIcon} resizeMode='contain' style={{ width: 20, height: 20 }} />
+			</View>
 		</View>
-		<View style={styles.SEARCH_INPUT_ADJUSTMENTS}>
-		<Image source={IMAGES.shortIcon} resizeMode='contain' style={{ width: 20, height: 20 }} />
-		</View>
-		</View>
-		{
-			Object.keys(returns).map((r, key) => ([
-				<Text key={key + '_label'} style={styles.RETURNS_LABEL}>TODAY</Text>,
-				returns[r].map((i, key2) => (
-					<View key={key2 + '_values'} style={styles.RETURN_ITEM}>
-						<View style={{ marginLeft: 15 }}>
-							<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
-							<Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text>
-						</View>
-						<View>
-							{i.credit
-								? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
-								: <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
-							}
-							
-						</View>
+		{Object.keys(returns).map((r, key) => ([
+			<Text key={key + '_label'} style={styles.RETURNS_LABEL}>TODAY</Text>,
+			returns[r].map((i, key2) => (
+				<View key={key2 + '_values'} style={styles.RETURN_ITEM}>
+					<View style={{ marginLeft: 15 }}>
+						<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
+						<Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text>
 					</View>
-				))
-			]))
-		}
+					<View>
+						{i.credit
+							? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
+							: <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
+						}
 
-		<Button
-			buttonStyle={{
-				backgroundColor: COLOR.PALETTE.green,
-				marginVertical: 20
-			}}
-			buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
-			onPress={() => [setShowIndex(false), setShowScanModal(true)]}
-			buttonLabel={'Receive or Scan to pay'}
-		/>
+					</View>
+				</View>
+			))
+		]))}
+		<View style={{ height: 100 }} />
 	</View>
-
 
 	const ScanModal = () => (
 		<Modal visible={ShowScanModal} transparent>
@@ -248,8 +232,8 @@ Thank you
 							{(!ShowScanModal && !Loading && !Finish && !ShowIndex) &&
 								<View style={styles.HEADER_ACTIONS}>
 									<TouchableOpacity
-									  onPress={() => [ setShowIndex(true)]}
-									  style={styles.BACK_BUTON_CONTAINER}
+										onPress={() => [setShowIndex(true)]}
+										style={styles.BACK_BUTON_CONTAINER}
 									>
 										<Icon name={"arrow-back"} size={23} color={'#8B9555'} />
 										<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
@@ -268,6 +252,19 @@ Thank you
 					</View>
 					{ScanModal()}
 				</ScrollView>
+				{ShowIndex &&
+					<Button
+						buttonStyle={{
+							backgroundColor: COLOR.PALETTE.green,
+							top: METRICS.screenHeight - 80,
+							position: 'absolute'
+						}}
+						buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
+						onPress={() => [setShowIndex(false), setShowScanModal(true)]}
+						buttonLabel={'Receive or Scan to pay'}
+					/>
+				}
+
 			</KeyboardAvoidingView>
 		</Screen>
 	)

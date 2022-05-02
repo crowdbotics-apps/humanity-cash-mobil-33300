@@ -83,7 +83,6 @@ export const LoginStoreModel = types
       self.billing_data_added = user.billing_data_added
     },
     setStep(step) {
-      console.log('store -> ', step)
       self.currentStep = step
     },
     setSignupData(data) {

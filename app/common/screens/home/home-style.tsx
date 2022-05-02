@@ -8,6 +8,12 @@ export default StyleSheet.create({
     marginTop: 50,
     justifyContent: 'space-between'
   },
+  ROOT_CONTAINER: {
+    flex: 1,
+    backgroundColor: COLOR.PALETTE.white,
+    justifyContent: 'space-between',
+    minHeight: METRICS.screenHeight,
+  },
   BACK_BUTON_LABEL: {
     fontSize: 16,
     color: COLOR.PALETTE.green
@@ -94,5 +100,81 @@ export default StyleSheet.create({
     fontSize: 16,
     color: COLOR.PALETTE.blue,
     textDecorationLine: 'underline'
+  },
+  LOGO_STYLE: {
+    width: 120,
+    alignSelf: 'center'
+  },
+  LINE: {
+    width: METRICS.screenWidth * 0.95,
+    backgroundColor: COLOR.PALETTE.strongGreen,
+    height: 1,
+    alignSelf: 'center',
+    marginVertical: 10
+  },
+  AMOUNT: {
+    color: COLOR.PALETTE.blue,
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  AMOUNT_ICON: {
+    width: 30,
+    height: 30,
+    marginRight: 5
+  },
+  AMOUNT_CONTAINER: {
+    flexDirection: 'row',
+    marginLeft: 10,
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  LOAD_WALLET_LABEL: {
+    color: COLOR.PALETTE.white,
+    fontSize: 16,
+    textAlign: 'center'
+  },
+  LOAD_WALLET_CONTAINER: {
+    backgroundColor: COLOR.PALETTE.mustard,
+    width: 120,
+    height: 25,
+    borderRadius: 20,
+    marginRight: 10
+  },
+  NEWS_CONTAINER: {
+    width: METRICS.screenWidth * 0.9,
+    backgroundColor: COLOR.PALETTE.lightGray,
+    alignItems: 'center',
+    height: 500,
+    alignSelf: 'center',
+    justifyContent: 'space-around',
+    marginTop: 15
+  },
+  NEWS_HEADER_CONTAINER: {
+    flexDirection: 'row',
+    width: METRICS.screenWidth * 0.80,
+    justifyContent: 'space-between',
+    marginTop: 10
+  },
+  NEWS_TAG: {
+    fontSize: 10,
+    color: COLOR.PALETTE.black
+  },
+  NEWS_TITLE: {
+    fontSize: 18,
+    color: COLOR.PALETTE.black,
+    fontWeight: 'bold',
+    marginTop: 15,
+    width: METRICS.screenWidth * 0.80,
+  },
+  NEWS_BODY: {
+    fontSize: 18,
+    color: COLOR.PALETTE.black,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.80,
+  },
+  NEWS_IMAGE: {
+    width: METRICS.screenWidth * 0.80,
+    flex: 1,
+    height: null,
   },
 })
