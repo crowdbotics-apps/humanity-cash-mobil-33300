@@ -1,191 +1,175 @@
-import {observer} from "mobx-react-lite";
-import {useNavigation} from "@react-navigation/native";
-import React, {useEffect, useRef, useState} from "react";
-import {Button, Icon, Screen, Text} from "../../components";
-import {Image, TouchableOpacity, View} from "react-native";
-import {COLOR, IMAGES} from "../../theme";
-import {ButtonIcon} from "../../components/button-icon/button-icon";
+import { observer } from "mobx-react-lite";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Screen, Text } from "../../components";
+import { Image, TouchableOpacity, View, Modal, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
+import { COLOR, IMAGES, METRICS } from "../../theme";
+import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from './home-style';
+import Icon from "react-native-vector-icons/MaterialIcons"
+import { CheckBox } from 'react-native-elements'
 
+const userData = {
+	profile: {
+		name: 'rafa',
+		last_name: 'Clemente',
+		mail: 'rafael@mail.com'
+	},
+	bankInfo: {
+		bankName: 'nombre'
+	}
+}
 
-import {icons} from "../../components/icon/icons";
-import {transform} from "@babel/core";
-// import setConnected = MapboxGL.setConnected;
-import {RESOURCES} from "./home-data";
-import {useLoginStore} from "../../utils/custom_hooks";
-// import {MapResource} from "../../components/map-source/map-source";
-
-
-
-
-const BATHROOM = [-76.30748411492345, 36.907571047369025]
-const INITIAL = [-76.3070636534724, 36.90686794486544]
-
-const ICON_MARGIN = 12
+const news = [
+	{
+		tag: 'MERCHANT OF THE MONTH',
+		date: 'SEPTEMBER',
+		title: 'Dory & Ginger',
+		body: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
+		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	},
+	{
+		tag: 'MERCHANT OF THE MONTH',
+		date: 'SEPTEMBER',
+		title: 'Dory & Ginger',
+		body: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
+		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	}
+]
 
 export const HomeScreen = observer(function HomeScreen() {
-    const navigation = useNavigation()
-    const [coordinates, setCoordinates] = useState(INITIAL);
-    const inputEl = useRef(null);
-    const [ZoomLevel, setZoomLevel] = useState(16)
-    const [ShowPumpOut, setShowPumpOut] = useState(false)
-    const [ShowFuel, setShowFuel] = useState(false)
-    const [ShowElectricity, setShowElectricity] = useState(false)
-    const [CurrentIndex, setCurrentIndex] = useState(0)
-    const loginStore = useLoginStore()
+	const navigation = useNavigation()
+
+	const [ShowBankModal, setShowBankModal] = useState(false)
+	const [ShowBankStepModal, setShowBankStepModal] = useState(false)
+	const [ModalAgree, setModalAgree] = useState(false)
+
+	useEffect(() => {
+		if (!userData.profile.name) navigation.navigate("setupProfile", {})
+		else if (!userData.bankInfo.bankName) setShowBankModal(true)
+		// navigation.navigate("return", {})
+	}, [])
+
+	const bankModal = () => (
+		<Modal visible={ShowBankModal} transparent>
+			<View style={styles.ROOT_MODAL}>
+				<TouchableOpacity onPress={() => setShowBankModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
+					<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
+					<Icon name={"close"} size={20} color={'#8B9555'} />
+				</TouchableOpacity>
+				<View style={styles.MODAL_CONTAINER}>
+					{ShowBankStepModal
+						? <View style={styles.MODAL_CONTENT}>
+							<Text style={styles.STEP_TITLE}>Currents uses Dwolla to link your personal bank account.</Text>
+
+							<View style={styles.AGREE_CONTAINER}>
+								<CheckBox
+									checked={ModalAgree}
+									onPress={() => setModalAgree(!ModalAgree)}
+									checkedColor={COLOR.PALETTE.green}
+								/>
+								<Text style={styles.AGREE_LABEL}>{`By checking this box, you agree to the `}
+									<Text style={styles.AGREE_LABEL_LINK} onPress={() => console.log('dwolla')}>
+										{"Dwolla Terms of Service "}
+									</Text>
+									{`and `}
+									<Text style={styles.AGREE_LABEL_LINK} onPress={() => console.log('dwolla')}>
+										{"Dwolla Privacy Policy"}
+									</Text>
+								</Text>
+							</View>
 
 
-    const fuelIconPress = ()=>{
-        let newIndex = 0
-        if(ShowFuel){
-            newIndex = CurrentIndex + 1
-            if(newIndex === RESOURCES.fuel.length){
-                newIndex = 0
+							<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => navigation.navigate("splash", {})}>
+								<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
+							</TouchableOpacity>
+						</View>
+						: <View style={styles.MODAL_CONTENT}>
+							<Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
+							<Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
+							<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => setShowBankStepModal(true)}>
+								<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
+							</TouchableOpacity>
+						</View>
+					}
 
-            }
-            setZoomLevel(18)
-        }else{
-            setZoomLevel(16)
-        }
+				</View>
+				<View />
+			</View>
+		</Modal>
+	)
 
-        setCoordinates([RESOURCES.fuel[newIndex].lon, RESOURCES.fuel[newIndex].lat])
-        setCurrentIndex(newIndex)
-        setShowFuel(true)
-        setShowElectricity(false)
-        setShowPumpOut(false)
-    }
+	const renderNews = () => (
+			news.map((n, key) => <View key={key + '_new'} style={styles.NEWS_CONTAINER}>
+				<View style={styles.NEWS_HEADER_CONTAINER}>
+					<Text style={styles.NEWS_TAG}>{n.tag}</Text>
+					<Text style={styles.NEWS_TAG}>{n.date}</Text>
+				</View>
+				<Text style={styles.NEWS_TITLE}>{n.title}</Text>
+				<Text style={styles.NEWS_BODY}>{n.body}</Text>
+				<Image
+					source={{ uri: n.image }}
+					resizeMode="contain"
+					style={styles.NEWS_IMAGE}
+				/>
+			</View>
+			)
+	)
 
-    const pumOutIconPress = ()=>{
-        let newIndex = 0
-        if(ShowPumpOut){
-            newIndex = CurrentIndex + 1
-            if(newIndex === RESOURCES.pumpOuts.length){
-                newIndex = 0
-            }
-            setZoomLevel(18)
-        }else{
-            setZoomLevel(16)
-        }
-        setCoordinates([RESOURCES.pumpOuts[newIndex].lon, RESOURCES.pumpOuts[newIndex].lat])
-        setCurrentIndex(newIndex)
-        setShowFuel(false)
-        setShowElectricity(false)
-        setShowPumpOut(true)
-    }
+return (
+	<Screen
+		preset="fixed"
+		statusBar={'dark-content'}
+		unsafe={true}
+	>
+		<KeyboardAvoidingView
+			enabled
+			behavior={Platform.OS === 'ios' ? 'padding' : null}
+			style={styles.ROOT}
+		>
+			<ScrollView bounces={false}>
+				<View style={styles.ROOT_CONTAINER}>
+					<View>
+						<View style={styles.STEP_CONTAINER}>
+							<Image
+								resizeMode="contain"
+								source={IMAGES.logoFull}
+								style={styles.LOGO_STYLE}
+							/>
 
-    const electricityIconPress = ()=>{
-        let newIndex = 0
-        if(ShowElectricity){
-            newIndex = CurrentIndex + 1
-            if(newIndex === RESOURCES.electricity.length){
-                newIndex = 0
+							<View style={styles.AMOUNT_CONTAINER}>
+								<View style={{ flexDirection: 'row' }}>
+									<Image
+										resizeMode="contain"
+										source={IMAGES.currentDollarIcon}
+										style={styles.AMOUNT_ICON}
+									/>
+									<Text style={styles.AMOUNT}>382.91</Text>
+								</View>
+								<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER}>
+									<Text style={styles.LOAD_WALLET_LABEL}>Load Wallet</Text>
+								</TouchableOpacity>
+							</View>
+							<View style={styles.LINE} />
+							{renderNews()}
+							<View style={{ height: 100 }} />
+						</View>
+					</View>
+				</View>
+				{bankModal()}
 
-            }
-            setZoomLevel(18)
-        }else{
-            setZoomLevel(16)
-        }
-        setCoordinates([RESOURCES.electricity[newIndex].lon, RESOURCES.electricity[newIndex].lat])
-        setCurrentIndex(newIndex)
-        setShowFuel(false)
-        setShowElectricity(true)
-        setShowPumpOut(false)
-    }
-
-    const logout = () => {
-        navigation.navigate("login")
-        loginStore.reset()
-    }
-
-
-    return (
-
-        <Screen preset="scroll" statusBar={"dark-content"} showHeader={false}>
-            <View style={styles.NAV_BAR}>
-                <ButtonIcon icon={'profile'} style={{tintColor: COLOR.PALETTE.white}}
-                            touchableStyle={{marginLeft: ICON_MARGIN}} onPress={()=>{
-                    logout()
-                }} />
-
-                <View style={styles.MIDDLE_NAV_BAR}>
-                    <Text style={styles.MIDDLE_NAV_BAR_TEXT}>marina name</Text>
-                    <Icon icon={'down'}  containerStyle={{alignSelf:"center"}} style={styles.DOWN_ICON} />
-                </View>
-
-                <ButtonIcon icon={'settings'} style={{tintColor: COLOR.PALETTE.white}}
-                            touchableStyle={{marginRight:ICON_MARGIN}} onPress={()=>{
-                    alert("not implemented yet!!")
-                }} />
-            </View>
-
-            <View style={styles.TOP_RIGHT_MENU_CONTAINER}>
-                <ButtonIcon icon={'electricity'} style={{tintColor: COLOR.PALETTE.white}} touchableStyle={{marginTop:ICON_MARGIN, borderRadius: 90}} onPress={()=>{
-                    electricityIconPress()
-                }} />
-
-                <ButtonIcon icon={'fuel'} style={{tintColor: COLOR.PALETTE.white}} touchableStyle={{marginTop:ICON_MARGIN, borderRadius: 90}} onPress={()=>{
-                    fuelIconPress()
-                }} />
-
-                <ButtonIcon icon={'pumpOut'} style={{tintColor: COLOR.PALETTE.white}}  touchableStyle={{marginTop:ICON_MARGIN, borderRadius: 90}} onPress={()=>{
-                    pumOutIconPress()
-                }} />
-
-                <ButtonIcon icon={'paperPlane'}  style={{tintColor: COLOR.PALETTE.white}}   touchableStyle={{marginTop:ICON_MARGIN, borderRadius: 90}} onPress={()=>{
-                    setCoordinates(INITIAL)
-                    setZoomLevel(20)
-
-                }} />
-            </View>
-
-            <View style={styles.DOWN_RIGHT_MENU_CONTAINER}>
-                <ButtonIcon icon={'map'} style={{tintColor: COLOR.PALETTE.marina_dark}}
-                            touchableStyle={styles.SERVICE_BUTTON}
-                            onPress={()=>{
-                                alert("not implemented yet!!")
-                            }} />
-
-
-                <ButtonIcon icon={'plus'} style={{tintColor: COLOR.PALETTE.marina_dark}}
-                            touchableStyle={styles.SERVICE_BUTTON}
-                            onPress={async ()=>{
-                                console.log("entranding")
-
-
-                                let zoom = await inputEl.current.getZoom()
-                                if(zoom <= 20){
-                                    setZoomLevel(zoom + 1)
-                                }
-
-
-                                // if(inputEl.current){
-                                //     // @ts-ignore
-                                //     console.log(inputEl.current)
-                                // }
-
-
-
-                            }} />
-
-                <ButtonIcon icon={'minus'} style={{tintColor: COLOR.PALETTE.marina_dark}}
-                            touchableStyle={styles.SERVICE_BUTTON}
-                            onPress={async ()=>{
-
-                                let zoom = await inputEl.current.getZoom()
-                                if(zoom >= 12){
-                                    setZoomLevel(zoom - 1)
-                                }
-                            }} />
-            </View>
-
-
-            <View style={styles.page}>
-                <View style={styles.container}>
-
-                </View>
-            </View>
-
-
-        </Screen>
-    )
+			</ScrollView>
+			<Button
+				buttonStyle={{
+					backgroundColor: COLOR.PALETTE.blue,
+					top: METRICS.screenHeight - 80,
+					position: 'absolute'
+				}}
+				buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
+				onPress={() => navigation.navigate("return", {})}
+				buttonLabel={'Scan to Pay or Receive'}
+			/>
+		</KeyboardAvoidingView>
+	</Screen>
+)
 })

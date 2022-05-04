@@ -38,7 +38,7 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.orange,
     marginLeft: 10
   },
-   STEP_TITLE_BLACK: {
+  STEP_TITLE_BLACK: {
     fontSize: 32,
     color: COLOR.PALETTE.black,
     marginLeft: 10,
@@ -377,8 +377,8 @@ export default StyleSheet.create({
     height: 84,
     borderRadius: 42,
     backgroundColor: COLOR.PALETTE.lightGreen,
-    justifyContent: 'center', 
-    alignSelf: 'center',   
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   BACK_IMAGE_BOX: {
     width: METRICS.screenWidth * 0.95,
@@ -391,8 +391,8 @@ export default StyleSheet.create({
     borderRadius: 42
   },
   MODAL_CONTENT: {
-    backgroundColor: 'white',
-    width: METRICS.screenWidth*0.85,
+    backgroundColor: '#F8FAF6',
+    width: METRICS.screenWidth * 0.85,
     height: 230,
     alignItems: 'center',
     borderRadius: 10,
@@ -412,4 +412,26 @@ export default StyleSheet.create({
     textAlignVertical: 'center',
     marginBottom: 15
   },
+  CHECK_OUTSIDE: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderColor: COLOR.PALETTE.gray,
+    borderWidth: 0.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOffset: {width: -2, height: 4},
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    backgroundColor: COLOR.PALETTE.white,
+    elevation: 5,
+    marginRight: 15
+  },
+CHECK_INSIDE: {
+  width: 16,
+  height: 16,
+  borderRadius: 8,
+  backgroundColor: COLOR.PALETTE.black
+},
 })

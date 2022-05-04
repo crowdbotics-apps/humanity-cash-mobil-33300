@@ -33,12 +33,27 @@ export const LoginStoreModel = types
     state: types.maybeNull(types.string),
     postal_code: types.maybeNull(types.string),
     country: types.maybeNull(types.string),
-    billing_data_added: types.maybeNull(types.boolean)
+    billing_data_added: types.maybeNull(types.boolean),
+    // currentStep
+    currentStep: types.maybeNull(types.string),
+    // signup
+    signupData: types.frozen(),
+    // setup
+    setupData: types.frozen(),
   })
   .views(self => ({
     get isLoggedIn() {
       return self.access_token !== null && self.access_token !== undefined
-    }
+    },
+    get getStep() {
+      return self.currentStep
+    },
+    get getSignupData() {
+      return self.signupData
+    },
+    get getSetupData() {
+      return self.setupData
+    },
   }))
   .actions(self => ({
     setUser(user) {
@@ -66,6 +81,15 @@ export const LoginStoreModel = types
       self.postal_code = user.postal_code
       self.country = user.country
       self.billing_data_added = user.billing_data_added
+    },
+    setStep(step) {
+      self.currentStep = step
+    },
+    setSignupData(data) {
+      self.signupData = data
+    },
+    setSetupData(data) {
+      self.setupData = data
     },
     setApiToken(tokenProvided) {
       const api = self.environment.api.apisauce

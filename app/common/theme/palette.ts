@@ -34,9 +34,10 @@ export const PALETTE = {
   primaryDisabled: "#A6D4DD",
   angry: "#B00020",
 
-  modalBackgroundColor: "rgba(246, 246, 241, 0.95)",
+  modalBackgroundColor: "#F6F6F195",
   ligthGray: '#F6F5F0',
   background: '#F7F5F0',
+  lightGray: '#F5F5F0',
   blue: '#008ABA',
   yellow: '#F7BE00',
   darkYellow: '#D2A824',
@@ -44,5 +45,7 @@ export const PALETTE = {
   green: '#8B9555',
   strongGreen: '#395344',
   pink: '#DF9BB9',
-  orange: '#D59B76'
+  orange: '#D59B76',
+  purple: '#442E88',
+  mustard: '#D2A824'
 }

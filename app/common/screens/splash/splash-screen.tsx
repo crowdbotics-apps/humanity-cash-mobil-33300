@@ -24,8 +24,13 @@ export const SplashScreen = observer(function SplashScreen() {
   }
 
   useEffect(() => {
+    let step = loginStore.getStep
     setupDatosIniciales()
     setTimeout(function () {
+      if (step !== '' && step !== null) {
+        navigation.navigate(step, {})
+      } 
+      if (loginStore.isLoggedIn) navigation.navigate('home', {})
       setLoading(false)
     }, 2000)
   }, [])

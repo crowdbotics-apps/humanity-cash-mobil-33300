@@ -9,6 +9,8 @@ type ButtonProps = {
   buttonStyle?: any
   buttonLabelStyle?: any
   buttonLabel?: string | ''
+  buttonLabelPre?: any
+  buttonLabelPos?: any
   disabled?: boolean | false
   loading?: boolean | false
 }
@@ -29,7 +31,11 @@ export function Button(props: ButtonProps) {
     >
       {props.loading
         ? <ActivityIndicator size="small" color={'black'} />
-        : <Text style={[styles.BUTTON_LABEL, props.buttonLabelStyle]}>{props.buttonLabel}</Text>
+        : [
+          props.buttonLabelPre && props.buttonLabelPre,
+          <Text key={'button_label'} style={[styles.BUTTON_LABEL, props.buttonLabelStyle]}>{props.buttonLabel}</Text>,
+          props.buttonLabelPos && props.buttonLabelPos,
+        ]
       }
     </TouchableOpacity>
   )

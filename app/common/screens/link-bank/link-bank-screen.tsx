@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { TextInput, View, TouchableOpacity, ScrollView } from "react-native"
-import { Text, Screen, Button, TextInputComponent } from "../../components"
+import { Text, Screen, Checkbox, Button, TextInputComponent } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
 import Ionicons from "react-native-vector-icons/Ionicons"
-import styles from "./signup-style"
+import styles from "./link-bank-style"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import { COLOR } from '../../theme';
-import { CheckBox } from 'react-native-elements'
 interface SignupFields {
   email: string;
   password: string;
@@ -38,7 +37,7 @@ const steps = [
   "touch_id"
 ]
 
-export const SignupScreen = observer(function SignupScreen() {
+export const LinkBankScreen = observer(function LinkBankScreen() {
   const rootStore = useStores()
   const navigation = useNavigation()
   const { loginStore } = rootStore
@@ -442,7 +441,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const backButtonHandler = () => {
     switch (Step) {
       case "email":
-        navigation.navigate("home", {})
+        navigation.navigate("splash", {})
         break
       case "legal":
         setStep("email")
@@ -464,13 +463,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         break
     }
   }
+
   const nextButtonHandler = () => {
-    let signupData = { Email, Phone, Code1, Code2, Code3, Code4, Code5, Code6, }
-    loginStore.setSignupData(signupData)
     switch (Step) {
       case "email":
         // register()
-        loginStore.setStep('signup')
         setStep("verify_email")
         break
       case "verify_email":
@@ -493,22 +490,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         break;
       case "touch_id":
         navigation.navigate("setupProfile", {})
-        loginStore.setStep('')
         break;
     }
   }
-
-    useEffect(() => {
-      let data = loginStore.getSignupData
-      if(data?.Email) setEmail(data.Email)
-      if(data?.Phone) setPhone(data.Phone)
-      if(data?.Code1) setCode1(data.Code1)
-      if(data?.Code2) setCode2(data.Code2)
-      if(data?.Code3) setCode3(data.Code3)
-      if(data?.Code4) setCode4(data.Code4)
-      if(data?.Code5) setCode5(data.Code5)
-      if(data?.Code6) setCode6(data.Code6)
-  }, [])
 
   return (
     <Screen preset="fixed" statusBar={"dark-content"} unsafe={true}>
@@ -526,13 +510,14 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         <View>
           {Step === "email" && (
             <View style={styles.AGREE_CONTAINER}>
-              <CheckBox
-                checked={Agree}
-                onPress={() => [
-                  setAgree(!Agree),
-                  validateEmail(Email, !Agree)
+              <Checkbox
+                value={Agree}
+                onToggle={value => [
+                  setAgree(value),
+                  validateEmail(Email, value)
                 ]}
-                checkedColor={COLOR.PALETTE.green}
+                fillStyle={styles.CHECKBOX_FILL}
+                outlineStyle={styles.CHECKBOX_OUTLINE}
               />
               <Text style={styles.AGREE_LABEL}>
                 {
