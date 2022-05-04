@@ -80,11 +80,11 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.pink,
   },
   AGREE_CONTAINER: {
-    width: METRICS.screenWidth,
+    width: METRICS.screenWidth * 0.85,
     alignSelf: 'center',
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 10,
+    justifyContent: 'space-between',
+    marginBottom: 10
   },
   CHECKBOX_OUTLINE: {  },
   CHECKBOX_FILL: {
@@ -92,7 +92,7 @@ export default StyleSheet.create({
     borderWidth: 0
   },
   AGREE_LABEL: {
-    width: METRICS.screenWidth * 0.70,
+    width: METRICS.screenWidth * 0.80,
     fontSize: 16,
     color: COLOR.PALETTE.black,
   },
