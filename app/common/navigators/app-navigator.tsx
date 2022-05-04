@@ -21,6 +21,7 @@ import { SetupProfileScreen } from "../screens/setup-profile/setup-profile-scree
 import { LoginScreen } from "../screens/login/login-screen";
 import { LinkBankScreen } from "../screens/link-bank/link-bank-screen";
 import { HomeScreen } from "../screens/home/home-screen";
+import { ReturnScreen } from "../screens/return/return-screen";
 
 import { ResetPasswordScreen } from "../screens/reset-password/reset-password-screen";
 import { CheckEmailScreen } from "../screens/check-email/check-email-screen";
@@ -44,6 +45,7 @@ export type NavigatorParamList = {
 	login: any
 	home: any
 	linkBank: any
+	return: any
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -74,6 +76,7 @@ const AppStack = () => {
 
 			<Stack.Screen name="login" component={LoginScreen} />
 			<Stack.Screen name="home" component={HomeScreen} />
+			<Stack.Screen name="return" component={ReturnScreen} />
 			<Stack.Screen name="linkBank" component={LinkBankScreen} />
 		</Stack.Navigator>
 

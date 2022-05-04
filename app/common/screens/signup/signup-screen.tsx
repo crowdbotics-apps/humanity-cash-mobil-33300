@@ -464,7 +464,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         break
     }
   }
-
   const nextButtonHandler = () => {
     let signupData = { Email, Phone, Code1, Code2, Code3, Code4, Code5, Code6, }
     loginStore.setSignupData(signupData)

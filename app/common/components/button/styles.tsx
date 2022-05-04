@@ -6,6 +6,8 @@ export default StyleSheet.create({
         width: METRICS.screenWidth * 0.95,
         height: 55,
         backgroundColor: COLOR.PALETTE.green,
+        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
         borderRadius: 27.5,

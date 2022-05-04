@@ -30,7 +30,6 @@ export function TextFieldRow(props: TextFieldRowProps) {
                            label={props.placeholder}
                             errorText={props.errorText}
                            onBlur={(aux)=>{
-                               // console.log("onblur", aux)
                                if(props.onBlur)
                                 props.onBlur(aux)
                            }}
