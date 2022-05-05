@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 def code_live_time():
@@ -46,3 +47,41 @@ class UserVerificationCode(models.Model):
     expires_on = models.DateTimeField(_("Expires On"), default=code_live_time)
     timestamp = models.DateTimeField(_("Timestamp"), auto_now_add=True)
     active = models.BooleanField(default=True)
+
+
+class BaseProfileModel(models.Model):
+    profile_picture = models.ImageField(upload_to='profile-pictures', null=True, blank=True)
+    address_1 = models.CharField(max_length=150)
+    address_2 = models.CharField(max_length=150, null=True, blank=True)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=2)
+    zip_code = models.CharField(max_length=16)
+
+    class Meta:
+        abstract = True
+
+
+class Consumer(BaseProfileModel):
+
+    class Meta:
+        db_table = 'consumer'
+
+
+class Merchant(BaseProfileModel):
+    background_picture = models.ImageField(upload_to='background-pictures', null=True, blank=True)
+    business_name = models.CharField(max_length=50)
+    business_story = models.CharField(max_length=50, null=True, blank=True)
+    type_of_business = models.CharField(max_length=50)
+    registered_business_name = models.CharField(max_length=50)
+    industry = models.CharField(max_length=50)
+    phone_number = PhoneNumberField(null=True, blank=True)
+    owner_first_name = models.CharField(max_length=150)
+    owner_last_name = models.CharField(max_length=150)
+    owner_address_1 = models.CharField(max_length=150)
+    owner_address_2 = models.CharField(max_length=150, null=True, blank=True)
+    owner_city = models.CharField(max_length=100)
+    owner_state = models.CharField(max_length=2)
+    owner_zip_code = models.CharField(max_length=16)
+
+    class Meta:
+        db_table = 'merchant'
