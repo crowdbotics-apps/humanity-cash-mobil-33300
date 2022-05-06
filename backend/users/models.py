@@ -50,6 +50,7 @@ class UserVerificationCode(models.Model):
 
 
 class BaseProfileModel(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='profile-pictures', null=True, blank=True)
     address_1 = models.CharField(max_length=150)
     address_2 = models.CharField(max_length=150, null=True, blank=True)
