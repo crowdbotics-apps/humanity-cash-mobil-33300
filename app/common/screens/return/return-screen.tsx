@@ -53,6 +53,11 @@ export const ReturnScreen = observer(function ReturnScreen() {
 	const [Search, setSearch] = useState('')
 
 	const ReturnIndex = () => <View>
+		<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+			<Icon name={"menu"} size={23} color={COLOR.PALETTE.green} />
+			<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+
+		</TouchableOpacity>
 		<Image
 			resizeMode="contain"
 			source={IMAGES.logoFull}

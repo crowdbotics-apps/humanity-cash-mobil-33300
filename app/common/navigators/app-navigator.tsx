@@ -7,12 +7,13 @@
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme, useNavigationContainerRef } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { createDrawerNavigator } from '@react-navigation/drawer'
 // import {
 //   SplashScreen,
 //   TermsConditionsScreen,
 // } from "../screens"
 // import { navigationRef } from "./navigation-utilities"
-import { COLOR } from "../theme"
+import { COLOR, METRICS } from "../theme"
 import React from "react";
 
 import { SplashScreen } from "../screens";
@@ -22,6 +23,7 @@ import { LoginScreen } from "../screens/login/login-screen";
 import { LinkBankScreen } from "../screens/link-bank/link-bank-screen";
 import { HomeScreen } from "../screens/home/home-screen";
 import { ReturnScreen } from "../screens/return/return-screen";
+import { DrawerScreen } from "../screens/drawer/drawer-screen";
 
 import { ResetPasswordScreen } from "../screens/reset-password/reset-password-screen";
 import { CheckEmailScreen } from "../screens/check-email/check-email-screen";
@@ -46,10 +48,12 @@ export type NavigatorParamList = {
 	home: any
 	linkBank: any
 	return: any
+	drawer: any
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
+const Drawer = createDrawerNavigator<NavigatorParamList>();
 
 
 const defaultHeaderOptions = {
@@ -59,7 +63,32 @@ const defaultHeaderOptions = {
 	headerTintColor: '#fff',
 };
 
+const AppStackDrawer = () => {
+	return (
+		<Drawer.Navigator 
+			screenOptions={{
+				headerShown: false,
+				drawerStyle: {
+					width: METRICS.screenWidth * 0.9,
+				},
+			}}
+			initialRouteName="splash"
+			drawerContent={(props) => <DrawerScreen {...props} />}
+		>
+			<Drawer.Screen  name="splash" component={SplashScreen} />
+			<Drawer.Screen name="signup" component={SignupScreen} />
+			<Drawer.Screen name="setupProfile" component={SetupProfileScreen} />
 
+			<Drawer.Screen name="login" component={LoginScreen} />
+			<Drawer.Screen name="home" component={HomeScreen} />
+			<Drawer.Screen name="return" component={ReturnScreen} />
+			<Drawer.Screen name="linkBank" component={LinkBankScreen} />
+			{/* <Drawer.Screen name="drawer" component={DrawerScreen} /> */}
+			
+		</Drawer.Navigator>
+
+	)
+}
 
 const AppStack = () => {
 	return (
@@ -94,7 +123,8 @@ export const AppNavigator = (props: NavigationProps) => {
 			theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
 			{...props}
 		>
-			<AppStack />
+			{/* <AppStack /> */}
+			<AppStackDrawer />
 		</NavigationContainer>
 	)
 }

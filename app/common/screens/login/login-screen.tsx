@@ -24,6 +24,7 @@ export const LoginScreen = observer(function LoginScreen() {
   const [Username, setUsername] = useState('')
   const [Pass, setPass] = useState('')
   const [HidePass, setHidePass] = useState(true)
+  const [Loading, setLoading] = useState(false)
 
   return (
     <Screen
@@ -86,13 +87,20 @@ export const LoginScreen = observer(function LoginScreen() {
           </View>
           <Button
             buttonStyle={{
-              backgroundColor: COLOR.PALETTE.green,
+              backgroundColor: Loading ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green,
             }}
-            onPress={() => [
-              navigation.navigate("home", {}),
-              loginStore.setApiToken('123')
-            ]}
+            onPress={() => {
+              setLoading(true)
+              setTimeout(function () {
+                navigation.navigate("home", {})
+                loginStore.setApiToken('123')
+                setLoading(false)
+              }, 2000)
+              
+            }}
             buttonLabel={'Log in'}
+            disabled={Loading}
+            loading={Loading}
           />
         </View>
       </View>

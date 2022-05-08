@@ -32,6 +32,11 @@ export default StyleSheet.create({
     marginLeft: 10,
     width: METRICS.screenWidth * 0.90,
   },
+  HEADER: {
+    marginLeft: 10,
+    marginTop: 10,
+    flexDirection: 'row',
+  },
   BACK_BUTON_LABEL: {
     fontSize: 16,
     color: COLOR.PALETTE.green
@@ -230,8 +235,9 @@ export default StyleSheet.create({
     marginTop: METRICS.screenHeight - 200
   },
   LOGO_STYLE: {
-    width: 120,
-    alignSelf: 'center'
+    width: 130,
+    height: 60,
+    alignSelf: 'center',
   },
   RETURNS_LABEL: {
     color: COLOR.PALETTE.purple,
