@@ -15,9 +15,12 @@ services:
     environment:
       POSTGRES_PASSWORD: <postgres_pwd>
     volumes:
-      - ./postgres-data/postgres:/var/lib/postgresql/data
+      - postgres-data-humanity:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   redis:
     ports:
       - "6379:6379"
+
+volumes:
+  postgres-data-humanity:
