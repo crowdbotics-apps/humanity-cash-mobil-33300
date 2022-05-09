@@ -52,11 +52,11 @@ class UserVerificationCode(models.Model):
 class BaseProfileModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='profile-pictures', null=True, blank=True)
-    address_1 = models.CharField(max_length=150)
+    address_1 = models.CharField(max_length=150, null=True, blank=True)
     address_2 = models.CharField(max_length=150, null=True, blank=True)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=2)
-    zip_code = models.CharField(max_length=16)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=2, null=True, blank=True)
+    zip_code = models.CharField(max_length=16, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -72,17 +72,19 @@ class Merchant(BaseProfileModel):
     background_picture = models.ImageField(upload_to='background-pictures', null=True, blank=True)
     business_name = models.CharField(max_length=50)
     business_story = models.CharField(max_length=50, null=True, blank=True)
-    type_of_business = models.CharField(max_length=50)
-    registered_business_name = models.CharField(max_length=50)
-    industry = models.CharField(max_length=50)
+    type_of_business = models.CharField(max_length=50, null=True, blank=True)
+    registered_business_name = models.CharField(max_length=50, null=True, blank=True)
+    industry = models.CharField(max_length=50, null=True, blank=True)
+    employer_identification_number = models.CharField(max_length=50, null=True, blank=True)
+    social_security_number = models.CharField(max_length=50, null=True, blank=True)
     phone_number = PhoneNumberField(null=True, blank=True)
-    owner_first_name = models.CharField(max_length=150)
-    owner_last_name = models.CharField(max_length=150)
-    owner_address_1 = models.CharField(max_length=150)
+    owner_first_name = models.CharField(max_length=150, null=True, blank=True)
+    owner_last_name = models.CharField(max_length=150, null=True, blank=True)
+    owner_address_1 = models.CharField(max_length=150, null=True, blank=True)
     owner_address_2 = models.CharField(max_length=150, null=True, blank=True)
-    owner_city = models.CharField(max_length=100)
-    owner_state = models.CharField(max_length=2)
-    owner_zip_code = models.CharField(max_length=16)
+    owner_city = models.CharField(max_length=100, null=True, blank=True)
+    owner_state = models.CharField(max_length=2, null=True, blank=True)
+    owner_zip_code = models.CharField(max_length=16, null=True, blank=True)
 
     class Meta:
         db_table = 'merchant'
