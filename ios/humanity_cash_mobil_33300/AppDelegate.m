@@ -48,7 +48,7 @@ static void InitializeFlipper(UIApplication *application) {
 
   
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
-                                                   moduleName:@"marinas_32691"
+                                                   moduleName:@"humanity_cash_mobil_33300"
                                             initialProperties:nil];
 
   if (@available(iOS 13.0, *)) {
