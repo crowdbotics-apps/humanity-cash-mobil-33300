@@ -6,7 +6,6 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: COLOR.PALETTE.white,
     marginTop: 50,
-    justifyContent: 'space-between'
   },
   ROOT_CONTAINER: {
     flex: 1,
@@ -18,6 +17,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: 50,
+    width: METRICS.screenWidth
   },
   LINE: {
     width: METRICS.screenWidth * 0.95,
@@ -39,7 +39,7 @@ export default StyleSheet.create({
   },
   BACK_BUTON_LABEL: {
     fontSize: 16,
-    color: COLOR.PALETTE.green
+    color: COLOR.PALETTE.black
   },
   BACK_BUTON_LABEL_MODAL: {
     fontSize: 16,
@@ -64,14 +64,21 @@ export default StyleSheet.create({
   STEP_CONTAINER: {},
   STEP_TITLE: {
     fontSize: 32,
-    color: COLOR.PALETTE.green,
+    color: COLOR.PALETTE.orange,
     marginLeft: 10
+  },
+  PENDING_TITLE: {
+    fontSize: 32,
+    color: COLOR.PALETTE.orange,
+    marginLeft: 10,
+    marginTop: 80,
+    width: METRICS.screenWidth * 0.8
   },
   ROOT_MODAL: {
     flex: 1,
     backgroundColor: 'rgba(157, 165, 111, 0.90)',
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'space-between'
   },
   MODAL_CONTAINER: {
     backgroundColor: '#F8FAF6',
@@ -160,11 +167,21 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
     justifyContent: 'space-between',
     alignSelf: 'center',
-    marginTop: 20
+    marginTop: 20,
+  },
+  INPUT_AMOUNT_STYLE_CONTAINER: {
+    flexDirection: 'row',
+    width: METRICS.screenWidth * 0.95,
+    alignSelf: 'center',
+    marginTop: 20,
   },
   INPUT_LABEL_STYLE: {
     fontSize: 10,
     color: COLOR.PALETTE.black,
+  },
+  COSTS_LABEL: {
+    fontSize: 16,
+    color: COLOR.PALETTE.blue,
   },
   INPUT_LABEL_ERROR: {
     fontSize: 10,
@@ -228,11 +245,11 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   LOADING_RETURN: {
-    marginTop: 50,
-    height: METRICS.screenHeight - 50
+    height: METRICS.screenHeight,
+    backgroundColor: COLOR.PALETTE.white
   },
   ACTIVITY: {
-    marginTop: METRICS.screenHeight - 200
+    marginTop: METRICS.screenHeight - 250
   },
   LOGO_STYLE: {
     width: 130,
@@ -284,7 +301,22 @@ export default StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 10
-  }
-
-
+  },
+  BUTTON_AMOUNT: {
+    borderColor: COLOR.PALETTE.green, 
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+    width: 105,
+    height: 40,
+    marginRight: 15,
+    marginBottom: 0
+  },
+  BUTTON_AMOUNT_ACTIVE: {
+    backgroundColor: COLOR.PALETTE.green, 
+    
+    width: 105,
+    height: 40,
+    marginRight: 15,
+    marginBottom: 0
+  },
 })

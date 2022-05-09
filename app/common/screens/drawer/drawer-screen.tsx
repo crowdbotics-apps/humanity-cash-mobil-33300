@@ -23,6 +23,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
 
   React.useEffect(() => {
     console.log('props ===>>> ', props)
+
   })
 
   return (
@@ -48,15 +49,15 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
               />
             </View>
             <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
-              <Text style={styles.USER_NAME}>Dagmar van Eijk</Text>
+              <Text style={styles.USER_NAME}>Rafael Bastos Clemente</Text>
               <TouchableOpacity>
               <Text style={styles.SWITCH_ACCOUNT_LABEL}>Switch account</Text>
               </TouchableOpacity>
             </View>
           </View>
-        <Text style={styles.TOTAL_CURRENCY}>C$ 382.91</Text>
+        <Text style={styles.TOTAL_CURRENCY}>C$ 100.00</Text>
 
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("return", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.scanToPay}
@@ -72,7 +73,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             />
             <Text style={styles.MENU_ITEM_LABEL}>Receive payment</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("loadWallet", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.load_wallet}
@@ -108,7 +109,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             />
             <Text style={styles.MENU_ITEM_LABEL}>Community Chest</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("setupProfile", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.sign_up_your_business}
@@ -116,7 +117,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             />
             <Text style={styles.MENU_ITEM_LABEL}>Sign up your business</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("settings", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.settings}
@@ -135,7 +136,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         </View>
 
         <View style={styles.SIGN_OUT_CONTAINER}>
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => [loginStore.reset(), props.navigation.navigate("login", {})]} style={styles.MENU_ITEM_CONTAINER}>
           <Image
             resizeMode="contain"
             source={IMAGES.logout}

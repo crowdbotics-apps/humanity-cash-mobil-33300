@@ -23,7 +23,10 @@ import { LoginScreen } from "../screens/login/login-screen";
 import { LinkBankScreen } from "../screens/link-bank/link-bank-screen";
 import { HomeScreen } from "../screens/home/home-screen";
 import { ReturnScreen } from "../screens/return/return-screen";
+import { MyProfileScreen } from "../screens/my-profile/my-profile-screen";
+import { LoadWalletScreen } from "../screens/load-wallet/load-wallet-screen";
 import { DrawerScreen } from "../screens/drawer/drawer-screen";
+import { SettingsScreen } from "../screens/settings/settings-screen";
 
 import { ResetPasswordScreen } from "../screens/reset-password/reset-password-screen";
 import { CheckEmailScreen } from "../screens/check-email/check-email-screen";
@@ -49,6 +52,9 @@ export type NavigatorParamList = {
 	linkBank: any
 	return: any
 	drawer: any
+	myProfile: any
+	loadWallet: any
+	settings: any
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -83,6 +89,9 @@ const AppStackDrawer = () => {
 			<Drawer.Screen name="home" component={HomeScreen} />
 			<Drawer.Screen name="return" component={ReturnScreen} />
 			<Drawer.Screen name="linkBank" component={LinkBankScreen} />
+			<Drawer.Screen name="loadWallet" component={LoadWalletScreen} />
+			<Drawer.Screen name="myProfile" component={MyProfileScreen} />
+			<Drawer.Screen name="settings" component={SettingsScreen} />
 			{/* <Drawer.Screen name="drawer" component={DrawerScreen} /> */}
 			
 		</Drawer.Navigator>

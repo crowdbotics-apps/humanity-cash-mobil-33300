@@ -601,7 +601,11 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	const backButtonHandler = () => {
 		switch (Step) {
 			case 'profile_type':
-				navigation.navigate("login", {})
+				if (loginStore.isLoggedIn) {
+					navigation.navigate("home", {})
+				} else {
+					navigation.navigate("login", {})
+				}
 			case 'pic_username':
 				setStep('profile_type')
 				break;
