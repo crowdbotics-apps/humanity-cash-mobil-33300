@@ -3,4 +3,5 @@ env/
 .terraform
 .env
 staticfiles/
+mediafiles/
 postgres-data/

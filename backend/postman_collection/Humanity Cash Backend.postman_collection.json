@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "31f2991f-214c-4ac9-84a8-ad277f02d654",
+		"_postman_id": "9e6eedaa-b3d7-4cff-9520-9bfd2e0bef48",
 		"name": "Humanity Cash Backend",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -392,6 +392,243 @@
 							""
 						]
 					}
+				}
+			]
+		},
+		{
+			"name": "Set up profile",
+			"item": [
+				{
+					"name": "Consumer",
+					"item": [
+						{
+							"name": "11 Set up Consumer Profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "nuevo_chau",
+											"type": "text"
+										},
+										{
+											"key": "consumer_profile.profile_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/250x250.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/consumer/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"consumer",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "13 Set up Consumer Profile Detail",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"Juan\",\n    \"last_name\": \"Perez\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/consumer-detail/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"consumer-detail",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Merchant",
+					"item": [
+						{
+							"name": "72 Set up Merchant Profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "business_name",
+											"value": "OK Company",
+											"type": "text"
+										},
+										{
+											"key": "profile_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/250x250.jpg"
+										},
+										{
+											"key": "background_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/1000x1000.gif"
+										},
+										{
+											"key": "business_story",
+											"value": "Long story.....",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/merchant/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"merchant",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "73 Set up Merchant Profile Detail (Type business)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type_of_business\": \"LLC\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/merchant-detail/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"merchant-detail",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "75 Set up Merchant Profile Detail (industry)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"registered_business_name\": \"New business name\",\n    \"industry\": \"Shopping\",\n    \"employer_identification_number\": \"111111\",\n    \"social_security_number\": \"999999\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/merchant-detail/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"merchant-detail",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}
