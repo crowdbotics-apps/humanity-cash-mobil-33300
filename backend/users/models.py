@@ -1,3 +1,4 @@
+from cities_light.models import City, Region
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -54,8 +55,8 @@ class BaseProfileModel(models.Model):
     profile_picture = models.ImageField(upload_to='profile-pictures', null=True, blank=True)
     address_1 = models.CharField(max_length=150, null=True, blank=True)
     address_2 = models.CharField(max_length=150, null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
-    state = models.CharField(max_length=2, null=True, blank=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
+    state = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True)
     zip_code = models.CharField(max_length=16, null=True, blank=True)
 
     class Meta:
