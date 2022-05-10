@@ -605,7 +605,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"registered_business_name\": \"New business name\",\n    \"industry\": \"Shopping\",\n    \"employer_identification_number\": \"111111\",\n    \"social_security_number\": \"999999\"\n}",
+									"raw": "{\n    \"registered_business_name\": \"New business name\",\n    \"industry\": \"Shopping\",\n    \"employer_identification_number\": \"22222\",\n    \"social_security_number\": \"999999\",\n    \"city\": 1988,\n    \"state\": 28,\n    \"address_1\": \"Addr1\",\n    \"address_2\": \"Addr2\",\n    \"zip_code\": \"12345\",\n    \"phone_number\": \"+1-212-456-7890\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
