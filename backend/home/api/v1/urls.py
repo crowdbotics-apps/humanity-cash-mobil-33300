@@ -25,6 +25,10 @@ urlpatterns = [
         path('merchant/', setup_profile_views.SetupMerchantProfileAPIView.as_view(), name='setup_merchant_profile'),
         path('merchant-detail/', setup_profile_views.SetupMerchantProfileDetailAPIView.as_view(), name='setup_merchant_profile_detail'),
     ])),
+    path('my-profile/', include([
+        path('consumer/', setup_profile_views.ConsumerMyProfileAPIView.as_view(), name='my_profile_consumer'),
+        path('merchant/', setup_profile_views.MerchantMyProfileDetailAPIView.as_view(), name='my_profile_merchant'),
+    ])),
     path('base/', include([
         path('cities/', base_views.CityListView.as_view(), name='cities'),
         path('states/', base_views.StateListView.as_view(), name='states'),
