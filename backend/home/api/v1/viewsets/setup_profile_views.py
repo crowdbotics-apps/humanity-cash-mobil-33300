@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework.generics import UpdateAPIView, CreateAPIView
+from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from home.api.v1.serializers import setup_profile_serializers
@@ -44,7 +44,7 @@ class SetupMerchantProfileAPIView(AuthenticatedAPIView, CreateAPIView):
         serializer.save(user=self.request.user)
 
 
-class SetupMerchantProfileDetailAPIView(AuthenticatedAPIView, UpdateAPIView):
+class SetupMerchantProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
     """
     Endpoint to set up Merchant Profile Details after first log in
     """
@@ -54,3 +54,26 @@ class SetupMerchantProfileDetailAPIView(AuthenticatedAPIView, UpdateAPIView):
     def get_object(self):
         return self.request.user.merchant
 
+
+class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
+    """
+    Endpoint to view and edit Consumer Profile
+    """
+    serializer_class = setup_profile_serializers.ConsumerMyProfileSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    queryset = User.objects.all()
+
+    def get_object(self):
+        return self.request.user
+
+
+class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
+    """
+    Endpoint to view and edit Merchant Profile
+    """
+    serializer_class = setup_profile_serializers.MerchantMyProfileSerializer
+    queryset = Merchant.objects.all()
+    parser_classes = (MultiPartParser, FormParser)
+
+    def get_object(self):
+        return self.request.user.merchant

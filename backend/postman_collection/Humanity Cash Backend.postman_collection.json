@@ -772,6 +772,180 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "My Profile",
+			"item": [
+				{
+					"name": "109 My profile Merchant",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/my-profile/merchant/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"my-profile",
+								"merchant",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "109 My profile Merchant Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "business_name",
+									"value": "OKI Company",
+									"type": "text"
+								},
+								{
+									"key": "business_story",
+									"value": "Story...",
+									"type": "text"
+								},
+								{
+									"key": "profile_picture",
+									"type": "file",
+									"src": "/home/daniel/Imágenes/80x80.png"
+								},
+								{
+									"key": "background_picture",
+									"type": "file",
+									"src": "/home/daniel/Imágenes/1000x1000.gif"
+								},
+								{
+									"key": "address_1",
+									"value": "Street 1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/my-profile/merchant/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"my-profile",
+								"merchant",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "53 My profile Consumer Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "consumer_profile.profile_picture",
+									"type": "file",
+									"src": "/home/daniel/Imágenes/80x80.png"
+								},
+								{
+									"key": "username",
+									"value": "el_user2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/my-profile/consumer/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"my-profile",
+								"consumer",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "53 My profile Consumer Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/my-profile/consumer/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"my-profile",
+								"consumer",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
