@@ -88,6 +88,7 @@ THIRD_PARTY_APPS = [
     'storages',
     'phonenumber_field',
     'django_filters',
+    'cities_light'
 ]
 # MODULES_APPS = get_modules()
 
@@ -269,8 +270,9 @@ if USE_S3:
     DEFAULT_FILE_STORAGE = env.str(
         "DEFAULT_FILE_STORAGE", "home.storage_backends.MediaStorage"
     )
-    MEDIA_URL = '/mediafiles/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
+MEDIA_URL = '/mediafiles/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 # Swagger settings for api docs
 SWAGGER_SETTINGS = {
@@ -291,3 +293,6 @@ if GS_BUCKET_NAME:
     DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
     STATICFILES_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
     GS_DEFAULT_ACL = "publicRead"
+
+CITIES_LIGHT_DATA_DIR = '/opt/webapp/cities'
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['US']

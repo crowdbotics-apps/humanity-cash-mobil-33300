@@ -16,7 +16,7 @@ export default StyleSheet.create({
   },
   BACK_BUTON_LABEL: {
     fontSize: 16,
-    color: COLOR.PALETTE.green
+    color: COLOR.PALETTE.blue
   },
   BACK_BUTON_CONTAINER: {
     flexDirection: 'row',
@@ -34,7 +34,14 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginRight: 30
   },
-  STEP_CONTAINER: {},
+  STEP_CONTAINER: {
+    width: METRICS.screenWidth
+  },
+  HEADER: {
+    marginLeft: 10,
+    marginTop: 10,
+    flexDirection: 'row',
+  },
   STEP_TITLE: {
     fontSize: 32,
     color: COLOR.PALETTE.green,
@@ -102,8 +109,9 @@ export default StyleSheet.create({
     textDecorationLine: 'underline'
   },
   LOGO_STYLE: {
-    width: 120,
-    alignSelf: 'center'
+    width: 130,
+    height: 60,
+    alignSelf: 'center',
   },
   LINE: {
     width: METRICS.screenWidth * 0.95,

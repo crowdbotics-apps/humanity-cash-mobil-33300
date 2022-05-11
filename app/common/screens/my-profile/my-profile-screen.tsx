@@ -5,13 +5,13 @@ import { Button, Screen, Text } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import { ButtonIcon } from "../../components/button-icon/button-icon";
-import styles from './return-style';
+import styles from './my-profile-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
 import { CheckBox } from 'react-native-elements'
 import { PALETTE } from "../../theme/palette";
 
-export const ReturnScreen = observer(function ReturnScreen() {
+export const MyProfileScreen = observer(function MyProfileScreen() {
 	const navigation = useNavigation()
 
 	const returns = {

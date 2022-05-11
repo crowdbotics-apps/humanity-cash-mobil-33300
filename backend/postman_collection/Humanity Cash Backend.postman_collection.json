@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "31f2991f-214c-4ac9-84a8-ad277f02d654",
+		"_postman_id": "9e6eedaa-b3d7-4cff-9520-9bfd2e0bef48",
 		"name": "Humanity Cash Backend",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -392,6 +392,558 @@
 							""
 						]
 					}
+				}
+			]
+		},
+		{
+			"name": "Set up profile",
+			"item": [
+				{
+					"name": "Consumer",
+					"item": [
+						{
+							"name": "11 Set up Consumer Profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "nuevo_chau",
+											"type": "text"
+										},
+										{
+											"key": "consumer_profile.profile_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/250x250.jpg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/consumer/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"consumer",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "13 Set up Consumer Profile Detail",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\": \"Juan\",\n    \"last_name\": \"Perez\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/consumer-detail/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"consumer-detail",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Merchant",
+					"item": [
+						{
+							"name": "72 Set up Merchant Profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "business_name",
+											"value": "OK Company",
+											"type": "text"
+										},
+										{
+											"key": "profile_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/250x250.jpg"
+										},
+										{
+											"key": "background_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/1000x1000.gif"
+										},
+										{
+											"key": "business_story",
+											"value": "Long story.....",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/merchant/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"merchant",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "73 Set up Merchant Profile Detail (Type business)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type_of_business\": \"LLC\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/merchant-detail/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"merchant-detail",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "75 Set up Merchant Profile Detail (industry)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"registered_business_name\": \"New business name\",\n    \"industry\": \"Shopping\",\n    \"employer_identification_number\": \"22222\",\n    \"social_security_number\": \"999999\",\n    \"city\": 1988,\n    \"state\": 28,\n    \"address_1\": \"Addr1\",\n    \"address_2\": \"Addr2\",\n    \"zip_code\": \"12345\",\n    \"phone_number\": \"+1-212-456-7890\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/merchant-detail/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"merchant-detail",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Base",
+			"item": [
+				{
+					"name": "Cities",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/base/cities/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"base",
+								"cities",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cities Search",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/base/cities/?search=wash",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"base",
+								"cities",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "wash"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "States",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/base/states/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"base",
+								"states",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "States Search",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/base/states/?search=n",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"base",
+								"states",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "n"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "My Profile",
+			"item": [
+				{
+					"name": "109 My profile Merchant",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/my-profile/merchant/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"my-profile",
+								"merchant",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "109 My profile Merchant Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "business_name",
+									"value": "OKI Company",
+									"type": "text"
+								},
+								{
+									"key": "business_story",
+									"value": "Story...",
+									"type": "text"
+								},
+								{
+									"key": "profile_picture",
+									"type": "file",
+									"src": "/home/daniel/Imágenes/80x80.png"
+								},
+								{
+									"key": "background_picture",
+									"type": "file",
+									"src": "/home/daniel/Imágenes/1000x1000.gif"
+								},
+								{
+									"key": "address_1",
+									"value": "Street 1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/my-profile/merchant/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"my-profile",
+								"merchant",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "53 My profile Consumer Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "consumer_profile.profile_picture",
+									"type": "file",
+									"src": "/home/daniel/Imágenes/80x80.png"
+								},
+								{
+									"key": "username",
+									"value": "el_user2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/my-profile/consumer/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"my-profile",
+								"consumer",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "53 My profile Consumer Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/my-profile/consumer/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"my-profile",
+								"consumer",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
