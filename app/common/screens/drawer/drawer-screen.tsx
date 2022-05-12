@@ -39,7 +39,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             <Icon name={"close"} size={23} color={COLOR.PALETTE.blue} />
             <Text style={styles.BACK_BUTON_LABEL}>{` Menu`}</Text>
           </TouchableOpacity>
-     
+
           <View style={styles.USER_CONTAINER}>
             <View style={styles.USER_IMAGE_CONTAINER}>
               <Image
@@ -51,11 +51,11 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
               <Text style={styles.USER_NAME}>Rafael Bastos Clemente</Text>
               <TouchableOpacity>
-              <Text style={styles.SWITCH_ACCOUNT_LABEL}>Switch account</Text>
+                <Text style={styles.SWITCH_ACCOUNT_LABEL}>Switch account</Text>
               </TouchableOpacity>
             </View>
           </View>
-        <Text style={styles.TOTAL_CURRENCY}>C$ 100.00</Text>
+          <Text style={styles.TOTAL_CURRENCY}>C$ 100.00</Text>
 
           <TouchableOpacity onPress={() => props.navigation.navigate("return", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
@@ -137,18 +137,15 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
 
         <View style={styles.SIGN_OUT_CONTAINER}>
           <TouchableOpacity onPress={() => [loginStore.reset(), props.navigation.navigate("login", {})]} style={styles.MENU_ITEM_CONTAINER}>
-          <Image
-            resizeMode="contain"
-            source={IMAGES.logout}
-            style={styles.MENU_ITEM_ICON}
-          />
-          <Text style={styles.SIGN_OUT}>Sign out</Text>
+            <Image
+              resizeMode="contain"
+              source={IMAGES.logout}
+              style={styles.MENU_ITEM_ICON}
+            />
+            <Text style={styles.SIGN_OUT}>Sign out</Text>
           </TouchableOpacity>
         </View>
-
       </View>
-
-
     </Screen>
   )
 })

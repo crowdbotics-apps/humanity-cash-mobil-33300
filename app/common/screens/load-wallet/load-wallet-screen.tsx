@@ -32,20 +32,20 @@ C$ ${Amount}`}
 							</Text>
 							<Text style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>
 							<Button
-					buttonStyle={{
-						backgroundColor: COLOR.PALETTE.green,
-						top: METRICS.screenHeight - 80,
-						position: 'absolute'
-					}}
-					onPress={() => [
-						setTransactionConfirm(false),
-						setShowModal(false),
-						setTransactionFinished(false),
-						setAmount(''),
-						navigation.navigate("home", {})
-					]}
-					buttonLabel={'Explore BerkShares'}
-				/>
+								buttonStyle={{
+									backgroundColor: COLOR.PALETTE.green,
+									top: METRICS.screenHeight - 80,
+									position: 'absolute'
+								}}
+								onPress={() => [
+									setTransactionConfirm(false),
+									setShowModal(false),
+									setTransactionFinished(false),
+									setAmount(''),
+									navigation.navigate("home", {})
+								]}
+								buttonLabel={'Explore BerkShares'}
+							/>
 						</View>
 						: <View>
 							<Text style={styles.PENDING_TITLE}>Pending...</Text>

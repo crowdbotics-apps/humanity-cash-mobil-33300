@@ -396,7 +396,11 @@ export default StyleSheet.create({
     height: 230,
     alignItems: 'center',
     borderRadius: 10,
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    shadowOffset: { height: 20, width: 20 },
+    shadowOpacity: 0.3,
+    shadowColor: COLOR.PALETTE.black,
+    elevation: 5
   },
   IMAGE_BOX_LABEL: {
     fontSize: 16,

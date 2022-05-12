@@ -14,13 +14,15 @@ export const LoginStoreModel = types
     first_name: types.maybeNull(types.string),
     last_name: types.maybeNull(types.string),
     email: types.maybeNull(types.string),
+    verified_email: types.maybeNull(types.boolean),
+    password_set: types.maybeNull(types.boolean),
+
     phone_number: types.maybeNull(types.string),
     phone_number_national: types.maybeNull(types.string),
     phone_number_national_iso: types.maybeNull(types.string),
     profile_picture: types.maybeNull(types.string),
     access_token: types.maybeNull(types.string),
     refresh_token: types.maybeNull(types.string),
-    email_verified: types.maybeNull(types.boolean),
     passcode: types.maybeNull(types.boolean),
     finplan_admin: types.maybeNull(types.boolean),
     current_balance: types.maybeNull(types.number),
@@ -62,25 +64,8 @@ export const LoginStoreModel = types
       self.first_name = user.first_name
       self.last_name = user.last_name
       self.email = user.email
-      self.phone_number = user.phone_number
-      self.phone_number_national = user.phone_number_national
-      self.phone_number_national_iso = user.phone_number_national_iso
-      self.profile_picture = user.profile_picture
-      self.access_token = user.token.access
-      self.refresh_token = user.token.refresh
-      self.email_verified = user.email_verified
-      self.passcode = user.passcode
-      self.finplan_admin = user.finplan_admin
-      self.current_balance = user.current_balance
-      self.payment_method_id = user.payment_method_id
-      self.payment_method_choice = user.payment_method_choice
-      self.recurring_selected_option = user.recurring_selected_option
-      self.line1 = user.line1
-      self.city = user.city
-      self.state = user.state
-      self.postal_code = user.postal_code
-      self.country = user.country
-      self.billing_data_added = user.billing_data_added
+      self.password_set = user.password_set
+      self.verified_email = user.verified_email
     },
     setStep(step) {
       self.currentStep = step
@@ -112,6 +97,7 @@ export const LoginStoreModel = types
       self.username = null
       self.first_name = null
       self.last_name = null
+      self.verified_email = null
       self.email = null
       self.phone_number = null
       self.phone_number_national = null
@@ -119,7 +105,6 @@ export const LoginStoreModel = types
       self.profile_picture = null
       self.access_token = null
       self.refresh_token = null
-      self.email_verified = null
       self.passcode = null
       self.finplan_admin = null
       self.current_balance = null
