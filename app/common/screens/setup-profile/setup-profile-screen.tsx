@@ -65,7 +65,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [ShowThankyouModal, setShowThankyouModal] = useState(false)
 
 	const [ProfileType, setProfileType] = useState('personal')
-	const [RandoPic, setRandoPic] = useState(null)
+	const [RandonPic, setRandonPic] = useState(null)
 
 	// personal
 	const [Username, setUsername] = useState('')
@@ -183,7 +183,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				{!imageSource?.uri
 					// ? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
 					? <Image
-						source={RandoPic}
+						source={RandonPic}
 						style={styles.IMAGE_BOX}
 						resizeMode='contain'
 					/>
@@ -256,8 +256,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			<Text style={styles.STEP_TITLE}>Set up your profile</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>*Required fields</Text>
-
-
 			<View style={styles.BUSINESS_IMAGES_CONTAINER}>
 				<TouchableOpacity
 					onPress={() => selectImage('business_back')}
@@ -320,9 +318,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					placeholder={'Business name'}
 				/>
 			</View>
-
-
-
 		</View>
 	)
 	const renderBusinessType = () => (
@@ -713,7 +708,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		if (data?.State) setState(data.State)
 		if (data?.PostalCode) setPostalCode(data.PostalCode)
 		if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
-		setRandoPic(randomImages[Math.round(Math.random() * 3)])
+		setRandonPic(randomImages[Math.round(Math.random() * 3)])
 	}, [])
 
 	return (

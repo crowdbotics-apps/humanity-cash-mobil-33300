@@ -533,7 +533,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   }, [])
 
   return (
-    <Screen preset="fixed" statusBar={"dark-content"} unsafe={true}>
+    <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>
       <View style={styles.ROOT}>
         <View>
           <TouchableOpacity

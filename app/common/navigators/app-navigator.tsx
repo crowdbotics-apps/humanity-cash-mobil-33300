@@ -24,6 +24,7 @@ import { LinkBankScreen } from "../screens/link-bank/link-bank-screen";
 import { HomeScreen } from "../screens/home/home-screen";
 import { ReturnScreen } from "../screens/return/return-screen";
 import { MyProfileScreen } from "../screens/my-profile/my-profile-screen";
+import { CommunityChestScreen } from "../screens/community-chest/community-chest-screen";
 import { LoadWalletScreen } from "../screens/load-wallet/load-wallet-screen";
 import { DrawerScreen } from "../screens/drawer/drawer-screen";
 import { SettingsScreen } from "../screens/settings/settings-screen";
@@ -53,6 +54,7 @@ export type NavigatorParamList = {
 	return: any
 	drawer: any
 	myProfile: any
+	communityChest: any
 	loadWallet: any
 	settings: any
 }
@@ -91,6 +93,7 @@ const AppStackDrawer = () => {
 			<Drawer.Screen name="linkBank" component={LinkBankScreen} />
 			<Drawer.Screen name="loadWallet" component={LoadWalletScreen} />
 			<Drawer.Screen name="myProfile" component={MyProfileScreen} />
+			<Drawer.Screen name="communityChest" component={CommunityChestScreen} />
 			<Drawer.Screen name="settings" component={SettingsScreen} />
 			{/* <Drawer.Screen name="drawer" component={DrawerScreen} /> */}
 			

@@ -1,223 +1,382 @@
 import { observer } from "mobx-react-lite";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Screen, Text } from "../../components";
+import { Button, Screen, Text, ModalSelector } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
-import { ButtonIcon } from "../../components/button-icon/button-icon";
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import styles from './my-profile-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
 import { CheckBox } from 'react-native-elements'
 import { PALETTE } from "../../theme/palette";
+import { notifyMessage } from "../../utils/helpers"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 
 export const MyProfileScreen = observer(function MyProfileScreen() {
 	const navigation = useNavigation()
 
-	const returns = {
-		TODAY: [
-			{
-				item: 'Customer sale',
-				time: '7 min ago',
-				credit: '10.00'
-			},
-			{
-				item: 'Carr Hardware',
-				time: '3:51, Jun 17, 2021',
-				debit: '10.00'
-			},
-			{
-				item: 'Cash out',
-				time: '4:51, Jun 17, 2021',
-				debit: '10.00'
-			},
-		],
-		YESTERDAY: [
-			{
-				item: 'Customer return',
-				time: '3:51, Jun 16, 2021',
-				debit: '10.00'
-			},
-		]
+	const profile_types = ['personal', 'business']
+	const [ProfileType, setProfileType] = useState(profile_types[1])
+
+	// personal
+	const [Username, setUsername] = useState('rafabastos')
+	const [imageSource, setImageSource] = React.useState<any>(null);
+	const [UsernameError, setUsernameError] = useState(false);
+
+	// business
+	const [BusinessImageSource, setBusinessImageSource] = React.useState<any>(null);
+	const [BackBusinessImageSource, setBackBusinessImageSource] = React.useState<any>(null);
+	const [BusinessName, setBusinessName] = React.useState('Rafael Store');
+	const [BusinessStory, setBusinessStory] = React.useState('We design & build innovative musical instruments in Sheffield. Using modern methods & materials, our instruments are engineered for quality sound, ergonomic playability, & legendary durability. ');
+	const [BusinessCategory, setBusinessCategory] = React.useState('IT Supplies');
+	const [BusinessWebsite, setBusinessWebsite] = React.useState('www.rafaelsite.com');
+	const [Address1, setAddress1] = React.useState('');
+	const [Address2, setAddress2] = React.useState('');
+	const [PostalCode, setPostalCode] = React.useState('');
+	const [PhoneNumber, setPhoneNumber] = React.useState('');	
+
+	const [City, setCity] = React.useState(1);
+	const states = [
+		{id: "AL", title: "AL", description: "Alabama"},
+    {id: "AK", title: "AK", description: "Alaska"},
+    {id: "AS", title: "AS", description: "American Samoa"},
+    {id: "AZ", title: "AZ", description: "Arizona"},
+    {id: "AR", title: "AR", description: "Arkansas"},
+    {id: "CA", title: "CA", description: "California"},
+    {id: "CO", title: "CO", description: "Colorado"},
+    {id: "CT", title: "CT", description: "Connecticut"},
+    {id: "DE", title: "DE", description: "Delaware"},
+    {id: "DC", title: "DC", description: "District Of Columbia"},
+    {id: "FM", title: "FM", description: "Federated States Of Micronesia"},
+    {id: "FL", title: "FL", description: "Florida"},
+    {id: "GA", title: "GA", description: "Georgia"},
+    {id: "GU", title: "GU", description: "Guam"},
+    {id: "HI", title: "HI", description: "Hawaii"},
+    {id: "ID", title: "ID", description: "Idaho"},
+    {id: "IL", title: "IL", description: "Illinois"},
+    {id: "IN", title: "IN", description: "Indiana"},
+    {id: "IA", title: "IA", description: "Iowa"},
+    {id: "KS", title: "KS", description: "Kansas"},
+    {id: "KY", title: "KY", description: "Kentucky"},
+    {id: "LA", title: "LA", description: "Louisiana"},
+    {id: "ME", title: "ME", description: "Maine"},
+    {id: "MH", title: "MH", description: "Marshall Islands"},
+    {id: "MD", title: "MD", description: "Maryland"},
+    {id: "MA", title: "MA", description: "Massachusetts"},
+    {id: "MI", title: "MI", description: "Michigan"},
+    {id: "MN", title: "MN", description: "Minnesota"},
+    {id: "MS", title: "MS", description: "Mississippi"},
+    {id: "MO", title: "MO", description: "Missouri"},
+    {id: "MT", title: "MT", description: "Montana"},
+    {id: "NE", title: "NE", description: "Nebraska"},
+    {id: "NV", title: "NV", description: "Nevada"},
+    {id: "NH", title: "NH", description: "New Hampshire"},
+    {id: "NJ", title: "NJ", description: "New Jersey"},
+    {id: "NM", title: "NM", description: "New Mexico"},
+    {id: "NY", title: "NY", description: "New York"},
+    {id: "NC", title: "NC", description: "North Carolina"},
+    {id: "ND", title: "ND", description: "North Dakota"},
+    {id: "MP", title: "MP", description: "Northern Mariana Islands"},
+    {id: "OH", title: "OH", description: "Ohio"},
+    {id: "OK", title: "OK", description: "Oklahoma"},
+    {id: "OR", title: "OR", description: "Oregon"},
+    {id: "PW", title: "PW", description: "Palau"},
+    {id: "PA", title: "PA", description: "Pennsylvania"},
+    {id: "PR", title: "PR", description: "Puerto Rico"},
+    {id: "RI", title: "RI", description: "Rhode Island"},
+    {id: "SC", title: "SC", description: "South Carolina"},
+    {id: "SD", title: "SD", description: "South Dakota"},
+    {id: "TN", title: "TN", description: "Tennessee"},
+    {id: "TX", title: "TX", description: "Texas"},
+    {id: "UT", title: "UT", description: "Utah"},
+    {id: "VT", title: "VT", description: "Vermont"},
+    {id: "VI", title: "VI", description: "Virgin Islands"},
+    {id: "VA", title: "VA", description: "Virginia"},
+    {id: "WA", title: "WA", description: "Washington"},
+    {id: "WV", title: "WV", description: "West Virginia"},
+    {id: "WI", title: "WI", description: "Wisconsin"},
+    {id: "WY", title: "WY", description: "Wyoming"}
+]
+	const [State, setState] = React.useState(states[1]);
+	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
+	 
+const FinplanOptions = [
+  {id: 0, title: "All finplans", description: ""},
+  {id: 10, title: "Outgoing payments", description: ""},
+  {id: 20, title: "Incoming payments", description: ""},
+  {id: 30, title: "Savings", description: ""}
+]
+const [FinplanFilterOption, setFinplanFilterOption] = useState({id: 0, description: "All finplans"})
+
+	function selectImage(type: string) {
+		let options = {
+			mediaType: 'photo',
+			maxWidth: 300,
+			maxHeight: 550,
+			quality: 1,
+			includeBase64: true,
+		};
+
+		launchImageLibrary(options, (response: any) => {
+			if (response.didCancel) {
+				return;
+			} else if (response.errorCode == 'camera_unavailable') {
+				return;
+			} else if (response.errorCode == 'permission') {
+				return;
+			} else if (response.errorCode == 'others') {
+				return;
+			}
+			if (type === 'user_image') setImageSource(response.assets[0]);
+			if (type === 'business') setBusinessImageSource(response.assets[0]);
+			if (type === 'business_back') setBackBusinessImageSource(response.assets[0]);
+
+		});
 	}
 
-	const [ShowIndex, setShowIndex] = useState(true)
-	const [ShowScanModal, setShowScanModal] = useState(false)
-	const [ReturnInfo, setReturnInfo] = useState({})
-	const [SendingReturn, setSendingReturn] = useState(false)
-	const [AmountError, setAmountError] = useState(false)
-	const [Amount, setAmount] = useState('')
-	const [ModalAgree, setModalAgree] = useState(false)
-	const [Loading, setLoading] = useState(false)
-	const [Finish, setFinish] = useState(false)
-	const [Search, setSearch] = useState('')
-
-	const ReturnIndex = () => <View>
-		<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-			<Icon name={"menu"} size={23} color={COLOR.PALETTE.green} />
-			<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
-
-		</TouchableOpacity>
-		<Image
-			resizeMode="contain"
-			source={IMAGES.logoFull}
-			style={styles.LOGO_STYLE}
-		/>
-		<Text style={styles.AMOUNT}>C$ 382.91</Text>
-		<View style={styles.LINE} />
-		<View style={styles.SEARCH_INPUT_CONTAINER}>
-			<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
-				<Icon name={"search"} size={25} color={COLOR.PALETTE.black} />
+	const PersonalProfile = () => (
+		<View style={styles.EDIT_CONTAINER}>
+			<TouchableOpacity
+				onPress={() => selectImage('user_image')}
+				style={styles.IMAGE_CONTAINER}
+			>
+				{!imageSource?.uri
+					// ? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
+					? <Image
+						source={IMAGES.noImage}
+						style={styles.IMAGE_BOX}
+					/>
+					: <Image
+						source={{ uri: imageSource.uri }}
+						style={styles.IMAGE_BOX}
+						resizeMode='contain'
+					/>
+				}
+			</TouchableOpacity>
+			<Text style={styles.IMAGE_BOX_LABEL}>Upload profile picture</Text>
+			<Text style={styles.IMAGE_BOX_VALIDATION}>(Max 200 MB / .jpeg, .jpg, .png)</Text>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>USER NAME*</Text>
+				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
+			</View>
+			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
-					style={styles.SEARCH_INPUT_STYLE}
-					onChangeText={t => setSearch(t)}
-					value={Search}
-					placeholder={`Search`}
+					style={styles.INPUT_STYLE}
+					onChangeText={t => {
+						setUsername(t)
+						if (t === '@rafa') setUsernameError(true)
+						else setUsernameError(false)
+					}}
+					value={Username.charAt(0) == '@' ? Username : '@' + Username}
+					placeholder={'@username'}
 				/>
 			</View>
-			<View style={styles.SEARCH_INPUT_ADJUSTMENTS}>
-				<Image source={IMAGES.shortIcon} resizeMode='contain' style={{ width: 20, height: 20 }} />
-			</View>
 		</View>
-		{Object.keys(returns).map((r, key) => ([
-			<Text key={key + '_label'} style={styles.RETURNS_LABEL}>TODAY</Text>,
-			returns[r].map((i, key2) => (
-				<View key={key2 + '_values'} style={styles.RETURN_ITEM}>
-					<View style={{ marginLeft: 15 }}>
-						<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
-						<Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text>
-					</View>
-					<View>
-						{i.credit
-							? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
-							: <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
-						}
-
-					</View>
-				</View>
-			))
-		]))}
-		<View style={{ height: 100 }} />
-	</View>
-
-	const ScanModal = () => (
-		<Modal visible={ShowScanModal} transparent>
-			<View style={styles.ROOT_MODAL}>
-				<TouchableOpacity onPress={() => [setShowScanModal(false), setShowIndex(true)]} style={styles.CLOSE_MODAL_BUTTON}>
-					<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-					<Icon name={"close"} size={20} color={'#8B9555'} />
-				</TouchableOpacity>
-				<View style={styles.MODAL_CONTAINER}>
-					<View style={styles.MODAL_CONTENT}>
-						<Text style={styles.STEP_TITLE}>Scan the customer’s return receipt QR code.</Text>
-						<Text style={styles.STEP_SUB_TITLE_MODAL}>The customer needs to provide the transaction receipt, and select “Make a Return” in order to generate a QR Code. Scan this QR code in order to the refund Currents to the customer. </Text>
-						<TouchableOpacity
-							style={styles.MODAL_BUTTON}
-							onPress={() => [
-								setShowScanModal(false),
-								setReturnInfo({
-									amount: 14.34,
-									transaction_id: '0567882hdjh2je20',
-									type: 'customer sale',
-									date: '4:22 , JUN 17, 2021'
-								}),
-								setSendingReturn(true)
-							]}
-						>
-							<Text style={styles.SUBMIT_BUTTON_LABEL}>Scan</Text>
-						</TouchableOpacity>
-					</View>
-				</View>
-				<View />
-			</View>
-		</Modal>
 	)
 
-	const FinishReturn = () => <View style={{ height: METRICS.screenHeight }}>
-		<View style={styles.HEADER_ACTIONS}>
-			<View />
-			<TouchableOpacity style={styles.BACK_BUTON_CONTAINER} onPress={() => [setShowIndex(true), setFinish(false)]}>
-				<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-				<Icon name={"close"} size={23} color={'#8B9555'} />
-			</TouchableOpacity>
-		</View>
-		<Text style={styles.STEP_TITLE}>{`Succeeded! 
-Thank you
-	`}</Text>
-		<Button
-			buttonStyle={{
-				position: 'absolute',
-				marginTop: METRICS.screenHeight - 100,
-				backgroundColor: COLOR.PALETTE.green
-			}}
-			onPress={() => [setShowIndex(true), setFinish(false)]}
-			buttonLabel={'Close'}
-		/>
-	</View>
-
-	const LoadingReturn = () => <View style={styles.LOADING_RETURN}>
-		<Text style={styles.STEP_TITLE}>Pending...</Text>
-		<Text style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>
-		<ActivityIndicator style={styles.ACTIVITY} size="large" color={'black'} />
-	</View>
-
-	const SendReturn = () => <View>
-		<Text style={styles.STEP_TITLE}>Send return</Text>
-		<View style={styles.LINE} />
-		<Text style={styles.SUB_TITLE}>TRANSACTION DETAILS</Text>
-		<View style={styles.RETURN_CONTAINER}>
-			<Text style={styles.RETURN_AMOUNT}>C$ 14.34</Text>
-			<View style={styles.RETURN_DETAIL_CONTAINER}>
-				<Text style={styles.RETURN_DETAIL_LABEL}>TRANSACTION ID</Text>
-				<Text style={styles.RETURN_DETAIL_LABEL}>0567882HDJH2JE20</Text>
+	const BusinessProfile = () => (
+		<View style={styles.EDIT_CONTAINER}>
+			<View style={styles.BUSINESS_IMAGES_CONTAINER}>
+				<TouchableOpacity
+					onPress={() => selectImage('business_back')}
+					style={styles.BACK_IMAGE_CONTAINER}
+				>
+					{!BackBusinessImageSource?.uri
+						? <FontAwesome name={"camera"} size={23} color={'#39534440'} style={{ marginTop: 15, marginRight: 15 }} />
+						: <Image
+							source={{ uri: BackBusinessImageSource.uri }
+							}
+							style={styles.BACK_IMAGE_BOX}
+						/>
+					}
+				</TouchableOpacity>
+				<View style={styles.IMAGE_CONTAINER_MARGIN}>
+					<TouchableOpacity
+						onPress={() => selectImage('business')}
+						style={styles.IMAGE_CONTAINER}
+					>
+						{!BusinessImageSource?.uri
+							? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
+							: <Image
+								source={{ uri: BusinessImageSource.uri }
+								}
+								style={styles.IMAGE_BOX}
+							/>
+						}
+					</TouchableOpacity>
+				</View>
 			</View>
-			<View style={styles.RETURN_DETAIL_CONTAINER}>
-				<Text style={styles.RETURN_DETAIL_LABEL}>TYPE</Text>
-				<Text style={styles.RETURN_DETAIL_LABEL}>CUSTOMER SALE</Text>
-			</View>
-			<View style={styles.RETURN_DETAIL_CONTAINER}>
-				<Text style={styles.RETURN_DETAIL_LABEL}>DATE</Text>
-				<Text style={styles.RETURN_DETAIL_LABEL}>4:22 , JUN 17, 2021</Text>
-			</View>
-		</View>
-		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-			<Text style={styles.INPUT_LABEL_STYLE}>RETURN AMOUNT</Text>
-			<Text style={styles.INPUT_LABEL_ERROR}>{AmountError ? 'MAX. TOTAL TRANSACTION AMOUNT' : ''}</Text>
-		</View>
-		<View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
-			<TextInput
-				style={styles.INPUT_STYLE}
-				keyboardType='numeric'
-				onChangeText={t => {
-					if (t) t = t.split(' ')[1]
-					else t = ''
-					setAmount(t)
-					if (parseFloat(t) >= 14.34) setAmountError(true)
-					else setAmountError(false)
-				}}
-				value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
-				placeholder={`Amount`}
-			/>
-		</View>
-		<Button
-			buttonStyle={{
-				marginTop: 20,
-				backgroundColor: (AmountError || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green
-			}}
-			onPress={() => {
-				setLoading(true)
-				setSendingReturn(false)
-				setTimeout(function () {
-					setLoading(false)
-					setFinish(true)
-				}, 5000)
-			}}
-			buttonLabel={'Next'}
-			disabled={AmountError || Loading}
-			loading={Loading}
-		/>
+			<Text style={styles.IMAGE_BOX_LABEL}>Upload profile picture</Text>
+			<Text style={styles.IMAGE_BOX_VALIDATION}>(Max 200 MB / .jpeg, .jpg, .png)</Text>
 
-	</View>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS NAME - THIS NAME WILL BE PUBLIC*</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => {
+						setBusinessName(t)
+					}}
+					value={BusinessName}
+					placeholder={'Business name'}
+				/>
+			</View>
+
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>TELL US YOUR STORY (50 WORDS MAX)</Text>
+			</View>
+			<View style={styles.BIG_INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.BIG_INPUT_STYLE}
+					onChangeText={t => setBusinessStory(t)}
+					value={BusinessStory}
+					multiline
+					numberOfLines={4}
+					placeholder={'Business name'}
+				/>
+			</View>
+
+
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS CATEGORY</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => {
+						setBusinessCategory(t)
+					}}
+					value={BusinessCategory}
+					placeholder={'business category'}
+				/>
+			</View>
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>WEBSITE - OPCIONAL</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => {
+						setBusinessWebsite(t)
+					}}
+					value={BusinessWebsite}
+					placeholder={'website - optional'}
+				/>
+			</View>
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 1</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setAddress1(t)}
+					value={Address1}
+					placeholder={'Street number, street name'}
+				/>
+			</View>
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 2</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setAddress2(t)}
+					value={Address2}
+					placeholder={'Street number, street name'}
+				/>
+			</View>
+
+			<View style={{
+				// backgroundColor: 'red'
+				flexDirection: 'row',
+				justifyContent: 'space-between',
+				width: METRICS.screenWidth * 0.95,
+				alignSelf: 'center',
+			}}>
+				<View>
+					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
+						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
+					</View>
+					<View style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
+						<TextInput
+							style={[styles.INPUT_STYLE, , { width: METRICS.screenWidth * 0.6 }]}
+							onChangeText={t => setCity(t)}
+							value={City}
+							placeholder={'City'}
+						/>
+					</View>
+				</View>
+				<View>
+					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
+						<Text style={styles.INPUT_LABEL_STYLE}>STATE</Text>
+					</View>
+					<View style={[
+						styles.SELECT_INPUT_STYLE_CONTAINER,
+						{ width: METRICS.screenWidth * 0.25 }
+					]}>
+						<TouchableOpacity
+							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
+							onPress={() => [setSelectStateOpen(!SelectStateOpen), setState({})]}
+						>
+							{/* <Text style={styles.SELECT_LABEL}>{State.title}</Text>
+							<Entypo
+								name={"chevron-down"}
+								size={23} color={'black'}
+								style={{ marginRight: 20 }}
+							/> */}
+
+						<ModalSelector
+            options={states}
+            action={setFinplanFilterOption}
+            title={""}
+            value={State}
+            visible={SelectStateOpen}
+            setVisible={setSelectStateOpen}
+            displaySelector
+            closeOnClick
+          />
+											</TouchableOpacity>
+					</View>
+				</View>
+			</View>
+
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>POSTAL CODE</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setPostalCode(t)}
+					value={PostalCode}
+					placeholder={'xxxxxxxxx'}
+				/>
+			</View>
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setPhoneNumber(t)}
+					value={PhoneNumber}
+					placeholder={'Phone number'}
+				/>
+			</View>
+
+
+
+
+		</View>
+	)
 
 	return (
 		<Screen
@@ -234,42 +393,33 @@ Thank you
 				<ScrollView bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View>
-							{(!ShowScanModal && !Loading && !Finish && !ShowIndex) &&
-								<View style={styles.HEADER_ACTIONS}>
-									<TouchableOpacity
-										onPress={() => [setShowIndex(true)]}
-										style={styles.BACK_BUTON_CONTAINER}
-									>
-										<Icon name={"arrow-back"} size={23} color={'#8B9555'} />
-										<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-									</TouchableOpacity>
-									<TouchableOpacity style={styles.BACK_BUTON_CONTAINER}>
-										<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-										<Icon name={"close"} size={23} color={'#8B9555'} />
-									</TouchableOpacity>
-								</View>
-							}
-							{ShowIndex && ReturnIndex()}
-							{SendingReturn && SendReturn()}
-							{Loading && LoadingReturn()}
-							{Finish && FinishReturn()}
+
+							<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings", {})}>
+								<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+								<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+
+							</TouchableOpacity>
+
+							<Text style={styles.STEP_TITLE}>My profile</Text>
+							<View style={styles.LINE} />
+							<Text style={styles.STEP_SUB_TITLE}>This information is shared publicly.</Text>
+
+
+							{ProfileType === profile_types[0] && PersonalProfile()}
+							{ProfileType === profile_types[1] && BusinessProfile()}
 						</View>
 					</View>
-					{ScanModal()}
 				</ScrollView>
-				{ShowIndex &&
-					<Button
-						buttonStyle={{
-							backgroundColor: COLOR.PALETTE.green,
-							top: METRICS.screenHeight - 80,
-							position: 'absolute'
-						}}
-						buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
-						onPress={() => [setShowIndex(false), setShowScanModal(true)]}
-						buttonLabel={'Receive or Scan to pay'}
-					/>
-				}
-
+				<Button
+					buttonStyle={{
+						backgroundColor: COLOR.PALETTE.green,
+						top: METRICS.screenHeight - 80,
+						position: 'absolute'
+					}}
+					// buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
+					onPress={() => notifyMessage("Your profile has been updated successfully.")}
+					buttonLabel={'Save changes'}
+				/>
 			</KeyboardAvoidingView>
 		</Screen>
 	)

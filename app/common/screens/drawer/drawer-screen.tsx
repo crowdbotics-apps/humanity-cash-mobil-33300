@@ -101,7 +101,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             />
             <Text style={styles.MENU_ITEM_LABEL}>Where to spend</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("communityChest", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.chest}
@@ -109,7 +109,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             />
             <Text style={styles.MENU_ITEM_LABEL}>Community Chest</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => props.navigation.navigate("setupProfile", {})} style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.sign_up_your_business}
