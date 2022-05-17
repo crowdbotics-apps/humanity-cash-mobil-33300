@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>marinas_32691</string>
+	<string>humanity_cash_mobil_33300</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -25,7 +25,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.crowdbotics.marinas-32691-id</string>
+				<string>com.crowdbotics.humanity_cash_mobil_33300-id</string>
 			</array>
 		</dict>
 	</array>
