@@ -139,6 +139,8 @@ export class ApiBase {
 
         const response: ApiResponse<any> = await this.apisauce.post(path, params, axios)
 
+        console.log(' simple_post ===>>> ', response)
+
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T

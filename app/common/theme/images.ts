@@ -29,6 +29,8 @@ const SETTINGS =  require("../../../assets/icons/settings.png")
 const SIGN_UP_YOUR_BUSINESS =  require("../../../assets/icons/sign_up_your_business.png")
 const WHERE_TO_SPEND =  require("../../../assets/icons/where_to_spend.png")
 const LOGOUT =  require("../../../assets/icons/logout.png")
+const COMMUNITY =  require("../../../assets/icons/community.png")
+const FAMILY =  require("../../../assets/icons/family.png")
 
 
 export const IMAGES = {
@@ -60,5 +62,7 @@ export const IMAGES = {
   settings: SETTINGS,
   sign_up_your_business: SIGN_UP_YOUR_BUSINESS,
   where_to_spend: WHERE_TO_SPEND,
-  logout: LOGOUT
+  logout: LOGOUT,
+  community: COMMUNITY,
+  family: FAMILY,
 }

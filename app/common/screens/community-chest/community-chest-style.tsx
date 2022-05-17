@@ -45,7 +45,14 @@ export default StyleSheet.create({
   STEP_TITLE: {
     fontSize: 32,
     color: COLOR.PALETTE.green,
-    marginLeft: 10
+    marginLeft: 10,
+    marginTop: 10
+  },
+  STEP_SUB_TITLE: {
+    fontSize: 16,
+    color: COLOR.PALETTE.black,
+    marginLeft: 10,
+    width: METRICS.screenWidth * 0.90,
   },
   ROOT_MODAL: {
     flex: 1,
@@ -152,7 +159,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
     backgroundColor: COLOR.PALETTE.lightGray,
     alignItems: 'center',
-    height: 500,
+
     alignSelf: 'center',
     justifyContent: 'space-around',
     marginTop: 15,
@@ -180,10 +187,48 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.black,
     marginTop: 10,
     width: METRICS.screenWidth * 0.80,
+    marginBottom: 30
   },
   NEWS_IMAGE: {
     width: METRICS.screenWidth * 0.80,
     flex: 1,
     height: null,
   },
+  INPUT_LABEL_STYLE_CONTAINER: {
+    flexDirection: 'row',
+    width: METRICS.screenWidth * 0.8,
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+  },
+  INPUT_LABEL_STYLE: {
+    fontSize: 10,
+    color: COLOR.PALETTE.black,
+  },
+  NEWS_AMOUNT: {
+    fontSize: 18,
+    color: COLOR.PALETTE.black,
+    fontWeight: 'bold',
+  },
+  INPUT_LABEL_STYLE_OFF: {
+    fontSize: 10,
+    color: `${COLOR.PALETTE.black}60`,
+  },
+  NEWS_AMOUNT_OFF: {
+    fontSize: 18,
+    color: `${COLOR.PALETTE.black}60`,
+    fontWeight: 'bold',
+  },
+  ITEM_ICON: {
+    width: 25,
+    height: 25,
+    marginLeft: 5,
+    marginRight: 5
+  },
+  PROGRESS_LINE: {
+    height: 5,
+    marginVertical: 10
+  },
+  NEWS_INFO_CONTAINER: {
+    marginBottom: 15
+  }
 })

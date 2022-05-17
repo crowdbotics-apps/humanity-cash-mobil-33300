@@ -14,7 +14,7 @@ export const notifyMessage = (msg: any, type = "error") => {
   Toast.show({
     type: type,
     text1: msg,
-    topOffset: Platform.OS === "ios" ? 50 : 25
+    topOffset: Platform.OS === "ios" ? 50 : 50
   })
 }
 

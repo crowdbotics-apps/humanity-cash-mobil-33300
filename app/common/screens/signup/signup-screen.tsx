@@ -115,13 +115,13 @@ export const SignupScreen = observer(function SignupScreen() {
   const register = () => {
     setLoading(true)
     loginStore.environment.api.userRegister({ email: Email }).then(result => {
-      console.log("result ", result)
       setLoading(false)
       if (result.kind === "ok") {
         runInAction(() => {
           loginStore.setUser(result.response.user)
           loginStore.setApiToken(result.response.access_token)
         })
+        sendVerificationCode()
         setStep("verify_email")
       } else if (result.kind === "bad-data") {
         notifyMessage("Please correct the errors and try again")
@@ -134,14 +134,19 @@ export const SignupScreen = observer(function SignupScreen() {
     })
   }
 
+  const sendVerificationCode = () => {
+    setLoading(true)
+    loginStore.environment.api.sendVerificaitonCode({ "otp": "64640" }).then(result => {
+      setLoading(false)
+    })
+  }
+
   const verifyUserAuthenticationCode = () => {
     const code = Code1 + Code2 + Code3 + Code4 + Code5 + Code6
-    console.log("code ===> ", code)
     setLoading(true)
     loginStore.environment.api
       .verifyUserAuthenticationCode({ verification_code: code })
       .then(result => {
-        console.log("result ", result)
         setLoading(false)
         if (result.kind === "ok") {
           notifyMessage("Email verified", "success")
@@ -159,12 +164,13 @@ export const SignupScreen = observer(function SignupScreen() {
     loginStore.environment.api
       .setUserPassword({ password: Pass, password_confirm: PassConfirm })
       .then(result => {
-        console.log("result ", result)
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
-            loginStore.setUser(result.response.user)
-            loginStore.setApiToken(result.response.access_token)
+            // loginStore.setUser(result.response.user)
+            // loginStore.setApiToken(result.response.access_token)
+            navigation.navigate("setupProfile", {})
+            resetData()
           })
         } else if (result.kind === "bad-data") {
           notifyMessage(result.errors.password)
@@ -173,6 +179,21 @@ export const SignupScreen = observer(function SignupScreen() {
           notifyMessage(null)
         }
       })
+  }
+
+  const resetData = () => {
+    loginStore.setStep('')
+    loginStore.setSignupData({})
+
+    setStep('email')
+    setEmail('')
+    setPhone('')
+    setCode1('')
+    setCode2('')
+    setCode3('')
+    setCode4('')
+    setCode5('')
+    setCode6('')
   }
 
   const EmailStep = () => (
@@ -456,8 +477,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       case "email_confirmed":
         setStep("verify_email")
         break
-      case "email_confirmed":
-        setStep("verify_email")
+      case "create_password":
+        setStep("email_confirmed")
         break
       case "touch_id":
         setStep("create_password")
@@ -469,14 +490,14 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     loginStore.setSignupData(signupData)
     switch (Step) {
       case "email":
-        // register()
-        loginStore.setStep('signup')
-        setStep("verify_email")
+        register()
+        // loginStore.setStep('signup')
+        // setStep("verify_email")
         break
       case "verify_email":
         if (Code1 && Code2 && Code3 && Code4 && Code5 && Code6) {
-          // verifyUserAuthenticationCode()
-          setStep("email_confirmed")
+          verifyUserAuthenticationCode()
+          // setStep("email_confirmed")
         }
         break
       case "email_confirmed":
@@ -486,10 +507,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         if (Pass !== PassConfirm) {
           setMatchPassword(false)
         } else {
-          setMatchPassword(true), console.log("touch id")
+          setPassword()
+          setMatchPassword(true)
+          // setStep('touch_id')
         }
-        // setPassword()
-        setStep('touch_id')
         break;
       case "touch_id":
         navigation.navigate("setupProfile", {})
@@ -498,20 +519,21 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     }
   }
 
-    useEffect(() => {
-      let data = loginStore.getSignupData
-      if(data?.Email) setEmail(data.Email)
-      if(data?.Phone) setPhone(data.Phone)
-      if(data?.Code1) setCode1(data.Code1)
-      if(data?.Code2) setCode2(data.Code2)
-      if(data?.Code3) setCode3(data.Code3)
-      if(data?.Code4) setCode4(data.Code4)
-      if(data?.Code5) setCode5(data.Code5)
-      if(data?.Code6) setCode6(data.Code6)
+  useEffect(() => {
+    console.log(' useEffect ===>>> ', loginStore)
+    let data = loginStore.getSignupData
+    if (data?.Email) setEmail(data.Email)
+    if (data?.Phone) setPhone(data.Phone)
+    if (data?.Code1) setCode1(data.Code1)
+    if (data?.Code2) setCode2(data.Code2)
+    if (data?.Code3) setCode3(data.Code3)
+    if (data?.Code4) setCode4(data.Code4)
+    if (data?.Code5) setCode5(data.Code5)
+    if (data?.Code6) setCode6(data.Code6)
   }, [])
 
   return (
-    <Screen preset="fixed" statusBar={"dark-content"} unsafe={true}>
+    <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>
       <View style={styles.ROOT}>
         <View>
           <TouchableOpacity
