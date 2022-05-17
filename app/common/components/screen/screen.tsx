@@ -6,23 +6,39 @@ import {
   StatusBar,
   View
 } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ScreenProps } from "./screen.props"
 import { isNonScrolling, offsets, presets } from "./screen.presets"
 import { Header } from "../header/header"
-import { COLOR } from "../../theme"
+import { BlurView } from "@react-native-community/blur"
+import styles from "../../screens/home-styles"
+// import { BlurView } from 'expo-blur'
 
 const isIos = Platform.OS === "ios"
 
 function ScreenWithoutScrolling(props: ScreenProps) {
+  const insets = useSafeAreaInsets()
   const preset = presets.fixed
   const style = props.style || {}
   const backgroundStyle = props.backgroundColor
     ? { backgroundColor: props.backgroundColor }
     : {}
+  const insetStyle = { paddingTop: props.unsafe ? 0 : insets.top }
   const bigHeader = props.bigHeader || false
+  const showBlur = props.showBlur || false
 
   return (
     <>
+      {showBlur && (
+        <BlurView
+          style={styles.BLUR_STYLES}
+          //blur
+          blurType="light"
+          // intensity={10}
+          //blurAmount={5}
+          //reducedTransparencyFallbackColor="white"
+        />
+      )}
       <KeyboardAvoidingView
         style={[preset.outer, backgroundStyle]}
         behavior={isIos ? "padding" : undefined}
@@ -31,7 +47,7 @@ function ScreenWithoutScrolling(props: ScreenProps) {
         <StatusBar
           barStyle={props.statusBar || "light-content"}
           translucent
-          backgroundColor={COLOR.PALETTE.whiteBackground}
+          backgroundColor={"transparent"}
           animated
         />
         {props.showHeader && (
@@ -56,6 +72,8 @@ function ScreenWithScrolling(props: ScreenProps) {
     ? { backgroundColor: props.backgroundColor }
     : {}
   const bigHeader = props.bigHeader || false
+  const showBlur = props.showBlur || false
+
   return (
     <>
       <KeyboardAvoidingView
@@ -67,7 +85,7 @@ function ScreenWithScrolling(props: ScreenProps) {
           <StatusBar
             barStyle={props.statusBar || "dark-content"}
             translucent
-            backgroundColor={COLOR.PALETTE.whiteBackground}
+            backgroundColor={"transparent"}
             animated
           />
           {props.showHeader && (
