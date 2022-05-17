@@ -23,8 +23,8 @@ export class Api extends ApiBase {
   async setUserPassword(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post(apiv1 + "/registration/set-password/", data)
   }
-  async sendVerificaitonCode(data: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(apiv1 + "/registration/send-verification-code/", data)
+  async sendVerificaitonCode(): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/registration/send-verification-code/")
   }
   // LOGIN
   async login(data: any): Promise<Types.SimplePostResult> {

@@ -121,7 +121,6 @@ export const SignupScreen = observer(function SignupScreen() {
           loginStore.setUser(result.response.user)
           loginStore.setApiToken(result.response.access_token)
         })
-        sendVerificationCode()
         setStep("verify_email")
       } else if (result.kind === "bad-data") {
         notifyMessage("Please correct the errors and try again")
@@ -136,7 +135,7 @@ export const SignupScreen = observer(function SignupScreen() {
 
   const sendVerificationCode = () => {
     setLoading(true)
-    loginStore.environment.api.sendVerificaitonCode({ "otp": "64640" }).then(result => {
+    loginStore.environment.api.sendVerificaitonCode().then(result => {
       setLoading(false)
     })
   }
@@ -519,6 +518,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     }
   }
 
+  const sendCodeAgainHandler = () => {
+    sendVerificationCode()
+  }
+
   useEffect(() => {
     console.log(' useEffect ===>>> ', loginStore)
     let data = loginStore.getSignupData
@@ -585,6 +588,13 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 style={styles.NEED_HELP_LINK}
               >
                 Need help?
+              </Text>
+            </View>
+          )}
+          {Step === "verify_email" && (
+            <View style={styles.NEED_HELP_CONTAINER}>
+              <Text onPress={() => sendCodeAgainHandler()} style={styles.NEED_HELP_LINK}>
+                Send code again
               </Text>
             </View>
           )}

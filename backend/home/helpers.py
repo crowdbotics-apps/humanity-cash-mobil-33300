@@ -26,7 +26,13 @@ def send_email(user_email, subject, text_content):
 def send_verification_email(user):
     try:
         code = random.randint(100000, 999999)
-        UserVerificationCode.objects.create(user=user, verification_code=code)
+        user_code = UserVerificationCode.objects.filter(user=user)
+        if user_code.exists():
+            user_code_modify = user_code.first()
+            user_code_modify.verification_code = code
+            user_code_modify.save()
+        else:
+            UserVerificationCode.objects.create(user=user, verification_code=code)
         subject = "Verification code"
         text_content = f"""<h5>Hello!</h5><br/>
         Please use the Verification code bellow to complete the verification process<br/>
