@@ -6,24 +6,20 @@ import {
   StatusBar,
   View
 } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ScreenProps } from "./screen.props"
 import { isNonScrolling, offsets, presets } from "./screen.presets"
 import { Header } from "../header/header"
 import { BlurView } from "@react-native-community/blur"
 import styles from "../../screens/home-styles"
-// import { BlurView } from 'expo-blur'
 
 const isIos = Platform.OS === "ios"
 
 function ScreenWithoutScrolling(props: ScreenProps) {
-  const insets = useSafeAreaInsets()
   const preset = presets.fixed
   const style = props.style || {}
   const backgroundStyle = props.backgroundColor
     ? { backgroundColor: props.backgroundColor }
     : {}
-  const insetStyle = { paddingTop: props.unsafe ? 0 : insets.top }
   const bigHeader = props.bigHeader || false
   const showBlur = props.showBlur || false
 
@@ -72,7 +68,6 @@ function ScreenWithScrolling(props: ScreenProps) {
     ? { backgroundColor: props.backgroundColor }
     : {}
   const bigHeader = props.bigHeader || false
-  const showBlur = props.showBlur || false
 
   return (
     <>

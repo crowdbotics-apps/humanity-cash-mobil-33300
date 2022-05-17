@@ -5,8 +5,6 @@ export default StyleSheet.create({
 	ROOT: {
 		flex: 1,
 		backgroundColor: COLOR.PALETTE.white,
-		marginTop: 50,
-		justifyContent: 'space-between'
 	},
 	BACK_BUTON_LABEL: {
 		fontSize: 16,

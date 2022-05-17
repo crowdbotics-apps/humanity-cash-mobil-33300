@@ -17,7 +17,6 @@ export const PALETTE = {
 
   warning: "#ffc107",
 
-
   marina_dark: "#30343F",
   marina_light: "#738296",
   navy: "#153565",
@@ -28,6 +27,7 @@ export const PALETTE = {
   gray: "#A3A3A3",
   gray_light: "#D9D9D9",
   white: "#ffffff",
+  whiteBackground: "#E5E5E5",
   success: "#FCCB4E",
 
   primary: "#58AEBF",
@@ -35,17 +35,17 @@ export const PALETTE = {
   angry: "#B00020",
 
   modalBackgroundColor: "rgba(246, 246, 241, 0.90)",
-  ligthGray: '#F6F5F0',
-  background: '#F7F5F0',
-  lightGray: '#F5F5F0',
-  blue: '#008ABA',
-  yellow: '#F7BE00',
-  darkYellow: '#D2A824',
-  lightGreen: '#D1D5BE',
-  green: '#8B9555',
-  strongGreen: '#395344',
-  pink: '#DF9BB9',
-  orange: '#D59B76',
-  purple: '#442E88',
-  mustard: '#D2A824'
+  ligthGray: "#F6F5F0",
+  background: "#F7F5F0",
+  lightGray: "#F5F5F0",
+  blue: "#008ABA",
+  yellow: "#F7BE00",
+  darkYellow: "#D2A824",
+  lightGreen: "#D1D5BE",
+  green: "#8B9555",
+  strongGreen: "#395344",
+  pink: "#DF9BB9",
+  orange: "#D59B76",
+  purple: "#442E88",
+  mustard: "#D2A824"
 }

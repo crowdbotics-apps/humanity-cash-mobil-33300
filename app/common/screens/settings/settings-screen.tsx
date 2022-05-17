@@ -28,9 +28,8 @@ export const SettingsScreen = observer(function SettingsScreen() {
 
   return (
     <Screen
-      // preset='scroll'
       preset="fixed"
-      statusBar={'dark-content'}
+      statusBar={"dark-content"}
       unsafe={true}
     >
       <View style={styles.ROOT}>
