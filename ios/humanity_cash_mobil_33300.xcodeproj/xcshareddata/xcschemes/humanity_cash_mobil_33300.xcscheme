@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1210"
+   LastUpgradeVersion = "1330"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "marinas_32691.app"
-               BlueprintName = "marinas_32691"
-               ReferencedContainer = "container:marinas_32691.xcodeproj">
+               BuildableName = "humanity_cash_mobil_33300.app"
+               BlueprintName = "humanity_cash_mobil_33300"
+               ReferencedContainer = "container:humanity_cash_mobil_33300.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "marinas_32691Tests.xctest"
-               BlueprintName = "marinas_32691Tests"
-               ReferencedContainer = "container:marinas_32691.xcodeproj">
+               BuildableName = "humanity_cash_mobil_33300Tests.xctest"
+               BlueprintName = "humanity_cash_mobil_33300Tests"
+               ReferencedContainer = "container:humanity_cash_mobil_33300.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "marinas_32691.app"
-            BlueprintName = "marinas_32691"
-            ReferencedContainer = "container:marinas_32691.xcodeproj">
+            BuildableName = "humanity_cash_mobil_33300.app"
+            BlueprintName = "humanity_cash_mobil_33300"
+            ReferencedContainer = "container:humanity_cash_mobil_33300.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <LocationScenarioReference
@@ -76,9 +76,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "marinas_32691.app"
-            BlueprintName = "marinas_32691"
-            ReferencedContainer = "container:marinas_32691.xcodeproj">
+            BuildableName = "humanity_cash_mobil_33300.app"
+            BlueprintName = "humanity_cash_mobil_33300"
+            ReferencedContainer = "container:humanity_cash_mobil_33300.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

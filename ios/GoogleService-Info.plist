@@ -13,11 +13,11 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.crowdbotics.marinas-32691-id</string>
+	<string>com.crowdbotics.humanity_cash_mobil_33300-id</string>
 	<key>PROJECT_ID</key>
-	<string>marinas-plus</string>
+	<string>humanity_cash_mobil_33300-plus</string>
 	<key>STORAGE_BUCKET</key>
-	<string>marinas-plus.appspot.com</string>
+	<string>humanity_cash_mobil_33300-plus.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>

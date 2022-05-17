@@ -46,7 +46,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
             <Button
               buttonStyle={styles.BUTTON_STYLE}
               buttonLabelStyle={{ color: COLOR.PALETTE.green }}
-              onPress={() => { }}
+              onPress={() => navigation.navigate("myProfile", {})}
               buttonLabel={'My profile'}
               disabled={Loading}
               loading={Loading}
