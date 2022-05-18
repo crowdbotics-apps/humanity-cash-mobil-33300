@@ -139,7 +139,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
       type: imageSource.type,
       name: imageSource.fileName
     }
-    loginStore.environment.api.setupConsumer({ username: Username, consumer_profile: { profile_picture: pic } }).then(result => {
+
+    loginStore.environment.api.setupConsumer({ username: Username, consumer_profile: pic }).then(result => {
       setLoading(false)
 			console.log(' result ===>>> ',)
       // if (result.kind === "ok") {

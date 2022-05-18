@@ -20,7 +20,7 @@ class ConsumerProfileSerializer(serializers.ModelSerializer):
 
 
 class SetupConsumerProfileSerializer(serializers.ModelSerializer):
-    consumer_profile = ConsumerProfileSerializer(required=False)
+    consumer_profile = serializers.ImageField(required=False, allow_empty_file=True)
     has_consumer_profile = serializers.SerializerMethodField()
 
     class Meta:
@@ -31,9 +31,8 @@ class SetupConsumerProfileSerializer(serializers.ModelSerializer):
         consumer_profile = validated_data.pop('consumer_profile')
 
         consumer = Consumer.objects.create(user=instance)
-        profile_picture = consumer_profile.get('profile_picture')
-        if profile_picture:
-            consumer.profile_picture = profile_picture
+        if consumer_profile:
+            consumer.profile_picture = consumer_profile
             consumer.save()
         
         return super(SetupConsumerProfileSerializer, self).update(instance, validated_data)

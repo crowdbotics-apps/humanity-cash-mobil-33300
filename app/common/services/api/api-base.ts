@@ -289,6 +289,61 @@ export class ApiBase {
         }
     }
 
+    async multipart_form_data_patch(path: string, data: any, keys: any): Promise<Types.SimplePostResult> {
+        if (!this.apisauce) {
+            return {kind: "unknown", temporary: true}
+        }
+
+        let fdata = new FormData()
+        for (const key in data) {
+            if (keys.includes(key) && (!data[key] || typeof data[key] === "string")) {
+                continue
+            }
+            if (keys.includes(key)) {
+                fdata.append(key, data[key], "image.png")
+            } else {
+                if (Array.isArray(data[key])) {
+                    fdata.append(key, data[key].join(","))
+                } else {
+                    fdata.append(key, data[key] || "")
+                }
+            }
+
+        }
+        let response
+        const headers = {
+            "Content-Type": "multipart/form-data",
+            "Authorization": this.apisauce.headers.Authorization
+        }
+        try {
+            response = await this.apisauce.axiosInstance.patch(path, fdata, {headers})
+
+            console.log(' response ===>>> ', response )
+        } catch (e) {
+            console.log(' response e ===>>> ', e,  fdata )
+            if (e.message.indexOf("status code 400") !== -1) {
+                return {kind: "bad-data", errors: e.response.data}
+            }
+            response = {status: 500}
+        }
+
+        if (response.status === 400) {
+            // @ts-ignore
+            return {kind: "bad-data", errors: response.data}
+        } else {
+            // @ts-ignore
+            const problem = getGeneralApiProblem(response)
+            if (problem) {return problem}
+        }
+
+        try {
+            // @ts-ignore
+            return {kind: "ok", response: response.data}
+        } catch {
+            return {kind: "bad-data"}
+        }
+    }
+
     // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
     // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
     // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
