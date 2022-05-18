@@ -263,11 +263,6 @@ PODS:
     - glog
     - RCT-Folly (= 2021.06.28.00-v2)
     - React-jsi/Default (= 0.67.4)
-  - React-jsi/Default (0.67.4):
-    - boost (= 1.76.0)
-    - DoubleConversion
-    - glog
-    - RCT-Folly (= 2021.06.28.00-v2)
   - React-jsiexecutor (0.67.4):
     - DoubleConversion
     - glog
@@ -372,7 +367,7 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.11):
     - React
-  - RNGestureHandler (2.1.3):
+  - RNGestureHandler (2.4.2):
     - React-Core
   - RNImageCropPicker (0.37.3):
     - React-Core
@@ -390,7 +385,7 @@ PODS:
     - React-Core
   - RNPermissions (3.3.1):
     - React-Core
-  - RNReanimated (2.4.1):
+  - RNReanimated (2.8.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -398,7 +393,6 @@ PODS:
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
-    - React
     - React-callinvoker
     - React-Core
     - React-Core/DevSupport
@@ -703,11 +697,11 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 005c0e2f09575360f142d0d1f1f15e4ec575b1af
   RNCClipboard: 41d8d918092ae8e676f18adada19104fa3e68495
   RNCMaskedView: 0e1bc4bfa8365eba5fbbb71e07fbdc0555249489
-  RNGestureHandler: e1099204721a17a89c81fcd1cc2e92143dc040fb
+  RNGestureHandler: 61628a2c859172551aa2100d3e73d1e57878392f
   RNImageCropPicker: 44e2807bc410741f35d4c45b6586aedfe3da39d2
   RNNotifee: f1ba270897bd7491f889a1a257d0c038a43376f7
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
-  RNReanimated: 32c91e28f5780937b8efc07ddde1bab8d373fe0b
+  RNReanimated: 46cdb89ca59ab7181334f4ed05a70e82ddb36751
   RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
   RNSentry: ec3c033c13bcb65c79f19d54ca54c514d1832bb5
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
@@ -717,6 +711,6 @@ SPEC CHECKSUMS:
   Yoga: d6b6a80659aa3e91aaba01d0012e7edcbedcbecd
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 71a97163835dc03b3a841094e8fc3793fa281e23
+PODFILE CHECKSUM: a512c4243f8e972317c760b54b8e6f6f5c22eb92
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.11.2

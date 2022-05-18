@@ -17,27 +17,6 @@ export const TYPOGRAPHY = {
   /**
    * The primary font.  Used in most places.
    */
-  primary: Platform.select({
-    ios: 'Poppins Medium',
-    android: 'Poppins-Medium',
-  }),
-  primaryLight: Platform.select({
-    ios: 'Poppins Light',
-    android: 'Poppins-Light',
-  }),
-  primaryBold: Platform.select({
-    ios: 'Poppins SemiBold',
-    android: 'Poppins-SemiBold',
-  }),
-  primarySemiBold: Platform.select({
-    ios: 'Poppins Bold',
-    android: 'Poppins-Bold',
-  }),
-  primaryBlack: Platform.select({
-    ios: 'Poppins Black',
-    android: 'Poppins-Black',
-  }),
-
   /**
    * An alternate font used for perhaps titles and stuff.
    */
