@@ -34,80 +34,80 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
 	const [PostalCode, setPostalCode] = React.useState('');
-	const [PhoneNumber, setPhoneNumber] = React.useState('');	
+	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
 	const [City, setCity] = React.useState(1);
 	const states = [
-		{id: "AL", title: "AL", description: "Alabama"},
-    {id: "AK", title: "AK", description: "Alaska"},
-    {id: "AS", title: "AS", description: "American Samoa"},
-    {id: "AZ", title: "AZ", description: "Arizona"},
-    {id: "AR", title: "AR", description: "Arkansas"},
-    {id: "CA", title: "CA", description: "California"},
-    {id: "CO", title: "CO", description: "Colorado"},
-    {id: "CT", title: "CT", description: "Connecticut"},
-    {id: "DE", title: "DE", description: "Delaware"},
-    {id: "DC", title: "DC", description: "District Of Columbia"},
-    {id: "FM", title: "FM", description: "Federated States Of Micronesia"},
-    {id: "FL", title: "FL", description: "Florida"},
-    {id: "GA", title: "GA", description: "Georgia"},
-    {id: "GU", title: "GU", description: "Guam"},
-    {id: "HI", title: "HI", description: "Hawaii"},
-    {id: "ID", title: "ID", description: "Idaho"},
-    {id: "IL", title: "IL", description: "Illinois"},
-    {id: "IN", title: "IN", description: "Indiana"},
-    {id: "IA", title: "IA", description: "Iowa"},
-    {id: "KS", title: "KS", description: "Kansas"},
-    {id: "KY", title: "KY", description: "Kentucky"},
-    {id: "LA", title: "LA", description: "Louisiana"},
-    {id: "ME", title: "ME", description: "Maine"},
-    {id: "MH", title: "MH", description: "Marshall Islands"},
-    {id: "MD", title: "MD", description: "Maryland"},
-    {id: "MA", title: "MA", description: "Massachusetts"},
-    {id: "MI", title: "MI", description: "Michigan"},
-    {id: "MN", title: "MN", description: "Minnesota"},
-    {id: "MS", title: "MS", description: "Mississippi"},
-    {id: "MO", title: "MO", description: "Missouri"},
-    {id: "MT", title: "MT", description: "Montana"},
-    {id: "NE", title: "NE", description: "Nebraska"},
-    {id: "NV", title: "NV", description: "Nevada"},
-    {id: "NH", title: "NH", description: "New Hampshire"},
-    {id: "NJ", title: "NJ", description: "New Jersey"},
-    {id: "NM", title: "NM", description: "New Mexico"},
-    {id: "NY", title: "NY", description: "New York"},
-    {id: "NC", title: "NC", description: "North Carolina"},
-    {id: "ND", title: "ND", description: "North Dakota"},
-    {id: "MP", title: "MP", description: "Northern Mariana Islands"},
-    {id: "OH", title: "OH", description: "Ohio"},
-    {id: "OK", title: "OK", description: "Oklahoma"},
-    {id: "OR", title: "OR", description: "Oregon"},
-    {id: "PW", title: "PW", description: "Palau"},
-    {id: "PA", title: "PA", description: "Pennsylvania"},
-    {id: "PR", title: "PR", description: "Puerto Rico"},
-    {id: "RI", title: "RI", description: "Rhode Island"},
-    {id: "SC", title: "SC", description: "South Carolina"},
-    {id: "SD", title: "SD", description: "South Dakota"},
-    {id: "TN", title: "TN", description: "Tennessee"},
-    {id: "TX", title: "TX", description: "Texas"},
-    {id: "UT", title: "UT", description: "Utah"},
-    {id: "VT", title: "VT", description: "Vermont"},
-    {id: "VI", title: "VI", description: "Virgin Islands"},
-    {id: "VA", title: "VA", description: "Virginia"},
-    {id: "WA", title: "WA", description: "Washington"},
-    {id: "WV", title: "WV", description: "West Virginia"},
-    {id: "WI", title: "WI", description: "Wisconsin"},
-    {id: "WY", title: "WY", description: "Wyoming"}
-]
+		{ id: "AL", title: "AL", description: "Alabama" },
+		{ id: "AK", title: "AK", description: "Alaska" },
+		{ id: "AS", title: "AS", description: "American Samoa" },
+		{ id: "AZ", title: "AZ", description: "Arizona" },
+		{ id: "AR", title: "AR", description: "Arkansas" },
+		{ id: "CA", title: "CA", description: "California" },
+		{ id: "CO", title: "CO", description: "Colorado" },
+		{ id: "CT", title: "CT", description: "Connecticut" },
+		{ id: "DE", title: "DE", description: "Delaware" },
+		{ id: "DC", title: "DC", description: "District Of Columbia" },
+		{ id: "FM", title: "FM", description: "Federated States Of Micronesia" },
+		{ id: "FL", title: "FL", description: "Florida" },
+		{ id: "GA", title: "GA", description: "Georgia" },
+		{ id: "GU", title: "GU", description: "Guam" },
+		{ id: "HI", title: "HI", description: "Hawaii" },
+		{ id: "ID", title: "ID", description: "Idaho" },
+		{ id: "IL", title: "IL", description: "Illinois" },
+		{ id: "IN", title: "IN", description: "Indiana" },
+		{ id: "IA", title: "IA", description: "Iowa" },
+		{ id: "KS", title: "KS", description: "Kansas" },
+		{ id: "KY", title: "KY", description: "Kentucky" },
+		{ id: "LA", title: "LA", description: "Louisiana" },
+		{ id: "ME", title: "ME", description: "Maine" },
+		{ id: "MH", title: "MH", description: "Marshall Islands" },
+		{ id: "MD", title: "MD", description: "Maryland" },
+		{ id: "MA", title: "MA", description: "Massachusetts" },
+		{ id: "MI", title: "MI", description: "Michigan" },
+		{ id: "MN", title: "MN", description: "Minnesota" },
+		{ id: "MS", title: "MS", description: "Mississippi" },
+		{ id: "MO", title: "MO", description: "Missouri" },
+		{ id: "MT", title: "MT", description: "Montana" },
+		{ id: "NE", title: "NE", description: "Nebraska" },
+		{ id: "NV", title: "NV", description: "Nevada" },
+		{ id: "NH", title: "NH", description: "New Hampshire" },
+		{ id: "NJ", title: "NJ", description: "New Jersey" },
+		{ id: "NM", title: "NM", description: "New Mexico" },
+		{ id: "NY", title: "NY", description: "New York" },
+		{ id: "NC", title: "NC", description: "North Carolina" },
+		{ id: "ND", title: "ND", description: "North Dakota" },
+		{ id: "MP", title: "MP", description: "Northern Mariana Islands" },
+		{ id: "OH", title: "OH", description: "Ohio" },
+		{ id: "OK", title: "OK", description: "Oklahoma" },
+		{ id: "OR", title: "OR", description: "Oregon" },
+		{ id: "PW", title: "PW", description: "Palau" },
+		{ id: "PA", title: "PA", description: "Pennsylvania" },
+		{ id: "PR", title: "PR", description: "Puerto Rico" },
+		{ id: "RI", title: "RI", description: "Rhode Island" },
+		{ id: "SC", title: "SC", description: "South Carolina" },
+		{ id: "SD", title: "SD", description: "South Dakota" },
+		{ id: "TN", title: "TN", description: "Tennessee" },
+		{ id: "TX", title: "TX", description: "Texas" },
+		{ id: "UT", title: "UT", description: "Utah" },
+		{ id: "VT", title: "VT", description: "Vermont" },
+		{ id: "VI", title: "VI", description: "Virgin Islands" },
+		{ id: "VA", title: "VA", description: "Virginia" },
+		{ id: "WA", title: "WA", description: "Washington" },
+		{ id: "WV", title: "WV", description: "West Virginia" },
+		{ id: "WI", title: "WI", description: "Wisconsin" },
+		{ id: "WY", title: "WY", description: "Wyoming" }
+	]
 	const [State, setState] = React.useState(states[1]);
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
-	 
-const FinplanOptions = [
-  {id: 0, title: "All finplans", description: ""},
-  {id: 10, title: "Outgoing payments", description: ""},
-  {id: 20, title: "Incoming payments", description: ""},
-  {id: 30, title: "Savings", description: ""}
-]
-const [FinplanFilterOption, setFinplanFilterOption] = useState({id: 0, description: "All finplans"})
+
+	const FinplanOptions = [
+		{ id: 0, title: "All finplans", description: "" },
+		{ id: 10, title: "Outgoing payments", description: "" },
+		{ id: 20, title: "Incoming payments", description: "" },
+		{ id: 30, title: "Savings", description: "" }
+	]
+	const [FinplanFilterOption, setFinplanFilterOption] = useState({ id: 0, description: "All finplans" })
 
 	function selectImage(type: string) {
 		let options = {
@@ -300,7 +300,7 @@ const [FinplanFilterOption, setFinplanFilterOption] = useState({id: 0, descripti
 				width: METRICS.screenWidth * 0.95,
 				alignSelf: 'center',
 			}}>
-				<View>
+				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
@@ -313,7 +313,7 @@ const [FinplanFilterOption, setFinplanFilterOption] = useState({id: 0, descripti
 						/>
 					</View>
 				</View>
-				<View>
+				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>STATE</Text>
 					</View>
@@ -332,17 +332,17 @@ const [FinplanFilterOption, setFinplanFilterOption] = useState({id: 0, descripti
 								style={{ marginRight: 20 }}
 							/> */}
 
-						<ModalSelector
-            options={states}
-            action={setFinplanFilterOption}
-            title={""}
-            value={State}
-            visible={SelectStateOpen}
-            setVisible={setSelectStateOpen}
-            displaySelector
-            closeOnClick
-          />
-											</TouchableOpacity>
+							<ModalSelector
+								options={states}
+								action={setFinplanFilterOption}
+								title={""}
+								value={State}
+								visible={SelectStateOpen}
+								setVisible={setSelectStateOpen}
+								displaySelector
+								closeOnClick
+							/>
+						</TouchableOpacity>
 					</View>
 				</View>
 			</View>
@@ -380,7 +380,7 @@ const [FinplanFilterOption, setFinplanFilterOption] = useState({id: 0, descripti
 
 	return (
 		<Screen
-			// preset='scroll'
+			showHeader
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
@@ -392,7 +392,7 @@ const [FinplanFilterOption, setFinplanFilterOption] = useState({id: 0, descripti
 			>
 				<ScrollView bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
-						<View>
+						<View style={styles.CONTAINER}>
 
 							<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings", {})}>
 								<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
@@ -413,7 +413,7 @@ const [FinplanFilterOption, setFinplanFilterOption] = useState({id: 0, descripti
 				<Button
 					buttonStyle={{
 						backgroundColor: COLOR.PALETTE.green,
-						top: METRICS.screenHeight - 80,
+						top: METRICS.screenHeight - 100,
 						position: 'absolute'
 					}}
 					// buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}

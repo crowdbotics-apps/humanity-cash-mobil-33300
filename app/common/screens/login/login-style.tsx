@@ -3,7 +3,6 @@ import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
 	ROOT: {
-		flex: 1,
 		backgroundColor: COLOR.PALETTE.white,
 	},
 	BACK_BUTON_LABEL: {

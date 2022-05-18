@@ -71,7 +71,7 @@ export const SplashScreen = observer(function SplashScreen() {
           style={styles.WATERMARK_STYLE}
         />
       </View>
-      <View>
+      <View style={styles.CONTAINER}>
         <Button
           buttonStyle={{
             backgroundColor: COLOR.PALETTE.blue,

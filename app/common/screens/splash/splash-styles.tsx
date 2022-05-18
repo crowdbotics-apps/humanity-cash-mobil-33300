@@ -5,9 +5,9 @@ export default StyleSheet.create({
   ROOT: {
     flex: 1,
     backgroundColor: COLOR.PALETTE.background,
-    justifyContent: 'space-between',
-    marginTop: 50,
+    justifyContent: 'space-between'
   },
+  CONTAINER: {},
   BG_STYLE: {
     width: METRICS.screenWidth,
     bottom: 350,

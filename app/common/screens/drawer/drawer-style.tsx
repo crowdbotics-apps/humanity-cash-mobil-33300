@@ -5,8 +5,10 @@ export default StyleSheet.create({
 	ROOT: {
 		flex: 1,
 		backgroundColor: COLOR.PALETTE.background,
-		marginTop: 50,
 		justifyContent: 'space-between'
+	},
+  HEADER: {
+		backgroundColor: COLOR.PALETTE.background,
 	},
 	BACK_BUTON_LABEL: {
 		fontSize: 16,

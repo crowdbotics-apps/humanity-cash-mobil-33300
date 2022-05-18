@@ -5,12 +5,12 @@ export default StyleSheet.create({
   ROOT: {
     flex: 1,
     backgroundColor: COLOR.PALETTE.white,
-    marginTop: 50,
     justifyContent: 'space-between'
   },
   STEP_CONTAINER: {
-
+    width: METRICS.screenWidth
   },
+  CONTAINER: {},
   STEP_TITLE: {
     fontSize: 32,
     color: COLOR.PALETTE.green,

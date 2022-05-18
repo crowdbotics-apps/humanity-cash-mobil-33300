@@ -105,6 +105,7 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			showHeader
 		>
 			<KeyboardAvoidingView
 				enabled
@@ -113,21 +114,19 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 			>
 				<ScrollView bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
-						<View>
-							<View style={styles.STEP_CONTAINER}>
-								<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-									<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
-									<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+						<View style={styles.STEP_CONTAINER}>
+							<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+								<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
+								<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
 
-								</TouchableOpacity>
+							</TouchableOpacity>
 
-								<Text style={styles.STEP_TITLE}>Community chest</Text>
-								<View style={styles.LINE} />
-								<Text style={styles.STEP_SUB_TITLE}>Currents is all about supporting the local community. You can choose to round up and donate your change to the community chest, which will be distributed to local projects or neighbors in need.</Text>
+							<Text style={styles.STEP_TITLE}>Community chest</Text>
+							<View style={styles.LINE} />
+							<Text style={styles.STEP_SUB_TITLE}>Currents is all about supporting the local community. You can choose to round up and donate your change to the community chest, which will be distributed to local projects or neighbors in need.</Text>
 
-								{renderNews()}
-								<View style={{ height: 100 }} />
-							</View>
+							{renderNews()}
+							<View style={{ height: 100 }} />
 						</View>
 					</View>
 
@@ -135,7 +134,7 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 				<Button
 					buttonStyle={{
 						backgroundColor: COLOR.PALETTE.blue,
-						top: METRICS.screenHeight - 80,
+						top: METRICS.screenHeight - 100,
 						position: 'absolute'
 					}}
 					buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}

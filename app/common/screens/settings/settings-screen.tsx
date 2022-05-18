@@ -31,9 +31,10 @@ export const SettingsScreen = observer(function SettingsScreen() {
       preset="fixed"
       statusBar={"dark-content"}
       unsafe={true}
+      showHeader
     >
       <View style={styles.ROOT}>
-        <View>
+        <View style={styles.CONTAINER}>
           <TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
             <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
             <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
@@ -84,7 +85,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
             />
           </View>
         </View>
-        <View>
+        <View style={styles.CONTAINER}>
           <View style={styles.NEED_HELP_CONTAINER}>
             <Text onPress={() => { }} style={styles.NEED_HELP_LINK}>Delete account</Text>
           </View>

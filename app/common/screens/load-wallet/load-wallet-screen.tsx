@@ -25,13 +25,14 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 			{TransactionConfirm
 				? <View style={styles.LOADING_RETURN}>
 					{TransactionFinished
-						? <View>
-							<Text style={styles.PENDING_TITLE}>{`Congratulations! You 
+						? [
+							<Text key={'congrat_title'} style={styles.PENDING_TITLE}>{`Congratulations! You 
 have topped up 
 C$ ${Amount}`}
-							</Text>
-							<Text style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>
+							</Text>,
+							<Text key={'congrat_sub_title'} style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>,
 							<Button
+								key={'congrat_button'}
 								buttonStyle={{
 									backgroundColor: COLOR.PALETTE.green,
 									top: METRICS.screenHeight - 80,
@@ -46,12 +47,12 @@ C$ ${Amount}`}
 								]}
 								buttonLabel={'Explore BerkShares'}
 							/>
-						</View>
-						: <View>
-							<Text style={styles.PENDING_TITLE}>Pending...</Text>
-							<Text style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>
-							<ActivityIndicator style={styles.ACTIVITY} size="large" color={'black'} />
-						</View>
+						]
+						: [
+							<Text key={'pending_title'} style={styles.PENDING_TITLE}>Pending...</Text>,
+							<Text key={'pending_sub_title'} style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>,
+							<ActivityIndicator key={'pending_ind'} style={styles.ACTIVITY} size="large" color={'black'} />
+						]
 					}
 
 				</View>
@@ -93,7 +94,7 @@ C$ ${Amount}`}
 
 	return (
 		<Screen
-			// preset='scroll'
+			showHeader
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
@@ -172,7 +173,7 @@ C$ ${Amount}`}
 				<Button
 					buttonStyle={{
 						backgroundColor: COLOR.PALETTE.green,
-						top: METRICS.screenHeight - 80,
+						top: METRICS.screenHeight - 100,
 						position: 'absolute'
 					}}
 					onPress={() => setShowModal(true)}

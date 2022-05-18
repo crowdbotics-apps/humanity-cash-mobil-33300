@@ -8,9 +8,7 @@ export default StyleSheet.create({
     marginTop: 50,
     justifyContent: 'space-between'
   },
-  STEP_CONTAINER: {
-
-  },
+  STEP_CONTAINER: {},
   STEP_TITLE: {
     fontSize: 32,
     color: COLOR.PALETTE.green,

@@ -121,6 +121,7 @@ export const HomeScreen = observer(function HomeScreen() {
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			showHeader
 		>
 			<KeyboardAvoidingView
 				enabled
@@ -129,7 +130,6 @@ export const HomeScreen = observer(function HomeScreen() {
 			>
 				<ScrollView bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
-						<View>
 							<View style={styles.STEP_CONTAINER}>
 								<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
 									<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
@@ -158,7 +158,6 @@ export const HomeScreen = observer(function HomeScreen() {
 								{renderNews()}
 								<View style={{ height: 100 }} />
 							</View>
-						</View>
 					</View>
 					{bankModal()}
 

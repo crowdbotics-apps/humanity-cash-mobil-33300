@@ -462,7 +462,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const backButtonHandler = () => {
     switch (Step) {
       case "email":
-        navigation.navigate("home", {})
+        navigation.navigate("splash", {})
         break
       case "legal":
         setStep("email")
@@ -538,7 +538,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   return (
     <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>
       <View style={styles.ROOT}>
-        <View>
+        <View style={styles.STEP_CONTAINER}>
           <TouchableOpacity
             onPress={() => backButtonHandler()}
             style={styles.BACK_BUTON_CONTAINER}
@@ -548,7 +548,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           </TouchableOpacity>
           {renderStep()}
         </View>
-        <View>
+        <View style={styles.CONTAINER}>
           {Step === "email" && (
             <View style={styles.AGREE_CONTAINER}>
               <CheckBox

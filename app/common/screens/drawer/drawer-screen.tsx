@@ -21,20 +21,16 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
   const rootStore = useStores()
   const { loginStore } = rootStore
 
-  React.useEffect(() => {
-    console.log('props ===>>> ', props)
-
-  })
-
   return (
     <Screen
-      // preset='scroll'
+      showHeader
       preset="fixed"
       statusBar={'dark-content'}
       unsafe={true}
+      headerStyle={styles.HEADER}
     >
       <View style={styles.ROOT}>
-        <View>
+        <View style={styles.HEADER}>
           <TouchableOpacity onPress={() => props.navigation.closeDrawer()} style={styles.BACK_BUTON_CONTAINER}>
             <Icon name={"close"} size={23} color={COLOR.PALETTE.blue} />
             <Text style={styles.BACK_BUTON_LABEL}>{` Menu`}</Text>
@@ -109,7 +105,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             />
             <Text style={styles.MENU_ITEM_LABEL}>Community Chest</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER} onPress={() => props.navigation.navigate("setupProfile", {})}> 
             <Image
               resizeMode="contain"
               source={IMAGES.sign_up_your_business}

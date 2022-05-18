@@ -24,7 +24,8 @@ import { observer } from "mobx-react-lite"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useNavigation } from "@react-navigation/native"
 
-const STATUSBAR_HEIGHT = StatusBarManager.HEIGHT
+// const STATUSBAR_HEIGHT = StatusBarManager.HEIGHT
+const STATUSBAR_HEIGHT = 10
 
 const ROOT: ViewStyle = {
   flexDirection: "row",
@@ -42,8 +43,8 @@ const TITLE: TextStyle = {
   color: COLOR.PALETTE.white
 }
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
-const LEFT: ViewStyle = { marginTop: 5, width: 60 }
-const RIGHT: ViewStyle = { flexDirection: "row", width: 60, marginTop: 20 }
+const LEFT: ViewStyle = { marginTop: 5, width: 20 }
+const RIGHT: ViewStyle = { flexDirection: "row", width: 20, marginTop: 20 }
 const STATUS_BAR_PADDING: ViewStyle = { paddingTop: STATUSBAR_HEIGHT }
 
 /**

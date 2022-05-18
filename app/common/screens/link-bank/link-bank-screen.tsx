@@ -497,7 +497,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   return (
     <Screen preset="fixed" statusBar={"dark-content"} unsafe={true}>
       <View style={styles.ROOT}>
-        <View>
+        <View style={styles.STEP_CONTAINER}>
           <TouchableOpacity
             onPress={() => backButtonHandler()}
             style={styles.BACK_BUTON_CONTAINER}
@@ -507,7 +507,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           </TouchableOpacity>
           {renderStep()}
         </View>
-        <View>
+        <View style={styles.STEP_CONTAINER}>
           {Step === "email" && (
             <View style={styles.AGREE_CONTAINER}>
               <Checkbox

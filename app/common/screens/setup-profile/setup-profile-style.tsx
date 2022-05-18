@@ -4,12 +4,12 @@ import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 export default StyleSheet.create({
   ROOT: {
     flex: 1,
-    marginTop: 50,
   },
   FULL_SCREEN: {
     height: METRICS.screenHeight,
     backgroundColor: 'red'
   },
+  CONTAINER: {},
   ROOT_CONTAINER: {
     flex: 1,
     backgroundColor: COLOR.PALETTE.white,

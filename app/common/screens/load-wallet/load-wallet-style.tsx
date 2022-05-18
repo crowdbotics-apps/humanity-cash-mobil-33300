@@ -5,7 +5,6 @@ export default StyleSheet.create({
   ROOT: {
     flex: 1,
     backgroundColor: COLOR.PALETTE.white,
-    marginTop: 50,
   },
   ROOT_CONTAINER: {
     flex: 1,
@@ -313,7 +312,6 @@ export default StyleSheet.create({
   },
   BUTTON_AMOUNT_ACTIVE: {
     backgroundColor: COLOR.PALETTE.green, 
-    
     width: 105,
     height: 40,
     marginRight: 15,

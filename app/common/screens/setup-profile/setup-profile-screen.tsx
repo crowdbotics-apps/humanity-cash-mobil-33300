@@ -481,7 +481,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				width: METRICS.screenWidth * 0.95,
 				alignSelf: 'center',
 			}}>
-				<View>
+				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
@@ -494,7 +494,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						/>
 					</View>
 				</View>
-				<View>
+				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>STATE</Text>
 					</View>
@@ -583,7 +583,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			<View style={styles.THANK_MODAL}>
 
 				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Thank you! Welcome to the Currents App. Now it is time to add some Currents to your wallet!</Text>
-				<View>
+				<View style={styles.CONTAINER}>
 					<Text onPress={() => [setShowThankyouModal(false), setStep('profile_type')]} style={styles.NEED_HELP_LINK}>Skip for now</Text>
 					<TouchableOpacity style={styles.SUBMIT_BUTTON}>
 						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my personal bank account</Text>
@@ -713,7 +713,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 	return (
 		<Screen
-			// preset='scroll'
+			showHeader
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
@@ -725,7 +725,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			>
 				<ScrollView bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
-						<View>
+						<View style={styles.CONTAINER}>
 							<View style={styles.HEADER_ACTIONS}>
 								<TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
 									<Icon name={"arrow-back"} size={23} color={'black'} />
@@ -739,7 +739,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						</View>
 
 
-						<View>
+						<View style={styles.CONTAINER}>
 							{Step !== 'profile_type' &&
 								<TouchableOpacity
 									disabled={ButtonDisabled}

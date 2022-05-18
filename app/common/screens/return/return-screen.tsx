@@ -52,7 +52,7 @@ export const ReturnScreen = observer(function ReturnScreen() {
 	const [Finish, setFinish] = useState(false)
 	const [Search, setSearch] = useState('')
 
-	const ReturnIndex = () => <View>
+	const ReturnIndex = () => <View style={styles.CONTAINER}>
 		<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
 			<Icon name={"menu"} size={23} color={COLOR.PALETTE.green} />
 			<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
@@ -87,7 +87,7 @@ export const ReturnScreen = observer(function ReturnScreen() {
 						<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
 						<Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text>
 					</View>
-					<View>
+					<View style={styles.CONTAINER}>
 						{i.credit
 							? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
 							: <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
@@ -161,7 +161,7 @@ Thank you
 		<ActivityIndicator style={styles.ACTIVITY} size="large" color={'black'} />
 	</View>
 
-	const SendReturn = () => <View>
+	const SendReturn = () => <View style={styles.CONTAINER}>
 		<Text style={styles.STEP_TITLE}>Send return</Text>
 		<View style={styles.LINE} />
 		<Text style={styles.SUB_TITLE}>TRANSACTION DETAILS</Text>
@@ -221,7 +221,7 @@ Thank you
 
 	return (
 		<Screen
-			// preset='scroll'
+			showHeader
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
@@ -233,7 +233,7 @@ Thank you
 			>
 				<ScrollView bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
-						<View>
+						<View style={styles.CONTAINER}>
 							{(!ShowScanModal && !Loading && !Finish && !ShowIndex) &&
 								<View style={styles.HEADER_ACTIONS}>
 									<TouchableOpacity
@@ -261,7 +261,7 @@ Thank you
 					<Button
 						buttonStyle={{
 							backgroundColor: COLOR.PALETTE.green,
-							top: METRICS.screenHeight - 80,
+							top: METRICS.screenHeight - 100,
 							position: 'absolute'
 						}}
 						buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
