@@ -96,7 +96,6 @@ export const SignupScreen = observer(function SignupScreen() {
     return render
   }
 
-
   const validateEmail = (email, agree) => {
     let valid = String(email)
       .toLowerCase()

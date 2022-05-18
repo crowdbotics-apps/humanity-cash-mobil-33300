@@ -262,7 +262,10 @@ export class ApiBase {
         }
         try {
             response = await this.apisauce.axiosInstance.post(path, fdata, {headers})
+
+            console.log(' response ===>>> ', response )
         } catch (e) {
+            console.log(' response e ===>>> ', e,  fdata )
             if (e.message.indexOf("status code 400") !== -1) {
                 return {kind: "bad-data", errors: e.response.data}
             }

@@ -59,6 +59,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const navigation = useNavigation()
 	const { loginStore } = rootStore
 
+	const [Loading, setLoading] = useState(false)
+
 	const [Step, setStep] = useState('profile_type')
 	const [ButtonDisabled, setButtonDisabled] = useState(true)
 	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false)
@@ -104,11 +106,10 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	function selectImage(type: string) {
 		let options = {
-			mediaType: 'photo',
-			maxWidth: 300,
-			maxHeight: 550,
-			quality: 1,
-			includeBase64: true,
+			mediaType: "photo",
+			includeBase64: false,
+			maxWidth: 512,
+			maxHeight: 512
 		};
 
 		launchImageLibrary(options, (response: any) => {
@@ -126,6 +127,36 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			if (type === 'business_back') setBackBusinessImageSource(response.assets[0]);
 
 		});
+	}
+
+	const setupConsumer = () => {
+		setLoading(true)
+		const pic = {
+      uri:
+        Platform.OS === "android"
+          ? imageSource.uri
+          : imageSource.uri.replace("file://", ""),
+      type: imageSource.type,
+      name: imageSource.fileName
+    }
+    loginStore.environment.api.setupConsumer({ username: Username, consumer_profile: { profile_picture: pic } }).then(result => {
+      setLoading(false)
+			console.log(' result ===>>> ',)
+      // if (result.kind === "ok") {
+      //   runInAction(() => {
+      //     loginStore.setUser(result.response.user)
+      //     loginStore.setApiToken(result.response.access_token)
+      //   })
+      //   setStep("verify_email")
+      // } else if (result.kind === "bad-data") {
+      //   notifyMessage("Please correct the errors and try again")
+      //   setEmailError(true)
+      //   setEmailErrorMessage(result.errors.email[0])
+      // } else {
+      //   loginStore.reset()
+      //   notifyMessage(null)
+      // }
+    })
 	}
 
 	const renderStep = () => {
@@ -653,7 +684,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		loginStore.setSetupData(setupData)
 		switch (Step) {
 			case 'pic_username':
-				setStep('name')
+				setupConsumer()
+				// setStep('name')
 				break;
 			case 'name':
 				setShowThankyouModal(true)

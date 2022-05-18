@@ -33,7 +33,7 @@ export class Api extends ApiBase {
 
   // SETUP
   async setupConsumer(data: any): Promise<Types.SimplePostResult> {
-    return this.simple_patch(apiv1 + "/set-up-profile/consumer/", data)
+    return this.multipart_form_data(apiv1 + "/set-up-profile/consumer/", data, ["username", "consumer_profile"])
   }
   async setupConsumerDetail(data: any): Promise<Types.SimplePostResult> {
     return this.simple_patch(apiv1 + "/set-up-profile/consumer-detail/", data)
