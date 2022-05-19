@@ -12,7 +12,7 @@ export function Icon(props: IconProps) {
   const { style: styleOverride, icon, containerStyle } = props
 
   return (
-    <View style={containerStyle}>
+    <View style={[containerStyle, {alignContent:"center"}]}>
       <Image style={[ROOT, styleOverride]} source={icons[icon]} />
     </View>
   )

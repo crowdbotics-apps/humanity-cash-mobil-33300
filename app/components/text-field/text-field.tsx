@@ -1,98 +1,112 @@
-import React from "react"
-import { StyleProp, TextInput, TextInputProps, TextStyle, View, ViewStyle } from "react-native"
-import { color, spacing, typography } from "../../theme"
-import { translate, TxKeyPath } from "../../i18n"
-import { Text } from "../text/text"
+import React, {useEffect, useRef, useState} from "react"
+import Icon from "react-native-vector-icons/Ionicons"
+import {COLOR, TYPOGRAPHY} from "../../theme"
+import {
+  Text,
+  TextInput,
+  StyleSheet,
+  View,
+  Animated,
+  Easing,
+  TouchableOpacity, StyleProp, ViewStyle
+} from "react-native"
 
-// the base styling for the container
-const CONTAINER: ViewStyle = {
-  paddingVertical: spacing[3],
-}
-
-// the base styling for the TextInput
-const INPUT: TextStyle = {
-  fontFamily: typography.primary,
-  color: color.text,
-  minHeight: 44,
-  fontSize: 18,
-  backgroundColor: color.palette.white,
-}
-
-// currently we have no presets, but that changes quickly when you build your app.
-const PRESETS: { [name: string]: ViewStyle } = {
-  default: {},
-}
-
-export interface TextFieldProps extends TextInputProps {
-  /**
-   * The placeholder i18n key.
-   */
-  placeholderTx?: TxKeyPath
-
-  /**
-   * The Placeholder text if no placeholderTx is provided.
-   */
-  placeholder?: string
-
-  /**
-   * The label i18n key.
-   */
-  labelTx?: TxKeyPath
-
-  /**
-   * The label text if no labelTx is provided.
-   */
-  label?: string
-
-  /**
-   * Optional container style overrides useful for margins & padding.
-   */
-  style?: StyleProp<ViewStyle>
-
-  /**
-   * Optional style overrides for the input.
-   */
-  inputStyle?: StyleProp<TextStyle>
-
-  /**
-   * Various look & feels.
-   */
-  preset?: keyof typeof PRESETS
-
+type Props = React.ComponentProps<typeof TextInput> & {
+  label: string
+  errorText?: string | null
   forwardedRef?: any
+  textInputStyle?: StyleProp<ViewStyle>
 }
 
-/**
- * A component which has a label and an input together.
- */
-export function TextField(props: TextFieldProps) {
-  const {
-    placeholderTx,
-    placeholder,
-    labelTx,
-    label,
-    preset = "default",
-    style: styleOverride,
-    inputStyle: inputStyleOverride,
-    forwardedRef,
-    ...rest
-  } = props
+export const TextField: React.FC<Props> = (props) => {
+  const [ToggleShow, setToggleShow] = useState(true)
 
-  const containerStyles = [CONTAINER, PRESETS[preset], styleOverride]
-  const inputStyles = [INPUT, inputStyleOverride]
-  const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
+  const {
+    label,
+    errorText,
+    value,
+    style,
+    onBlur,
+    onFocus,
+    secureTextEntry,
+    forwardedRef,
+    textInputStyle,
+    ...restOfProps
+  } = props
+  const [isFocused, setIsFocused] = useState(false)
+
+  const focusAnim = useRef(new Animated.Value(0)).current
+
+  useEffect(() => {
+    Animated.timing(focusAnim, {
+      toValue: isFocused || !!value ? 1 : 0,
+      duration: 150,
+      easing: Easing.bezier(0.4, 0, 0.2, 1),
+      useNativeDriver: true
+    }).start()
+  }, [focusAnim, isFocused, value])
+
+  let borderColor = isFocused ? COLOR.PALETTE.primary : COLOR.PALETTE.lightGrey
 
   return (
-    <View style={containerStyles}>
-      <Text preset="fieldLabel" tx={labelTx} text={label} />
+    <View style={[style]}>
       <TextInput
-        placeholder={actualPlaceholder}
-        placeholderTextColor={color.palette.lighterGrey}
-        underlineColorAndroid={color.transparent}
-        {...rest}
-        style={inputStyles}
+        placeholderTextColor={COLOR.PALETTE.lightGrey}
+        placeholder={label}
+        style={[
+          styles.input,
+          {borderColor: borderColor}, textInputStyle
+        ]}
         ref={forwardedRef}
+        {...restOfProps}
+        value={value}
+        secureTextEntry={secureTextEntry ? ToggleShow : false}
+        onBlur={(event) => {
+          setIsFocused(false)
+          onBlur?.(event)
+        }}
+        onFocus={(event) => {
+          setIsFocused(true)
+          onFocus?.(event)
+        }}
       />
+      {!!errorText && <Text style={styles.error}>{errorText}</Text>}
+      {secureTextEntry && (
+        <TouchableOpacity
+          onPress={() => setToggleShow(!ToggleShow)}
+          style={{position: "absolute", right: 0, paddingRight:10, top: 20}}
+        >
+          <Icon
+            name={ToggleShow ? "eye-outline" : "eye-off-outline"}
+            size={20}
+            color={COLOR.PALETTE.gray}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  input: {
+    borderBottomWidth: 2,
+    fontSize: 14,
+    paddingLeft: 10,
+    height: 50,
+    color: COLOR.PALETTE.black
+  },
+  labelContainer: {
+    position: "absolute",
+  },
+  label: {
+    fontSize: 14
+  },
+  error: {
+    marginTop: 4,
+    fontFamily: TYPOGRAPHY.primaryLight,
+    fontSize: 11,
+    color: COLOR.PALETTE.angry
+  }
+})
+
+export default TextField

@@ -20,6 +20,8 @@ export const TYPOGRAPHY = {
   /**
    * An alternate font used for perhaps titles and stuff.
    */
+  primary: Platform.select({ ios: 'Arial', android: 'sans-serif' }),
+
   secondary: Platform.select({ ios: 'Arial', android: 'sans-serif' }),
 
   /**

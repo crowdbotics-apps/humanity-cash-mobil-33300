@@ -1,5 +1,6 @@
-import React, { Component, ErrorInfo, ReactNode } from "react"
+import { Component, ErrorInfo, ReactNode } from "react"
 import { ErrorComponent } from "./error-component"
+import * as Sentry from "@sentry/react-native";
 
 interface Props {
   children: ReactNode
@@ -9,6 +10,7 @@ interface Props {
 interface State {
   error: Error | null
   errorInfo: ErrorInfo | null
+  eventId: string | null
 }
 
 /**
@@ -22,14 +24,17 @@ interface State {
  * @link: https://reactjs.org/docs/error-boundaries.html
  */
 export class ErrorBoundary extends Component<Props, State> {
-  state = { error: null, errorInfo: null }
+  state = { error: null, errorInfo: null, eventId: ""  }
 
   // If an error in a child is encountered, this will run
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Catch errors in any components below and re-render with error message
-    this.setState({
-      error,
-      errorInfo,
+    console.log({ error, errorInfo })
+    Sentry.withScope((scope) => {
+      // @ts-ignore
+      scope.setExtras(errorInfo)
+      const eventId = Sentry.captureException(error)
+      this.setState({ error, errorInfo, eventId })
     })
 
     // You can also log error messages to an error reporting service here

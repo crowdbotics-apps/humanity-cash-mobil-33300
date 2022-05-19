@@ -9,6 +9,11 @@
 // It's easier just to leave it here.
 import App from "./app/app.tsx"
 import { AppRegistry } from "react-native"
+import * as Sentry from "@sentry/react-native";
+
+if (!__DEV__) {
+  Sentry.init({ dsn: 'SENTRY_DSN', tracesSampleRate: 1.0 })
+}
 
 AppRegistry.registerComponent("HumanityCash", () => App)
 export default App

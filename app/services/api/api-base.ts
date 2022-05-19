@@ -9,7 +9,6 @@ import {
 import {getGeneralApiProblem} from "./api-problem"
 import * as Types from "./api.types"
 import {ApiResponse, ApisauceInstance, create} from "apisauce"
-
 import {ApiConfig, DEFAULT_API_CONFIG} from "./api-config"
 
 
@@ -20,23 +19,20 @@ export class ApiBase {
     /**
      * The underlying apisauce instance which performs the requests.
      */
-    public apisauce: ApisauceInstance | undefined;
+    public apisauce: ApisauceInstance | undefined
 
     /**
      * Configurable options.
      */
     config: ApiConfig
-    prefix: string
 
     /**
      * Creates the api.
      *
      * @param config The configuration to use.
-     * @param prefix url prefix to add
      */
-    constructor(config: ApiConfig = DEFAULT_API_CONFIG, prefix = '') {
+    constructor(config: ApiConfig = DEFAULT_API_CONFIG) {
         this.config = config
-        this.prefix = prefix
     }
 
     /**
@@ -46,16 +42,15 @@ export class ApiBase {
      *
      * Be as quick as possible in here.
      */
-    async setup() {
+    setup() {
         // construct the apisauce instance
         this.apisauce = create({
-            baseURL: this.config.url + this.prefix,
+            baseURL: this.config.url,
             timeout: this.config.timeout,
             headers: {
                 Accept: "application/json"
             }
         })
-
     }
 
 
@@ -83,7 +78,7 @@ export class ApiBase {
             ret[field] = respuesta.data
             return ret as T
         } else
-            {return respuesta as T}
+        {return respuesta as T}
 
     }
 
@@ -102,13 +97,11 @@ export class ApiBase {
     }
 
     async simple_get<T extends SimpleGetResult>(path: string, extra_params?: any, axios?: any): Promise<T> {
-
         if (!this.apisauce) {
             return {kind: "unknown", temporary: true} as T
         }
-        const response: ApiResponse<any> = await this.apisauce.get(path, extra_params, axios)
 
-        console.log(' response simple_get ===>>> ', response)
+        const response: ApiResponse<any> = await this.apisauce.get(path, extra_params, axios)
 
         if (!response.ok) {
             if (response.status === 400) {
@@ -133,15 +126,11 @@ export class ApiBase {
     }
 
     async simple_post<T extends SimplePostResult>(path: string, params?: any, axios?: any): Promise<T> {
-
-
         if (!this.apisauce) {
             return {kind: "unknown", temporary: true} as T
         }
 
         const response: ApiResponse<any> = await this.apisauce.post(path, params, axios)
-
-        console.log(' response simple_post ===>>> ', response)
 
         if (!response.ok) {
             if (response.status === 400) {
@@ -174,8 +163,6 @@ export class ApiBase {
 
         const response: ApiResponse<any> = await this.apisauce.put(path, data)
 
-        console.log(' response simple_put ===>>> ', response)
-
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T
@@ -199,8 +186,6 @@ export class ApiBase {
 
         const response: ApiResponse<any> = await this.apisauce.patch(path, data)
 
-        console.log(' response simple_patch ===>>> ', response)
-
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T
@@ -223,8 +208,6 @@ export class ApiBase {
         }
 
         const response: ApiResponse<any> = await this.apisauce.delete(path)
-
-        console.log(' response simple_delete ===>>> ', response)
 
         if (!response.ok) {
             if (response.status === 400) {
@@ -269,15 +252,18 @@ export class ApiBase {
             "Authorization": this.apisauce.headers.Authorization
         }
         try {
-            response = await this.apisauce.axiosInstance.post(path, fdata, {headers})
+            if (data.id) {
+                path += data.id + "/"
+                response = await this.apisauce.axiosInstance.patch(path, fdata, {headers})
+            } else {
+                response = await this.apisauce.axiosInstance.post(path, fdata, {headers})
+            }
         } catch (e) {
             if (e.message.indexOf("status code 400") !== -1) {
                 return {kind: "bad-data", errors: e.response.data}
             }
             response = {status: 500}
         }
-
-        console.log(' response multipart_form_data ===>>> ', response)
 
         if (response.status === 400) {
             // @ts-ignore

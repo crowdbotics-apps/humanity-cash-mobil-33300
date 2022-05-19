@@ -42,4 +42,10 @@ export interface HeaderProps {
    * Title style overrides.
    */
   titleStyle?: StyleProp<TextStyle>
+
+  bigHeader?: boolean
+
+  showImage?: boolean
+
+  showButton?: boolean
 }

@@ -43,4 +43,24 @@ export interface ScreenProps {
    * Only applies to scroll preset.
    */
   keyboardShouldPersistTaps?: "handled" | "always" | "never"
+
+  /**
+   * An optional for statusbar with gradient background
+   */
+  bigHeader?: boolean
+
+  showBlur?: boolean
+
+  loggedIn?: boolean
+
+  showHeader: boolean
+
+  showHeaderImage?: boolean
+
+  headerTitle?: string
+
+  headerStyle?: StyleProp<ViewStyle>
+
+  onRightPress?():void
+
 }

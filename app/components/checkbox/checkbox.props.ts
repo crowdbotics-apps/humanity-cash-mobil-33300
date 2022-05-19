@@ -25,7 +25,7 @@ export interface CheckboxProps {
   /**
    * The text to display if there isn't a tx.
    */
-  text?: string
+  text?: any
 
   /**
    * The i18n lookup key.
@@ -41,4 +41,6 @@ export interface CheckboxProps {
    * Fires when the user tabs to change the value.
    */
   onToggle?: (newValue: boolean) => void
+
+  textLabel?: boolean
 }

@@ -57,9 +57,8 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
 
       // are we allowed to exit?
       if (canExitRef.current(routeName)) {
-        // exit and let the system know we've handled the event
-        BackHandler.exitApp()
-        return true
+        // let the system know we've not handled this event
+        return false
       }
 
       // we can't exit, so let's turn this into a back action
@@ -99,7 +98,7 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
 
     if (previousRouteName !== currentRouteName) {
       // track screens.
-      __DEV__ && console.tron.log(currentRouteName)
+      __DEV__ && console.log(currentRouteName)
     }
 
     // Save the current route name for later comparision
@@ -111,8 +110,8 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
 
   const restoreState = async () => {
     try {
-      const state = await storage.load(persistenceKey)
-      if (state) setInitialNavigationState(state)
+      // const state = await storage.load(persistenceKey)
+      // if (state) setInitialNavigationState(state)
     } finally {
       setIsRestored(true)
     }
@@ -126,7 +125,7 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
 }
 
 /**
- * use this to navigate without the navigation
+ * use this to navigate to navigate without the navigation
  * prop. If you have access to the navigation prop, do not use this.
  * More info: https://reactnavigation.org/docs/navigating-without-navigation-prop/
  */

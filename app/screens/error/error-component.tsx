@@ -1,6 +1,6 @@
 import React, { ErrorInfo } from "react"
 import { TextStyle, View, ViewStyle, ScrollView, ImageStyle } from "react-native"
-import { color } from "../../theme"
+import { COLOR } from "../../theme"
 import { Button, Icon, Text } from "../../components"
 
 const CONTAINER: ViewStyle = {
@@ -8,13 +8,13 @@ const CONTAINER: ViewStyle = {
   flex: 1,
   padding: 16,
   paddingVertical: 50,
-  backgroundColor: color.background,
+  backgroundColor: COLOR.background,
 }
 
 const ERROR_DETAILS_CONTAINER: ViewStyle = {
   width: "100%",
   maxHeight: "60%",
-  backgroundColor: color.line,
+  backgroundColor: COLOR.line,
   marginVertical: 15,
   paddingHorizontal: 10,
   paddingBottom: 15,
@@ -24,23 +24,23 @@ const ERROR_DETAILS_CONTAINER: ViewStyle = {
 const BTN_RESET: ViewStyle = {
   paddingHorizontal: 40,
 
-  backgroundColor: color.primary,
+  backgroundColor: COLOR.primary,
 }
 
 const TITLE_ERROR: TextStyle = {
-  color: color.error,
+  color: COLOR.error,
   fontWeight: "bold",
   paddingVertical: 15,
 }
 
 const FRIENDLY_SUBTITLE: TextStyle = {
-  color: color.palette.black,
+  color: COLOR.PALETTE.black,
   fontWeight: "normal",
   paddingVertical: 15,
 }
 
 const CONTENT_ERROR: TextStyle = {
-  color: color.error,
+  color: COLOR.error,
   fontWeight: "bold",
   paddingVertical: 15,
 }
@@ -48,7 +48,7 @@ const CONTENT_ERROR: TextStyle = {
 // Uncomment this and the Text component in the ErrorComponent if
 // you want to see a backtrace in your error reporting screen.
 // const CONTENT_BACKTRACE: TextStyle = {
-//   color: color.dim,
+//   color: COLOR.dim,
 // }
 
 const ICON: ImageStyle = {
