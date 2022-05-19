@@ -1,153 +1,145 @@
-# humanity_cash_mobil_33300
+# Welcome to your new ignited app!
 
-Welcome to your new Crowdbotics app.
+[![CircleCI](https://circleci.com/gh/infinitered/ignite.svg?style=svg)](https://circleci.com/gh/infinitered/ignite)
 
-## What is Crowdbotics? 
-Crowdbotics is an easy way to build software applications of all kinds.  You can build production, high-caliber software applications in minutes, rather than weeks or months, even if you're not a software developer.
+## The latest and greatest boilerplate for Infinite Red opinions
 
-The reason this works is that most software applications and features we want to build are similar to applications that have been built before. We've crawled hundreds of thousands of public code repositories to teach the Crowdbotics engine how to create software.
+This is the boilerplate that [Infinite Red](https://infinite.red) uses as a way to test bleeding-edge changes to our React Native stack.
 
-As a result, Crowdbotics can generate new applications automatically in a standardized way.
+Currently includes:
 
-### Useful Links
-[App Dashboard](https://app.crowdbotics.com/)
-·
-[Knowledgebase](https://knowledge.crowdbotics.com/)
-·
-[Developer Training](https://knowledge.crowdbotics.com/crowdbotics-developer-training)
-·
-[Forum](https://discuss.crowdbotics.com/)
-·
-[Tech Support](https://crowdbotics.slack.com/archives/CGSAV319V)
+- React Native
+- React Navigation
+- MobX State Tree
+- TypeScript
+- And more!
 
-## Table of Contents
-1. [Project Description](#project-description)
-2. [Project Structure](#project-structure)
-3. [Modules](#modules)
-4. [Getting Started: Frontend](#getting-started-frontend)
-   - [Installation](#installation)
-   - [Running with Fastlane](#running-with-fastlane)
-     - [Android](#android-1)
-     - [iOS](#ios-1)
-     - [React Native Web](#react-native-web)
-5. [Getting Started: Backend](backend#readme)
-6. [License](#license)
+## Quick Start
 
-## Project Description
+The Ignite boilerplate project's structure will look similar to this:
 
-This react_native application was built with Crowdbotics www.crowdbotics.com
+```
+ignite-project
+├── app
+│   ├── components
+│   ├── i18n
+│   ├── utils
+│   ├── models
+│   ├── navigators
+│   ├── screens
+│   ├── services
+│   ├── theme
+│   ├── app.tsx
+├── storybook
+│   ├── views
+│   ├── index.ts
+│   ├── storybook-registry.ts
+│   ├── storybook.ts
+│   ├── toggle-storybook.tsx
+├── test
+│   ├── __snapshots__
+│   ├── storyshots.test.ts.snap
+│   ├── mock-i18n.ts
+│   ├── mock-reactotron.ts
+│   ├── setup.ts
+│   ├── storyshots.test.ts
+├── README.md
+├── android
+│   ├── app
+│   ├── build.gradle
+│   ├── gradle
+│   ├── gradle.properties
+│   ├── gradlew
+│   ├── gradlew.bat
+│   ├── keystores
+│   └── settings.gradle
+├── ignite
+│   ├── ignite.json
+│   └── plugins
+├── index.js
+├── ios
+│   ├── IgniteProject
+│   ├── IgniteProject-tvOS
+│   ├── IgniteProject-tvOSTests
+│   ├── IgniteProject.xcodeproj
+│   └── IgniteProjectTests
+├── .env
+└── package.json
 
-## Project Structure
-
-    .
-    ├── ...
-    ├── android                 # Android native files
-    ├── backend                 # Django backend REST API
-    ├── ios                     # iOS native files
-    ├── modules                 # Modules
-    ├── public                  
-    ├── screens                 
-    ├── store                   # Application state storage
-    ├── ...
-    ├── README.md
-    └── ...
-
-## Modules (THIS SECTION IS AUTO-GENERATED, PLEASE DO NOT EDIT)
-
-This section will show any installed modules you add from the Storyboard Modules section.
-- [camera]()
-- [react-native-user-profile](modules/user-profile)
-- [privacy-policy]()
-- [react-native-login](modules/login)
-- [react-native-splash](modules/splash)
-- [react-native-app-menu](modules/app-menu)
-- [terms-and-conditions]()
-
-# Getting started: Frontend
-
-This section outlines instructions on setting up a local development environment for the frontend of your application.
-
-## Installation
-
-### Metro
-
-After cloning the repo, install the dependencies locally with [Yarn](https://yarnpkg.com/):
-
-```sh
-yarn install
 ```
 
-Start your [Metro](https://facebook.github.io/metro/) server:
+### ./app directory
 
-```sh
-npx react-native start
+Included in an Ignite boilerplate project is the `app` directory. This is a directory you would normally have to create when using vanilla React Native.
+
+The inside of the src directory looks similar to the following:
+
+```
+app
+│── components
+│── i18n
+├── models
+├── navigators
+├── screens
+├── services
+├── theme
+├── utils
+└── app.tsx
 ```
 
-### Android
+**components**
+This is where your React components will live. Each component will have a directory containing the `.tsx` file, along with a story file, and optionally `.presets`, and `.props` files for larger components. The app will come with some commonly used components like Button.
 
-```sh
-npx react-native run-android
-```
+**i18n**
+This is where your translations will live if you are using `react-native-i18n`.
 
-### iOS
+**models**
+This is where your app's models will live. Each model has a directory which will contain the `mobx-state-tree` model file, test file, and any other supporting files like actions, types, etc.
 
-```sh
-pod install --repo-update --project-directory=ios
-npx react-native run-ios
-```
+**navigators**
+This is where your `react-navigation` navigators will live.
 
-### Setup react-native-vector-icons
+**screens**
+This is where your screen components will live. A screen is a React component which will take up the entire screen and be part of the navigation hierarchy. Each screen will have a directory containing the `.tsx` file, along with any assets or other helper files.
 
-Follow instructions at their [README.md](https://github.com/oblador/react-native-vector-icons/blob/master/README.md#installation)
+**services**
+Any services that interface with the outside world will live here (think REST APIs, Push Notifications, etc.).
 
-## Running with Fastlane
+**theme**
+Here lives the theme for your application, including spacing, colors, and typography.
 
-[Fastlane](https://fastlane.tools/) makes testing, building, and deploying apps
-easier.
+**utils**
+This is a great place to put miscellaneous helpers and utilities. Things like date helpers, formatters, etc. are often found here. However, it should only be used for things that are truely shared across your application. If a helper or utility is only used by a specific component or model, consider co-locating your helper with that component or model.
 
-Install fastlane globally (`npm i -g fastlane` or `yarn i -g fastlane`).
-Android and iOS dependencies are the same as React Native CLI.
+**app.tsx** This is the entry point to your app. This is where you will find the main App component which renders the rest of the application.
 
-All fastlane commands are run from the platform directory. For example, Android
-commands must be run from `android/`. Fastlane should be executed using `bundle exec` to ensure dependencies are managed correctly.
+### ./ignite directory
 
-The commands for Android and iOS are the same:
+The `ignite` directory stores all things Ignite, including CLI and boilerplate items. Here you will find generators, plugins and examples to help you get started with React Native.
 
-- Run tests: `bundle exec fastlane tests`
-- Local build: `bundle exec fastlane build`
-- Build and upload a beta (requires signing): `bundle exec fastlane beta`
-- Build or promote a release: `bundle exec fastlane deploy`
+### ./storybook directory
 
-### Android
+This is where your stories will be registered and where the Storybook configs will live.
 
-Publish an Android app you must first create an app in the Play Console and
-manually upload an APK. After the first upload run `bundle exec fastlane supply init` from `android/` to sync with the Play store. All future releases will be
-uploaded automatically.
+### ./test directory
 
-Android uses tracks. A beta release will build the app and upload to the beta
-track. Deploying will promote from beta to production.
+This directory will hold your Jest configs and mocks, as well as your [storyshots](https://github.com/storybooks/storybook/tree/master/addons/storyshots) test file. This is a file that contains the snapshots of all your component storybooks.
 
-### iOS
+## Running Storybook
 
-CB developers must follow fastlane's [codesigning guide](https://codesigning.guide/) for using match.
-Match will automatically sign iOS builds.
+From the command line in your generated app's root directory, enter `yarn run storybook`
+This starts up the storybook server and opens a story navigator in your browser. With your app
+running, choose Toggle Storybook from the developer menu to switch to Storybook; you can then
+use the story navigator in your browser to change stories.
 
-New CB developers should get access to the codesigning repo and run `bundle exec fastlane match development` from `ios/`.
+For Visual Studio Code users, there is a handy extension that makes it easy to load Storybook use cases into a running emulator via tapping on items in the editor sidebar. Install the `React Native Storybook` extension by `Orta`, hit `cmd + shift + P` and select "Reconnect Storybook to VSCode". Expand the STORYBOOK section in the sidebar to see all use cases for components that have `.story.tsx` files in their directories.
 
-Not a CB developer? Create an [Apple developer](https://developer.apple.com)
-and follow the instructions on [codesigning guide](https://codesigning.guide/)
-to setup your certificates.
+## Running e2e tests
 
-## React Native Web
+Read [e2e setup instructions](./e2e/README.md).
 
-It is to build and deploy your app as web platform which run on browser
+## Previous Boilerplates
 
-Please follow the steps
-
-- please run `yarn web-build`
-- the web_build folder is generated and copied to backend/ automatically. please commit/push the web_build folder to git
-
-# License
-The use of code in this repository is governed by Crowdbotics [Terms and Conditions](https://www.crowdbotics.com/terms-of-service).
-
-Created with ❤️ by [Crowdbotics](https://www.crowdbotics.com/)
+- [2018 aka Bowser](https://github.com/infinitered/ignite-bowser)
+- [2017 aka Andross](https://github.com/infinitered/ignite-andross)
+- [2016 aka Ignite 1.0](https://github.com/infinitered/ignite-ir-boilerplate-2016)

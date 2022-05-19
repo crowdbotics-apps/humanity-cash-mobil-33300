@@ -1,9 +1,26 @@
 {
-  "name": "humanity_cash_mobil_33300",
-  "android": {
-    "package": "com.humanity_cash_mobil_33300"
-  },
-  "ios": {
-    "bundleIdentifier": "com.crowdbotics.humanity_cash_mobil_33300-id"
+  "name": "HumanityCash",
+  "displayName": "HumanityCash",
+  "expo": {
+    "name": "HumanityCash",
+    "slug": "HumanityCash",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    }
   }
 }

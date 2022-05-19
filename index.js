@@ -7,22 +7,13 @@
 // side effect of breaking other tooling like mobile-center and react-native-rename.
 //
 // It's easier just to leave it here.
-import App from './app/app'
-import {AppRegistry, Platform} from 'react-native'
-import * as Sentry from '@sentry/react-native'
-// import messaging from '@react-native-firebase/messaging';
-
-// @ts-ignore
-// import { SENTRY_DSN } from 'react-native-dotenv'
+import App from "./app/app.tsx"
+import { AppRegistry } from "react-native"
+import * as Sentry from "@sentry/react-native";
 
 if (!__DEV__) {
   Sentry.init({ dsn: 'SENTRY_DSN', tracesSampleRate: 1.0 })
 }
-// if (Platform.OS !== 'ios') {
-//   messaging().setBackgroundMessageHandler(onRemoteMessage);
-// }
 
-
-AppRegistry.registerComponent('humanity_cash_mobil_33300', () => App)
-
+AppRegistry.registerComponent("HumanityCash", () => App)
 export default App
