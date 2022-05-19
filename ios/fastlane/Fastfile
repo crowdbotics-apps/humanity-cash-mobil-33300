@@ -20,8 +20,8 @@ app_name = 'humanity-cash-mobil-33300'
 base_name = 'humanity_cash_mobil_33300'
 team_name = 'Crowdbotics Corporation'
 team_id = '6YKR59QXKM'
-filename = "#{base_name}.xcodeproj"
-workspace_name = "#{base_name}.xcworkspace"
+filename = "#HumanityCash.xcodeproj"
+workspace_name = "#HumanityCash.xcworkspace"
 identifier = "com.crowdbotics.#{app_name}"
 app_privacy_details = "app_privacy_details.json"
 
