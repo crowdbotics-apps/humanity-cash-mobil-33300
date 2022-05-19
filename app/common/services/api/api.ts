@@ -49,11 +49,13 @@ export class Api extends ApiBase {
   async getCities(data?: any): Promise<Types.SimpleGetResult> {
     let url = "/base/cities/"
     if (data && data.value) url += `?search=${data.value}`
+    console.log(' url => ', url, data)
     return this.simple_get(url)
   }
   async getStates(data?: any): Promise<Types.SimpleGetResult> {
     let url = "/base/states/"
     if (data && data.value) url += `?search=${data.value}`
+    console.log(' url => ', url, data)
     return this.simple_get(url)
   }
 }

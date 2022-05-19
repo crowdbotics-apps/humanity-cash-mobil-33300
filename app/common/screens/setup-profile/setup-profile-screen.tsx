@@ -5,7 +5,8 @@ import {
 	Text,
 	Button,
 	Screen,
-	Checkbox
+	Checkbox,
+	ModalSelector
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
@@ -238,17 +239,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const setupMerchantDetailComplete = () => {
 		setLoading(true)
-
-		loginStore.environment.api.getCities()
-			.then(result => {
-				console.log('result citie ===>>> ', result)
-			})
-
-		loginStore.environment.api.getStates()
-			.then(result => {
-				console.log('result state ===>>> ', result)
-			})
-
 
 		loginStore.environment.api.setupMerchantDetail({
 			registered_business_name: BusinessRegName,
@@ -643,24 +633,26 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					]}>
 						<TouchableOpacity
 							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
-							onPress={() => [setSelectStateOpen(!SelectStateOpen), setState('')]}
+							onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
 						>
-							<Text style={styles.SELECT_LABEL}>{State}</Text>
+							{/* <Text style={styles.SELECT_LABEL}>{State.title}</Text>
 							<Entypo
-								name={SelectStateOpen ? "chevron-up" : "chevron-down"}
+								name={"chevron-down"}
 								size={23} color={'black'}
 								style={{ marginRight: 20 }}
+							/> */}
+
+							<ModalSelector
+								options={states}
+								action={setState}
+								title={""}
+								value={State}
+								visible={SelectStateOpen}
+								setVisible={setSelectStateOpen}
+								displaySelector
+								closeOnClick
 							/>
 						</TouchableOpacity>
-						{SelectStateOpen && states.map((t, key) => (
-							<TouchableOpacity
-								key={key + 'stype'}
-								style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
-								onPress={() => [setSelectStateOpen(!SelectStateOpen), setState(t)]}
-							>
-								<Text style={styles.SELECT_LABEL}>{t}</Text>
-							</TouchableOpacity>
-						))}
 					</View>
 				</View>
 			</View>
@@ -788,6 +780,18 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			PhoneNumber,
 		}
 		loginStore.setSetupData(setupData)
+
+		
+		loginStore.environment.api.getCities({ value: 'wash'})
+			.then(result => {
+				console.log('result citie ===>>> ', result)
+			})
+
+		loginStore.environment.api.getStates({ value: 'wash'})
+			.then(result => {
+				console.log('result state ===>>> ', result)
+			})
+
 		switch (Step) {
 			case 'pic_username':
 				setupConsumer()
@@ -847,6 +851,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		if (data?.PostalCode) setPostalCode(data.PostalCode)
 		if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
 		setRandonPic(randomImages[Math.round(Math.random() * 3)])
+
+
+
 	}, [])
 
 	return (

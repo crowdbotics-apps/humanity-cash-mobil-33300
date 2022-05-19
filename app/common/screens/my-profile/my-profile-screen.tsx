@@ -101,14 +101,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [State, setState] = React.useState(states[1]);
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
 
-	const FinplanOptions = [
-		{ id: 0, title: "All finplans", description: "" },
-		{ id: 10, title: "Outgoing payments", description: "" },
-		{ id: 20, title: "Incoming payments", description: "" },
-		{ id: 30, title: "Savings", description: "" }
-	]
-	const [FinplanFilterOption, setFinplanFilterOption] = useState({ id: 0, description: "All finplans" })
-
 	function selectImage(type: string) {
 		let options = {
 			mediaType: 'photo',
@@ -323,7 +315,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					]}>
 						<TouchableOpacity
 							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
-							onPress={() => [setSelectStateOpen(!SelectStateOpen), setState({})]}
+							onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
 						>
 							{/* <Text style={styles.SELECT_LABEL}>{State.title}</Text>
 							<Entypo
@@ -334,7 +326,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 
 							<ModalSelector
 								options={states}
-								action={setFinplanFilterOption}
+								action={setState}
 								title={""}
 								value={State}
 								visible={SelectStateOpen}
