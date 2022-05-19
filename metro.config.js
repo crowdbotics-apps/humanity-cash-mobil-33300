@@ -1,39 +1,23 @@
 /**
- * Metro configuration for React Native
- * https://github.com/facebook/react-native
+ * We're using a custom metro config because we want to support symlinks
+ * out of the box. This allows you to use pnpm and/or play better in a monorepo.
  *
- * @format
+ * You can safely delete this file and remove @rnx-kit/metro-* if you're not
+ * using PNPM or monorepo or symlinks at all.
+ *
+ * However, it doesn't hurt to have it either.
  */
+const { makeMetroConfig } = require("@rnx-kit/metro-config")
+const MetroSymlinksResolver = require("@rnx-kit/metro-resolver-symlinks")
+const { getDefaultConfig } = require("metro-config")
 
-const path = require("path")
-const extraNodeModules = {
-  "@modules": path.resolve(__dirname, "modules"),
-  "@screens": path.resolve(__dirname, "screens"),
-  "@options": path.resolve(__dirname, "options")
-}
-const watchFolders = [
-  path.resolve(__dirname, "modules"),
-  path.resolve(__dirname, "screens"),
-  path.resolve(__dirname, "options")
-]
-module.exports = {
-  transformer: {
-    getTransformOptions: async () => ({
-      transform: {
-        experimentalImportSupport: false,
-        inlineRequires: false
-      }
-    })
-  },
-  resolver: {
-    extraNodeModules: new Proxy(extraNodeModules, {
-      get: (target, name) =>
-        //redirects dependencies referenced from extraNodeModules to local node_modules
-        name in target
-          ? target[name]
-          : path.join(process.cwd(), "node_modules", name)
-    })
-  },
-  watchFolders,
-  resetCache: true
-}
+module.exports = (async () => {
+  const defaultConfig = await getDefaultConfig()
+  return makeMetroConfig({
+    projectRoot: __dirname,
+    resolver: {
+      resolveRequest: MetroSymlinksResolver(),
+      assetExts: [...defaultConfig.resolver.assetExts, "bin"],
+    },
+  })
+})()
