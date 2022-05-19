@@ -116,3 +116,10 @@ class MerchantMyProfileSerializer(serializers.ModelSerializer):
                   'registered_business_name', 'industry',
                   'employer_identification_number', 'social_security_number',
                   'address_1', 'address_2', 'city', 'state', 'zip_code', 'phone_number']
+
+
+class ConsumerProfileDetailSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Consumer
+        fields = ['id', 'profile_picture', 'address_1', 'address_2', 'city', 'state', 'zip_code']

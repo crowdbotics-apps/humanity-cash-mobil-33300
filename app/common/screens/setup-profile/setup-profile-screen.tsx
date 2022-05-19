@@ -255,12 +255,14 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			industry: BusinessIndustryType,
 			employer_identification_number: IndentifierType === 'EIN' ? EmployerId: '',
 			social_security_number: IndentifierType === 'SSN' ? SocialSecurityNumber: '',
+			owner_first_name: BusinessExecName,
+			owner_last_name: BusinessExecLastName,
 			// city: 1988, // TODO: fetch
-			// state: 28, // TODO: fetch 
+			// state: 28, // TODO: fetch
 			address_1: Address1,
 			address_2: Address2,
 			zip_code: PostalCode,
-			// phone_number: PhoneNumber
+			phone_number: PhoneNumber
 		})
 			.then(result => {
 				setLoading(false)
@@ -810,7 +812,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				break;
 			case 'business_addresss':
 				setupMerchantDetailComplete()
-				
+
 				break;
 
 		}

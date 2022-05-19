@@ -33,6 +33,16 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
 
+    @property
+    def get_consumer_data(self):
+        if hasattr(self, 'consumer'):
+            return self.consumer
+
+    @property
+    def get_merchant_data(self):
+        if hasattr(self, 'merchant'):
+            return self.merchant
+
 
 class PasswordReset(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
