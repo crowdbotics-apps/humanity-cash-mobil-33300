@@ -56,6 +56,35 @@ export const LoginStoreModel = types
     get getSetupData() {
       return self.setupData
     },
+    get getAllData() {
+      return {
+        id: self.id,
+        username: self.username,
+        first_name: self.first_name,
+        last_name: self.last_name,
+        verified_email: self.verified_email,
+        email: self.email,
+        phone_number: self.phone_number,
+        phone_number_national: self.phone_number_national,
+        phone_number_national_iso: self.phone_number_national_iso,
+        profile_picture: self.profile_picture,
+        access_token: self.access_token,
+        refresh_token: self.refresh_token,
+        passcode: self.passcode,
+        finplan_admin: self.finplan_admin,
+        current_balance: self.current_balance,
+        payment_method_id: self.payment_method_id,
+        payment_method_choice: self.payment_method_choice,
+        recurring_selected_option: self.recurring_selected_option,
+        read_contacts_permission : self.read_contacts_permission ,
+        line1: self.line1,
+        city: self.city,
+        state: self.state,
+        postal_code: self.postal_code,
+        country: self.country,
+        billing_data_added: self.billing_data_added,
+      }
+    }
   }))
   .actions(self => ({
     setUser(user) {

@@ -108,6 +108,8 @@ export class ApiBase {
         }
         const response: ApiResponse<any> = await this.apisauce.get(path, extra_params, axios)
 
+        console.log(' response simple_get ===>>> ', response)
+
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T
@@ -139,7 +141,7 @@ export class ApiBase {
 
         const response: ApiResponse<any> = await this.apisauce.post(path, params, axios)
 
-        console.log(' simple_post ===>>> ', response)
+        console.log(' response simple_post ===>>> ', response)
 
         if (!response.ok) {
             if (response.status === 400) {
@@ -172,6 +174,8 @@ export class ApiBase {
 
         const response: ApiResponse<any> = await this.apisauce.put(path, data)
 
+        console.log(' response simple_put ===>>> ', response)
+
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T
@@ -195,6 +199,8 @@ export class ApiBase {
 
         const response: ApiResponse<any> = await this.apisauce.patch(path, data)
 
+        console.log(' response simple_patch ===>>> ', response)
+
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T
@@ -217,6 +223,8 @@ export class ApiBase {
         }
 
         const response: ApiResponse<any> = await this.apisauce.delete(path)
+
+        console.log(' response simple_delete ===>>> ', response)
 
         if (!response.ok) {
             if (response.status === 400) {
@@ -262,15 +270,14 @@ export class ApiBase {
         }
         try {
             response = await this.apisauce.axiosInstance.post(path, fdata, {headers})
-
-            console.log(' response ===>>> ', response )
         } catch (e) {
-            console.log(' response e ===>>> ', e,  fdata )
             if (e.message.indexOf("status code 400") !== -1) {
                 return {kind: "bad-data", errors: e.response.data}
             }
             response = {status: 500}
         }
+
+        console.log(' response multipart_form_data ===>>> ', response)
 
         if (response.status === 400) {
             // @ts-ignore
@@ -311,21 +318,21 @@ export class ApiBase {
 
         }
         let response
+        console.log(' header -> ', this.apisauce.headers.Authorization)
         const headers = {
             "Content-Type": "multipart/form-data",
             "Authorization": this.apisauce.headers.Authorization
         }
         try {
             response = await this.apisauce.axiosInstance.patch(path, fdata, {headers})
-
-            console.log(' response ===>>> ', response )
         } catch (e) {
-            console.log(' response e ===>>> ', e,  fdata )
             if (e.message.indexOf("status code 400") !== -1) {
                 return {kind: "bad-data", errors: e.response.data}
             }
             response = {status: 500}
         }
+
+        console.log(' response multipart_form_data_patch ===>>> ', response)
 
         if (response.status === 400) {
             // @ts-ignore

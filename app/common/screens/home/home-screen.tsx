@@ -5,9 +5,10 @@ import { Button, Screen, Text } from "../../components";
 import { Image, TouchableOpacity, View, Modal, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import { ButtonIcon } from "../../components/button-icon/button-icon";
-import styles from './home-style';
-import Icon from "react-native-vector-icons/MaterialIcons"
-import { CheckBox } from 'react-native-elements'
+import styles from "./home-style";
+import {useStores} from "../../models";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { CheckBox } from "react-native-elements";
 
 const userData = {
 	profile: {
@@ -39,6 +40,8 @@ const news = [
 
 export const HomeScreen = observer(function HomeScreen() {
 	const navigation = useNavigation()
+	const rootStore = useStores()
+	const {loginStore} = rootStore
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
 	const [ShowBankStepModal, setShowBankStepModal] = useState(false)
@@ -48,6 +51,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		if (!userData.profile.name) navigation.navigate("setupProfile", {})
 		else if (!userData.bankInfo.bankName) setShowBankModal(true)
 		// navigation.navigate("return", {})
+		console.log(' loginStore ===>>> ', loginStore.getAllData)
 	}, [])
 
 	const bankModal = () => (

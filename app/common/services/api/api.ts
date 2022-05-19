@@ -39,10 +39,21 @@ export class Api extends ApiBase {
     return this.simple_patch(apiv1 + "/set-up-profile/consumer-detail/", data)
   }
   async setupMerchant(data: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(apiv1 + "/set-up-profile/merchant/", data)
+    return this.multipart_form_data(apiv1 + "/set-up-profile/merchant/", data, ["profile_picture", "background_picture"])
   }
   async setupMerchantDetail(data: any): Promise<Types.SimplePostResult> {
     return this.simple_patch(apiv1 + "/set-up-profile/merchant-detail/", data)
   }
 
+  // BASE
+  async getCities(data?: any): Promise<Types.SimpleGetResult> {
+    let url = "/base/cities/"
+    if (data && data.value) url += `?search=${data.value}`
+    return this.simple_get(url)
+  }
+  async getStates(data?: any): Promise<Types.SimpleGetResult> {
+    let url = "/base/states/"
+    if (data && data.value) url += `?search=${data.value}`
+    return this.simple_get(url)
+  }
 }

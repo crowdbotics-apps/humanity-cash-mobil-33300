@@ -18,6 +18,8 @@ import { IMAGES, METRICS } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { CheckBox } from 'react-native-elements'
 import { useStores } from "../../models"
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
 
 
 const steps_user = ['pic_username', 'name']
@@ -73,12 +75,13 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [Username, setUsername] = useState('')
 	const [imageSource, setImageSource] = React.useState<any>(null);
 	const [UsernameError, setUsernameError] = useState(false)
+	const [UsernameErrorMsg, setUsernameErrorMsg] = useState('')
 	const [Name, setName] = useState('')
 	const [LastName, setLastName] = useState('')
 
 	// business
-	const [BusinessName, setBusinessName] = React.useState(null);
-	const [BusinessStory, setBusinessStory] = React.useState(null);
+	const [BusinessName, setBusinessName] = React.useState('');
+	const [BusinessStory, setBusinessStory] = React.useState('');
 	const [BusinessType, setBusinessType] = React.useState('');
 	const [SelectOpen, setSelectOpen] = useState(false)
 	const [BusinessExecName, setBusinessExecName] = React.useState('');
@@ -97,7 +100,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
-	const [City, setCity] = React.useState(1);
+	const [City, setCity] = React.useState('');
 	const states = ["AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE", "DC"]
 	const [State, setState] = React.useState(states[1]);
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
@@ -131,33 +134,147 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const setupConsumer = () => {
 		setLoading(true)
+		setUsernameErrorMsg("")
+		setUsernameError(false)
 		const pic = {
-      uri:
-        Platform.OS === "android"
-          ? imageSource.uri
-          : imageSource.uri.replace("file://", ""),
-      type: imageSource.type,
-      name: imageSource.fileName
-    }
+			uri:
+				Platform.OS === "android"
+					? imageSource.uri
+					: imageSource.uri.replace("file://", ""),
+			type: imageSource.type,
+			name: imageSource.fileName
+		}
+		loginStore.environment.api.setupConsumer({ username: Username, consumer_profile: pic }).then(result => {
+			setLoading(false)
+			if (result.kind === "ok") {
+				setStep("name")
+			} else if (result.kind === "bad-data") {
+				const key = Object.keys(result?.errors)[0]
+				let msg = `${key}: ${result?.errors?.[key][0]}`
+				if (key === 'username') {
+					setUsernameError(true)
+					setUsernameErrorMsg(result?.errors?.[key][0])
+				}
+				notifyMessage(msg)
+			} else {
+				notifyMessage(null)
+			}
+		})
+	}
 
-    loginStore.environment.api.setupConsumer({ username: Username, consumer_profile: pic }).then(result => {
-      setLoading(false)
-			console.log(' result ===>>> ',)
-      // if (result.kind === "ok") {
-      //   runInAction(() => {
-      //     loginStore.setUser(result.response.user)
-      //     loginStore.setApiToken(result.response.access_token)
-      //   })
-      //   setStep("verify_email")
-      // } else if (result.kind === "bad-data") {
-      //   notifyMessage("Please correct the errors and try again")
-      //   setEmailError(true)
-      //   setEmailErrorMessage(result.errors.email[0])
-      // } else {
-      //   loginStore.reset()
-      //   notifyMessage(null)
-      // }
-    })
+	const setupConsumerDetail = () => {
+		setLoading(true)
+		loginStore.environment.api.setupConsumerDetail({ first_name: Name, last_name: LastName }).then(result => {
+			setLoading(false)
+			if (result.kind === "ok") {
+				setShowThankyouModal(true)
+			} else if (result.kind === "bad-data") {
+				const key = Object.keys(result?.errors)[0]
+				let msg = `${key}: ${result?.errors?.[key][0]}`
+				notifyMessage(msg)
+			} else {
+				notifyMessage(null)
+			}
+		})
+	}
+
+	const setupMerchant = () => {
+		setLoading(true)
+		const prof_pic = {
+			uri:
+				Platform.OS === "android"
+					? BusinessImageSource.uri
+					: BusinessImageSource.uri.replace("file://", ""),
+			type: BusinessImageSource.type,
+			name: BusinessImageSource.fileName
+		}
+		const back_pic = {
+			uri:
+				Platform.OS === "android"
+					? BackBusinessImageSource.uri
+					: BackBusinessImageSource.uri.replace("file://", ""),
+			type: BackBusinessImageSource.type,
+			name: BackBusinessImageSource.fileName
+		}
+		loginStore.environment.api.setupMerchant({
+			business_name: BusinessName,
+			profile_picture: prof_pic,
+			background_picture: back_pic,
+			business_story: BusinessStory
+		})
+			.then(result => {
+				setLoading(false)
+				console.log('result ===>>> ', result)
+				setStep('business_type')
+				if (result.kind === "ok") {
+					setStep('business_type')
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					let msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const setupMerchantDetail = () => {
+		setLoading(true)
+		loginStore.environment.api.setupMerchantDetail({type_of_business: BusinessType})
+			.then(result => {
+				setLoading(false)
+				console.log('result ===>>> ', result)
+				if (result.kind === "ok") {
+					setStep('business_exec')
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					let msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const setupMerchantDetailComplete = () => {
+		setLoading(true)
+
+		loginStore.environment.api.getCities()
+			.then(result => {
+				console.log('result citie ===>>> ', result)
+			})
+
+		loginStore.environment.api.getStates()
+			.then(result => {
+				console.log('result state ===>>> ', result)
+			})
+
+
+		loginStore.environment.api.setupMerchantDetail({
+			registered_business_name: BusinessRegName,
+			industry: BusinessIndustryType,
+			employer_identification_number: IndentifierType === 'EIN' ? EmployerId: '',
+			social_security_number: IndentifierType === 'SSN' ? SocialSecurityNumber: '',
+			// city: 1988, // TODO: fetch
+			// state: 28, // TODO: fetch 
+			address_1: Address1,
+			address_2: Address2,
+			zip_code: PostalCode,
+			// phone_number: PhoneNumber
+		})
+			.then(result => {
+				setLoading(false)
+				console.log('result ===>>> ', result)
+				if (result.kind === "ok") {
+					setShowThankyouModal(true)
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					let msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
 	}
 
 	const renderStep = () => {
@@ -230,23 +347,12 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			<Text style={styles.IMAGE_BOX_VALIDATION}>(Max 200 MB / .jpeg, .jpg, .png)</Text>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>USER NAME*</Text>
-				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
+				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? UsernameErrorMsg : ''}</Text>
 			</View>
 			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
 					style={styles.INPUT_STYLE}
-					onChangeText={t => {
-						setUsername(t)
-						if (t === '@rafa') {
-							setUsernameError(true)
-							setButtonDisabled(true)
-						}
-						else {
-							setUsernameError(false)
-							if (t.length > 1) setButtonDisabled(false)
-							else setButtonDisabled(true)
-						}
-					}}
+					onChangeText={t => setUsername(t)}
 					value={Username.charAt(0) == '@' ? Username : '@' + Username}
 					placeholder={'@username'}
 				/>
@@ -260,9 +366,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			<Text style={styles.STEP_SUB_TITLE}>We use your personal details to set up your Currents wallet. Don’t worry, this information is not shared publicy!</Text>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>FIRST NAME</Text>
-				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setName(t)}
@@ -689,13 +794,13 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				// setStep('name')
 				break;
 			case 'name':
-				setShowThankyouModal(true)
+				setupConsumerDetail()
 				break;
 			case 'pic_bname':
-				setStep('business_type')
+				setupMerchant()
 				break;
 			case 'business_type':
-				setStep('business_exec')
+				setupMerchantDetail()
 				break;
 			case 'business_exec':
 				setStep('business_data')
@@ -704,7 +809,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				setStep('business_addresss')
 				break;
 			case 'business_addresss':
-				setShowThankyouModal(true)
+				setupMerchantDetailComplete()
+				
 				break;
 
 		}
@@ -712,7 +818,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 	useEffect(() => {
 		let data = loginStore.getSetupData
-		console.log(' data -> ', data)
 		if (data?.Username) {
 			setUsername(data.Username)
 			setButtonDisabled(false)
@@ -774,18 +879,14 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 						<View style={styles.CONTAINER}>
 							{Step !== 'profile_type' &&
-								<TouchableOpacity
-									disabled={ButtonDisabled}
+								<Button
+									disabled={ButtonDisabled || Loading}
 									onPress={() => nextButtonHandler()}
-									style={ButtonDisabled ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
-								>
-									<Text style={styles.SUBMIT_BUTTON_LABEL}>
-										{Step === 'business_exec'
-											? 'Confirm'
-											: 'Next'
-										}
-									</Text>
-								</TouchableOpacity>
+									loading={Loading}
+									buttonLabel={Step === 'business_exec' ? 'Confirm' : 'Next'}
+									buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
+								/>
+
 							}
 						</View>
 					</View>
