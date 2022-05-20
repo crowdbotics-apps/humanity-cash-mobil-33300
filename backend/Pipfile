@@ -36,3 +36,4 @@ django-phonenumber-field = {extras = ["phonenumbers"],version = "*"}
 django-filter = "*"
 django-cities-light = "*"
 django-model-utils = "*"
+sentry-sdk = "*"

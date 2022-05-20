@@ -12,7 +12,7 @@ import { AppRegistry } from "react-native"
 import * as Sentry from "@sentry/react-native";
 
 if (!__DEV__) {
-  Sentry.init({ dsn: 'SENTRY_DSN', tracesSampleRate: 1.0 })
+  Sentry.init({ dsn: 'https://5c4617dc3b4943aa9db6a81e763b69cc@sentry.innovatica.com.py//13', tracesSampleRate: 1.0 })
 }
 
 AppRegistry.registerComponent("HumanityCash", () => App)
