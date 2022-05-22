@@ -28,6 +28,9 @@ import { CommunityChestScreen } from "../screens/community-chest/community-chest
 import { LoadWalletScreen } from "../screens/load-wallet/load-wallet-screen";
 import { DrawerScreen } from "../screens/drawer/drawer-screen";
 import { SettingsScreen } from "../screens/settings/settings-screen";
+import { LegalScreen } from "../screens/legal/legal-screen";
+import { SecurityScreen } from "../screens/security/security-screen";
+import { HelpContactScreen } from "../screens/help-contact/help-contact-screen";
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -54,6 +57,9 @@ export type NavigatorParamList = {
   communityChest: any
   loadWallet: any
   settings: any
+  legal: any
+  security: any
+  helpContact: any
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -85,6 +91,9 @@ const AppStackDrawer = () => {
       <Drawer.Screen name="myProfile" component={MyProfileScreen} />
       <Drawer.Screen name="communityChest" component={CommunityChestScreen} />
       <Drawer.Screen name="settings" component={SettingsScreen} />
+      <Drawer.Screen name="helpContact" component={HelpContactScreen} />
+      <Drawer.Screen name="security" component={SecurityScreen} />
+      <Drawer.Screen name="legal" component={LegalScreen} />
       {/* <Drawer.Screen name="drawer" component={DrawerScreen} /> */}
 
     </Drawer.Navigator>

@@ -154,7 +154,7 @@ export const HomeScreen = observer(function HomeScreen() {
 										/>
 										<Text style={styles.AMOUNT}>382.91</Text>
 									</View>
-									<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER}>
+									<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}>
 										<Text style={styles.LOAD_WALLET_LABEL}>Load Wallet</Text>
 									</TouchableOpacity>
 								</View>

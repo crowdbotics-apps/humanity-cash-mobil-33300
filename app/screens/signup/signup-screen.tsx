@@ -20,14 +20,6 @@ interface SignupFields {
   name: string;
 }
 
-const INITIAL_VALUES = {
-  email: "",
-  password: "",
-  password_confirm: "",
-  phone_number: "",
-  name: ""
-}
-
 const steps = [
   "email",
   "legal",

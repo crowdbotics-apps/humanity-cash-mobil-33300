@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { TextInput, View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import {
   Text,
   Button,
   Screen,
-  Checkbox
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
-import Entypo from "react-native-vector-icons/Entypo"
-import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from './settings-style';
-import { COLOR, TYPOGRAPHY } from '../../theme';
-import { StackActions, useNavigation } from "@react-navigation/native"
-import { IMAGES } from "../../theme"
+import { COLOR } from '../../theme';
+import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 
 export const SettingsScreen = observer(function SettingsScreen() {
@@ -70,7 +66,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
             <Button
               buttonStyle={styles.BUTTON_STYLE}
               buttonLabelStyle={{ color: COLOR.PALETTE.green }}
-              onPress={() => { }}
+              onPress={() => navigation.navigate("legal", {})}
               buttonLabel={'Legal'}
               disabled={Loading}
               loading={Loading}
@@ -78,7 +74,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
             <Button
               buttonStyle={styles.BUTTON_STYLE}
               buttonLabelStyle={{ color: COLOR.PALETTE.green }}
-              onPress={() => { }}
+              onPress={() => navigation.navigate("security", {})}
               buttonLabel={'Security'}
               disabled={Loading}
               loading={Loading}
