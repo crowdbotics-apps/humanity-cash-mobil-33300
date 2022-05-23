@@ -13,7 +13,6 @@ import Entypo from "react-native-vector-icons/Entypo"
 export const LegalScreen = observer(function LegalScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
-  const { loginStore } = rootStore
 
   const [ShowTerms, setShowTerms] = useState(false)
   const [ShowPolicy, setShowPolicy] = useState(false)

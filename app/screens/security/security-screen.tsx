@@ -1,52 +1,30 @@
-import React, {useEffect, useState} from "react"
-import {observer} from "mobx-react-lite"
-import {TextInput, View, TouchableOpacity, Image} from "react-native"
-import {Text, Button, Screen, Checkbox} from "../../components"
+import React, { useState } from "react"
+import { observer } from "mobx-react-lite"
+import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, TextInput, Switch } from "react-native"
+import { Text, Button, Screen } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
-import Entypo from "react-native-vector-icons/Entypo"
-import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from "./security-style"
-import {COLOR, TYPOGRAPHY} from "../../theme"
-import {StackActions, useNavigation} from "@react-navigation/native"
-import {IMAGES} from "../../theme"
-import {useStores} from "../../models"
-import {runInAction} from "mobx"
-import {notifyMessage} from "../../utils/helpers"
+import { COLOR, METRICS } from "../../theme"
+import { useNavigation } from "@react-navigation/native"
+import { useStores } from "../../models"
+import Ionicons from "react-native-vector-icons/Ionicons"
+
 
 export const SecurityScreen = observer(function SecurityScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
-  const {loginStore} = rootStore
 
-  const [Username, setUsername] = useState("")
   const [Pass, setPass] = useState("")
   const [HidePass, setHidePass] = useState(true)
-  const [Loading, setLoading] = useState(false)
 
-  // rafael@mail.com @Rafa1234567
+  const [NewPass, setNewPass] = useState("")
+  const [HideNewPass, setHideNewPass] = useState(true)
+  const [NewPassConfirmation, setNewPassConfirmation] = useState("")
+  const [HideNewPassConfirmation, setHideNewPassConfirmation] = useState(true)
 
-  const login = () => {
-    setLoading(true)
-    loginStore.environment.api
-      .login({email: Username, password: Pass})
-      .then(result => {
-        setLoading(false)
-        if (result.kind === "ok") {
-          runInAction(() => {
-            loginStore.setUser(result.response.user)
-            loginStore.setApiToken(result.response.access_token)
-            navigation.navigate("home", {})
-          })
-        } else if (result.kind === "bad-data") {
-          const key = Object.keys(result?.errors)[0]
-          let msg = `${key}: ${result?.errors?.[key][0]}`
-          notifyMessage(msg)
-        } else {
-          loginStore.reset()
-          notifyMessage(null)
-        }
-      })
-  }
+  const [isEnabled, setIsEnabled] = useState(false)
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState)
+
 
   return (
     <Screen
@@ -56,84 +34,101 @@ export const SecurityScreen = observer(function SecurityScreen() {
       style={styles.ROOT}
       showHeader
     >
-      <TouchableOpacity
-        onPress={() => navigation.navigate("splash", {})}
-        style={styles.BACK_BUTON_CONTAINER}
+      <KeyboardAvoidingView
+        enabled
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        style={styles.ROOT}
       >
-        <Icon name={"arrow-back"} size={23} color={"#8B9555"}/>
-        <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
-      </TouchableOpacity>
-      <View style={styles.STEP_CONTAINER}>
-        <Text style={styles.STEP_TITLE}>Log in</Text>
-        <Text style={styles.STEP_SUB_TITLE}>{"Welcome back"}</Text>
-        <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-          <Text style={styles.INPUT_LABEL_STYLE}>
-            EMAIL ADDRESS OR USER NAME
-          </Text>
-        </View>
-        <View style={styles.INPUT_STYLE_CONTAINER}>
-          <TextInput
-            style={styles.INPUT_STYLE}
-            onChangeText={t => setUsername(t)}
-            value={Username}
-            placeholder={"EMAIL ADDRESS OR USER NAME"}
-          />
-        </View>
-        <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-          <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
-          {/* <Text style={styles.PASS_REQUIREMENTS}>AT LEAST 12 CHARACTERS LONG,  1 NUMBER AND 1 SYMBOL</Text> */}
-        </View>
-        <View style={styles.INPUT_STYLE_CONTAINER}>
-          <TextInput
-            // ref={ref => EmailInput = ref}
-            style={styles.PASS_INPUT_STYLE}
-            onChangeText={t => [setPass(t)]}
-            value={Pass}
-            secureTextEntry={HidePass}
-            placeholder={"*********"}
-          />
-          <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
-            <Ionicons name="eye" color={"#39534440"} size={20}/>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
-        <View style={styles.LOGIN_TYPES_CONTAINER}>
-          <Image
-            source={IMAGES.appleIcon}
-            resizeMode="contain"
-            style={styles.LOGIN_TYPE}
-          />
-          <Image
-            source={IMAGES.googleIcon}
-            resizeMode="contain"
-            style={styles.LOGIN_TYPE}
-          />
-          <Image
-            source={IMAGES.facebookIcon}
-            resizeMode="contain"
-            style={styles.LOGIN_TYPE}
-          />
-        </View>
-      </View>
+        <ScrollView bounces={false}>
+          <View style={styles.ROOT_CONTAINER}>
+            <View style={styles.CONTAINER}>
 
-      <View style={styles.NEED_HELP_CONTAINER}>
-        <Text onPress={() => {
-        }} style={styles.NEED_HELP_LINK}>
-          Forgot password
-        </Text>
-      </View>
-      <Button
-        buttonStyle={{
-          marginTop: "auto",
-          backgroundColor: Loading
-            ? `${COLOR.PALETTE.green}40`
-            : COLOR.PALETTE.green
-        }}
-        onPress={() => login()}
-        buttonLabel={"Log in"}
-        disabled={Loading}
-        loading={Loading}
-      />
+              <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings", {})}>
+                <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+                <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+
+              </TouchableOpacity>
+
+              <Text style={styles.STEP_TITLE}>Security</Text>
+              <View style={styles.LINE} />
+
+              <View style={styles.SWITCH_INPUT_STYLE_CONTAINER}>
+                <Text style={styles.ALLOW_LABEL}>Allow touch ID</Text>
+                <Switch
+                  trackColor={{ false: "#39534480", true: "#4CD964" }}
+                  thumbColor={isEnabled ? "#F8FAF6" : "#F8FAF6"}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                />
+              </View>
+
+              <View style={styles.LINE} />
+              
+              <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+                <Text style={styles.INPUT_LABEL_STYLE}>OLD PASSWORD</Text>
+              </View>
+              <View style={styles.INPUT_STYLE_CONTAINER}>
+                <TextInput
+                  style={styles.PASS_INPUT_STYLE}
+                  onChangeText={t => [setPass(t)]}
+                  value={Pass}
+                  secureTextEntry={HidePass}
+                  placeholder={"*********"}
+                />
+                <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+                  <Ionicons name="eye" color={"#39534480"} size={20} />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+                <Text style={styles.INPUT_LABEL_STYLE}>NEW PASSWORD</Text>
+              </View>
+              <View style={styles.INPUT_STYLE_CONTAINER}>
+                <TextInput
+                  style={styles.PASS_INPUT_STYLE}
+                  onChangeText={t => [setNewPass(t)]}
+                  value={NewPass}
+                  secureTextEntry={HideNewPass}
+                  placeholder={"*********"}
+                />
+                <TouchableOpacity onPress={() => setHideNewPass(!HideNewPass)}>
+                  <Ionicons name="eye" color={"#39534480"} size={20} />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+                <Text style={styles.INPUT_LABEL_STYLE}>CONFIRM NEW PASSWORD</Text>
+              </View>
+              <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+                <Text style={styles.INPUT_LABEL_STYLE}>AT LEAST 12 CHARACTERS LONG,  1 NUMBER AND 1 SYMBOL</Text>
+              </View>
+              <View style={styles.INPUT_STYLE_CONTAINER}>
+                <TextInput
+                  style={styles.PASS_INPUT_STYLE}
+                  onChangeText={t => [setNewPassConfirmation(t)]}
+                  value={NewPassConfirmation}
+                  secureTextEntry={HideNewPassConfirmation}
+                  placeholder={"*********"}
+                />
+                <TouchableOpacity onPress={() => setHideNewPassConfirmation(!HideNewPassConfirmation)}>
+                  <Ionicons name="eye" color={"#39534480"} size={20} />
+                </TouchableOpacity>
+              </View>
+
+            </View>
+          </View>
+        </ScrollView>
+        <Button
+					buttonStyle={{
+						backgroundColor: COLOR.PALETTE.blue,
+						top: METRICS.screenHeight - 80,
+						position: 'absolute'
+					}}
+					onPress={() => {}}
+					buttonLabel={'Save changes'}
+				/>
+      </KeyboardAvoidingView>
     </Screen>
   )
 })

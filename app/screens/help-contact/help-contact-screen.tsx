@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from "react-native"
+import { View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Linking } from "react-native"
 import { Text, Button, Screen } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from "./help-contact-style"
-import { COLOR } from "../../theme"
+import { COLOR, METRICS } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
-import { useStores } from "../../models"
 import Entypo from "react-native-vector-icons/Entypo"
 
 export const HelpContactScreen = observer(function HelpContactScreen() {
   const navigation = useNavigation()
-  const rootStore = useStores()
-  const { loginStore } = rootStore
 
+  const [Step, setStep] = useState('help')
 
   const [Show1, setShow1] = useState(false)
   const [Show2, setShow2] = useState(false)
@@ -22,211 +20,242 @@ export const HelpContactScreen = observer(function HelpContactScreen() {
   const [Show5, setShow5] = useState(false)
   const [Show6, setShow6] = useState(false)
 
+  const [Search, setSearch] = useState('')
 
-  const Render1 = () => (!Show1 ? (
-    <TouchableOpacity
-      onPress={() => setShow1(!Show1)}
-      style={styles.TERMS_CLOSE_CONTAINER}
-    >
-      <Text style={styles.TERMS_TITLE}>{"How to pay with Currents?"}</Text>
-      <Entypo
-        name={"chevron-down"}
-        size={23}
-        color={"black"}
-        style={{ marginRight: 20 }}
-      />
-    </TouchableOpacity>
-  ) : (
-    <View style={styles.TERMS_OPEN_CONTAINER}>
-      <TouchableOpacity
-        onPress={() => setShow1(!Show1)}
-        style={styles.TERMS_OPEN_TITLE_CONTAINER}
-      >
-        <Text style={styles.TERMS_TITLE}>{"How to pay with Currents?"}</Text>
-        <Entypo
-          name={"chevron-up"}
-          size={23}
-          color={"black"}
-          style={{ marginRight: 20 }}
-        />
-      </TouchableOpacity>
-      <Text style={styles.TERMS_OPEN_CONTENT}>
-        {`
+  const Render1 = () => {
+    const title = "How to pay with Currents?"
+    if (Search === '' || title.toLocaleLowerCase().includes(Search.toLocaleLowerCase())) {
+      return (!Show1 ? (
+        <TouchableOpacity
+          onPress={() => setShow1(!Show1)}
+          style={styles.TERMS_CLOSE_CONTAINER}
+        >
+          <Text style={styles.TERMS_TITLE}>{title}</Text>
+          <Entypo
+            name={"chevron-down"}
+            size={23}
+            color={"black"}
+            style={{ marginRight: 20 }}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.TERMS_OPEN_CONTAINER}>
+          <TouchableOpacity
+            onPress={() => setShow1(!Show1)}
+            style={styles.TERMS_OPEN_TITLE_CONTAINER}
+          >
+            <Text style={styles.TERMS_TITLE}>{title}</Text>
+            <Entypo
+              name={"chevron-up"}
+              size={23}
+              color={"black"}
+              style={{ marginRight: 20 }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.TERMS_OPEN_CONTENT}>
+            {`
 First you click on ‘scan to pay or receive' on the home screen. Then you can scan the qr code shown the merchant. You confirm the amount and the berkshares will be transferred. 
 `}
-      </Text>
-    </View>
-  ))
-  const Render2 = () => (!Show2 ? (
-    <TouchableOpacity
-      onPress={() => setShow2(!Show2)}
-      style={styles.TERMS_CLOSE_CONTAINER}
-    >
-      <Text style={styles.TERMS_TITLE}>{"How to make a return?"}</Text>
-      <Entypo
-        name={"chevron-down"}
-        size={23}
-        color={"black"}
-        style={{ marginRight: 20 }}
-      />
-    </TouchableOpacity>
-  ) : (
-    <View style={styles.TERMS_OPEN_CONTAINER}>
-      <TouchableOpacity
-        onPress={() => setShow2(!Show2)}
-        style={styles.TERMS_OPEN_TITLE_CONTAINER}
-      >
-        <Text style={styles.TERMS_TITLE}>{"How to make a return?"}</Text>
-        <Entypo
-          name={"chevron-up"}
-          size={23}
-          color={"black"}
-          style={{ marginRight: 20 }}
-        />
-      </TouchableOpacity>
-      <Text style={styles.TERMS_OPEN_CONTENT}>
-        {`
+          </Text>
+        </View>
+      ))
+    } else return null
+  }
+  const Render2 = () => {
+    const title = "How to make a return?"
+    if (Search === '' || title.toLocaleLowerCase().includes(Search.toLocaleLowerCase())) {
+      return (!Show2 ? (
+        <TouchableOpacity
+          onPress={() => setShow2(!Show2)}
+          style={styles.TERMS_CLOSE_CONTAINER}
+        >
+          <Text style={styles.TERMS_TITLE}>{title}</Text>
+          <Entypo
+            name={"chevron-down"}
+            size={23}
+            color={"black"}
+            style={{ marginRight: 20 }}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.TERMS_OPEN_CONTAINER}>
+          <TouchableOpacity
+            onPress={() => setShow2(!Show2)}
+            style={styles.TERMS_OPEN_TITLE_CONTAINER}
+          >
+            <Text style={styles.TERMS_TITLE}>{title}</Text>
+            <Entypo
+              name={"chevron-up"}
+              size={23}
+              color={"black"}
+              style={{ marginRight: 20 }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.TERMS_OPEN_CONTENT}>
+            {`
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 `}
-      </Text>
-    </View>
-  ))
-  const Render3 = () => (!Show3 ? (
-    <TouchableOpacity
-      onPress={() => setShow3(!Show3)}
-      style={styles.TERMS_CLOSE_CONTAINER}
-    >
-      <Text style={styles.TERMS_TITLE}>{"How to partially return a transaction?"}</Text>
-      <Entypo
-        name={"chevron-down"}
-        size={23}
-        color={"black"}
-        style={{ marginRight: 20 }}
-      />
-    </TouchableOpacity>
-  ) : (
-    <View style={styles.TERMS_OPEN_CONTAINER}>
-      <TouchableOpacity
-        onPress={() => setShow3(!Show3)}
-        style={styles.TERMS_OPEN_TITLE_CONTAINER}
-      >
-        <Text style={styles.TERMS_TITLE}>{"How to partially return a transaction?"}</Text>
-        <Entypo
-          name={"chevron-up"}
-          size={23}
-          color={"black"}
-          style={{ marginRight: 20 }}
-        />
-      </TouchableOpacity>
-      <Text style={styles.TERMS_OPEN_CONTENT}>
-        {`
+          </Text>
+        </View>
+      ))
+    } else return null
+  }
+  const Render3 = () => {
+    const title = "How to partially return a transaction?"
+    if (Search === '' || title.toLocaleLowerCase().includes(Search.toLocaleLowerCase())) {
+      return (!Show3 ? (
+        <TouchableOpacity
+          onPress={() => setShow3(!Show3)}
+          style={styles.TERMS_CLOSE_CONTAINER}
+        >
+          <Text style={styles.TERMS_TITLE}>{title}</Text>
+          <Entypo
+            name={"chevron-down"}
+            size={23}
+            color={"black"}
+            style={{ marginRight: 20 }}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.TERMS_OPEN_CONTAINER}>
+          <TouchableOpacity
+            onPress={() => setShow3(!Show3)}
+            style={styles.TERMS_OPEN_TITLE_CONTAINER}
+          >
+            <Text style={styles.TERMS_TITLE}>{title}</Text>
+            <Entypo
+              name={"chevron-up"}
+              size={23}
+              color={"black"}
+              style={{ marginRight: 20 }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.TERMS_OPEN_CONTENT}>
+            {`
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 `}
-      </Text>
-    </View>
-  ))
-  const Render4 = () => (!Show4 ? (
-    <TouchableOpacity
-      onPress={() => setShow4(!Show4)}
-      style={styles.TERMS_CLOSE_CONTAINER}
-    >
-      <Text style={styles.TERMS_TITLE}>{"How to cash out to USD?"}</Text>
-      <Entypo
-        name={"chevron-down"}
-        size={23}
-        color={"black"}
-        style={{ marginRight: 20 }}
-      />
-    </TouchableOpacity>
-  ) : (
-    <View style={styles.TERMS_OPEN_CONTAINER}>
-      <TouchableOpacity
-        onPress={() => setShow4(!Show4)}
-        style={styles.TERMS_OPEN_TITLE_CONTAINER}
-      >
-        <Text style={styles.TERMS_TITLE}>{"How to cash out to USD?"}</Text>
-        <Entypo
-          name={"chevron-up"}
-          size={23}
-          color={"black"}
-          style={{ marginRight: 20 }}
-        />
-      </TouchableOpacity>
-      <Text style={styles.TERMS_OPEN_CONTENT}>
-        {`
+          </Text>
+        </View>
+      ))
+    } else return null
+  }
+  const Render4 = () => {
+    const title = "How to cash out to USD?"
+    if (Search === '' || title.toLocaleLowerCase().includes(Search.toLocaleLowerCase())) {
+      return (!Show4 ? (
+        <TouchableOpacity
+          onPress={() => setShow4(!Show4)}
+          style={styles.TERMS_CLOSE_CONTAINER}
+        >
+          <Text style={styles.TERMS_TITLE}>{title}</Text>
+          <Entypo
+            name={"chevron-down"}
+            size={23}
+            color={"black"}
+            style={{ marginRight: 20 }}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.TERMS_OPEN_CONTAINER}>
+          <TouchableOpacity
+            onPress={() => setShow4(!Show4)}
+            style={styles.TERMS_OPEN_TITLE_CONTAINER}
+          >
+            <Text style={styles.TERMS_TITLE}>{title}</Text>
+            <Entypo
+              name={"chevron-up"}
+              size={23}
+              color={"black"}
+              style={{ marginRight: 20 }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.TERMS_OPEN_CONTENT}>
+            {`
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 `}
-      </Text>
-    </View>
-  ))
-  const Render5 = () => (!Show5 ? (
-    <TouchableOpacity
-      onPress={() => setShow5(!Show5)}
-      style={styles.TERMS_CLOSE_CONTAINER}
-    >
-      <Text style={styles.TERMS_TITLE}>{"What if a transaction fails?"}</Text>
-      <Entypo
-        name={"chevron-down"}
-        size={23}
-        color={"black"}
-        style={{ marginRight: 20 }}
-      />
-    </TouchableOpacity>
-  ) : (
-    <View style={styles.TERMS_OPEN_CONTAINER}>
-      <TouchableOpacity
-        onPress={() => setShow5(!Show5)}
-        style={styles.TERMS_OPEN_TITLE_CONTAINER}
-      >
-        <Text style={styles.TERMS_TITLE}>{"What if a transaction fails?"}</Text>
-        <Entypo
-          name={"chevron-up"}
-          size={23}
-          color={"black"}
-          style={{ marginRight: 20 }}
-        />
-      </TouchableOpacity>
-      <Text style={styles.TERMS_OPEN_CONTENT}>
-        {`
+          </Text>
+        </View>
+      ))
+    } else return null
+  }
+  const Render5 = () => {
+    const title = "What if a transaction fails?"
+    if (Search === '' || title.toLocaleLowerCase().includes(Search.toLocaleLowerCase())) {
+      return (!Show5 ? (
+        <TouchableOpacity
+          onPress={() => setShow5(!Show5)}
+          style={styles.TERMS_CLOSE_CONTAINER}
+        >
+          <Text style={styles.TERMS_TITLE}>{title}</Text>
+          <Entypo
+            name={"chevron-down"}
+            size={23}
+            color={"black"}
+            style={{ marginRight: 20 }}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.TERMS_OPEN_CONTAINER}>
+          <TouchableOpacity
+            onPress={() => setShow5(!Show5)}
+            style={styles.TERMS_OPEN_TITLE_CONTAINER}
+          >
+            <Text style={styles.TERMS_TITLE}>{title}</Text>
+            <Entypo
+              name={"chevron-up"}
+              size={23}
+              color={"black"}
+              style={{ marginRight: 20 }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.TERMS_OPEN_CONTENT}>
+            {`
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 `}
-      </Text>
-    </View>
-  ))
-  const Render6 = () => (!Show6 ? (
-    <TouchableOpacity
-      onPress={() => setShow6(!Show6)}
-      style={styles.TERMS_CLOSE_CONTAINER}
-    >
-      <Text style={styles.TERMS_TITLE}>{"How much BerkShares can I spend in one day?"}</Text>
-      <Entypo
-        name={"chevron-down"}
-        size={23}
-        color={"black"}
-        style={{ marginRight: 20 }}
-      />
-    </TouchableOpacity>
-  ) : (
-    <View style={styles.TERMS_OPEN_CONTAINER}>
-      <TouchableOpacity
-        onPress={() => setShow6(!Show6)}
-        style={styles.TERMS_OPEN_TITLE_CONTAINER}
-      >
-        <Text style={styles.TERMS_TITLE}>{"How much BerkShares can I spend in one day?"}</Text>
-        <Entypo
-          name={"chevron-up"}
-          size={23}
-          color={"black"}
-          style={{ marginRight: 20 }}
-        />
-      </TouchableOpacity>
-      <Text style={styles.TERMS_OPEN_CONTENT}>
-        {`
+          </Text>
+        </View>
+      ))
+    } else return null
+  }
+  const Render6 = () => {
+    const title = "How much BerkShares can I spend in one day?"
+    if (Search === '' || title.toLocaleLowerCase().includes(Search.toLocaleLowerCase())) {
+      return (!Show6 ? (
+        <TouchableOpacity
+          onPress={() => setShow6(!Show6)}
+          style={styles.TERMS_CLOSE_CONTAINER}
+        >
+          <Text style={styles.TERMS_TITLE}>{title}</Text>
+          <Entypo
+            name={"chevron-down"}
+            size={23}
+            color={"black"}
+            style={{ marginRight: 20 }}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.TERMS_OPEN_CONTAINER}>
+          <TouchableOpacity
+            onPress={() => setShow6(!Show6)}
+            style={styles.TERMS_OPEN_TITLE_CONTAINER}
+          >
+            <Text style={styles.TERMS_TITLE}>{title}</Text>
+            <Entypo
+              name={"chevron-up"}
+              size={23}
+              color={"black"}
+              style={{ marginRight: 20 }}
+            />
+          </TouchableOpacity>
+          <Text style={styles.TERMS_OPEN_CONTENT}>
+            {`
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 `}
-      </Text>
-    </View>
-  ))
+          </Text>
+        </View>
+      ))
+    } else return null
+  }
 
   return (
     <Screen
@@ -243,27 +272,55 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       >
         <ScrollView bounces={false}>
           <View style={styles.ROOT_CONTAINER}>
-            <View style={styles.CONTAINER}>
 
-              <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings", {})}>
+            {(Step === 'help')
+              ? <View style={styles.CONTAINER}>
+                <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home", {})}>
+                  <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+                  <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+                </TouchableOpacity>
+                <Text style={styles.STEP_TITLE}>{'Help & Contact'}</Text>
+                <View style={styles.LINE} />
+                <Text style={styles.STEP_SUB_TITLE}>We are here to help you with anything and everything on the Currents app.</Text>
+                <View style={styles.SEARCH_INPUT_CONTAINER}>
+                  <View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
+                    <Icon name={"search"} size={25} color={COLOR.PALETTE.black} />
+                    <TextInput
+                      style={styles.SEARCH_INPUT_STYLE}
+                      onChangeText={t => setSearch(t)}
+                      value={Search}
+                      placeholder={`Search`}
+                    />
+                  </View>
+                </View>
+                {Render1()}
+                {Render2()}
+                {Render3()}
+                {Render4()}
+                {Render5()}
+                {Render6()}
+              </View>
+              : <View style={styles.CONTAINER}>
+              <TouchableOpacity style={styles.HEADER} onPress={() => setStep('help')}>
                 <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
                 <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-
               </TouchableOpacity>
-
-              <Text style={styles.STEP_TITLE}>{'Help & Contact'}</Text>
+              <Text style={styles.STEP_TITLE}>{'Contact'}</Text>
               <View style={styles.LINE} />
-
-              {Render1()}
-              {Render2()}
-              {Render3()}
-              {Render4()}
-              {Render5()}
-              {Render6()}
-
-
+              <Text style={styles.STEP_SUB_TITLE}>If you have questions, complaints, remarks, or just like to chat, please send an email to [Hudson Valley Currents contact] or contact the Hudson Valley Currents by calling (845) 663-2286.</Text>
             </View>
+            }
+
           </View>
+          <Button
+					buttonStyle={{
+						backgroundColor: COLOR.PALETTE.blue,
+						top: METRICS.screenHeight - 80,
+						position: 'absolute'
+					}}
+					onPress={() => {Step === 'help' ? setStep('contact') : Linking.openURL('mailto:support@example.com') }}
+					buttonLabel={Step === 'help' ? 'Contact' : 'Send mail'}
+				/>
         </ScrollView>
       </KeyboardAvoidingView>
     </Screen>
