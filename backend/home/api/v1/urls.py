@@ -7,7 +7,7 @@ import home.api.v1.viewsets.signup_signin_views as signup_signin_views
 #     # SignupViewSet,
 #     # LoginViewSet,
 # )
-from home.api.v1.viewsets import setup_profile_views, base_views
+from home.api.v1.viewsets import setup_profile_views, base_views, security_views
 
 router = DefaultRouter()
 # router.register("signup", SignupViewSet, basename="signup")
@@ -28,6 +28,11 @@ urlpatterns = [
     path('my-profile/', include([
         path('consumer/', setup_profile_views.ConsumerMyProfileAPIView.as_view(), name='my_profile_consumer'),
         path('merchant/', setup_profile_views.MerchantMyProfileDetailAPIView.as_view(), name='my_profile_merchant'),
+    ])),
+    path('security/', include([
+        path('change-password/', security_views.ChangePasswordView.as_view(), name='change_password'),
+        path('allow-touch-id/', security_views.AllowTouchIdView.as_view(), name='allow_touch_id'),
+        path('delete-account/', security_views.DeleteAccountView.as_view(), name='delete_account'),
     ])),
     path('base/', include([
         path('cities/', base_views.CityListView.as_view(), name='cities'),

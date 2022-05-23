@@ -29,6 +29,7 @@ class User(AbstractUser):
     # around the globe.
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
     verified_email = models.BooleanField(default=False)
+    allow_touch_id = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
