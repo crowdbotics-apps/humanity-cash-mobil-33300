@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "9e6eedaa-b3d7-4cff-9520-9bfd2e0bef48",
 		"name": "Humanity Cash Backend",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3136945"
 	},
 	"item": [
 		{
@@ -228,7 +229,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"otp\": \"64640\"}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -270,7 +271,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"hassankarimbittar@gmail.com\",\n    \"password\": \"admin123admin123\"\n}",
+							"raw": "{\n    \"email\": \"test32@gmail.com\",\n    \"password\": \"admin123admin123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -667,6 +668,38 @@
 					"response": []
 				},
 				{
+					"name": "Get City",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/base/cities/504/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"base",
+								"cities",
+								"504",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Cities Search",
 					"request": {
 						"auth": {
@@ -735,6 +768,38 @@
 					"response": []
 				},
 				{
+					"name": "Get State",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/base/states/34/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"base",
+								"states",
+								"34",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "States Search",
 					"request": {
 						"auth": {
@@ -774,174 +839,313 @@
 			]
 		},
 		{
-			"name": "My Profile",
+			"name": "Settings",
 			"item": [
 				{
-					"name": "109 My profile Merchant",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
+					"name": "My Profile",
+					"item": [
+						{
+							"name": "109 My profile Merchant",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/my-profile/merchant/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"my-profile",
+										"merchant",
+										""
+									]
 								}
-							]
+							},
+							"response": []
 						},
+						{
+							"name": "109 My profile Merchant Update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "business_name",
+											"value": "OKI Company",
+											"type": "text"
+										},
+										{
+											"key": "business_story",
+											"value": "Story...",
+											"type": "text"
+										},
+										{
+											"key": "profile_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/80x80.png"
+										},
+										{
+											"key": "background_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/1000x1000.gif"
+										},
+										{
+											"key": "address_1",
+											"value": "Street 1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/my-profile/merchant/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"my-profile",
+										"merchant",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "53 My profile Consumer Update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "consumer_profile.profile_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/80x80.png"
+										},
+										{
+											"key": "username",
+											"value": "el_user2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/my-profile/consumer/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"my-profile",
+										"consumer",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "53 My profile Consumer Get",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/my-profile/consumer/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"my-profile",
+										"consumer",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Security",
+					"item": [
+						{
+							"name": "56 Security-Change password",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_password\": \"humanity12345\",\n    \"new_password\": \"admin123admin123\",\n    \"new_password_confirm\": \"admin123admin123\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/security/change-password/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"security",
+										"change-password",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "56 Security-Allow Touch ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"allow_touch_id\": false\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/security/allow-touch-id/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"security",
+										"allow-touch-id",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete Account",
+					"item": [
+						{
+							"name": "59 Delete account",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/security/delete-account/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"security",
+										"delete-account",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "123 - Admin Forgot Password",
+					"request": {
 						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/my-profile/merchant/",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"my-profile",
-								"merchant",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "109 My profile Merchant Update",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "business_name",
-									"value": "OKI Company",
-									"type": "text"
-								},
-								{
-									"key": "business_story",
-									"value": "Story...",
-									"type": "text"
-								},
-								{
-									"key": "profile_picture",
-									"type": "file",
-									"src": "/home/daniel/Imágenes/80x80.png"
-								},
-								{
-									"key": "background_picture",
-									"type": "file",
-									"src": "/home/daniel/Imágenes/1000x1000.gif"
-								},
-								{
-									"key": "address_1",
-									"value": "Street 1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/my-profile/merchant/",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"my-profile",
-								"merchant",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "53 My profile Consumer Update",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "consumer_profile.profile_picture",
-									"type": "file",
-									"src": "/home/daniel/Imágenes/80x80.png"
-								},
-								{
-									"key": "username",
-									"value": "el_user2",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/my-profile/consumer/",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"my-profile",
-								"consumer",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "53 My profile Consumer Get",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{TOKEN}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/api/v1/my-profile/consumer/",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"my-profile",
-								"consumer",
-								""
-							]
-						}
+						"header": []
 					},
 					"response": []
 				}
