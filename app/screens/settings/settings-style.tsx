@@ -104,6 +104,11 @@ export default StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 50
   },
+  FORGOT_PASSWORD_CONTAINER: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 25
+  },
   NEED_HELP_LINK: {
     fontSize: 16,
     color: COLOR.PALETTE.darkYellow,
@@ -114,5 +119,59 @@ export default StyleSheet.create({
     borderColor: COLOR.PALETTE.green, 
     backgroundColor: 'transparent', 
     borderWidth: 1,
-  }
+  },
+
+
+  ROOT_MODAL: {
+    flex: 1,
+    backgroundColor: 'rgba(240, 240, 240, 0.90)',
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  MODAL_CONTAINER: {
+    backgroundColor: '#F8FAF6',
+    width: METRICS.screenWidth * 0.80,
+    height: 350,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    borderRadius: 20,
+    shadowColor: 'black',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  MODAL_CONTENT: {
+    width: METRICS.screenWidth * 0.70,
+    height: 330,
+    justifyContent: 'space-evenly'
+  },
+  CLOSE_MODAL_BUTTON: {
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginRight: 30
+  },
+  MODAL_BUTTON: {
+    width: METRICS.screenWidth * 0.70,
+    height: 55,
+    backgroundColor: COLOR.PALETTE.green,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderRadius: 27.5,
+    marginBottom: 20
+  },
+  SUBMIT_BUTTON_LABEL: {
+    fontSize: 16,
+    color: COLOR.PALETTE.white,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
+
+
+
+
+
+
 })

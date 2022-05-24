@@ -11,6 +11,7 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.white,
     justifyContent: 'space-between',
     minHeight: METRICS.screenHeight,
+    marginBottom: 80
   },
   HEADER: {
     marginLeft: 10,

@@ -312,16 +312,16 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             }
 
           </View>
+        </ScrollView>
           <Button
 					buttonStyle={{
 						backgroundColor: COLOR.PALETTE.blue,
-						top: METRICS.screenHeight - 80,
+						bottom: 5,
 						position: 'absolute'
 					}}
 					onPress={() => {Step === 'help' ? setStep('contact') : Linking.openURL('mailto:support@example.com') }}
 					buttonLabel={Step === 'help' ? 'Contact' : 'Send mail'}
 				/>
-        </ScrollView>
       </KeyboardAvoidingView>
     </Screen>
   )

@@ -60,6 +60,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
                   ios_backgroundColor="#3e3e3e"
                   onValueChange={toggleSwitch}
                   value={isEnabled}
+                  style={{ marginRight: 10}}
                 />
               </View>
 
@@ -122,7 +123,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
         <Button
 					buttonStyle={{
 						backgroundColor: COLOR.PALETTE.blue,
-						top: METRICS.screenHeight - 80,
+            bottom: 5,
 						position: 'absolute'
 					}}
 					onPress={() => {}}
