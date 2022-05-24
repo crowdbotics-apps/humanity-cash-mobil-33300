@@ -2,13 +2,17 @@ import logging
 import random
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.mail import EmailMultiAlternatives
+from django.utils.http import urlsafe_base64_decode
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
 from users.models import UserVerificationCode
 
 LOGGER = logging.getLogger('django')
+
+User = get_user_model()
 
 
 def send_email(user_email, subject, text_content):
@@ -49,3 +53,12 @@ def send_verification_email(user):
 
 class AuthenticatedAPIView(APIView):
     permission_classes = [IsAuthenticated]
+
+
+def get_user_by_uidb64(uidb64):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist, ValidationError):
+        user = None
+    return user

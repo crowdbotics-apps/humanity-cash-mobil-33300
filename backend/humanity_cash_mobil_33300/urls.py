@@ -23,12 +23,18 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from admin.api.v1.viewsets.user_viewset import password_reset, password_reset_confirm
+
 urlpatterns = [
     # path("", include("home.urls")),
     path("accounts/", include("allauth.urls")),
     # path("modules/", include("modules.urls")),
     path("api/v1/", include("home.api.v1.urls")),
+    path("api/v1/admin/", include("admin.api.v1.urls")),
     path("admin/", admin.site.urls),
+    path('users/password_reset/', password_reset, name='password_reset'),
+    path('users/reset/', password_reset_confirm, name='password_reset_confirm_complete'),
+    path('users/reset/<uidb64>/<token>/', password_reset_confirm, name='password_reset_confirm'),
     path("users/", include("users.urls", namespace="users")),
     # Override email confirm to use allauth's HTML view instead of rest_auth's API view
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
