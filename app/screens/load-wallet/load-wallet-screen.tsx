@@ -35,7 +35,7 @@ C$ ${Amount}`}
 								key={'congrat_button'}
 								buttonStyle={{
 									backgroundColor: COLOR.PALETTE.green,
-									top: METRICS.screenHeight - 80,
+									bottom: 5,
 									position: 'absolute'
 								}}
 								onPress={() => [

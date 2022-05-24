@@ -11,6 +11,7 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.white,
     justifyContent: 'space-between',
     minHeight: METRICS.screenHeight,
+    marginBottom: 80
   },
   HEADER: {
     marginLeft: 10,
@@ -33,6 +34,12 @@ export default StyleSheet.create({
     height: 1,
     alignSelf: 'center',
     marginVertical: 10
+  },
+  STEP_SUB_TITLE: {
+    fontSize: 16,
+    color: COLOR.PALETTE.black,
+    marginLeft: 10,
+    width: METRICS.screenWidth * 0.90,
   },
   TERMS_CLOSE_CONTAINER: {
     width: METRICS.screenWidth * 0.95,
@@ -74,5 +81,35 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.background,
     alignSelf: 'center',
     marginBottom: 250,
+  },
+  SEARCH_INPUT_CONTAINER: {
+    width: METRICS.screenWidth * 0.95,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginBottom: 20
+  },
+  SEARCH_INPUT_STYLE_CONTAINER: {
+    borderRadius: 3,
+    height: 55,
+    width: METRICS.screenWidth * 0.95,
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  SEARCH_INPUT_STYLE: {
+    height: 55,
+    width: METRICS.screenWidth * 0.85,
+    alignSelf: 'center',
+  },
+  SEARCH_INPUT_ADJUSTMENTS: {
+    height: 55,
+    width: METRICS.screenWidth * 0.15,
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 })

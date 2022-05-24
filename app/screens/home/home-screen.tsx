@@ -169,7 +169,7 @@ export const HomeScreen = observer(function HomeScreen() {
 				<Button
 					buttonStyle={{
 						backgroundColor: COLOR.PALETTE.blue,
-						top: METRICS.screenHeight - 80,
+						bottom: 5,
 						position: 'absolute'
 					}}
 					buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}

@@ -5,72 +5,56 @@ export default StyleSheet.create({
 	ROOT: {
 		backgroundColor: COLOR.PALETTE.white,
 	},
-	BACK_BUTON_LABEL: {
-		fontSize: 16,
-		color: COLOR.PALETTE.green
-	},
-	BACK_BUTON_CONTAINER: {
-    flexDirection: 'row',
-    width: 80,
-    height: 30,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginVertical: 10
-  },
-	STEP_CONTAINER: {
-
-  },
-  LOGIN_TYPES_LABEL: {
-    fontSize: 16,
-    color: COLOR.PALETTE.green,
-    marginLeft: 10,
-    textAlign: 'center',
-    marginTop: 70,
-    marginBottom: 30
-  },
-  LOGIN_TYPES_CONTAINER: {
-    flexDirection: 'row',
+	CONTAINER: {},
+  ROOT_CONTAINER: {
+    flex: 1,
+    backgroundColor: COLOR.PALETTE.white,
     justifyContent: 'space-between',
-    width: 250,
-    alignSelf: 'center',
+    minHeight: METRICS.screenHeight,
   },
-  LOGIN_TYPE: {
-    width: 50,
-    height: 50
+  HEADER: {
+    marginLeft: 10,
+    marginTop: 10,
+    flexDirection: 'row',
   },
-	STEP_TITLE: {
+  STEP_TITLE: {
     fontSize: 32,
     color: COLOR.PALETTE.green,
-    marginLeft: 10
+    marginLeft: 10,
+    marginTop: 10
   },
-	STEP_SUB_TITLE: {
+  BACK_BUTON_LABEL: {
+    fontSize: 20,
+    color: COLOR.PALETTE.black,
+  },
+  ALLOW_LABEL: {
     fontSize: 16,
     color: COLOR.PALETTE.black,
-    marginLeft: 10,
-    width: METRICS.screenWidth * 0.90,
+    marginLeft: 10
   },
-	INPUT_LABEL_STYLE: {
-    fontSize: 10,
-    color: COLOR.PALETTE.black,
-  },
-	PASS_REQUIREMENTS: {
-    color: COLOR.PALETTE.strongGreen,
-    fontSize: 10,
+  LINE: {
+    width: METRICS.screenWidth * 0.95,
+    backgroundColor: COLOR.PALETTE.strongGreen,
+    height: 1,
+    alignSelf: 'center',
+    marginVertical: 10
   },
   INPUT_LABEL_STYLE_CONTAINER: {
     flexDirection: 'row',
     width: METRICS.screenWidth * 0.95,
     justifyContent: 'space-between',
     alignSelf: 'center',
-    marginTop: 30
   },
-  INPUT_STYLE: {
+	INPUT_LABEL_STYLE: {
+    fontSize: 10,
+    color: COLOR.PALETTE.black,
+  },
+	PASS_INPUT_STYLE: {
     height: 55,
-    width: METRICS.screenWidth * 0.90,
+    width: METRICS.screenWidth * 0.80,
     alignSelf: 'center',
   },
-	INPUT_STYLE_CONTAINER: {
+  INPUT_STYLE_CONTAINER: {
     borderRadius: 5,
     height: 55,
     width: METRICS.screenWidth * 0.95,
@@ -80,23 +64,18 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: -10
+    marginBottom: 25
   },
-	PASS_INPUT_STYLE: {
-    height: 55,
-    width: METRICS.screenWidth * 0.80,
+  SWITCH_INPUT_STYLE_CONTAINER: {
+    borderRadius: 5,
+    height: 80,
+    width: METRICS.screenWidth * 0.95,
+    backgroundColor: `${COLOR.PALETTE.green}25`,
     alignSelf: 'center',
-  },
-  NEED_HELP_CONTAINER: {
-    width: METRICS.screenWidth * 0.80,
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    alignSelf: 'center',
-    marginBottom: 20
-  },
-  NEED_HELP_LINK: {
-    fontSize: 16,
-    color: COLOR.PALETTE.darkYellow,
-    textDecorationLine: 'underline',
-    textAlign: 'center'
+    marginBottom: 25
   },
 })
