@@ -1,4 +1,4 @@
 export * from "./NotFound/NotFound"
 export * from "./SynthesisExplorer/SynthesisExplorer"
 export * from "./Splash/Splash"
-export * from "./StartForm/StartForm"
+export * from "./Login/Login"

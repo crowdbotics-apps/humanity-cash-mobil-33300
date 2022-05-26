@@ -6,7 +6,7 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import {NotFound, SynthesisExplorer, StartForm, Splash} from "./pages";
+import {NotFound, SynthesisExplorer, Login, Splash} from "./pages";
 import {title_pag} from "./helpers";
 import {ROUTES} from "./constants";
 import {HTML5Backend} from "react-dnd-html5-backend";
@@ -57,7 +57,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             {route(ROUTES.SPLASH, "", <Splash/>)}
-            {route(ROUTES.START_FORM, "Start Form", <StartForm/>)}
+            {route(ROUTES.START_FORM, "Start Form", <Login/>)}
             {route(ROUTES.SYNTHESIS_EXPLORER(":id"), "Synthesis explorer", <SynthesisExplorer/>)}
             {route('*', "", <NotFound/>)}
           </Routes>

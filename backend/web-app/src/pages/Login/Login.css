@@ -33,10 +33,9 @@
 }
 
 .start-problem-button {
-    width: 250px!important;
+    width: 300px!important;
     height: 50px;
-    background: #FF8A00;
-    box-shadow: 5px 5px 4px rgba(0, 0, 0, 0.25);
+    background: #3C88B7;
     border-radius: 30px;
     color: white;
     font-weight: bold;
@@ -45,14 +44,61 @@
 }
 
 .start-problem-button:hover {
-    background: rgba(255, 138, 0, 0.8);
+    background: #3C88B780
 }
 
 
 .start-form-content-container {
-    background: linear-gradient(180deg, #E5E5E5 0%, #FFFFFF 100%);
-    box-shadow: 8px 7px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 19px!important;
-    height: 200px;
+    background: #FFFFFF;
+    border-radius: 20px!important;
+    height: 500px;
+    border: none;
 }
 
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 400px;
+}
+
+.main-container {
+    justify-content: center;
+}
+
+.login-wrapper {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-around;
+    height: 450px;
+}
+
+.form-group {
+    align-items: center;
+    display: block;
+    padding: 5px;
+}
+
+.input-field {
+    background-color: #EFEFEF;
+    height: 55px;
+    border: none;
+    border-radius: 3px;
+}
+
+.input-field:focus {
+    background-color: #FFF;
+    border: 2px solid #D59B76;
+    outline: none;
+}
+
+.login-label {
+    text-align: center;
+    color: #3C88B7;
+    font-size: 32px;
+}
+
+.login-sub {
+    text-align: center;
+    font-size: 16px;
+}

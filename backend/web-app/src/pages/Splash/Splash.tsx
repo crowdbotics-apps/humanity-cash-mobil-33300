@@ -27,7 +27,7 @@ export const Splash: React.FC = observer(() => {
           height={300}
           width={300}
         />
-        <span style={{color: "white", fontSize: 20}} className={'mt-3'}>Reaction Explorer</span>
+        <span style={{color: "white", fontSize: 20}} className={'mt-3'}>Humanity Cash</span>
     </div>
   );
 });
