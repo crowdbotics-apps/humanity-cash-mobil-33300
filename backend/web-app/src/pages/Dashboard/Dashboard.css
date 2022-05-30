@@ -1,21 +1,21 @@
 
 .menu-label {
     text-align: left;
-    vertical-align: top;
+    vertical-align: center;
     font-size: 18px;
     font-family: Gotham;
     line-height: 75%;
     color: #3b88b6;
+    margin-left: 30px;
 }
 
 .logo {
     display: block;
-    margin-left: auto;
-    margin-right: auto;
-    height: 80px;
+    margin: auto;
+    height: 38px;
+    margin-left: 300px;
+    margin-top: 15px;
 }
-
-
 
 :root {
     --landscape-width: 25;
@@ -34,6 +34,7 @@ body {
 #layout {
     display: flex;
     overflow: hidden;
+    height: 100%;
 }
 #layout .header {
     position: relative;
@@ -48,8 +49,8 @@ body {
 #layout .content {
     overflow: auto;
     box-sizing: border-box;
-    height: calc(800px - var(--header-height));
-    padding: 26px;
+    height: calc(800px);
+    /* padding: 26px; */
 }
 #main {
     background: var(--bg-main);
@@ -81,13 +82,16 @@ body {
 #left .icon {
     position: fixed;
     z-index: 10;
-    width: var(--header-height);
-    height: var(--header-height);
-    line-height: var(--header-height);
-    font-size: var(--header-height);
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 50px;
     text-align: center;
     user-select: none;
     cursor: pointer;
+    justify-content: center;
+    display: flex;
+justify-content: center;
 }
 #left .sidebar {
     transition: transform var(--secs);
@@ -117,4 +121,15 @@ body {
 #left .sidebar .header {
     left: var(--header-height);
 }
+
+.sidebar-content {
+    height: 100%;
+    justify-content: space-around;
+    flex-direction: column;
+    display: flex;
+}
+
+
+
+
 
