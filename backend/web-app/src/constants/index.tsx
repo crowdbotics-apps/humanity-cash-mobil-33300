@@ -2,6 +2,7 @@
 
 export const ROUTES = {
   SPLASH:"/",
-  START_FORM:"/start-form",
+  LOGIN:"/start-form",
+  DASHBOARD: "/dashboard",
   SYNTHESIS_EXPLORER: (params: any) => `/synthesis-explorer/${params}` ,
 }

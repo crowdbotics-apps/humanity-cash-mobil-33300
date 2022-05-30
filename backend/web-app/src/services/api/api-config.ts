@@ -24,8 +24,8 @@ export const DEFAULT_API_CONFIG: ApiConfig = {
   // url: 'http://192.168.100.3:7112/cgibin/api/v1',
   // base_url: 'http://192.168.100.3:7112',
 
-   url: 'https://gkpy.net/cgibin/api/v1/',
-   base_url: 'https://gkpy.net/',
+  url: "https://humanity-cash-mobil-33300.botics.co",
+  base_url: 'https://gkpy.net/',
 
 
 

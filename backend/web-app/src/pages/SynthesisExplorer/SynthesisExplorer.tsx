@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
-import {DndProvider, useDrop} from 'react-dnd'
+import {useDrop} from 'react-dnd'
 import './SynthesisExplorer.css';
 import {PageWeb} from "../../components"
-import {useNavigate, useParams} from "react-router-dom"
 import reactant from '../../assets/images/reactants.png'
 import reagent from '../../assets/images/reagents.png'
 import {Item} from "../../components/Item/Item"
@@ -11,15 +10,14 @@ import {ItemReagent} from "../../components/ItemReagent/Item"
 import Lottie from "react-lottie"
 import animation from "../../assets/svg/chemistry-animation.json"
 import target from "../../assets/svg/target.json"
-import {dimensionsFixArrowService, formatData, genericApiError} from "../../helpers"
+import { genericApiError} from "../../helpers"
 import {useStores} from "../../models/root-store/root-store-context"
 import {toast} from "react-toastify"
 
 
 export const SynthesisExplorer: React.FC = observer(() => {
   const rootStore = useStores()
-  let {id} = useParams();
-  const [Loading, setLoading] = useState<boolean>(false);
+  const Loading: any = false
   const [StartAnimation, setStartAnimation] = useState<boolean>(false)
   const [StartSecondAnimation, setStartSecondAnimation] = useState<boolean>(false)
   const [Reactants, setReactants] = useState<any>([])
@@ -27,14 +25,14 @@ export const SynthesisExplorer: React.FC = observer(() => {
   const [SecondReagent, setSecondReagent] = useState<any>([])
   const [FirstResultReactants, setFirstResultReactants] = useState<any>([])
 
-  const [ResultImage, setResultImage] = useState<string>("")
-  const [ReactantsBase, setReactantsBase] = useState<any>([])
-  const [ReagentsBase, setReagentsBase] = useState<any>([])
+  const ResultImage: any = ""
+  const ReactantsBase: any = []
+  const ReagentsBase: any = []
   const [ProblemResult, setProblemResult] = useState<any>([])
   const [SecondProblemResult, setSecondProblemResult] = useState<any>([])
   const [width, setWidth] = useState<number>(window.innerWidth)
   const [Title, setTitle] = useState<string>('')
-  const [SynthesisProblemOptions, setSynthesisProblemOptions] = useState<any[]>([])
+  const SynthesisProblemOptions:any = []
 
   const defaultOptions = {
     loop: true,
@@ -142,60 +140,8 @@ export const SynthesisExplorer: React.FC = observer(() => {
 
   const getRandomProblem = () => {
     const randomProblem = SynthesisProblemOptions[Math.floor(Math.random() * SynthesisProblemOptions.length)];
-    getProblemData(randomProblem.value)
     setTitle(randomProblem.label)
     console.log(randomProblem)
-  }
-
-  const getSynthesisProblems = () => {
-    rootStore.environment.api.getSynthesisProblems().then((result: any) => {
-      setLoading(false)
-      if (result.kind === "ok") {
-        const title = result.data.results.find((res: any) => {
-          return res.id === parseInt(id as string)
-        })
-        setTitle(title.name)
-        setSynthesisProblemOptions(formatData(result.data.results))
-      }
-    })
-  }
-
-
-  const getProblemData = (id: string) => {
-    setLoading(true)
-    rootStore.environment.api.getProblem(parseInt(id)).then((result: any) => {
-      // delay para mostrar animacion
-      setTimeout(() => setLoading(false), 800)
-      if (result.kind === "ok") {
-        const {product, reactants, reagents} = result.data.results
-        setResultImage(dimensionsFixArrowService(product.url, 150, 200))
-        // Reactants
-        const formatedReactants: { id: any; smiles: any; url: string; }[] = []
-        reactants.map((reactant: any) => {
-          const formatedReactant = {
-            id: reactant.id,
-            smiles: reactant.smiles,
-            url: dimensionsFixArrowService(reactant.url, 100, 100),
-          }
-          formatedReactants.push(formatedReactant)
-        })
-        setReactantsBase(formatedReactants)
-        // Reagents
-        const formatedReagents: { id: number; text: string; url: string; }[] = []
-        reagents.map((reagent: any) => {
-          const formatedReagent = {
-            id: reagent.id,
-            text: reagent.text,
-            url: dimensionsFixArrowService(reagent.url, 100, 100),
-          }
-          formatedReagents.push(formatedReagent)
-        })
-        setReagentsBase(formatedReagents)
-      }
-    }).catch((error: any) => {
-      setLoading(false)
-      genericApiError()
-    })
   }
 
   const getProblemResult = () => {
@@ -212,29 +158,12 @@ export const SynthesisExplorer: React.FC = observer(() => {
       return
     }
     let smilesResult = ''
-    Reactants.map((reactant: any) => {
-      if (smilesResult !== '') {
-        smilesResult += ',' + reactant.smiles
-      } else {
-        smilesResult += reactant.smiles
-      }
-    })
+    
     setStartAnimation(true)
     rootStore.environment.api.getProblemResult(encodeURIComponent(smilesResult), Reagents[0].id).then((result: any) => {
       setStartAnimation(false)
       const formatedReactants: { id: any; smiles: any; url: string; }[] = []
-      result.data.map((reactant: any) => {
-        if (reactant.url) {
-          const formatedReactant = {
-            id: reactant.id,
-            smiles: reactant.smiles,
-            url: dimensionsFixArrowService(reactant.url, 100, 100),
-          }
-          formatedReactants.push(formatedReactant)
-        } else {
-          formatedReactants.push(reactant)
-        }
-      })
+  
       setProblemResult(formatedReactants)
     }).catch((error: any) => {
       setStartAnimation(false)
@@ -266,29 +195,10 @@ export const SynthesisExplorer: React.FC = observer(() => {
     }
 
     let smilesResult = ''
-    FirstResultReactants.map((reactant: any) => {
-      if (smilesResult !== '') {
-        smilesResult += ',' + reactant.smiles
-      } else {
-        smilesResult += reactant.smiles
-      }
-    })
     setStartSecondAnimation(true)
     rootStore.environment.api.getProblemResult(encodeURIComponent(smilesResult), SecondReagent[0].id).then((result: any) => {
       setStartSecondAnimation(false)
       const formatedReactants: { id: any; smiles: any; url: string; }[] = []
-      result.data.map((reactant: any) => {
-        if (reactant.url) {
-          const formatedReactant = {
-            id: reactant.id,
-            smiles: reactant.smiles,
-            url: dimensionsFixArrowService(reactant.url, 100, 100),
-          }
-          formatedReactants.push(formatedReactant)
-        } else {
-          formatedReactants.push(reactant)
-        }
-      })
       setSecondProblemResult(formatedReactants)
     }).catch((error: any) => {
       setStartSecondAnimation(false)
@@ -296,14 +206,6 @@ export const SynthesisExplorer: React.FC = observer(() => {
     })
 
   }
-
-  useEffect(() => {
-    if (id) {
-      getProblemData(id)
-      getSynthesisProblems()
-    }
-  }, [])
-
 
   useEffect(() => {
     window.addEventListener('resize', handleWindowSizeChange);

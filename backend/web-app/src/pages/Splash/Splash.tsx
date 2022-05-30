@@ -16,8 +16,9 @@ export const Splash: React.FC = observer(() => {
 
   useEffect(() => {
     setTimeout(() => {
-      navigate(ROUTES.START_FORM)
+      navigate(ROUTES.LOGIN)
     }, 3000)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

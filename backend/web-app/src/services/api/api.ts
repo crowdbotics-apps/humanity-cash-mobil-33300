@@ -12,20 +12,9 @@ export class Api extends ApiBase {
         super(config)
     }
 
-    async getSynthesisProblems(): Promise<Types.SimpleGetResult> {
-        return this.simple_get(`/ReactionSynthesisList.py`)
-    }
-
-    async getTextbooks(): Promise<Types.SimpleGetResult> {
-        return this.simple_get(`/TextbookList.py`)
-    }
-
-    async getReactionSubjectCategories(): Promise<Types.SimpleGetResult> {
-        return this.simple_get(`/ReactionCategoryList.py`)
-    }
-
-    async getProblem(reaction_synthesis_id: number): Promise<Types.SimpleGetResult> {
-        return this.simple_get(`/GenerateProblem.py?reaction_synthesis_id=${reaction_synthesis_id}&userID=null&user_class_id=&ProductWeb=Yes`)
+    // LOGIN
+    async login(data: any): Promise<Types.SimplePostResult> {
+        return this.simple_post("/dj-rest-auth/login/", data)
     }
 
     async getProblemResult(reactant: string, reagent: number): Promise<Types.SimpleGetResult> {
