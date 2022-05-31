@@ -17,35 +17,93 @@ export const Dashboard: React.FC = observer(() => {
   const [LeftOpen, setLeftOpen] = useState<any>(true);
   const [RightOpen, setRightOpen] = useState<any>(true);
 
+  const dataCompleted: any = [
+    {
+      id: 1,
+      bank_name: 'Bank Name',
+      deposits: '$3,635.22',
+      withdrawls: '$31',
+      ot_token_balance: 'B$0.34'
+    },
+    {
+      id: 2,
+      bank_name: 'Bank Name',
+      deposits: '$3,643',
+      withdrawls: '$21.11',
+      ot_token_balance: 'B$0.34'
+    },
+    {
+      id: 3,
+      bank_name: 'Bank Name',
+      deposits: '$3,635.22',
+      withdrawls: '$31',
+      ot_token_balance: 'B$0.34'
+    },
+    {
+      id: 4,
+      bank_name: 'Bank Name',
+      deposits: '$3,643',
+      withdrawls: '$21.11',
+      ot_token_balance: 'B$0.34'
+    },
+    {
+      id: 5,
+      bank_name: 'Bank Name',
+      deposits: '$3,635.22',
+      withdrawls: '$31',
+      ot_token_balance: 'B$20.00'
+    },
+    {
+      id: 6,
+      bank_name: 'Bank Name',
+      deposits: '$3,643',
+      withdrawls: '$21.11',
+      ot_token_balance: 'B$0.34'
+    },
+    {
+      id: 7,
+      bank_name: 'Bank Name',
+      deposits: '$3,635.22',
+      withdrawls: '$31',
+      ot_token_balance: 'B$20.00'
+    },
+    {
+      id: 8,
+      bank_name: 'Bank Name',
+      deposits: '$3,643',
+      withdrawls: '$21.11',
+      ot_token_balance: 'B$0.34'
+    },
+  ]
+
 
   const Tab1Content = () => (
     <Table responsive>
       <thead>
-        <tr>
-          <th>#</th>
-          {Array.from({ length: 12 }).map((_, index) => (
-            <th key={index}>Table heading</th>
-          ))}
+        <tr className='table-header'>
+          <th className='table-head'>BANK NAME</th>
+          <th className='table-head'>DEPOSITS</th>
+          <th className='table-head'>WHITHDRAWALS</th>
+          <th className='table-head'>OUTSTANDING TOKEN BALANCE</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          {Array.from({ length: 12 }).map((_, index) => (
-            <td key={index}>Table cell {index}</td>
-          ))}
-        </tr>
-        <tr>
-          <td>2</td>
-          {Array.from({ length: 12 }).map((_, index) => (
-            <td key={index}>Table cell {index}</td>
-          ))}
-        </tr>
-        <tr>
-          <td>3</td>
-          {Array.from({ length: 12 }).map((_, index) => (
-            <td key={index}>Table cell {index}</td>
-          ))}
+      <tbody className='table-body'>
+        {dataCompleted.map((d: any, key: any) => (
+          <tr className='table-row' key={key}>
+            {Object.keys(d).map((info, key) => {
+              if (info !== 'id') return <td className={`cell_${info}`} key={info + '_' + key}>{d[info]}</td>
+            })}
+          </tr>
+        ))}
+        <tr className='table-row-pagination'>
+          <td className='table-total'>Showing 7 from 100 data</td>
+          <td />
+          <td />
+          <td className='table-pagination'>
+            <div className='table-page'><span>1</span></div>
+            <div className='table-page'><span>2</span></div>
+            <div className='table-page'><span>3</span></div>
+          </td>
         </tr>
       </tbody>
     </Table>
@@ -54,32 +112,21 @@ export const Dashboard: React.FC = observer(() => {
   const Tab2Content = () => (
     <Table responsive>
       <thead>
-        <tr>
-          <th>#</th>
-          {Array.from({ length: 8 }).map((_, index) => (
-            <th key={index}>Table heading</th>
-          ))}
+        <tr className='table-header'>
+          <th className='table-head'>BANK NAME</th>
+          <th className='table-head'>DEPOSITS</th>
+          <th className='table-head'>WHITHDRAWALS</th>
+          <th className='table-head'>OUTSTANDING TOKEN BALANCE</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          {Array.from({ length: 8 }).map((_, index) => (
-            <td key={index}>Table cell {index}</td>
-          ))}
-        </tr>
-        <tr>
-          <td>2</td>
-          {Array.from({ length: 8 }).map((_, index) => (
-            <td key={index}>Table cell {index}</td>
-          ))}
-        </tr>
-        <tr>
-          <td>3</td>
-          {Array.from({ length: 8 }).map((_, index) => (
-            <td key={index}>Table cell {index}</td>
-          ))}
-        </tr>
+      <tbody className='table-body'>
+        {dataCompleted.map((d: any, key: any) => (
+          <tr className='table-row' key={key}>
+            {Object.keys(d).map((info, key) => {
+              if (info !== 'id') return <td className={`cell_${info}`} key={info + '_' + key}>{d[info]}</td>
+            })}
+          </tr>
+        ))}
       </tbody>
     </Table>
   )
@@ -89,46 +136,49 @@ export const Dashboard: React.FC = observer(() => {
       <div id='left' className={LeftOpen ? 'open' : 'closed'} >
         <div className='icon'
           onClick={() => setLeftOpen(!LeftOpen)} >
-          {/* &equiv; */}
-             <img src={logo} alt={"logo"} className={"logo"} />
+          &equiv;
         </div>
         <div className={`sidebar ${LeftOpen ? 'open' : 'closed'}`} >
-          <div className='header'>
-          </div>
           <div className='content'>
             <div className='sidebar-content'>
-             
-              <div className="menu-label"><span>Dashboard</span></div>
+              {/* <div className='header'>
+          </div> */}
+              <img src={logo} className={`logo${LeftOpen ? '' : '-closed'}`} alt={"logo"} />
+              <div className="menu-label-active"><span>Dashboard</span></div>
               <div className="menu-label"><span>ACH Transactions</span></div>
               <div className="menu-label"><span>Blockchain Transactions</span></div>
               <div className="menu-label"><span>Users</span></div>
               <div className="menu-label"><span>Smart Contracts</span></div>
               <div className="menu-label"><span>Content</span></div>
-              <div className="menu-label"><span>Sign out</span></div>
             </div>
+            <div className="menu-label"><span>Sign out</span></div>
           </div>
         </div>
       </div>
 
-      <div id='main'>
+      <div id='main' className={`main${LeftOpen ? '' : '-closed'}`}>
         <div className='header'>
           <h3 className={`title
               ${'left-' + LeftOpen ? 'open' : 'closed'}
               ${'right-' + RightOpen ? 'open' : 'closed'}
             `}
           >
-            Header
+            Dashboard
           </h3>
+          <input placeholder='Search' className='col-12 input-field mb-3' type="text" name="username" />
         </div>
         <div className='content'>
-          <Tabs defaultActiveKey="completed" id="uncontrolled-tab-example" className="mb-3">
-            <Tab eventKey="completed" title="COMPLETED">
-              {Tab1Content()}
-            </Tab>
-            <Tab eventKey="pending" title="PENDING">
-              {Tab2Content()}
-            </Tab>
-          </Tabs>
+          <div className='line' />
+          <div className='main-content'>
+            <Tabs defaultActiveKey="completed" id="uncontrolled-tab-example" className="mb-3 custom-tabs">
+              <Tab eventKey="completed" title="COMPLETED" className='custom-tab'>
+                {Tab1Content()}
+              </Tab>
+              <Tab eventKey="pending" title="PENDING" className='custom-tab'>
+                {Tab2Content()}
+              </Tab>
+            </Tabs>
+          </div>
         </div>
       </div>
     </div>
