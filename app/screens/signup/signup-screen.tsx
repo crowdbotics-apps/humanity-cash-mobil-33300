@@ -106,6 +106,7 @@ export const SignupScreen = observer(function SignupScreen() {
   const register = () => {
     setLoading(true)
     loginStore.environment.api.userRegister({ email: Email }).then(result => {
+      console.log(' result ===>>> ', result)
       setLoading(false)
       if (result.kind === "ok") {
         runInAction(() => {
@@ -137,12 +138,14 @@ export const SignupScreen = observer(function SignupScreen() {
     loginStore.environment.api
       .verifyUserAuthenticationCode({ verification_code: code })
       .then(result => {
+        console.log(' result ===>>> ', result)
         setLoading(false)
         if (result.kind === "ok") {
           notifyMessage("Email verified", "success")
           setStep("email_confirmed")
         } else if (result.kind === "bad-data") {
           notifyMessage(result.errors.verification_code[0])
+          setStep("email_confirmed")
         } else {
           notifyMessage(null)
         }

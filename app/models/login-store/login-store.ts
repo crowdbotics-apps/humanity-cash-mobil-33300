@@ -84,6 +84,15 @@ export const LoginStoreModel = types
         country: self.country,
         billing_data_added: self.billing_data_added,
       }
+    },
+    get ProfileData() {
+      return {
+        id: self.id,
+        username: self.username,
+        first_name: self.first_name,
+        last_name: self.last_name,
+        profile_picture: self.profile_picture,
+      }
     }
   }))
   .actions(self => ({
@@ -95,6 +104,13 @@ export const LoginStoreModel = types
       self.email = user.email
       self.password_set = user.password_set
       self.verified_email = user.verified_email
+    },
+    setConsumerUser(user) {
+      self.id = user.consumer_profile.id
+      self.username = user.username
+      self.first_name = user.first_name
+      self.last_name = user.last_name
+      self.profile_picture = user.consumer_profile.profile_picture
     },
     setStep(step) {
       self.currentStep = step

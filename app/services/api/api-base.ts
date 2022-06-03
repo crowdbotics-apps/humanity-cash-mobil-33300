@@ -101,6 +101,8 @@ export class ApiBase {
             return {kind: "unknown", temporary: true} as T
         }
 
+        console.log(' == aca ==>> ', this.apisauce.headers.Authorization)
+
         const response: ApiResponse<any> = await this.apisauce.get(path, extra_params, axios)
 
         if (!response.ok) {

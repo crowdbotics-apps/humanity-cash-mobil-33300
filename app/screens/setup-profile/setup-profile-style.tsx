@@ -94,22 +94,26 @@ export default StyleSheet.create({
     textAlignVertical: 'center',
   },
   SUBMIT_BUTTON: {
-    width: METRICS.screenWidth * 0.95,
-    height: 55,
+    // width: METRICS.screenWidth * 0.95,
+    // height: 55,
+    bottom: 5,
+    position: 'absolute',
     backgroundColor: COLOR.PALETTE.green,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    borderRadius: 27.5,
-    marginBottom: 30
+    // justifyContent: 'center',
+    // alignSelf: 'center',
+    // borderRadius: 27.5,
+    // marginBottom: 30
   },
   SUBMIT_BUTTON_DISABLED: {
-    width: METRICS.screenWidth * 0.95,
-    height: 55,
+    // width: METRICS.screenWidth * 0.95,
+    // height: 55,
+    bottom: 5,
+    position: 'absolute',
     backgroundColor: `${COLOR.PALETTE.green}40`,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    borderRadius: 27.5,
-    marginBottom: 30
+    // justifyContent: 'center',
+    // alignSelf: 'center',
+    // borderRadius: 27.5,
+    // marginBottom: 30
   },
   SUBMIT_BUTTON_LABEL: {
     fontSize: 16,

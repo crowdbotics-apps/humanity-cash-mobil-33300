@@ -40,12 +40,13 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             <View style={styles.USER_IMAGE_CONTAINER}>
               <Image
                 resizeMode="contain"
-                source={IMAGES.avBee}
+                source={{uri: loginStore.ProfileData.profile_picture}}
                 style={styles.USER_IMAGE}
               />
             </View>
             <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
-              <Text style={styles.USER_NAME}>Rafael Bastos Clemente</Text>
+              {console.log(' result ===>>> ', JSON.stringify(loginStore.ProfileData, null, 2))}
+              <Text style={styles.USER_NAME}>{loginStore.ProfileData.first_name + ' ' + loginStore.ProfileData.last_name}</Text>
               <TouchableOpacity>
                 <Text style={styles.SWITCH_ACCOUNT_LABEL}>Switch account</Text>
               </TouchableOpacity>

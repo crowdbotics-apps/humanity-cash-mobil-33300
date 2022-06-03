@@ -65,7 +65,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [Loading, setLoading] = useState(false)
 
 	const [Step, setStep] = useState('profile_type')
-	const [ButtonDisabled, setButtonDisabled] = useState(true)
+	const [ButtonDisabled, setButtonDisabled] = useState(false)
 	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false)
 	const [ShowThankyouModal, setShowThankyouModal] = useState(false)
 
@@ -221,7 +221,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const setupMerchantDetail = () => {
 		setLoading(true)
-		loginStore.environment.api.setupMerchantDetail({type_of_business: BusinessType})
+		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
 			.then(result => {
 				setLoading(false)
 				console.log('result ===>>> ', result)
@@ -243,8 +243,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		loginStore.environment.api.setupMerchantDetail({
 			registered_business_name: BusinessRegName,
 			industry: BusinessIndustryType,
-			employer_identification_number: IndentifierType === 'EIN' ? EmployerId: '',
-			social_security_number: IndentifierType === 'SSN' ? SocialSecurityNumber: '',
+			employer_identification_number: IndentifierType === 'EIN' ? EmployerId : '',
+			social_security_number: IndentifierType === 'SSN' ? SocialSecurityNumber : '',
 			owner_first_name: BusinessExecName,
 			owner_last_name: BusinessExecLastName,
 			// city: 1988, // TODO: fetch
@@ -715,10 +715,12 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Thank you! Welcome to the Currents App. Now it is time to add some Currents to your wallet!</Text>
 				<View style={styles.CONTAINER}>
-					<Text onPress={() => [setShowThankyouModal(false), setStep('profile_type')]} style={styles.NEED_HELP_LINK}>Skip for now</Text>
-					<TouchableOpacity style={styles.SUBMIT_BUTTON}>
-						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my personal bank account</Text>
-					</TouchableOpacity>
+					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home", {})]} style={[styles.NEED_HELP_LINK, {marginBottom: 100}]}>Skip for now</Text>
+					<Button
+							// onPress={() => nextButtonHandler()}
+							buttonLabel={'Link my personal bank account'}
+							buttonStyle={styles.SUBMIT_BUTTON}
+						/>
 				</View>
 			</View>
 		</Modal>
@@ -783,13 +785,13 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		}
 		loginStore.setSetupData(setupData)
 
-		
-		loginStore.environment.api.getCities({ value: 'wash'})
+
+		loginStore.environment.api.getCities({ value: 'wash' })
 			.then(result => {
 				console.log('result citie ===>>> ', result)
 			})
 
-		loginStore.environment.api.getStates({ value: 'wash'})
+		loginStore.environment.api.getStates({ value: 'wash' })
 			.then(result => {
 				console.log('result state ===>>> ', result)
 			})
@@ -886,22 +888,23 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						</View>
 
 
-						<View style={styles.CONTAINER}>
-							{Step !== 'profile_type' &&
-								<Button
-									disabled={ButtonDisabled || Loading}
-									onPress={() => nextButtonHandler()}
-									loading={Loading}
-									buttonLabel={Step === 'business_exec' ? 'Confirm' : 'Next'}
-									buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
-								/>
 
-							}
-						</View>
 					</View>
 					{confirmLogoutModal()}
 					{thankyouModal()}
 				</ScrollView>
+				<View style={styles.CONTAINER}>
+					{Step !== 'profile_type' &&
+						<Button
+							disabled={ButtonDisabled || Loading}
+							onPress={() => nextButtonHandler()}
+							loading={Loading}
+							buttonLabel={Step === 'business_exec' ? 'Confirm' : 'Next'}
+							buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
+						/>
+
+					}
+				</View>
 			</KeyboardAvoidingView>
 		</Screen>
 	)

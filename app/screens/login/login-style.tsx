@@ -4,6 +4,7 @@ import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 export default StyleSheet.create({
 	ROOT: {
 		backgroundColor: COLOR.PALETTE.white,
+    justifyContent: 'space-between'
 	},
 	BACK_BUTON_LABEL: {
 		fontSize: 16,
@@ -26,7 +27,6 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.green,
     marginLeft: 10,
     textAlign: 'center',
-    marginTop: 70,
     marginBottom: 30
   },
   LOGIN_TYPES_CONTAINER: {

@@ -52,6 +52,15 @@ export class Api extends ApiBase {
     return this.simple_patch(apiv1 + "/set-up-profile/merchant-detail/", data)
   }
 
+  // MY PROFILE
+  async getProfileConsumer(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/my-profile/consumer/")
+  }
+
+  async getProfileMerchant(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/my-profile/merchant/")
+  }
+
   // BASE
   async getCities(data?: any): Promise<Types.SimpleGetResult> {
     let url = apiv1 + "/base/cities/"

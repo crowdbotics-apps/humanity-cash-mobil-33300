@@ -12,25 +12,31 @@ import { CheckBox } from 'react-native-elements'
 import { PALETTE } from "../../theme/palette";
 import { notifyMessage } from "../../utils/helpers"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
+import { useStores } from "../../models"
 
 export const MyProfileScreen = observer(function MyProfileScreen() {
 	const navigation = useNavigation()
+	const rootStore = useStores()
+	const { loginStore } = rootStore
 
 	const profile_types = ['personal', 'business']
-	const [ProfileType, setProfileType] = useState(profile_types[1])
+	const [ProfileType, setProfileType] = useState(profile_types[0])
 
+	
 	// personal
-	const [Username, setUsername] = useState('rafabastos')
+	const [Username, setUsername] = useState('')
 	const [imageSource, setImageSource] = React.useState<any>(null);
 	const [UsernameError, setUsernameError] = useState(false);
+	const [Name, setName] = useState('')
+	const [LastName, setLastName] = useState('')
 
 	// business
 	const [BusinessImageSource, setBusinessImageSource] = React.useState<any>(null);
 	const [BackBusinessImageSource, setBackBusinessImageSource] = React.useState<any>(null);
-	const [BusinessName, setBusinessName] = React.useState('Rafael Store');
-	const [BusinessStory, setBusinessStory] = React.useState('We design & build innovative musical instruments in Sheffield. Using modern methods & materials, our instruments are engineered for quality sound, ergonomic playability, & legendary durability. ');
-	const [BusinessCategory, setBusinessCategory] = React.useState('IT Supplies');
-	const [BusinessWebsite, setBusinessWebsite] = React.useState('www.rafaelsite.com');
+	const [BusinessName, setBusinessName] = React.useState('');
+	const [BusinessStory, setBusinessStory] = React.useState('');
+	const [BusinessCategory, setBusinessCategory] = React.useState('');
+	const [BusinessWebsite, setBusinessWebsite] = React.useState('');
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
 	const [PostalCode, setPostalCode] = React.useState('');
@@ -162,6 +168,29 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					}}
 					value={Username.charAt(0) == '@' ? Username : '@' + Username}
 					placeholder={'@username'}
+				/>
+			</View>
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>FIRST NAME</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setName(t)}
+					value={Name}
+					placeholder={'First name'}
+				/>
+			</View>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>LAST NAME</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setLastName(t)}
+					value={LastName}
+					placeholder={'Last name'}
 				/>
 			</View>
 		</View>
@@ -370,6 +399,12 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		</View>
 	)
 
+	useEffect(() => {
+		setUsername(loginStore.ProfileData.username)
+		setName(loginStore.ProfileData.first_name)
+		setLastName(loginStore.ProfileData.last_name)
+	}, [])
+
 	return (
 		<Screen
 			showHeader
@@ -405,7 +440,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				<Button
 					buttonStyle={{
 						backgroundColor: COLOR.PALETTE.green,
-						top: METRICS.screenHeight - 100,
+						bottom: 5,
 						position: 'absolute'
 					}}
 					// buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}

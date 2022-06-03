@@ -9,6 +9,8 @@ import styles from "./home-style";
 import {useStores} from "../../models";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { CheckBox } from "react-native-elements";
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
 
 const userData = {
 	profile: {
@@ -47,10 +49,57 @@ export const HomeScreen = observer(function HomeScreen() {
 	const [ShowBankStepModal, setShowBankStepModal] = useState(false)
 	const [ModalAgree, setModalAgree] = useState(false)
 
+	const getProfileConsumer = () => {
+		loginStore.environment.api
+			.getProfileConsumer()
+			.then(result => {
+				if (result.kind === "ok") {
+					runInAction(() => {
+						console.log(' result ===>>> ', JSON.stringify(result.data, null, 2))
+						loginStore.setConsumerUser(result.data)
+						// loginStore.setApiToken(result.response.access_token)
+						// navigation.navigate("home", {})
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					let msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					//   loginStore.reset()
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const getProfileMerchant = () => {
+		loginStore.environment.api
+			.getProfileMerchant()
+			.then(result => {
+				if (result.kind === "ok") {
+					console.log('  Merchant ===>>> ', JSON.stringify(result.data, null, 2))
+					runInAction(() => {
+						// loginStore.setConsumerUser(result.data)
+						// loginStore.setApiToken(result.response.access_token)
+						// navigation.navigate("home", {})
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					let msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					//   loginStore.reset()
+					notifyMessage(null)
+				}
+			})
+	}
+	
+
 	useEffect(() => {
 		if (!userData.profile.name) navigation.navigate("setupProfile", {})
 		else if (!userData.bankInfo.bankName) setShowBankModal(true)
 		// navigation.navigate("return", {})
+		getProfileConsumer()
+		getProfileMerchant()
 		console.log(' loginStore ===>>> ', loginStore.getAllData)
 	}, [])
 
@@ -154,7 +203,8 @@ export const HomeScreen = observer(function HomeScreen() {
 										/>
 										<Text style={styles.AMOUNT}>382.91</Text>
 									</View>
-									<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}>
+									{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}> */}
+									<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => loginStore.getAllData}>
 										<Text style={styles.LOAD_WALLET_LABEL}>Load Wallet</Text>
 									</TouchableOpacity>
 								</View>

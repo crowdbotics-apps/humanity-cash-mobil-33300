@@ -1,22 +1,22 @@
-import React, {useEffect, useState} from "react"
-import {observer} from "mobx-react-lite"
-import {TextInput, View, TouchableOpacity, Image} from "react-native"
-import {Text, Button, Screen, Checkbox} from "../../components"
+import React, { useEffect, useState } from "react"
+import { observer } from "mobx-react-lite"
+import { TextInput, View, TouchableOpacity, Image } from "react-native"
+import { Text, Button, Screen, Checkbox } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from "./login-style"
-import {COLOR, TYPOGRAPHY} from "../../theme"
-import {StackActions, useNavigation} from "@react-navigation/native"
-import {IMAGES} from "../../theme"
-import {useStores} from "../../models"
-import {runInAction} from "mobx"
-import {notifyMessage} from "../../utils/helpers"
+import { COLOR, TYPOGRAPHY } from "../../theme"
+import { StackActions, useNavigation } from "@react-navigation/native"
+import { IMAGES } from "../../theme"
+import { useStores } from "../../models"
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
 
 export const LoginScreen = observer(function LoginScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
-  const {loginStore} = rootStore
+  const { loginStore } = rootStore
 
   const [Username, setUsername] = useState("")
   const [Pass, setPass] = useState("")
@@ -28,7 +28,7 @@ export const LoginScreen = observer(function LoginScreen() {
   const login = () => {
     setLoading(true)
     loginStore.environment.api
-      .login({email: Username, password: Pass})
+      .login({ email: Username, password: Pass })
       .then(result => {
         setLoading(false)
         if (result.kind === "ok") {
@@ -56,16 +56,18 @@ export const LoginScreen = observer(function LoginScreen() {
       style={styles.ROOT}
       showHeader
     >
-      <TouchableOpacity
-        onPress={() => navigation.navigate("splash", {})}
-        style={styles.BACK_BUTON_CONTAINER}
-      >
-        <Icon name={"arrow-back"} size={23} color={"#8B9555"}/>
-        <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
-      </TouchableOpacity>
       <View style={styles.STEP_CONTAINER}>
-        <Text style={styles.STEP_TITLE}>Log in</Text>
-        <Text style={styles.STEP_SUB_TITLE}>{"Welcome back"}</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("splash", {})}
+          style={styles.BACK_BUTON_CONTAINER}
+        >
+          <Icon name={"arrow-back"} size={23} color={"#8B9555"} />
+          <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
+        </TouchableOpacity>
+        <View style={styles.STEP_CONTAINER}>
+          <Text style={styles.STEP_TITLE}>Log in</Text>
+          <Text style={styles.STEP_SUB_TITLE}>{"Welcome back"}</Text>
+        </View>
         <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
           <Text style={styles.INPUT_LABEL_STYLE}>
             EMAIL ADDRESS OR USER NAME
@@ -93,9 +95,11 @@ export const LoginScreen = observer(function LoginScreen() {
             placeholder={"*********"}
           />
           <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
-            <Ionicons name="eye" color={"#39534440"} size={20}/>
+            <Ionicons name="eye" color={"#39534440"} size={20} />
           </TouchableOpacity>
         </View>
+      </View>
+      <View style={styles.STEP_CONTAINER}>
         <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
         <View style={styles.LOGIN_TYPES_CONTAINER}>
           <Image
@@ -114,26 +118,28 @@ export const LoginScreen = observer(function LoginScreen() {
             style={styles.LOGIN_TYPE}
           />
         </View>
-      </View>
+        </View>
 
-      <View style={styles.NEED_HELP_CONTAINER}>
-        <Text onPress={() => {
-        }} style={styles.NEED_HELP_LINK}>
-          Forgot password
-        </Text>
+      <View style={styles.STEP_CONTAINER}>
+        <View style={styles.NEED_HELP_CONTAINER}>
+          <Text onPress={() => {
+          }} style={styles.NEED_HELP_LINK}>
+            Forgot password
+          </Text>
+        </View>
+        <Button
+          buttonStyle={{
+            marginTop: "auto",
+            backgroundColor: Loading
+              ? `${COLOR.PALETTE.green}40`
+              : COLOR.PALETTE.green
+          }}
+          onPress={() => login()}
+          buttonLabel={"Log in"}
+          disabled={Loading}
+          loading={Loading}
+        />
       </View>
-      <Button
-        buttonStyle={{
-          marginTop: "auto",
-          backgroundColor: Loading
-            ? `${COLOR.PALETTE.green}40`
-            : COLOR.PALETTE.green
-        }}
-        onPress={() => login()}
-        buttonLabel={"Log in"}
-        disabled={Loading}
-        loading={Loading}
-      />
     </Screen>
   )
 })
