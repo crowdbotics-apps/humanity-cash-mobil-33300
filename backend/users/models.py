@@ -69,6 +69,7 @@ class BaseProfileModel(models.Model):
     city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
     state = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True)
     zip_code = models.CharField(max_length=16, null=True, blank=True)
+    dwolla_id = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
         abstract = True

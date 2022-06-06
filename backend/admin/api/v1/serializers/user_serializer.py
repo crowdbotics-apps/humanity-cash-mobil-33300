@@ -92,3 +92,31 @@ class UserAdminSerializer(serializers.ModelSerializer):
         elif obj.get_merchant_data:
             return obj.merchant.address_1
 
+
+class UserDetailAdminSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+    physical_address = serializers.SerializerMethodField()
+    account_created = serializers.SerializerMethodField()
+    dwolla_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('id', 'full_name', 'email', 'account_created', 'physical_address', 'dwolla_id')
+
+    def get_full_name(self, obj):
+        return obj.get_full_name()
+
+    def get_account_created(self, obj):
+        return obj.date_joined
+
+    def get_dwolla_id(self, obj):
+        if obj.get_consumer_data:
+            return obj.consumer.dwolla_id
+        elif obj.get_merchant_data:
+            return obj.merchant.dwolla_id
+
+    def get_physical_address(self, obj):
+        if obj.get_consumer_data:
+            return obj.consumer.address_1
+        elif obj.get_merchant_data:
+            return obj.merchant.address_1

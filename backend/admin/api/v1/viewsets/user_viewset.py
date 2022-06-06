@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from admin.api.v1.serializers.user_serializer import ResetPasswordSerializer, ResetPasswordConfirmSerializer, \
-    UserAdminSerializer
+    UserAdminSerializer, UserDetailAdminSerializer
 from home.helpers import get_user_by_uidb64, AuthenticatedAPIView
 
 User = get_user_model()
@@ -48,7 +48,15 @@ def password_reset_confirm(request):
 class UserAdminViewSet(AuthenticatedAPIView, ModelViewSet):
     queryset = User.objects.all().order_by('id')
     serializer_class = UserAdminSerializer
+    detail_serializer_class = UserDetailAdminSerializer
     search_fields = ["id", "email"]
     filter_backends = [SearchFilter, DjangoFilterBackend]
     http_method_names = ['get', 'head']
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            if hasattr(self, 'detail_serializer_class'):
+                return self.detail_serializer_class
+
+        return super(UserAdminViewSet, self).get_serializer_class()
 
