@@ -287,6 +287,10 @@ if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
     else:
         EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+TWILIO_ACCOUNT_SID = env.str("TWILIO_ACCOUNT_SID", "")
+TWILIO_AUTH_TOKEN = env.str("TWILIO_AUTH_TOKEN", "")
+TWILIO_NUMBER = env.str("TWILIO_NUMBER", "")
+
 # GCP config 
 GS_BUCKET_NAME = env.str("GS_BUCKET_NAME", "")
 if GS_BUCKET_NAME:

@@ -3,10 +3,13 @@ import random
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.backends import UserModel
+from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.utils.http import urlsafe_base64_decode
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from twilio.rest import Client
 
 from users.models import UserVerificationCode
 
@@ -27,16 +30,21 @@ def send_email(user_email, subject, text_content):
         LOGGER.exception('Email sending failed: {}'.format(e))
 
 
-def send_verification_email(user):
+def setup_verification_code(user):
+    code = random.randint(100000, 999999)
+    user_code = UserVerificationCode.objects.filter(user=user)
+    if user_code.exists():
+        user_code_modify = user_code.first()
+        user_code_modify.verification_code = code
+        user_code_modify.save()
+    else:
+        UserVerificationCode.objects.create(user=user, verification_code=code)
+
+    return code
+
+
+def send_verification_email(user, code):
     try:
-        code = random.randint(100000, 999999)
-        user_code = UserVerificationCode.objects.filter(user=user)
-        if user_code.exists():
-            user_code_modify = user_code.first()
-            user_code_modify.verification_code = code
-            user_code_modify.save()
-        else:
-            UserVerificationCode.objects.create(user=user, verification_code=code)
         subject = "Verification code"
         text_content = f"""<h5>Hello!</h5><br/>
         Please use the Verification code bellow to complete the verification process<br/>
@@ -49,6 +57,29 @@ def send_verification_email(user):
         )
     except Exception as e:
         LOGGER.exception('Verification email sending failed: {}'.format(e))
+
+
+def send_sms(message, to):
+    try:
+        twilio_client = Client(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
+
+        twilio_client.messages.create(
+            body=message,
+            to=to,
+            from_=settings.TWILIO_NUMBER,
+        )
+    except Exception as e:
+        LOGGER.exception('SMS sending failed: {}'.format(e))
+
+
+def send_verification_phone(user, code, phone_number):
+    message = f"""Verification code. 
+    Hello!
+    Please use the Verification code bellow to complete the verification process
+    {code}
+    Thank you."""
+
+    send_sms(message, phone_number)
 
 
 class AuthenticatedAPIView(APIView):

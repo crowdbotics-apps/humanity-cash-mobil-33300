@@ -12,16 +12,18 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from home.api.v1.serializers.setup_profile_serializers import ConsumerProfileDetailSerializer, \
     MerchantMyProfileSerializer
-from home.helpers import send_verification_email
+from home.helpers import send_verification_email, setup_verification_code, send_verification_phone
 from users.models import UserVerificationCode
 
 User = get_user_model()
 
 
 class SignupSerializer(serializers.ModelSerializer):
+    phone_number = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+
     class Meta:
         model = User
-        fields = ['email']
+        fields = ['email', 'phone_number']
         extra_kwargs = {
             'email': {
                 'required': True,
@@ -43,7 +45,13 @@ class SignupSerializer(serializers.ModelSerializer):
             username=validated_data.get('email')
         )
         user.save()
-        send_verification_email(user)
+        code = setup_verification_code(user)
+        send_verification_email(user, code)
+
+        phone_number = validated_data.get('phone_number')
+        if phone_number:
+            send_verification_phone(user, code, phone_number)
+
         return user
 
     def save(self, request=None):
