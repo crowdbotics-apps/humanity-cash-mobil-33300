@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Image, Modal, ScrollView, TouchableOpacity, View } from "react-native"
+import { Image, Modal, ScrollView, TouchableOpacity, View, TextInput } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from "./modal-selector-styles"
 import { IMAGES } from "../../theme/images"
@@ -22,6 +22,7 @@ type ModalSelectortProps = {
 
 export function ModalSelector(props: ModalSelectortProps) {
     const [SelectedValue, setSelectedValue] = useState(null)
+    const [Search, setSearch] = useState('')
     const closeOnClick = false || props.closeOnClick
     const alternativeStyle = props.alternativeStyle
     console.log(props)
@@ -29,6 +30,7 @@ export function ModalSelector(props: ModalSelectortProps) {
         if (props.value === null) {
             setSelectedValue(null)
         }
+        setSearch('')
     }, [props.value])
 
     return (
@@ -50,6 +52,15 @@ export function ModalSelector(props: ModalSelectortProps) {
                     <View style={styles.FIRST_TITLE_MODAL}>
                         <Text>{props.title}</Text>
                     </View>
+                    <TextInput
+					style={{
+                        borderBottomWidth: 0.5,
+                        borderBottomColor: COLOR.PALETTE.black,
+                    }}
+                        onChangeText={t => setSearch(t)}
+                        value={Search}
+                        placeholder={'Search'}
+                    />
                     <ScrollView style={[styles.FORM_CONTAINER, { marginTop: 10 }]}>
                         {props.options.map(option => {
                             let itemColor = COLOR.PALETTE.black
@@ -62,6 +73,10 @@ export function ModalSelector(props: ModalSelectortProps) {
                                     itemColor = COLOR.PALETTE.green
                                 }
                             }
+
+                            if (Search !== '' && !option.title.toLocaleLowerCase().includes(Search.toLocaleLowerCase()) && !option.description.toLocaleLowerCase().includes(Search.toLocaleLowerCase())) {                                
+                                return null
+                            } 
 
                             return (
                                 <TouchableOpacity
@@ -77,14 +92,15 @@ export function ModalSelector(props: ModalSelectortProps) {
                                     }}
                                     style={{
                                         alignItems: "flex-start",
-                                        borderWidth: 1,
+                                        borderWidth: 0.5,
                                         borderColor: itemColor,
                                         marginVertical: 5,
                                         padding: 10,
-                                        borderRadius: 5
+                                        borderRadius: 5,
+                                        flexDirection: 'row',
                                     }}
                                 >
-                                    <Text style={{ color: itemColor, fontSize: 20 }}>{option.title}</Text>
+                                    <Text style={{ color: itemColor, fontSize: 20, marginLeft: 10, marginRight: 20 }}>{option.title}</Text>
                                     {option.description !== "" && <Text style={{ color: itemColor, fontSize: 15, marginTop: 5 }}>{option.description}</Text>}
                                 </TouchableOpacity>
                             )
