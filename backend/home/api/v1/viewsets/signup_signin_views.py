@@ -3,7 +3,7 @@ from django.core import exceptions
 import django.contrib.auth.password_validation as validators
 from rest_framework import status, serializers
 from rest_framework.response import Response
-from home.helpers import AuthenticatedAPIView, send_verification_email
+from home.helpers import AuthenticatedAPIView, send_verification_email, setup_verification_code
 import home.api.v1.serializers.signup_signin_serializers as signup_signin_serializers
 
 
@@ -56,5 +56,6 @@ class ResendVerificationCodeAPIView(AuthenticatedAPIView):
         user = self.request.user
         if user.verified_email:
             return Response({"error": "User already verified"}, status=status.HTTP_400_BAD_REQUEST)
-        send_verification_email(user)
+        code = setup_verification_code(user)
+        send_verification_email(user, code)
         return Response(status=status.HTTP_200_OK)
