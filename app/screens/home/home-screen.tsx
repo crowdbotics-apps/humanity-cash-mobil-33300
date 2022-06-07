@@ -6,7 +6,7 @@ import { Image, TouchableOpacity, View, Modal, KeyboardAvoidingView, ScrollView,
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from "./home-style";
-import {useStores} from "../../models";
+import { useStores } from "../../models";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { CheckBox } from "react-native-elements";
 import { runInAction } from "mobx"
@@ -43,7 +43,7 @@ const news = [
 export const HomeScreen = observer(function HomeScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
-	const {loginStore} = rootStore
+	const { loginStore } = rootStore
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
 	const [ShowBankStepModal, setShowBankStepModal] = useState(false)
@@ -53,9 +53,9 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getProfileConsumer()
 			.then(result => {
+				console.log(' Consumer ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
-						console.log(' result ===>>> ', JSON.stringify(result.data, null, 2))
 						loginStore.setConsumerUser(result.data)
 						// loginStore.setApiToken(result.response.access_token)
 						// navigation.navigate("home", {})
@@ -75,10 +75,11 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getProfileMerchant()
 			.then(result => {
+
+				console.log('  Merchant ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
-					console.log('  Merchant ===>>> ', JSON.stringify(result.data, null, 2))
 					runInAction(() => {
-						// loginStore.setConsumerUser(result.data)
+						loginStore.setMerchantUser(result.data)
 						// loginStore.setApiToken(result.response.access_token)
 						// navigation.navigate("home", {})
 					})
@@ -92,7 +93,7 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
-	
+
 
 	useEffect(() => {
 		if (!userData.profile.name) navigation.navigate("setupProfile", {})
@@ -169,6 +170,95 @@ export const HomeScreen = observer(function HomeScreen() {
 		)
 	)
 
+	const ConsumerView = () => (
+		<ScrollView bounces={false}>
+			<View style={styles.ROOT_CONTAINER}>
+				<View style={styles.STEP_CONTAINER}>
+					<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+						<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
+						<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+
+					</TouchableOpacity>
+					<Image
+						resizeMode="contain"
+						source={IMAGES.logoFull}
+						style={styles.LOGO_STYLE}
+					/>
+					<View style={styles.AMOUNT_CONTAINER}>
+						<View style={{ flexDirection: 'row' }}>
+							<Image
+								resizeMode="contain"
+								source={IMAGES.currentDollarIcon}
+								style={styles.AMOUNT_ICON}
+							/>
+							<Text style={styles.AMOUNT}>382.91</Text>
+						</View>
+						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}> */}
+						<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => loginStore.getAllData}>
+							<Text style={styles.LOAD_WALLET_LABEL}>Load Wallet</Text>
+						</TouchableOpacity>
+					</View>
+					<View style={styles.LINE} />
+					{renderNews()}
+					<View style={{ height: 200 }} />
+				</View>
+			</View>
+			{bankModal()}
+
+		</ScrollView>
+	)
+
+	const MerchantView = () => (
+			<View style={styles.ROOT_CONTAINER}>
+				<View style={styles.STEP_CONTAINER}>
+					<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+						<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
+						<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity style={styles.CASHIER_BUTTON_BIG}>
+						<Image
+							resizeMode="contain"
+							source={IMAGES.currentDollarIconCashier}
+							style={styles.CASHIER_BUTTON_ICON_BIG}
+						/>
+						<Text style={styles.CASHIER_BUTTON_LABEL}>Receive payment</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+						<Image
+							resizeMode="contain"
+							source={IMAGES.transactions_cashier}
+							style={styles.CASHIER_BUTTON_ICON}
+						/>
+						<Text style={styles.CASHIER_BUTTON_LABEL}>Transactions</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+						<Image
+							resizeMode="contain"
+							source={IMAGES.return_cashier}
+							style={styles.CASHIER_BUTTON_ICON}
+						/>
+						<Text style={styles.CASHIER_BUTTON_LABEL}>Make a return</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+						<Image
+							resizeMode="contain"
+							source={IMAGES.report_cashier}
+							style={styles.CASHIER_BUTTON_ICON}
+						/>
+						<Text style={styles.CASHIER_BUTTON_LABEL}>Make a report</Text>
+					</TouchableOpacity>
+
+					<View style={{ height: 200 }} />
+				</View>
+				<View style={styles.STEP_CONTAINER}>
+          <TouchableOpacity onPress={() => navigation.navigate("helpContact", {})} style={styles.NEED_HELP_CONTAINER}>
+            <Text style={styles.NEED_HELP_LINK}>Need help?</Text>
+          </TouchableOpacity>
+        </View>
+			</View>
+	)
+
 	return (
 		<Screen
 			preset="fixed"
@@ -181,51 +271,24 @@ export const HomeScreen = observer(function HomeScreen() {
 				behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
-				<ScrollView bounces={false}>
-					<View style={styles.ROOT_CONTAINER}>
-							<View style={styles.STEP_CONTAINER}>
-								<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-									<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
-									<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
-
-								</TouchableOpacity>
-								<Image
-									resizeMode="contain"
-									source={IMAGES.logoFull}
-									style={styles.LOGO_STYLE}
-								/>
-								<View style={styles.AMOUNT_CONTAINER}>
-									<View style={{ flexDirection: 'row' }}>
-										<Image
-											resizeMode="contain"
-											source={IMAGES.currentDollarIcon}
-											style={styles.AMOUNT_ICON}
-										/>
-										<Text style={styles.AMOUNT}>382.91</Text>
-									</View>
-									{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}> */}
-									<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => loginStore.getAllData}>
-										<Text style={styles.LOAD_WALLET_LABEL}>Load Wallet</Text>
-									</TouchableOpacity>
-								</View>
-								<View style={styles.LINE} />
-								{renderNews()}
-								<View style={{ height: 100 }} />
-							</View>
-					</View>
-					{bankModal()}
-
-				</ScrollView>
-				<Button
-					buttonStyle={{
-						backgroundColor: COLOR.PALETTE.blue,
-						bottom: 5,
-						position: 'absolute'
-					}}
-					buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
-					onPress={() => navigation.navigate("return", {})}
-					buttonLabel={'Scan to Pay or Receive'}
-				/>
+				{loginStore.getSelectedAccount === 'merchant'
+					? MerchantView()
+					: [
+						ConsumerView(),
+						<Button
+							buttonStyle={{
+								backgroundColor: COLOR.PALETTE.blue,
+								bottom: 125,
+								position: 'absolute'
+							}}
+							buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
+							onPress={() => navigation.navigate("return", {})}
+							buttonLabel={'Scan to Pay or Receive'}
+							showBottonMenu
+							hideButton
+						/>
+					]
+				}
 			</KeyboardAvoidingView>
 		</Screen>
 	)

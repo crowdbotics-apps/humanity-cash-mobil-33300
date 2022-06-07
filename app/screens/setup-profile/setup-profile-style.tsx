@@ -429,17 +429,17 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: 'black',
-    shadowOffset: {width: -2, height: 4},
+    shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     backgroundColor: COLOR.PALETTE.white,
     elevation: 5,
-    marginRight: 15
+    marginRight: 15,
   },
-CHECK_INSIDE: {
-  width: 16,
-  height: 16,
-  borderRadius: 8,
-  backgroundColor: COLOR.PALETTE.black
-},
+  CHECK_INSIDE: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: COLOR.PALETTE.black
+  },
 })

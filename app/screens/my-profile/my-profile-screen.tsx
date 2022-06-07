@@ -148,7 +148,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					: <Image
 						source={{ uri: imageSource.uri }}
 						style={styles.IMAGE_BOX}
-						resizeMode='contain'
+						resizeMode='cover'
 					/>
 				}
 			</TouchableOpacity>
@@ -400,6 +400,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	)
 
 	useEffect(() => {
+		setImageSource({ uri: loginStore.ProfileData.profile_picture})
 		setUsername(loginStore.ProfileData.username)
 		setName(loginStore.ProfileData.first_name)
 		setLastName(loginStore.ProfileData.last_name)

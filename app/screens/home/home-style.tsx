@@ -13,6 +13,17 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     minHeight: METRICS.screenHeight,
   },
+  NEED_HELP_LINK: {
+    fontSize: 16,
+    color: COLOR.PALETTE.darkYellow,
+    textAlign: 'center'
+  }, 
+  NEED_HELP_CONTAINER: {
+    width: METRICS.screenWidth * 0.80,
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 50
+  },
   BACK_BUTON_LABEL: {
     fontSize: 16,
     color: COLOR.PALETTE.blue
@@ -88,6 +99,40 @@ export default StyleSheet.create({
   SUBMIT_BUTTON_LABEL: {
     fontSize: 16,
     color: COLOR.PALETTE.white,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
+  CASHIER_BUTTON_SMALL: {
+    marginTop: 10,
+    flexDirection: 'row',
+    backgroundColor: COLOR.PALETTE.lightGray,
+    width: METRICS.screenWidth * 0.9,
+    height: 55,
+    alignSelf: 'center',
+    alignItems:"center"
+  },
+  CASHIER_BUTTON_BIG: {
+    marginTop: 80,
+    backgroundColor: COLOR.PALETTE.lightGray,
+    width: METRICS.screenWidth * 0.9,
+    height: 155,
+    alignSelf: 'center',
+    alignItems:"center",
+    justifyContent: 'center'
+  },
+  CASHIER_BUTTON_ICON: {
+    width: 20,
+    height: 20,
+    marginHorizontal: 20
+  },
+  CASHIER_BUTTON_ICON_BIG: {
+    width: 70,
+    height: 70,
+    marginVertical: 10
+  },
+  CASHIER_BUTTON_LABEL: {
+    fontSize: 16,
+    color: COLOR.PALETTE.black,
     textAlign: 'center',
     textAlignVertical: 'center',
   },
