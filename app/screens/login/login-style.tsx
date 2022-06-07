@@ -91,7 +91,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80,
     alignItems: 'center',
     alignSelf: 'center',
-    marginBottom: 20
+    marginTop: 40
   },
   NEED_HELP_LINK: {
     fontSize: 16,

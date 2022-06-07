@@ -12,6 +12,13 @@ import { IMAGES } from "../../theme"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin'
+import { AppleButton } from '@invertase/react-native-apple-authentication'
+import { appleAuth } from '@invertase/react-native-apple-authentication'
 
 export const LoginScreen = observer(function LoginScreen() {
   const navigation = useNavigation()
@@ -30,6 +37,7 @@ export const LoginScreen = observer(function LoginScreen() {
     loginStore.environment.api
       .login({ email: Username, password: Pass })
       .then(result => {
+        console.log(' =====>>>>>>> ', JSON.stringify(result))
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
@@ -40,6 +48,7 @@ export const LoginScreen = observer(function LoginScreen() {
         } else if (result.kind === "bad-data") {
           const key = Object.keys(result?.errors)[0]
           let msg = `${key}: ${result?.errors?.[key][0]}`
+          console.log('msg -> ', msg)
           notifyMessage(msg)
         } else {
           loginStore.reset()
@@ -48,10 +57,27 @@ export const LoginScreen = observer(function LoginScreen() {
       })
   }
 
+  async function onAppleButtonPress() {
+    // performs login request
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    });
+  
+    // get current authentication state for user
+    // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
+    const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+  
+    // use credentialState response to ensure the user is authenticated
+    if (credentialState === appleAuth.State.AUTHORIZED) {
+      // user is authenticated
+    }
+  }
+
   return (
     <Screen
       // preset='scroll'
-      preset="fixed"
+      preset="scroll"
       statusBar={"dark-content"}
       style={styles.ROOT}
       showHeader
@@ -102,34 +128,42 @@ export const LoginScreen = observer(function LoginScreen() {
       <View style={styles.STEP_CONTAINER}>
         <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
         <View style={styles.LOGIN_TYPES_CONTAINER}>
-          <Image
-            source={IMAGES.appleIcon}
-            resizeMode="contain"
-            style={styles.LOGIN_TYPE}
-          />
-          <Image
-            source={IMAGES.googleIcon}
-            resizeMode="contain"
-            style={styles.LOGIN_TYPE}
-          />
-          <Image
-            source={IMAGES.facebookIcon}
-            resizeMode="contain"
-            style={styles.LOGIN_TYPE}
-          />
+          <TouchableOpacity onPress={() => onAppleButtonPress()}>
+            <Image
+              source={IMAGES.appleIcon}
+              resizeMode="contain"
+              style={styles.LOGIN_TYPE}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Image
+              source={IMAGES.googleIcon}
+              resizeMode="contain"
+              style={styles.LOGIN_TYPE}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Image
+              source={IMAGES.facebookIcon}
+              resizeMode="contain"
+              style={styles.LOGIN_TYPE}
+            />
+          </TouchableOpacity>
         </View>
-        </View>
-
-      <View style={styles.STEP_CONTAINER}>
         <View style={styles.NEED_HELP_CONTAINER}>
           <Text onPress={() => {
           }} style={styles.NEED_HELP_LINK}>
             Forgot password
           </Text>
         </View>
+        </View>
+
+      <View style={styles.STEP_CONTAINER}>
+      </View>
         <Button
           buttonStyle={{
-            marginTop: "auto",
+            bottom: 5,
+						position: 'absolute',
             backgroundColor: Loading
               ? `${COLOR.PALETTE.green}40`
               : COLOR.PALETTE.green
@@ -139,7 +173,6 @@ export const LoginScreen = observer(function LoginScreen() {
           disabled={Loading}
           loading={Loading}
         />
-      </View>
     </Screen>
   )
 })
