@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import './Dashboard.css';
 import { PageWeb } from "../../components";
 import { useNavigate } from "react-router-dom";
-import { Button, Offcanvas, Spinner, Tab, Tabs, Table } from "react-bootstrap";
+import { Button, Offcanvas, Spinner, Tab, Tabs, Table, Pagination } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useStores } from "../../models/root-store/root-store-context";
 import { genericApiError } from "../../helpers";

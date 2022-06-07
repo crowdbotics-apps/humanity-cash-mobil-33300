@@ -27,8 +27,12 @@ export default StyleSheet.create({
     flexDirection: 'row',
     width: METRICS.screenWidth * 0.9,
     height: 80,
+  },
+  USER_CONTAINER_CHANGE: {
+    flexDirection: 'row',
+    width: METRICS.screenWidth * 0.9,
+    height: 80,
     backgroundColor: COLOR.PALETTE.mustard,
-    marginTop: 10
   },
   USER_IMAGE_CONTAINER: {
     justifyContent: 'center',
@@ -38,7 +42,8 @@ export default StyleSheet.create({
   },
   USER_IMAGE: {
     width: 60,
-    height: 60
+    height: 60,
+    borderRadius: 30
   },
   SWITCH_ACCOUNT_CONTAINER: {
     justifyContent: 'center'
@@ -47,9 +52,17 @@ export default StyleSheet.create({
     fontSize: 16,
     color: COLOR.PALETTE.white
   },
+  USER_NAME_BLACK: {
+    fontSize: 16,
+    color: COLOR.PALETTE.black
+  },
   SWITCH_ACCOUNT_LABEL: {
     fontSize: 16,
     color: COLOR.PALETTE.black
+  },
+  SWITCH_ACCOUNT_LABEL_BLUE: {
+    fontSize: 16,
+    color: COLOR.PALETTE.blue
   },
   TOTAL_CURRENCY: {
     marginLeft: 15,

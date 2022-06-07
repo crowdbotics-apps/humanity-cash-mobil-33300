@@ -14,6 +14,7 @@ const AV_BIRD =  require("../../../assets/images/av_bird.png")
 const AV_SALAMANDER =  require("../../../assets/images/av_salamander.png")
 const SHORT_ICON =  require("../../../assets/images/shortIcon.png")
 const CURRENT_DOLLAR_ICON =  require("../../../assets/images/CurrentDollarIcon.png")
+const CURRENT_DOLLAR_ICON_CASHIER =  require("../../../assets/images/CurrentDollarIconCashier.png")
 const SCAN_TO_PAY =  require("../../../assets/icons/scan_to_pay.png")
 
 const CASH_OUT =  require("../../../assets/icons/cash_out.png")
@@ -32,6 +33,20 @@ const LOGOUT =  require("../../../assets/icons/logout.png")
 const COMMUNITY =  require("../../../assets/icons/community.png")
 const FAMILY =  require("../../../assets/icons/family.png")
 
+const MENU_MERCHANG =  require("../../../assets/images/menu_merchant.png")
+const MENU_CONSUMER =  require("../../../assets/images/menu_consumer.png")
+
+const menu_address_inactive =  require("../../../assets/icons/menu_address_inactive.png")
+const menu_home_inactive =  require("../../../assets/icons/menu_home_inactive.png")
+const menu_load_wallet_inactive =  require("../../../assets/icons/menu_load_wallet_inactive.png")
+const menu_where_spend_inactive =  require("../../../assets/icons/menu_where_spend_inactive.png")
+
+const transactions_cashier =  require("../../../assets/icons/transactions_cashier.png")
+const return_cashier =  require("../../../assets/icons/return_cashier.png")
+const report_cashier =  require("../../../assets/icons/report_cashier.png")
+
+
+
 
 export const IMAGES = {
   logo: LOGO,
@@ -49,6 +64,7 @@ export const IMAGES = {
   avSalamander: AV_SALAMANDER,
   shortIcon: SHORT_ICON,
   currentDollarIcon: CURRENT_DOLLAR_ICON,
+  currentDollarIconCashier: CURRENT_DOLLAR_ICON_CASHIER,
   scanToPay: SCAN_TO_PAY,
   cash_out: CASH_OUT,
   chest: CHEST,
@@ -65,4 +81,13 @@ export const IMAGES = {
   logout: LOGOUT,
   community: COMMUNITY,
   family: FAMILY,
+  menu_merchant: MENU_MERCHANG,
+  menu_consumer: MENU_CONSUMER,
+  menu_address_inactive,
+  menu_home_inactive,
+  menu_load_wallet_inactive,
+  menu_where_spend_inactive,
+  transactions_cashier,
+return_cashier,
+report_cashier,
 }

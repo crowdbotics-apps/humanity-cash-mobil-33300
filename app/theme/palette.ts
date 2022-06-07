@@ -38,7 +38,7 @@ export const PALETTE = {
   ligthGray: "#F6F5F0",
   background: "#F7F5F0",
   lightGray: "#F5F5F0",
-  blue: "#008ABA",
+  blue: "#3B88B6",
   yellow: "#F7BE00",
   darkYellow: "#D2A824",
   lightGreen: "#D1D5BE",

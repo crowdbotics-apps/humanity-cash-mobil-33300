@@ -43,6 +43,7 @@ export const LoginScreen = observer(function LoginScreen() {
           runInAction(() => {
             loginStore.setUser(result.response.user)
             loginStore.setApiToken(result.response.access_token)
+            loginStore.setSelectedAccount('consumer')
             navigation.navigate("home", {})
           })
         } else if (result.kind === "bad-data") {
