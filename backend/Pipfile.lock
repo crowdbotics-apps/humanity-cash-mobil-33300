@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "696855b81a9f76f864aaedf70826820e422a3f346f5b25cc01d0cc96bad8f9fd"
+            "sha256": "3eeccdc0f68aa5c17321fca5f2bb66609d2830d4971c8bc02b71d864e8e538ca"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -304,6 +304,14 @@
             "index": "pypi",
             "version": "==1.20.0"
         },
+        "dwollav2": {
+            "hashes": [
+                "sha256:084b83c88e5312862916f0501d45d195b20ad26bf26da706da7994c59b1dca9c",
+                "sha256:2d7a439a65d19bb27572106f53c9124ea28875eeb80e396ebe6413a942c70959"
+            ],
+            "index": "pypi",
+            "version": "==2.2.1"
+        },
         "factory-boy": {
             "hashes": [
                 "sha256:a98d277b0c047c75eb6e4ab8508a7f81fb03d2cb21986f627913546ef7a2a55e",
@@ -318,6 +326,12 @@
                 "sha256:fb95f956bac59c90f54543919d5c5ef41625e12a0773e5aa08c9b9c62ba58fb3"
             ],
             "version": "==13.12.1"
+        },
+        "future": {
+            "hashes": [
+                "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"
+            ],
+            "version": "==0.18.2"
         },
         "google-api-core": {
             "extras": [

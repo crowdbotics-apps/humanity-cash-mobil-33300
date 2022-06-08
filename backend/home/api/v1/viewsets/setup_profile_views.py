@@ -1,12 +1,16 @@
+import logging
 from django.contrib.auth import get_user_model
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
 
 from home.api.v1.serializers import setup_profile_serializers
+from home.clients.dwolla_api import DwollaClient
 from home.helpers import AuthenticatedAPIView
 from users.models import Merchant
 
 User = get_user_model()
+logger = logging.getLogger('django')
 
 
 class SetupConsumerProfileAPIView(AuthenticatedAPIView, UpdateAPIView):
@@ -31,6 +35,31 @@ class SetupConsumerProfileDetailAPIView(AuthenticatedAPIView, UpdateAPIView):
     def get_object(self):
         return self.request.user
 
+    def update(self, request, *args, **kwargs):
+        super(SetupConsumerProfileDetailAPIView, self).update(request, *args, **kwargs)
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+
+        if not self.request.user.consumer.dwolla_id:
+            # if dwolla_id is not set yet
+            try:
+                dwolla_client = DwollaClient()
+                dwolla_id = dwolla_client.create_customer(
+                    {
+                        "firstName": instance.first_name,
+                        "lastName": instance.last_name,
+                        "email": instance.email
+                    }
+                )
+                # TODO: add additional fields
+                instance.consumer.dwolla_id = dwolla_id
+                instance.consumer.save()
+            except Exception as e:
+                logger.exception('Dwolla Error: {}'.format(e))
+
+        return Response(serializer.initial_data)
+
 
 class SetupMerchantProfileAPIView(AuthenticatedAPIView, CreateAPIView):
     """
@@ -53,6 +82,32 @@ class SetupMerchantProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIV
 
     def get_object(self):
         return self.request.user.merchant
+
+    def update(self, request, *args, **kwargs):
+        super(SetupMerchantProfileDetailAPIView, self).update(request, *args, **kwargs)
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+
+        if not self.request.user.merchant.dwolla_id:
+            # if dwolla_id is not set yet
+            try:
+                dwolla_client = DwollaClient()
+                dwolla_id = dwolla_client.create_customer(
+                    {
+                        "firstName": instance.owner_first_name,
+                        "lastName": instance.owner_last_name,
+                        "email": instance.user.email,
+                        "businessName": instance.business_name
+                    }
+                )
+                # TODO: add additional fields
+                instance.dwolla_id = dwolla_id
+                instance.save()
+            except Exception as e:
+                logger.exception('Dwolla Error: {}'.format(e))
+
+        return Response(serializer.initial_data)
 
 
 class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):

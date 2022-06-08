@@ -7,7 +7,7 @@ import home.api.v1.viewsets.signup_signin_views as signup_signin_views
 #     # SignupViewSet,
 #     # LoginViewSet,
 # )
-from home.api.v1.viewsets import setup_profile_views, base_views, security_views
+from home.api.v1.viewsets import setup_profile_views, base_views, security_views, dwolla_views
 
 router = DefaultRouter()
 # router.register("signup", SignupViewSet, basename="signup")
@@ -33,6 +33,9 @@ urlpatterns = [
         path('change-password/', security_views.ChangePasswordView.as_view(), name='change_password'),
         path('allow-touch-id/', security_views.AllowTouchIdView.as_view(), name='allow_touch_id'),
         path('delete-account/', security_views.DeleteAccountView.as_view(), name='delete_account'),
+    ])),
+    path('dwolla/', include([
+        path('create-iav-token/', dwolla_views.CreateIavTokenView.as_view(), name='dwolla_iav_token'),
     ])),
     path('base/', include([
         path('cities/', base_views.CityListView.as_view(), name='cities'),
