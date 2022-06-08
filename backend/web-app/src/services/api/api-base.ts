@@ -48,7 +48,6 @@ export class ApiBase {
             timeout: this.config.timeout,
             headers: {
                 Accept: "application/json",
-                "Access-Control-Allow-Origin": "*"
             },
         }
         if (document && document.cookie) {

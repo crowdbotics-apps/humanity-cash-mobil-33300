@@ -334,23 +334,3 @@ code {
   -o-animation: flickerAnimation 1s linear;
   animation: flickerAnimation 1s linear;
 }
-
-/* width */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-  background: #224261;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #FF8A00;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #e6332a;
-}

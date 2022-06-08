@@ -88,13 +88,15 @@ THIRD_PARTY_APPS = [
     'storages',
     'phonenumber_field',
     'django_filters',
-    'cities_light'
+    'cities_light',
+    'corsheaders'
 ]
 # MODULES_APPS = get_modules()
 
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -278,6 +280,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 SWAGGER_SETTINGS = {
     "DEFAULT_INFO": f"{ROOT_URLCONF}.api_info",
 }
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://0.0.0.0:3000',
+    'http://192.168.183.55:3000'
+]
 
 if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
     if not DEBUG:

@@ -21,11 +21,11 @@ export interface ApiConfig {
  * The default configuration for the app.
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
-  // url: 'http://192.168.100.3:7112/cgibin/api/v1',
-  // base_url: 'http://192.168.100.3:7112',
+  // url: 'http://0.0.0.0:8000',
+  // base_url: 'http://0.0.0.0:8000',
 
   url: "https://humanity-cash-mobil-33300.botics.co",
-  base_url: 'https://gkpy.net/',
+  base_url: 'https://humanity-cash-mobil-33300.botics.co',
 
 
 
