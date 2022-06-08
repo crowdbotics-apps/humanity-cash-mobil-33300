@@ -57,7 +57,7 @@ export default StyleSheet.create({
   },
   BACK_IMAGE_BOX: {
     width: METRICS.screenWidth * 0.95,
-    height: 100,
+    height: 150,
     borderRadius: 3,
   },
   IMAGE_BOX: {

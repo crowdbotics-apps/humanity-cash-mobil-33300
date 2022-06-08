@@ -1,28 +1,24 @@
 import { observer } from "mobx-react-lite";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Screen, Text, ModalSelector } from "../../components";
-import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
+import { TextInput, TouchableOpacity, View, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import styles from './my-profile-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
-import Entypo from "react-native-vector-icons/Entypo"
-import { CheckBox } from 'react-native-elements'
-import { PALETTE } from "../../theme/palette";
 import { notifyMessage } from "../../utils/helpers"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useStores } from "../../models"
+import { runInAction } from "mobx"
 
 export const MyProfileScreen = observer(function MyProfileScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 
-	const profile_types = ['personal', 'business']
-	const [ProfileType, setProfileType] = useState(profile_types[0])
+	const [Loading, setLoading] = useState(false)
 
-	
 	// personal
 	const [Username, setUsername] = useState('')
 	const [imageSource, setImageSource] = React.useState<any>(null);
@@ -42,7 +38,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
-	const [City, setCity] = React.useState(1);
+	const [City, setCity] = React.useState('');
 	const states = [
 		{ id: "AL", title: "AL", description: "Alabama" },
 		{ id: "AK", title: "AK", description: "Alaska" },
@@ -206,8 +202,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					{!BackBusinessImageSource?.uri
 						? <FontAwesome name={"camera"} size={23} color={'#39534440'} style={{ marginTop: 15, marginRight: 15 }} />
 						: <Image
-							source={{ uri: BackBusinessImageSource.uri }
-							}
+							source={{ uri: BackBusinessImageSource.uri }}
+							resizeMode='cover'
 							style={styles.BACK_IMAGE_BOX}
 						/>
 					}
@@ -220,8 +216,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						{!BusinessImageSource?.uri
 							? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
 							: <Image
-								source={{ uri: BusinessImageSource.uri }
-								}
+								source={{ uri: BusinessImageSource.uri }}
+								resizeMode='cover'
 								style={styles.IMAGE_BOX}
 							/>
 						}
@@ -244,8 +240,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					placeholder={'Business name'}
 				/>
 			</View>
-
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>TELL US YOUR STORY (50 WORDS MAX)</Text>
 			</View>
@@ -259,9 +253,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					placeholder={'Business name'}
 				/>
 			</View>
-
-
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS CATEGORY</Text>
 			</View>
@@ -352,7 +343,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 								size={23} color={'black'}
 								style={{ marginRight: 20 }}
 							/> */}
-
 							<ModalSelector
 								options={states}
 								action={setState}
@@ -368,7 +358,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				</View>
 			</View>
 
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>POSTAL CODE</Text>
 			</View>
@@ -380,7 +369,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					placeholder={'xxxxxxxxx'}
 				/>
 			</View>
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
@@ -392,18 +380,100 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					placeholder={'Phone number'}
 				/>
 			</View>
-
-
-
-
 		</View>
 	)
 
+	const updateProfile = () => {
+		setLoading(true)
+		const pic = {
+			uri:
+				Platform.OS === "android"
+					? imageSource.uri
+					: imageSource.uri.replace("file://", ""),
+			type: imageSource.type,
+			name: imageSource.fileName
+		}
+		const prof_pic = {
+			uri:
+				Platform.OS === "android"
+					? BusinessImageSource.uri
+					: BusinessImageSource.uri.replace("file://", ""),
+			type: BusinessImageSource.type,
+			name: BusinessImageSource.fileName
+		}
+		const back_pic = {
+			uri:
+				Platform.OS === "android"
+					? BackBusinessImageSource.uri
+					: BackBusinessImageSource.uri.replace("file://", ""),
+			type: BackBusinessImageSource.type,
+			name: BackBusinessImageSource.fileName
+		}
+		loginStore.getSelectedAccount === 'merchant'
+			? loginStore.environment.api
+				.updateProfileMerchant({ 
+					business_name: BusinessName,
+					profile_picture: prof_pic,
+					background_picture: back_pic,
+					business_story: BusinessStory,
+					address_1: Address1
+				 })
+				.then(result => {
+					setLoading(false)
+					if (result.kind === "ok") {
+						runInAction(() => {
+							loginStore.setUser(result.response.user)
+							loginStore.setApiToken(result.response.access_token)
+							loginStore.setSelectedAccount('consumer')
+							navigation.navigate("home", {})
+						})
+					} else if (result.kind === "bad-data") {
+						const key = Object.keys(result?.errors)[0]
+						let msg = `${key}: ${result?.errors?.[key][0]}`
+						notifyMessage(msg)
+					} else {
+						loginStore.reset()
+						notifyMessage(null)
+					}
+				})
+			: loginStore.environment.api
+				.updateProfileConsumer({ username: Username, consumer_profile: pic })
+				.then(result => {
+					setLoading(false)
+					if (result.kind === "ok") {
+						runInAction(() => {
+							loginStore.setUser(result.response.user)
+							loginStore.setApiToken(result.response.access_token)
+							loginStore.setSelectedAccount('consumer')
+							navigation.navigate("home", {})
+						})
+					} else if (result.kind === "bad-data") {
+						const key = Object.keys(result?.errors)[0]
+						let msg = `${key}: ${result?.errors?.[key][0]}`
+						notifyMessage(msg)
+					} else {
+						loginStore.reset()
+						notifyMessage(null)
+					}
+				})
+	}
+
 	useEffect(() => {
-		setImageSource({ uri: loginStore.ProfileData.profile_picture})
+		setImageSource({ uri: loginStore.ProfileData.profile_picture })
 		setUsername(loginStore.ProfileData.username)
 		setName(loginStore.ProfileData.first_name)
 		setLastName(loginStore.ProfileData.last_name)
+		setBusinessImageSource({ uri: loginStore.ProfileDataBusiness.profile_picture_merchant })
+		setBackBusinessImageSource({ uri: loginStore.ProfileDataBusiness.background_picture })
+		setBusinessName(loginStore.ProfileDataBusiness.business_name)
+		setBusinessStory(loginStore.ProfileDataBusiness.business_story)
+		setBusinessCategory(loginStore.ProfileDataBusiness.type_of_business)
+		// setBusinessWebsite(loginStore.ProfileDataBusiness.)
+		setCity(loginStore.ProfileDataBusiness.city)
+		setAddress1(loginStore.ProfileDataBusiness.address_1)
+		setAddress2(loginStore.ProfileDataBusiness.address_2)
+		setPostalCode(loginStore.ProfileDataBusiness.zip_code)
+		setPhoneNumber(loginStore.ProfileDataBusiness.phone_number)
 	}, [])
 
 	return (
@@ -432,21 +502,26 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 							<View style={styles.LINE} />
 							<Text style={styles.STEP_SUB_TITLE}>This information is shared publicly.</Text>
 
-
-							{ProfileType === profile_types[0] && PersonalProfile()}
-							{ProfileType === profile_types[1] && BusinessProfile()}
+							{loginStore.getSelectedAccount === 'merchant'
+								? BusinessProfile()
+								: PersonalProfile()
+							}
 						</View>
 					</View>
 				</ScrollView>
 				<Button
 					buttonStyle={{
-						backgroundColor: COLOR.PALETTE.green,
 						bottom: 5,
-						position: 'absolute'
+						position: 'absolute',
+						backgroundColor: Loading
+							? `${COLOR.PALETTE.green}40`
+							: COLOR.PALETTE.green
 					}}
-					// buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
-					onPress={() => notifyMessage("Your profile has been updated successfully.")}
+					// onPress={() => notifyMessage("Your profile has been updated successfully.")}
+					onPress={() => updateProfile()}
 					buttonLabel={'Save changes'}
+					disabled={Loading}
+					loading={Loading}
 				/>
 			</KeyboardAvoidingView>
 		</Screen>

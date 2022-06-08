@@ -19,7 +19,7 @@ const userData = {
 		mail: 'rafael@mail.com'
 	},
 	bankInfo: {
-		bankName: 'nombre'
+		// bankName: 'nombre'
 	}
 }
 
@@ -53,7 +53,6 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getProfileConsumer()
 			.then(result => {
-				console.log(' Consumer ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
@@ -75,8 +74,6 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getProfileMerchant()
 			.then(result => {
-
-				console.log('  Merchant ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
@@ -97,11 +94,10 @@ export const HomeScreen = observer(function HomeScreen() {
 
 	useEffect(() => {
 		if (!userData.profile.name) navigation.navigate("setupProfile", {})
-		else if (!userData.bankInfo.bankName) setShowBankModal(true)
+		// else if (!userData.bankInfo.bankName) setShowBankModal(true)
 		// navigation.navigate("return", {})
 		getProfileConsumer()
 		getProfileMerchant()
-		console.log(' loginStore ===>>> ', loginStore.getAllData)
 	}, [])
 
 	const bankModal = () => (
@@ -134,7 +130,7 @@ export const HomeScreen = observer(function HomeScreen() {
 							</View>
 
 
-							<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => navigation.navigate("splash", {})}>
+							<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => [setShowBankModal(false), navigation.navigate("linkBank", {})]}>
 								<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
 							</TouchableOpacity>
 						</View>
@@ -194,7 +190,7 @@ export const HomeScreen = observer(function HomeScreen() {
 							<Text style={styles.AMOUNT}>382.91</Text>
 						</View>
 						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}> */}
-						<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => loginStore.getAllData}>
+						<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => setShowBankModal(true)} >
 							<Text style={styles.LOAD_WALLET_LABEL}>Load Wallet</Text>
 						</TouchableOpacity>
 					</View>
