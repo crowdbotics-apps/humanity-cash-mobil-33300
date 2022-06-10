@@ -27,6 +27,7 @@ export const LoginStoreModel = types
     owner_last_name: types.maybeNull(types.string),
     registered_business_name: types.maybeNull(types.string),
     industry: types.maybeNull(types.string),
+    website: types.maybeNull(types.string),
     employer_identification_number: types.maybeNull(types.string),
     social_security_number: types.maybeNull(types.string),
     address_1: types.maybeNull(types.string),
@@ -125,6 +126,7 @@ export const LoginStoreModel = types
         owner_last_name: self.owner_last_name,
         registered_business_name: self.registered_business_name,
         industry: self.industry,
+        website: self.website,
         employer_identification_number: self.employer_identification_number,
         social_security_number: self.social_security_number,
         address_1: self.address_1,
@@ -169,6 +171,7 @@ export const LoginStoreModel = types
       self.owner_last_name = user.owner_last_name
       self.registered_business_name = user.registered_business_name
       self.industry = user.industry
+      self.website = user.website
       self.employer_identification_number = user.employer_identification_number
       self.social_security_number = user.social_security_number
       self.address_1 = user.address_1

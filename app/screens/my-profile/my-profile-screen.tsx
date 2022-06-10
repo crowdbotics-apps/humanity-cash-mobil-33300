@@ -100,7 +100,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		{ id: "WI", title: "WI", description: "Wisconsin" },
 		{ id: "WY", title: "WY", description: "Wyoming" }
 	]
-	const [State, setState] = React.useState(states[1]);
+	const [State, setState] = React.useState('');
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
 
 	function selectImage(type: string) {
@@ -411,7 +411,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		}
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
-				.updateProfileMerchant({ 
+				.updateProfileMerchant({
 					business_name: BusinessName,
 					profile_picture: prof_pic,
 					background_picture: back_pic,
@@ -437,7 +437,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					}
 				})
 			: loginStore.environment.api
-				.updateProfileConsumer({ username: Username, consumer_profile: pic })
+				.updateProfileConsumer({ username: Username, consumer_profile: pic, first_name: Name, last_name: LastName})
 				.then(result => {
 					setLoading(false)
 					if (result.kind === "ok") {
@@ -467,9 +467,10 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		setBackBusinessImageSource({ uri: loginStore.ProfileDataBusiness.background_picture })
 		setBusinessName(loginStore.ProfileDataBusiness.business_name)
 		setBusinessStory(loginStore.ProfileDataBusiness.business_story)
-		setBusinessCategory(loginStore.ProfileDataBusiness.type_of_business)
-		// setBusinessWebsite(loginStore.ProfileDataBusiness.)
+		setBusinessCategory(loginStore.ProfileDataBusiness.industry)
+		setBusinessWebsite(loginStore.ProfileDataBusiness.website)
 		setCity(loginStore.ProfileDataBusiness.city)
+		setState(loginStore.ProfileDataBusiness.state)
 		setAddress1(loginStore.ProfileDataBusiness.address_1)
 		setAddress2(loginStore.ProfileDataBusiness.address_2)
 		setPostalCode(loginStore.ProfileDataBusiness.zip_code)
