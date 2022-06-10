@@ -24,6 +24,12 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This App need access to your camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This App need access to your photo library</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This App need access to your microphone</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
