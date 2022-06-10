@@ -1283,6 +1283,183 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Dwolla Sandbox (For Test)",
+			"item": [
+				{
+					"name": "Application Access Token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "7h1D9Gc7VKo6qj28qHgT3ISZMHNIeiprTeDxEBzYFQJWmWZMDB",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "Tt0xroefBqEYFQdBcv2t7dllN7l11mvLfsuXjpof9Q63GS9TtF",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api-sandbox.dwolla.com/token",
+							"protocol": "https",
+							"host": [
+								"api-sandbox",
+								"dwolla",
+								"com"
+							],
+							"path": [
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve a customer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{appToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "{{acceptHeader}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{appToken}}",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://api-sandbox.dwolla.com/customers/c034ac66-aa05-4887-93ad-1caf511fcd03",
+							"protocol": "https",
+							"host": [
+								"api-sandbox",
+								"dwolla",
+								"com"
+							],
+							"path": [
+								"customers",
+								"c034ac66-aa05-4887-93ad-1caf511fcd03"
+							]
+						},
+						"description": "Retrieve a Customer belonging to the authorized Dwolla Master Account.\n\n### Request parameters\n\nParameter | Data Type | Parameter Type | Required | Description\n---------|----------|----------|---------|---------|\nid | string | path | yes | Customer unique identifier."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dwolla",
+			"item": [
+				{
+					"name": "Dwolla IAV Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_type\": \"consumer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/dwolla/create-iav-token/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dwolla",
+								"create-iav-token",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Where to spend",
+			"item": [
+				{
+					"name": "49 Where to spend",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/where-to-spend/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"where-to-spend",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {

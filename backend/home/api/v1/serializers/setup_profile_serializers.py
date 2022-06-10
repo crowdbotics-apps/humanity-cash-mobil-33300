@@ -113,7 +113,7 @@ class MerchantMyProfileSerializer(serializers.ModelSerializer):
         fields = ['id', 'business_name', 'type_of_business', 'business_story',
                   'profile_picture', 'background_picture',
                   'owner_first_name', 'owner_last_name',
-                  'registered_business_name', 'industry',
+                  'registered_business_name', 'industry', 'website',
                   'employer_identification_number', 'social_security_number',
                   'address_1', 'address_2', 'city', 'state', 'zip_code', 'phone_number']
 

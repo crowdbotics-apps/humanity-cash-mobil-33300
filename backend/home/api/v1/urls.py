@@ -40,5 +40,6 @@ urlpatterns = [
         path('states/', base_views.StateListView.as_view(), name='states'),
         path('states/<int:pk>/', base_views.StateRetrieveView.as_view(), name='state'),
     ])),
+    path('where-to-spend/', base_views.WhereToSpendView.as_view(), name='where_to_spend'),
     path("", include(router.urls))
 ]

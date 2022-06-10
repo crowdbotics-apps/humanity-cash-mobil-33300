@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from cities_light.models import City, Region
 
+from users.models import Merchant
+
 
 class CityListSerializer(serializers.ModelSerializer):
     city_id = serializers.IntegerField(source='id')
@@ -21,3 +23,10 @@ class StateListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
         fields = ('state_id', 'state_code')
+
+
+class WhereToSpendListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Merchant
+        fields = ['id', 'profile_picture', 'business_name', 'website']
