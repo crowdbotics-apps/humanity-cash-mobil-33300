@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, ActivityIndicator, View, Image } from "react-na
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from "./styles"
 import { IMAGES } from "../../theme"
+import { useNavigation } from "@react-navigation/native";
 
 type ButtonProps = {
   onPress?: any
@@ -19,6 +20,7 @@ type ButtonProps = {
 
 
 export function Button(props: ButtonProps) {
+  const navigation = useNavigation()
   // const [SelectedValue, setSelectedValue] = useState(null)
 
   // useEffect(() => {
@@ -50,13 +52,13 @@ export function Button(props: ButtonProps) {
           style={styles.BOTTON_MENU}
         />,
         <View style={styles.ICONS_CONTAINER}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("home", {})}>
             <Image
             source={IMAGES.menu_home_inactive}
             style={styles.BOTTON_MENU_ICON_HOME}
           />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("loadWallet", {})}>
             <Image
             source={IMAGES.menu_load_wallet_inactive}
             style={styles.BOTTON_MENU_ICON_WALLET}
@@ -65,7 +67,7 @@ export function Button(props: ButtonProps) {
           <TouchableOpacity style={styles.QR_BUTTON}>
           <Icon key={'button_adornment'} name={"qr-code-2"} size={35} color={'white'} style={{ marginBottom: 3 }} />
             </TouchableOpacity>
-          <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("whereSpend", {})}>
             <Image
             resizeMode="contain"
             source={IMAGES.menu_where_spend_inactive}

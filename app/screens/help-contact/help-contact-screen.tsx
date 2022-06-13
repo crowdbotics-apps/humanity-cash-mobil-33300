@@ -7,9 +7,12 @@ import styles from "./help-contact-style"
 import { COLOR, METRICS } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
 import Entypo from "react-native-vector-icons/Entypo"
+import { useStores } from "../../models"
 
 export const HelpContactScreen = observer(function HelpContactScreen() {
-  const navigation = useNavigation()
+  const rootStore = useStores()
+	const navigation = useNavigation()
+	const { loginStore } = rootStore
 
   const [Step, setStep] = useState('help')
 
@@ -279,7 +282,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                   <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
                   <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
                 </TouchableOpacity>
-                <Text style={styles.STEP_TITLE}>{'Help & Contact'}</Text>
+                <Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>{'Help & Contact'}</Text>
                 <View style={styles.LINE} />
                 <Text style={styles.STEP_SUB_TITLE}>We are here to help you with anything and everything on the Currents app.</Text>
                 <View style={styles.SEARCH_INPUT_CONTAINER}>
@@ -315,7 +318,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         </ScrollView>
           <Button
 					buttonStyle={{
-						backgroundColor: COLOR.PALETTE.blue,
+						backgroundColor: loginStore.getAccountColor,
 						bottom: 5,
 						position: 'absolute'
 					}}

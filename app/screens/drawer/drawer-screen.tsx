@@ -159,7 +159,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
           {/* LINE */}
           <View style={styles.LINE} />
 
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("whereSpend", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.where_to_spend}
