@@ -416,15 +416,20 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					profile_picture: prof_pic,
 					background_picture: back_pic,
 					business_story: BusinessStory,
-					address_1: Address1
+					address_1: Address1,
+					address_2: Address2,
+					zip_code: PostalCode,
+					phone_number: PhoneNumber,
+					website: BusinessWebsite,
+					industry: BusinessCategory
 				 })
 				.then(result => {
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
-							loginStore.setUser(result.response.user)
-							loginStore.setApiToken(result.response.access_token)
-							loginStore.setSelectedAccount('consumer')
+							console.log("response: ", result.response)
+							loginStore.setMerchantUser(result.response)
+							loginStore.setSelectedAccount('merchant')
 							navigation.navigate("home", {})
 						})
 					} else if (result.kind === "bad-data") {
@@ -437,13 +442,18 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					}
 				})
 			: loginStore.environment.api
-				.updateProfileConsumer({ username: Username, consumer_profile: pic, first_name: Name, last_name: LastName})
+				.updateProfileConsumer({
+					username: Username,
+					consumer_profile: pic,
+					first_name: Name,
+					last_name: LastName
+				})
 				.then(result => {
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
-							loginStore.setUser(result.response.user)
-							loginStore.setApiToken(result.response.access_token)
+							console.log("response: ", result.response)
+							loginStore.setConsumerUser(result.response)
 							loginStore.setSelectedAccount('consumer')
 							navigation.navigate("home", {})
 						})

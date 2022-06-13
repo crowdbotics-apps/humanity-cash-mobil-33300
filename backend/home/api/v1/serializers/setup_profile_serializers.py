@@ -87,7 +87,12 @@ class ConsumerMyProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'consumer_profile']
+        fields = ['id', 'username', 'first_name', 'last_name', 'consumer_profile']
+
+    def to_representation(self, instance):
+        ret = super(ConsumerMyProfileSerializer, self).to_representation(instance)
+        ret['consumer_profile'] = self.context['request'].build_absolute_uri(instance.consumer.profile_picture.url)
+        return ret
 
     def update(self, instance, validated_data):
         consumer_profile = validated_data.pop('consumer_profile')
@@ -102,6 +107,8 @@ class ConsumerMyProfileSerializer(serializers.ModelSerializer):
 
 
 class MerchantMyProfileSerializer(serializers.ModelSerializer):
+    profile_picture = serializers.ImageField(required=False, allow_empty_file=True)
+    background_picture = serializers.ImageField(required=False, allow_empty_file=True)
 
     class Meta:
         model = Merchant

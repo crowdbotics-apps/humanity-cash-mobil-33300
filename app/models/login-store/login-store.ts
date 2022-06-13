@@ -154,14 +154,12 @@ export const LoginStoreModel = types
       self.verified_email = user.verified_email
     },
     setConsumerUser(user) {
-      self.id = user.consumer_profile.id
-      self.profile_picture = user.consumer_profile.profile_picture?.split('?')?.[0]
+      self.profile_picture = user.consumer_profile?.split('?')?.[0]
       self.username = user.username
       self.first_name = user.first_name
       self.last_name = user.last_name
     },
     setMerchantUser(user) {
-      self.id = user.id
       self.business_name = user.business_name
       self.type_of_business = user.type_of_business
       self.business_story = user.business_story

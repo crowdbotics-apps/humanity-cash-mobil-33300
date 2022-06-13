@@ -63,7 +63,7 @@ export class Api extends ApiBase {
     return this.multipart_form_data_patch(apiv1 + "/my-profile/consumer/", data, ["consumer_profile"])
   }
   async updateProfileMerchant(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
+    return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
   }
 
 

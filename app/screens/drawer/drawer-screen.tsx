@@ -26,7 +26,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
   return (
     <Screen
       showHeader
-      preset="fixed"
+      preset="scroll"
       statusBar={'dark-content'}
       unsafe={true}
       headerStyle={styles.HEADER}
