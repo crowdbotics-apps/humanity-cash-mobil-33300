@@ -1,5 +1,6 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment, withRootStore } from ".."
+import { COLOR } from '../../theme'
 
 /**
  * Model description here for TypeScript hints.
@@ -11,6 +12,7 @@ export const LoginStoreModel = types
   .props({
     id: types.maybeNull(types.number),
     selected_account: types.maybeNull(types.string),
+    account_base_color: types.maybeNull(types.string),
     username: types.maybeNull(types.string),
     first_name: types.maybeNull(types.string),
     last_name: types.maybeNull(types.string),
@@ -74,6 +76,9 @@ export const LoginStoreModel = types
     },
     get getSelectedAccount() {
       return self.selected_account
+    },
+    get getAccountColor() {
+      return self.account_base_color
     },
     get getAllData() {
       return {
@@ -140,8 +145,17 @@ export const LoginStoreModel = types
   }))
   .actions(self => ({
     setSelectedAccount(type) {
-      if (type === 'consumer' || type === 'merchant') {
+      if (type === 'consumer') {
         self.selected_account = type
+        self.account_base_color = COLOR.PALETTE.blue
+      }
+      if (type === 'merchant')  {
+        self.selected_account = type
+        self.account_base_color = COLOR.PALETTE.green
+      }
+      if (type === 'cashier')  {
+        self.selected_account = type
+        self.account_base_color = COLOR.PALETTE.orange
       }
     },
     setUser(user) {

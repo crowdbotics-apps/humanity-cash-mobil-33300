@@ -4,10 +4,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text } from "../../components";
 import { Image, TouchableOpacity, View, Modal, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
-import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from './community-chest-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
-import { CheckBox } from 'react-native-elements'
+import { useStores } from "../../models";
 
 const news = [
 	{
@@ -30,6 +29,8 @@ Let’s do this together!`,
 
 export const CommunityChestScreen = observer(function CommunityChestScreen() {
 	const navigation = useNavigation()
+	const rootStore = useStores()
+	const { loginStore } = rootStore
 
 	const [ShowBankStepModal, setShowBankStepModal] = useState(false)
 	const [ModalAgree, setModalAgree] = useState(false)
@@ -62,7 +63,7 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 					/>
 					<View
 						style={[
-							{ backgroundColor: COLOR.PALETTE.green, width: METRICS.screenWidth * 0.6 },
+							{ backgroundColor: loginStore.getAccountColor, width: METRICS.screenWidth * 0.6 },
 							styles.PROGRESS_LINE
 						]}
 					/>
@@ -116,12 +117,12 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.STEP_CONTAINER}>
 							<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-								<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
-								<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+								<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+								<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 
 							</TouchableOpacity>
 
-							<Text style={styles.STEP_TITLE}>Community chest</Text>
+							<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Community chest</Text>
 							<View style={styles.LINE} />
 							<Text style={styles.STEP_SUB_TITLE}>Currents is all about supporting the local community. You can choose to round up and donate your change to the community chest, which will be distributed to local projects or neighbors in need.</Text>
 

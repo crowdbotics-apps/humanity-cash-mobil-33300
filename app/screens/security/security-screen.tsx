@@ -13,6 +13,8 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 export const SecurityScreen = observer(function SecurityScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
+	const { loginStore } = rootStore
+
 
   const [Pass, setPass] = useState("")
   const [HidePass, setHidePass] = useState(true)
@@ -49,7 +51,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
 
               </TouchableOpacity>
 
-              <Text style={styles.STEP_TITLE}>Security</Text>
+              <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Security</Text>
               <View style={styles.LINE} />
 
               <View style={styles.SWITCH_INPUT_STYLE_CONTAINER}>
@@ -122,7 +124,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
         </ScrollView>
         <Button
 					buttonStyle={{
-						backgroundColor: COLOR.PALETTE.blue,
+						backgroundColor: loginStore.getAccountColor,
             bottom: 5,
 						position: 'absolute'
 					}}
