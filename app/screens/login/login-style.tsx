@@ -27,7 +27,7 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.green,
     marginLeft: 10,
     textAlign: 'center',
-    marginBottom: 30
+    paddingBottom: 30
   },
   LOGIN_TYPES_CONTAINER: {
     flexDirection: 'row',

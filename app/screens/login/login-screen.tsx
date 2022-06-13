@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextInput, View, TouchableOpacity, Image } from "react-native"
+import { TextInput, View, TouchableOpacity, Image, Keyboard } from "react-native"
 import { Text, Button, Screen, Checkbox } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
@@ -49,7 +49,7 @@ export const LoginScreen = observer(function LoginScreen() {
         } else if (result.kind === "bad-data") {
           const key = Object.keys(result?.errors)[0]
           let msg = `${key}: ${result?.errors?.[key][0]}`
-          console.log('msg -> ', msg)
+          console.log('msg -> ', Keyboard)
           notifyMessage(msg)
         } else {
           loginStore.reset()

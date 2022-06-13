@@ -154,7 +154,8 @@ export const LoginStoreModel = types
       self.verified_email = user.verified_email
     },
     setConsumerUser(user) {
-      self.profile_picture = user.consumer_profile?.split('?')?.[0]
+      self.id = user.consumer_profile.id
+      self.profile_picture = user.consumer_profile.profile_picture?.split('?')?.[0]
       self.username = user.username
       self.first_name = user.first_name
       self.last_name = user.last_name
