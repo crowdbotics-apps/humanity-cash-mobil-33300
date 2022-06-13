@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, {useEffect, useState} from "react"
 import { observer } from "mobx-react-lite"
 import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, TextInput, Switch } from "react-native"
 import { Text, Button, Screen } from "../../components"
@@ -8,12 +8,15 @@ import { COLOR, METRICS } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import {runInAction} from "mobx";
+import {notifyMessage} from "../../utils/helpers";
 
 
 export const SecurityScreen = observer(function SecurityScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
-	const { loginStore } = rootStore
+  const { loginStore } = rootStore
+  const [Loading, setLoading] = useState(false)
 
 
   const [Pass, setPass] = useState("")
@@ -24,9 +27,41 @@ export const SecurityScreen = observer(function SecurityScreen() {
   const [NewPassConfirmation, setNewPassConfirmation] = useState("")
   const [HideNewPassConfirmation, setHideNewPassConfirmation] = useState(true)
 
-  const [isEnabled, setIsEnabled] = useState(false)
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState)
+  const [allowTouchId, setAllowTouchId] = useState(false)
 
+  const toggleSwitch = () => setAllowTouchId(previousState => !previousState)
+
+  useEffect(() => {
+    setAllowTouchId(loginStore.ProfileData.allow_touch_id)
+  }, [])
+
+  const updateSecurity = () => {
+    setLoading(true)
+    loginStore.environment.api
+      .updateSecurity({
+        old_password: Pass,
+        new_password: NewPass,
+        new_password_confirm: NewPassConfirmation,
+        allow_touch_id: allowTouchId
+      })
+      .then(result => {
+        setLoading(false)
+        if (result.kind === "ok") {
+          runInAction(() => {
+            console.log("response: ", result.response)
+            loginStore.setAllowTouchId(result.response)
+            navigation.navigate("settings", {})
+          })
+        } else if (result.kind === "bad-data") {
+          const key = Object.keys(result?.errors)[0]
+          let msg = `${key}: ${result?.errors?.[key][0]}`
+          notifyMessage(msg)
+        } else {
+          loginStore.reset()
+          notifyMessage(null)
+        }
+      })
+  }
 
   return (
     <Screen
@@ -58,16 +93,16 @@ export const SecurityScreen = observer(function SecurityScreen() {
                 <Text style={styles.ALLOW_LABEL}>Allow touch ID</Text>
                 <Switch
                   trackColor={{ false: "#39534480", true: "#4CD964" }}
-                  thumbColor={isEnabled ? "#F8FAF6" : "#F8FAF6"}
+                  thumbColor={allowTouchId ? "#F8FAF6" : "#F8FAF6"}
                   ios_backgroundColor="#3e3e3e"
                   onValueChange={toggleSwitch}
-                  value={isEnabled}
+                  value={allowTouchId}
                   style={{ marginRight: 10}}
                 />
               </View>
 
               <View style={styles.LINE} />
-              
+
               <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
                 <Text style={styles.INPUT_LABEL_STYLE}>OLD PASSWORD</Text>
               </View>
@@ -125,10 +160,10 @@ export const SecurityScreen = observer(function SecurityScreen() {
         <Button
 					buttonStyle={{
 						backgroundColor: loginStore.getAccountColor,
-            bottom: 5,
+                        bottom: 5,
 						position: 'absolute'
 					}}
-					onPress={() => {}}
+					onPress={() => updateSecurity()}
 					buttonLabel={'Save changes'}
 				/>
       </KeyboardAvoidingView>
