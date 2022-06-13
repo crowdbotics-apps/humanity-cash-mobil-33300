@@ -66,6 +66,11 @@ export class Api extends ApiBase {
     return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
   }
 
+  // SECURITY
+  async updateSecurity(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_patch(apiv1 + "/security/change-password/", data)
+  }
+
 
   // BASE
   async getCities(data?: any): Promise<Types.SimpleGetResult> {

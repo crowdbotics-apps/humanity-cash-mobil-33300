@@ -1,5 +1,6 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment, withRootStore } from ".."
+import { COLOR } from '../../theme'
 
 /**
  * Model description here for TypeScript hints.
@@ -11,11 +12,13 @@ export const LoginStoreModel = types
   .props({
     id: types.maybeNull(types.number),
     selected_account: types.maybeNull(types.string),
+    account_base_color: types.maybeNull(types.string),
     username: types.maybeNull(types.string),
     first_name: types.maybeNull(types.string),
     last_name: types.maybeNull(types.string),
     email: types.maybeNull(types.string),
     verified_email: types.maybeNull(types.boolean),
+    allow_touch_id: types.maybeNull(types.boolean),
     password_set: types.maybeNull(types.boolean),
     business_name: types.maybeNull(types.string),
     type_of_business: types.maybeNull(types.string),
@@ -75,6 +78,9 @@ export const LoginStoreModel = types
     get getSelectedAccount() {
       return self.selected_account
     },
+    get getAccountColor() {
+      return self.account_base_color
+    },
     get getAllData() {
       return {
         id: self.id,
@@ -82,6 +88,7 @@ export const LoginStoreModel = types
         first_name: self.first_name,
         last_name: self.last_name,
         verified_email: self.verified_email,
+        allow_touch_id: self.allow_touch_id,
         email: self.email,
         phone_number: self.phone_number,
         phone_number_national: self.phone_number_national,
@@ -112,6 +119,7 @@ export const LoginStoreModel = types
         first_name: self.first_name,
         last_name: self.last_name,
         profile_picture: self.profile_picture,
+        allow_touch_id: self.allow_touch_id
       }
     },
     get ProfileDataBusiness() {
@@ -135,13 +143,23 @@ export const LoginStoreModel = types
         state: self.state,
         zip_code: self.zip_code,
         phone_number: self.phone_number,
+        allow_touch_id: self.allow_touch_id
       }
     }
   }))
   .actions(self => ({
     setSelectedAccount(type) {
-      if (type === 'consumer' || type === 'merchant') {
+      if (type === 'consumer') {
         self.selected_account = type
+        self.account_base_color = COLOR.PALETTE.blue
+      }
+      if (type === 'merchant')  {
+        self.selected_account = type
+        self.account_base_color = COLOR.PALETTE.green
+      }
+      if (type === 'cashier')  {
+        self.selected_account = type
+        self.account_base_color = COLOR.PALETTE.orange
       }
     },
     setUser(user) {
@@ -152,6 +170,7 @@ export const LoginStoreModel = types
       self.email = user.email
       self.password_set = user.password_set
       self.verified_email = user.verified_email
+      self.allow_touch_id = user.allow_touch_id
     },
     setConsumerUser(user) {
       self.id = user.consumer_profile.id
@@ -179,6 +198,9 @@ export const LoginStoreModel = types
       self.state = user.state
       self.zip_code = user.zip_code
       self.phone_number = user.phone_number
+    },
+    setAllowTouchId(user){
+      self.allow_touch_id = user.allow_touch_id
     },
     setStep(step) {
       self.currentStep = step
@@ -212,6 +234,7 @@ export const LoginStoreModel = types
       self.first_name = null
       self.last_name = null
       self.verified_email = null
+      self.allow_touch_id = null
       self.email = null
       self.phone_number = null
       self.phone_number_national = null

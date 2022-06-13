@@ -95,7 +95,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'verified_email', 'first_name', 'last_name',  'email', 'username', 'password_set',
-                  'consumer_data', 'merchant_data']
+                  'consumer_data', 'merchant_data', 'allow_touch_id']
 
     def get_password_set(self, obj):
         return obj.password is not None

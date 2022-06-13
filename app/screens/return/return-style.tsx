@@ -39,7 +39,7 @@ export default StyleSheet.create({
   },
   BACK_BUTON_LABEL: {
     fontSize: 16,
-    color: COLOR.PALETTE.green
+    color: COLOR.PALETTE.green,
   },
   BACK_BUTON_LABEL_MODAL: {
     fontSize: 16,

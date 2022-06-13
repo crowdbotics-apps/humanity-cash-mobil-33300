@@ -4,15 +4,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
-import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from './return-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
-import Entypo from "react-native-vector-icons/Entypo"
-import { CheckBox } from 'react-native-elements'
-import { PALETTE } from "../../theme/palette";
+import { useStores } from "../../models";
 
 export const ReturnScreen = observer(function ReturnScreen() {
 	const navigation = useNavigation()
+	const rootStore = useStores()
+	const { loginStore } = rootStore
 
 	const returns = {
 		TODAY: [
@@ -54,8 +53,8 @@ export const ReturnScreen = observer(function ReturnScreen() {
 
 	const ReturnIndex = () => <View style={styles.CONTAINER}>
 		<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-			<Icon name={"menu"} size={23} color={COLOR.PALETTE.green} />
-			<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+			<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+			<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 
 		</TouchableOpacity>
 		<Image
@@ -63,7 +62,7 @@ export const ReturnScreen = observer(function ReturnScreen() {
 			source={IMAGES.logoFull}
 			style={styles.LOGO_STYLE}
 		/>
-		<Text style={styles.AMOUNT}>C$ 382.91</Text>
+		<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>C$ 382.91</Text>
 		<View style={styles.LINE} />
 		<View style={styles.SEARCH_INPUT_CONTAINER}>
 			<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
@@ -101,18 +100,26 @@ export const ReturnScreen = observer(function ReturnScreen() {
 	</View>
 
 	const ScanModal = () => (
-		<Modal visible={ShowScanModal} transparent>
-			<View style={styles.ROOT_MODAL}>
+		<Modal visible={ShowScanModal}>
+			<View style={[
+				styles.ROOT_MODAL,
+				{
+					backgroundColor:
+						loginStore.getSelectedAccount === 'merchant'
+							? 'rgba(157, 165, 111, 0.50)'
+							: 'rgba(59, 136, 182, 0.50)'
+				}
+			]}>
 				<TouchableOpacity onPress={() => [setShowScanModal(false), setShowIndex(true)]} style={styles.CLOSE_MODAL_BUTTON}>
-					<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-					<Icon name={"close"} size={20} color={'#8B9555'} />
+					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Close `}</Text>
+					<Icon name={"close"} size={20} color={loginStore.getAccountColor} />
 				</TouchableOpacity>
 				<View style={styles.MODAL_CONTAINER}>
 					<View style={styles.MODAL_CONTENT}>
-						<Text style={styles.STEP_TITLE}>Scan the customer’s return receipt QR code.</Text>
+						<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Scan the customer’s return receipt QR code.</Text>
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>The customer needs to provide the transaction receipt, and select “Make a Return” in order to generate a QR Code. Scan this QR code in order to the refund Currents to the customer. </Text>
 						<TouchableOpacity
-							style={styles.MODAL_BUTTON}
+							style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
 							onPress={() => [
 								setShowScanModal(false),
 								setReturnInfo({
@@ -137,18 +144,18 @@ export const ReturnScreen = observer(function ReturnScreen() {
 		<View style={styles.HEADER_ACTIONS}>
 			<View />
 			<TouchableOpacity style={styles.BACK_BUTON_CONTAINER} onPress={() => [setShowIndex(true), setFinish(false)]}>
-				<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-				<Icon name={"close"} size={23} color={'#8B9555'} />
+				<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Close `}</Text>
+				<Icon name={"close"} size={23} color={loginStore.getAccountColor} />
 			</TouchableOpacity>
 		</View>
-		<Text style={styles.STEP_TITLE}>{`Succeeded! 
+		<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>{`Succeeded! 
 Thank you
 	`}</Text>
 		<Button
 			buttonStyle={{
 				position: 'absolute',
 				marginTop: METRICS.screenHeight - 100,
-				backgroundColor: COLOR.PALETTE.green
+				backgroundColor: loginStore.getAccountColor
 			}}
 			onPress={() => [setShowIndex(true), setFinish(false)]}
 			buttonLabel={'Close'}
@@ -156,17 +163,17 @@ Thank you
 	</View>
 
 	const LoadingReturn = () => <View style={styles.LOADING_RETURN}>
-		<Text style={styles.STEP_TITLE}>Pending...</Text>
+		<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Pending...</Text>
 		<Text style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>
 		<ActivityIndicator style={styles.ACTIVITY} size="large" color={'black'} />
 	</View>
 
 	const SendReturn = () => <View style={styles.CONTAINER}>
-		<Text style={styles.STEP_TITLE}>Send return</Text>
+		<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Send return</Text>
 		<View style={styles.LINE} />
 		<Text style={styles.SUB_TITLE}>TRANSACTION DETAILS</Text>
 		<View style={styles.RETURN_CONTAINER}>
-			<Text style={styles.RETURN_AMOUNT}>C$ 14.34</Text>
+			<Text style={[styles.RETURN_AMOUNT, { color: loginStore.getAccountColor }]}>C$ 14.34</Text>
 			<View style={styles.RETURN_DETAIL_CONTAINER}>
 				<Text style={styles.RETURN_DETAIL_LABEL}>TRANSACTION ID</Text>
 				<Text style={styles.RETURN_DETAIL_LABEL}>0567882HDJH2JE20</Text>
@@ -202,7 +209,7 @@ Thank you
 		<Button
 			buttonStyle={{
 				marginTop: 20,
-				backgroundColor: (AmountError || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green
+				backgroundColor: (AmountError || Loading) ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor
 			}}
 			onPress={() => {
 				setLoading(true)
@@ -240,12 +247,12 @@ Thank you
 										onPress={() => [setShowIndex(true)]}
 										style={styles.BACK_BUTON_CONTAINER}
 									>
-										<Icon name={"arrow-back"} size={23} color={'#8B9555'} />
-										<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+										<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
+										<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Back`}</Text>
 									</TouchableOpacity>
 									<TouchableOpacity style={styles.BACK_BUTON_CONTAINER}>
-										<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-										<Icon name={"close"} size={23} color={'#8B9555'} />
+										<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Close `}</Text>
+										<Icon name={"close"} size={23} color={loginStore.getAccountColor} />
 									</TouchableOpacity>
 								</View>
 							}
@@ -260,7 +267,7 @@ Thank you
 				{ShowIndex &&
 					<Button
 						buttonStyle={{
-							backgroundColor: COLOR.PALETTE.green,
+							backgroundColor: loginStore.getAccountColor,
 							bottom: 5,
 							position: 'absolute'
 						}}
