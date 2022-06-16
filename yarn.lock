@@ -1275,7 +1275,7 @@
     xcode "^3.0.1"
     xml2js "0.4.23"
 
-"@expo/config-plugins@4.1.5", "@expo/config-plugins@^4.0.2":
+"@expo/config-plugins@4.1.5", "@expo/config-plugins@^4.0.2", "@expo/config-plugins@^4.0.4":
   version "4.1.5"
   resolved "https://registry.npmjs.org/@expo/config-plugins/-/config-plugins-4.1.5.tgz"
   integrity sha512-RVvU40RtZt12HavuDAe+LDIq9lHj7sheOfMEHdmpJ/uTA8pgvkbc56XF6JHQD+yRr6+uhhb+JnAasGq49dsQbw==
@@ -12350,6 +12350,14 @@ react-native-elements@^3.4.2:
     react-native-ratings "8.0.4"
     react-native-size-matters "^0.3.1"
 
+react-native-fbsdk-next@^8.0.5:
+  version "8.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk-next/-/react-native-fbsdk-next-8.0.5.tgz#d69c51cdb2afd357e0a2400951155d64b935d348"
+  integrity sha512-gxIP+QfgHKtzVVcjQxflTbXuPOZQ1PlT9dJKlrCWDX2wIOblRIs8eTN6TS5dbw7OPgibwpHVMehIxLAM+z/G/w==
+  dependencies:
+    "@expo/config-plugins" "^4.0.4"
+    xml2js "^0.4.23"
+
 react-native-flipper@^0.34.0:
   version "0.34.0"
   resolved "https://registry.npmjs.org/react-native-flipper/-/react-native-flipper-0.34.0.tgz"
@@ -15180,7 +15188,7 @@ xml-name-validator@^3.0.0:
   resolved "https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-3.0.0.tgz"
   integrity sha512-A5CUptxDsvxKJEU3yO6DuWBSJz/qizqzJKOMIfUJHETbBw/sFaDxgd6fxm1ewUaM0jZ444Fc5vC5ROYurg/4Pw==
 
-xml2js@0.4.23:
+xml2js@0.4.23, xml2js@^0.4.23:
   version "0.4.23"
   resolved "https://registry.npmjs.org/xml2js/-/xml2js-0.4.23.tgz"
   integrity sha512-ySPiMjM0+pLDftHgXY4By0uswI3SPKLDw/i3UXbnO8M/p28zqexCUoPmQFrYD+/1BzhGJSs2i1ERWKJAtiLrug==

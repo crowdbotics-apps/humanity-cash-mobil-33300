@@ -19,15 +19,13 @@ export default StyleSheet.create({
     marginLeft: 10,
     marginVertical: 10
   },
-	STEP_CONTAINER: {
-
-  },
+	STEP_CONTAINER: {},
   LOGIN_TYPES_LABEL: {
     fontSize: 16,
     color: COLOR.PALETTE.green,
     marginLeft: 10,
     textAlign: 'center',
-    paddingBottom: 30
+    // paddingBottom: 30
   },
   LOGIN_TYPES_CONTAINER: {
     flexDirection: 'row',
@@ -91,7 +89,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80,
     alignItems: 'center',
     alignSelf: 'center',
-    marginTop: 40
+    // marginTop: 40
   },
   NEED_HELP_LINK: {
     fontSize: 16,

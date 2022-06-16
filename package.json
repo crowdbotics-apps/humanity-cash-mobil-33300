@@ -51,6 +51,7 @@
     "react-native": "0.67.2",
     "react-native-camera": "^4.2.1",
     "react-native-elements": "^3.4.2",
+    "react-native-fbsdk-next": "^8.0.5",
     "react-native-gesture-handler": "^2.4.2",
     "react-native-image-picker": "^4.8.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",

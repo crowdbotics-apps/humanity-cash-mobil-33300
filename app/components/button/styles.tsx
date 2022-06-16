@@ -39,7 +39,7 @@ export default StyleSheet.create({
     },
     ICONS_CONTAINER: {
         position: 'absolute',
-        bottom: 20,
+        bottom: 25,
         height: 50,
         width: METRICS.screenWidth * 0.9,
         alignSelf: 'center',

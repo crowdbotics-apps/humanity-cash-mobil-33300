@@ -207,8 +207,8 @@ export const HomeScreen = observer(function HomeScreen() {
 			<View style={styles.ROOT_CONTAINER}>
 				<View style={styles.STEP_CONTAINER}>
 					<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-						<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
-						<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+						<Icon name={"menu"} size={23} color={COLOR.PALETTE.green} />
+						<Text style={[styles.BACK_BUTON_LABEL, {color: loginStore.getAccountColor}]}>{` Home`}</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity style={styles.CASHIER_BUTTON_BIG}>

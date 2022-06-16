@@ -19,6 +19,7 @@ import {
 } from '@react-native-google-signin/google-signin'
 import { AppleButton } from '@invertase/react-native-apple-authentication'
 import { appleAuth } from '@invertase/react-native-apple-authentication'
+import { LoginButton, AccessToken, LoginManager, Profile } from 'react-native-fbsdk-next';
 
 export const LoginScreen = observer(function LoginScreen() {
   const navigation = useNavigation()
@@ -64,11 +65,11 @@ export const LoginScreen = observer(function LoginScreen() {
       requestedOperation: appleAuth.Operation.LOGIN,
       requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
     });
-  
+
     // get current authentication state for user
     // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
     const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
-  
+
     // use credentialState response to ensure the user is authenticated
     if (credentialState === appleAuth.State.AUTHORIZED) {
       // user is authenticated
@@ -126,8 +127,8 @@ export const LoginScreen = observer(function LoginScreen() {
           </TouchableOpacity>
         </View>
       </View>
+      <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
       <View style={styles.STEP_CONTAINER}>
-        <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
         <View style={styles.LOGIN_TYPES_CONTAINER}>
           <TouchableOpacity onPress={() => onAppleButtonPress()}>
             <Image
@@ -143,7 +144,34 @@ export const LoginScreen = observer(function LoginScreen() {
               style={styles.LOGIN_TYPE}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => LoginManager.logInWithPermissions(["public_profile"]).then(
+            function (result) {
+              if (result.isCancelled) {
+                console.log("Login cancelled");
+              } else {
+                console.log(
+                  "Login success with permissions: ",
+                  JSON.stringify(result, null, 2)
+                );
+                const currentProfile = Profile.getCurrentProfile().then(
+                  function(currentProfile) {
+                    if (currentProfile) {
+                      console.log("The current logged user is: " +
+                        currentProfile.name
+                        + ". His profile id is: " +
+                        JSON.stringify(currentProfile, null, 2)
+                      );
+                    }
+                  }
+                )
+
+
+              }
+            },
+            function (error) {
+              console.log("Login fail with error: " + error);
+            }
+          )}>
             <Image
               source={IMAGES.facebookIcon}
               resizeMode="contain"
@@ -151,29 +179,28 @@ export const LoginScreen = observer(function LoginScreen() {
             />
           </TouchableOpacity>
         </View>
-        <View style={styles.NEED_HELP_CONTAINER}>
-          <Text onPress={() => {
-          }} style={styles.NEED_HELP_LINK}>
-            Forgot password
-          </Text>
-        </View>
-        </View>
-
-      <View style={styles.STEP_CONTAINER}>
       </View>
-        <Button
-          buttonStyle={{
-            bottom: 5,
-						position: 'absolute',
-            backgroundColor: Loading
-              ? `${COLOR.PALETTE.green}40`
-              : COLOR.PALETTE.green
-          }}
-          onPress={() => login()}
-          buttonLabel={"Log in"}
-          disabled={Loading}
-          loading={Loading}
-        />
+      <View style={styles.NEED_HELP_CONTAINER}>
+        <Text onPress={() => {
+        }} style={styles.NEED_HELP_LINK}>
+          Forgot password
+        </Text>
+      </View>
+      {/* <View style={styles.STEP_CONTAINER}>
+      </View> */}
+      <Button
+        buttonStyle={{
+          bottom: 5,
+          // position: 'absolute',
+          backgroundColor: Loading
+            ? `${COLOR.PALETTE.green}40`
+            : COLOR.PALETTE.green
+        }}
+        onPress={() => login()}
+        buttonLabel={"Log in"}
+        disabled={Loading}
+        loading={Loading}
+      />
     </Screen>
   )
 })
