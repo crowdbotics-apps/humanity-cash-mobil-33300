@@ -28,7 +28,6 @@ export const SecurityScreen = observer(function SecurityScreen() {
   const [HideNewPassConfirmation, setHideNewPassConfirmation] = useState(true)
 
   const [allowTouchId, setAllowTouchId] = useState(false)
-
   const toggleSwitch = () => setAllowTouchId(previousState => !previousState)
 
   useEffect(() => {

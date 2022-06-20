@@ -273,8 +273,8 @@ export const HomeScreen = observer(function HomeScreen() {
 						<Button
 							buttonStyle={{
 								backgroundColor: loginStore.getAccountColor,
-								bottom: 125,
-								position: 'absolute'
+								// bottom: 125,
+								// position: 'absolute'
 							}}
 							buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
 							onPress={() => navigation.navigate("return", {})}

@@ -5,10 +5,12 @@ import { Text, Button, Screen } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 // import styles from "./where-spend-style"
 import styles from "./where-spend"
-import { COLOR, IMAGES } from "../../theme"
+import { COLOR, IMAGES, METRICS } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
+
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 
 const industry_types = [
   {
@@ -139,6 +141,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   const navigation = useNavigation()
   const { loginStore } = rootStore
   const [Search, setSearch] = useState('')
+  const [ShowMap, setShowMap] = useState(false)
 
   const RenderTopMonth = () => (
     <View style={styles.INDUSTRY_CONTAINER}>
@@ -181,6 +184,25 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
     )
   }
 
+  const MapContainer = () => 
+  // <View style={{ flex: 1, backgroundColor: 'blue'}}>
+    <MapView
+  // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+  style={{
+    height: METRICS.screenHeight * 0.6,
+   width: METRICS.screenWidth,
+   justifyContent: 'flex-end',
+   alignItems: 'center',
+  }}
+  region={{
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.0121,
+  }}
+/>
+// </View> 
+
   return (
     <Screen
       // preset='scroll'
@@ -215,13 +237,18 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                     placeholder={`Search`}
                   />
                 </View>
-                <View style={styles.SEARCH_INPUT_ADJUSTMENTS}>
+                <TouchableOpacity style={styles.SEARCH_INPUT_ADJUSTMENTS} onPress={() => setShowMap(true)}>
                   <Image source={IMAGES.shortIcon} resizeMode='contain' style={{ width: 20, height: 20 }} />
-                </View>
+                </TouchableOpacity>
               </View>
-
-              {RenderTopMonth()}
-              {RenderCategories()}
+              {ShowMap
+                ? MapContainer()
+                : [
+                  RenderTopMonth(),
+                  RenderCategories()
+                ]}
+              
+              
             </View>
           </View>
         </ScrollView>

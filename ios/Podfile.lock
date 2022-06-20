@@ -22,6 +22,10 @@ PODS:
     - ExpoModulesCore
   - Expo (44.0.6):
     - ExpoModulesCore
+  - ExpoAdapterFBSDKNext (8.0.5):
+    - ExpoModulesCore
+    - FBSDKCoreKit
+    - React-Core
   - ExpoAdapterGoogleSignIn (7.2.2):
     - ExpoModulesCore
     - GoogleSignIn
@@ -31,6 +35,8 @@ PODS:
   - ExpoModulesCore (0.6.5):
     - React-Core
     - ReactCommon/turbomodule/core
+  - FBAEMKit (13.2.0):
+    - FBSDKCoreKit_Basics (= 13.2.0)
   - FBLazyVector (0.67.2)
   - FBReactNativeSpec (0.67.2):
     - RCT-Folly (= 2021.06.28.00-v2)
@@ -39,6 +45,18 @@ PODS:
     - React-Core (= 0.67.2)
     - React-jsi (= 0.67.2)
     - ReactCommon/turbomodule/core (= 0.67.2)
+  - FBSDKCoreKit (13.2.0):
+    - FBAEMKit (= 13.2.0)
+    - FBSDKCoreKit_Basics (= 13.2.0)
+  - FBSDKCoreKit_Basics (13.2.0)
+  - FBSDKGamingServicesKit (13.2.0):
+    - FBSDKCoreKit (= 13.2.0)
+    - FBSDKCoreKit_Basics (= 13.2.0)
+    - FBSDKShareKit (= 13.2.0)
+  - FBSDKLoginKit (13.2.0):
+    - FBSDKCoreKit (= 13.2.0)
+  - FBSDKShareKit (13.2.0):
+    - FBSDKCoreKit (= 13.2.0)
   - Flipper (0.99.0):
     - Flipper-Folly (~> 2.6)
     - Flipper-RSocket (~> 1.4)
@@ -323,7 +341,24 @@ PODS:
     - React-Core
   - react-native-camera/RN (4.2.1):
     - React-Core
+  - react-native-fbsdk-next (8.0.5):
+    - React-Core
+    - react-native-fbsdk-next/Core (= 8.0.5)
+    - react-native-fbsdk-next/Login (= 8.0.5)
+    - react-native-fbsdk-next/Share (= 8.0.5)
+  - react-native-fbsdk-next/Core (8.0.5):
+    - FBSDKCoreKit (~> 13.2.0)
+    - React-Core
+  - react-native-fbsdk-next/Login (8.0.5):
+    - FBSDKLoginKit (~> 13.2.0)
+    - React-Core
+  - react-native-fbsdk-next/Share (8.0.5):
+    - FBSDKGamingServicesKit (~> 13.2.0)
+    - FBSDKShareKit (~> 13.2.0)
+    - React-Core
   - react-native-image-picker (4.8.3):
+    - React-Core
+  - react-native-maps (0.31.1):
     - React-Core
   - react-native-safe-area-context (3.1.8):
     - React-Core
@@ -461,6 +496,7 @@ DEPENDENCIES:
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - Expo (from `../node_modules/expo/ios`)
+  - ExpoAdapterFBSDKNext (from `../node_modules/react-native-fbsdk-next/ios`)
   - "ExpoAdapterGoogleSignIn (from `../node_modules/@react-native-google-signin/google-signin/ios`)"
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
@@ -507,7 +543,9 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-camera (from `../node_modules/react-native-camera`)
+  - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -539,6 +577,12 @@ SPEC REPOS:
   trunk:
     - AppAuth
     - CocoaAsyncSocket
+    - FBAEMKit
+    - FBSDKCoreKit
+    - FBSDKCoreKit_Basics
+    - FBSDKGamingServicesKit
+    - FBSDKLoginKit
+    - FBSDKShareKit
     - Flipper
     - Flipper-Boost-iOSX
     - Flipper-DoubleConversion
@@ -576,6 +620,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   Expo:
     :path: "../node_modules/expo/ios"
+  ExpoAdapterFBSDKNext:
+    :path: "../node_modules/react-native-fbsdk-next/ios"
   ExpoAdapterGoogleSignIn:
     :path: "../node_modules/@react-native-google-signin/google-signin/ios"
   ExpoLocalization:
@@ -620,8 +666,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-camera:
     :path: "../node_modules/react-native-camera"
+  react-native-fbsdk-next:
+    :path: "../node_modules/react-native-fbsdk-next"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-maps:
+    :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-perflogger:
@@ -687,11 +737,18 @@ SPEC CHECKSUMS:
   EXFont: 2597c10ac85a69d348d44d7873eccf5a7576ef5e
   EXKeepAwake: bf48d7f740a5cd2befed6cf9a49911d385c6c47d
   Expo: 534e51e607aba8229293297da5585f4b26f50fa1
+  ExpoAdapterFBSDKNext: 40362269c769bd10bcd3f6c9620b9d14e7ec8c36
   ExpoAdapterGoogleSignIn: 385ea557c00b1feb07f1816e6cf1563e63cfe9c1
   ExpoLocalization: 72b4524c167da6c4e2a0bbe09176ff8b2c4eddbe
   ExpoModulesCore: 32c0ccb47f477d330ee93db72505380adf0de09a
+  FBAEMKit: c2b2895363b7e57192013d1dc49fdf498b28624c
   FBLazyVector: 244195e30d63d7f564c55da4410b9a24e8fbceaa
   FBReactNativeSpec: c94002c1d93da3658f4d5119c6994d19961e3d52
+  FBSDKCoreKit: 58139803d861e72c7661dc875611a759352a55ac
+  FBSDKCoreKit_Basics: 1ffc68326a5ece051d85574f02a0adcf27c2a5f2
+  FBSDKGamingServicesKit: 2af7e19dcfc3459581dec011a230d1eeddc17861
+  FBSDKLoginKit: 19e2a878556c2ee4f20486dc406e582783cd7578
+  FBSDKShareKit: 079497bb0cfeb049dc8ff6aee2702698680a2806
   Flipper: 30e8eeeed6abdc98edaf32af0cda2f198be4b733
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
   Flipper-DoubleConversion: 57ffbe81ef95306cc9e69c4aa3aeeeeb58a6a28c
@@ -724,7 +781,9 @@ SPEC CHECKSUMS:
   React-jsinspector: 595f76eba2176ebd8817a1fffd47b84fbdab9383
   React-logger: 23de8ea0f44fa00ee77e96060273225607fd4d78
   react-native-camera: 3eae183c1d111103963f3dd913b65d01aef8110f
+  react-native-fbsdk-next: 79815a5b8f66ab0990fbb370b4a4b5bdf0a15e6c
   react-native-image-picker: e95b4785b685cfc06609bc50ed6fb55b59990c99
+  react-native-maps: 8b8bfada2c86205a7f5a07dd1f92f29b33ea83aa
   react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
   React-perflogger: 3c9bb7372493e49036f07a82c44c8cf65cbe88db
   React-RCTActionSheet: 052606483045a408693aa7e864410b4a052f541a

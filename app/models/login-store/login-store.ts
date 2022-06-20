@@ -119,7 +119,8 @@ export const LoginStoreModel = types
         first_name: self.first_name,
         last_name: self.last_name,
         profile_picture: self.profile_picture,
-        allow_touch_id: self.allow_touch_id
+        allow_touch_id: self.allow_touch_id,
+        full_name: self.first_name + ' ' + self.last_name
       }
     },
     get ProfileDataBusiness() {
