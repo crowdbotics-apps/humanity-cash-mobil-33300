@@ -59,6 +59,36 @@ export const LoginScreen = observer(function LoginScreen() {
       })
   }
 
+  const postSocialLogin = (result: any) => {
+    setLoading(false)
+    if (result.kind === "ok") {
+      runInAction(() => {
+        loginStore.setUser(result.response.user)
+        loginStore.setApiToken(result.user.token)
+
+        if (result.response.user.merchant_data === null && result.response.user.consumer_data === null) {
+          navigation.navigate("setupProfile", {})
+        }
+        else if (!(result.response.user.merchant === null)){
+          loginStore.setSelectedAccount('merchant')
+        }
+        else {
+          loginStore.setSelectedAccount('consumer')
+        }
+        navigation.navigate("home", {})
+      })
+
+    } else if (result.kind === "bad-data") {
+      const key = Object.keys(result?.errors)[0]
+      let msg = `${key}: ${result?.errors?.[key][0]}`
+      console.log('msg -> ', Keyboard)
+      notifyMessage(msg)
+    } else {
+      loginStore.reset()
+      notifyMessage(null)
+    }
+  }
+
   async function onAppleButtonPress() {
     // performs login request
     const appleAuthRequestResponse = await appleAuth.performRequest({
@@ -193,6 +223,10 @@ export const LoginScreen = observer(function LoginScreen() {
                     }
                   }
                 )
+                loginStore.environment.api.loginFacebook(result.accessToken).then((result: any ) => {
+                  console.log(result)
+                  postSocialLogin(result)
+                })
               }
             },
             function (error) {
