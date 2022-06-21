@@ -35,6 +35,11 @@ export class Api extends ApiBase {
     return this.simple_post("/dj-rest-auth/login/", data)
   }
 
+  // FACEBOOK LOGIN
+  async loginFacebook(accessToken: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/social/fb-login/", { accessToken: accessToken })
+  }
+
   // SETUP
   async setupConsumer(data: any): Promise<Types.SimplePostResult> {
     return this.multipart_form_data_patch(apiv1 + "/set-up-profile/consumer/", data, ["consumer_profile"])
@@ -63,7 +68,12 @@ export class Api extends ApiBase {
     return this.multipart_form_data_patch(apiv1 + "/my-profile/consumer/", data, ["consumer_profile"])
   }
   async updateProfileMerchant(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
+    return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
+  }
+
+  // SECURITY
+  async updateSecurity(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_patch(apiv1 + "/security/change-password/", data)
   }
 
 

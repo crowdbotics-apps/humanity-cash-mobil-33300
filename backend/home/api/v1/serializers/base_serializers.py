@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from cities_light.models import City, Region
+from rest_framework.generics import RetrieveAPIView
+
+from users.models import Merchant
 
 
 class CityListSerializer(serializers.ModelSerializer):
@@ -21,3 +24,23 @@ class StateListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
         fields = ('state_id', 'state_code')
+
+
+class WhereToSpendListSerializer(serializers.ModelSerializer):
+    background_picture = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Merchant
+        fields = ['id', 'background_picture', 'business_name', 'website']
+
+    def get_background_picture(self, obj):
+        if obj.background_picture:
+            return self.context['request'].build_absolute_uri(obj.background_picture.url)
+
+
+class BusinessDetailsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Merchant
+        fields = ['id', 'business_name', 'business_story', 'background_picture',
+                  'address_1', 'address_2', 'zip_code', 'city', 'state', 'website']

@@ -76,6 +76,30 @@ export const Dashboard: React.FC = observer(() => {
     },
   ]
 
+  const SideBar = () => (
+    <div id='left' className={LeftOpen ? 'open' : 'closed'} >
+      <div className='icon'
+        onClick={() => setLeftOpen(!LeftOpen)} >
+        &equiv;
+      </div>
+      <div className={`sidebar ${LeftOpen ? 'open' : 'closed'}`} >
+        <div className='content'>
+          <div className='sidebar-content'>
+            {/* <div className='header'>
+      </div> */}
+            <img src={logo} className={`logo${LeftOpen ? '' : '-closed'}`} alt={"logo"} />
+            <div className="menu-label-active"><span>Dashboard</span></div>
+            <div className="menu-label"><span>ACH Transactions</span></div>
+            <div className="menu-label"><span>Blockchain Transactions</span></div>
+            <div className="menu-label"><span>Users</span></div>
+            <div className="menu-label"><span>Smart Contracts</span></div>
+            <div className="menu-label"><span>Content</span></div>
+          </div>
+          <div className="menu-label"><span>Sign out</span></div>
+        </div>
+      </div>
+    </div>
+  )
 
   const Tab1Content = () => (
     <Table responsive>
@@ -133,28 +157,7 @@ export const Dashboard: React.FC = observer(() => {
 
   return (
     <div id='layout'>
-      <div id='left' className={LeftOpen ? 'open' : 'closed'} >
-        <div className='icon'
-          onClick={() => setLeftOpen(!LeftOpen)} >
-          &equiv;
-        </div>
-        <div className={`sidebar ${LeftOpen ? 'open' : 'closed'}`} >
-          <div className='content'>
-            <div className='sidebar-content'>
-              {/* <div className='header'>
-          </div> */}
-              <img src={logo} className={`logo${LeftOpen ? '' : '-closed'}`} alt={"logo"} />
-              <div className="menu-label-active"><span>Dashboard</span></div>
-              <div className="menu-label"><span>ACH Transactions</span></div>
-              <div className="menu-label"><span>Blockchain Transactions</span></div>
-              <div className="menu-label"><span>Users</span></div>
-              <div className="menu-label"><span>Smart Contracts</span></div>
-              <div className="menu-label"><span>Content</span></div>
-            </div>
-            <div className="menu-label"><span>Sign out</span></div>
-          </div>
-        </div>
-      </div>
+      {SideBar()}
 
       <div id='main' className={`main${LeftOpen ? '' : '-closed'}`}>
         <div className='header'>

@@ -140,10 +140,10 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		const pic = {
 			uri:
 				Platform.OS === "android"
-					? imageSource.uri
-					: imageSource.uri.replace("file://", ""),
-			type: imageSource.type,
-			name: imageSource.fileName
+					? imageSource?.uri
+					: imageSource?.uri.replace("file://", ""),
+			type: imageSource?.type,
+			name: imageSource?.fileName
 		}
 		loginStore.environment.api.setupConsumer({ username: Username, consumer_profile: pic }).then(result => {
 			setLoading(false)
@@ -184,18 +184,18 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		const prof_pic = {
 			uri:
 				Platform.OS === "android"
-					? BusinessImageSource.uri
-					: BusinessImageSource.uri.replace("file://", ""),
-			type: BusinessImageSource.type,
-			name: BusinessImageSource.fileName
+					? BusinessImageSource?.uri
+					: BusinessImageSource?.uri.replace("file://", ""),
+			type: BusinessImageSource?.type,
+			name: BusinessImageSource?.fileName
 		}
 		const back_pic = {
 			uri:
 				Platform.OS === "android"
-					? BackBusinessImageSource.uri
-					: BackBusinessImageSource.uri.replace("file://", ""),
-			type: BackBusinessImageSource.type,
-			name: BackBusinessImageSource.fileName
+					? BackBusinessImageSource?.uri
+					: BackBusinessImageSource?.uri.replace("file://", ""),
+			type: BackBusinessImageSource?.type,
+			name: BackBusinessImageSource?.fileName
 		}
 		loginStore.environment.api.setupMerchant({
 			business_name: BusinessName,

@@ -91,7 +91,6 @@ export const HomeScreen = observer(function HomeScreen() {
 			})
 	}
 
-
 	useEffect(() => {
 		if (!userData.profile.name) navigation.navigate("setupProfile", {})
 		// else if (!userData.bankInfo.bankName) setShowBankModal(true)
@@ -171,8 +170,8 @@ export const HomeScreen = observer(function HomeScreen() {
 			<View style={styles.ROOT_CONTAINER}>
 				<View style={styles.STEP_CONTAINER}>
 					<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-						<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
-						<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+						<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+						<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 
 					</TouchableOpacity>
 					<Image
@@ -187,7 +186,7 @@ export const HomeScreen = observer(function HomeScreen() {
 								source={IMAGES.currentDollarIcon}
 								style={styles.AMOUNT_ICON}
 							/>
-							<Text style={styles.AMOUNT}>382.91</Text>
+							<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>382.91</Text>
 						</View>
 						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}> */}
 						<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => setShowBankModal(true)} >
@@ -208,8 +207,8 @@ export const HomeScreen = observer(function HomeScreen() {
 			<View style={styles.ROOT_CONTAINER}>
 				<View style={styles.STEP_CONTAINER}>
 					<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-						<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
-						<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+						<Icon name={"menu"} size={23} color={COLOR.PALETTE.green} />
+						<Text style={[styles.BACK_BUTON_LABEL, {color: loginStore.getAccountColor}]}>{` Home`}</Text>
 					</TouchableOpacity>
 
 					<TouchableOpacity style={styles.CASHIER_BUTTON_BIG}>
@@ -273,9 +272,9 @@ export const HomeScreen = observer(function HomeScreen() {
 						ConsumerView(),
 						<Button
 							buttonStyle={{
-								backgroundColor: COLOR.PALETTE.blue,
-								bottom: 125,
-								position: 'absolute'
+								backgroundColor: loginStore.getAccountColor,
+								// bottom: 125,
+								// position: 'absolute'
 							}}
 							buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
 							onPress={() => navigation.navigate("return", {})}

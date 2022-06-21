@@ -1,17 +1,22 @@
 // @ts-ignore
 
 import Toast from "react-native-toast-message"
-import { Platform } from "react-native"
+import { Platform, ToastAndroid, Alert } from "react-native"
 import { checkMultiple, requestMultiple, PERMISSIONS } from "react-native-permissions"
 
 export const notifyMessage = (msg: any, type = "error") => {
   if (msg === null) {
     msg = "An error occurred while communicating with the server, please try again in a few moments"
   }
+  if (Platform.OS === 'android') {
+    ToastAndroid.show(msg, ToastAndroid.SHORT)
+  } else {
+    Alert.alert(msg);
+  }
   Toast.show({
     type: type,
     text1: msg,
-    topOffset: Platform.OS === "ios" ? 50 : 50
+    // topOffset: Platform.OS === "ios" ? 50 : 50
   })
 }
 
