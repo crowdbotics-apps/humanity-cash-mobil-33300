@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextInput, View, TouchableOpacity, Image, Keyboard } from "react-native"
+import { TextInput, View, TouchableOpacity, Image, Keyboard, Alert } from "react-native"
 import { Text, Button, Screen, Checkbox } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
@@ -19,7 +19,9 @@ import {
 } from '@react-native-google-signin/google-signin'
 import { AppleButton } from '@invertase/react-native-apple-authentication'
 import { appleAuth } from '@invertase/react-native-apple-authentication'
-import { LoginButton, AccessToken, LoginManager, Profile } from 'react-native-fbsdk-next';
+import { LoginButton, AccessToken, LoginManager, Profile } from 'react-native-fbsdk-next'
+
+import TouchID from 'react-native-touch-id'
 
 export const LoginScreen = observer(function LoginScreen() {
   const navigation = useNavigation()
@@ -30,8 +32,6 @@ export const LoginScreen = observer(function LoginScreen() {
   const [Pass, setPass] = useState("")
   const [HidePass, setHidePass] = useState(true)
   const [Loading, setLoading] = useState(false)
-
-  // rafael@mail.com @Rafa1234567
 
   const login = () => {
     setLoading(true)
@@ -75,6 +75,30 @@ export const LoginScreen = observer(function LoginScreen() {
       // user is authenticated
     }
   }
+
+  const optionalConfigObject = {
+    title: 'Authentication Required', // Android
+    imageColor: '#e00606', // Android
+    imageErrorColor: '#ff0000', // Android
+    sensorDescription: 'Touch sensor', // Android
+    sensorErrorDescription: 'Failed', // Android
+    cancelText: 'Cancel', // Android
+    fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+    unifiedErrors: false, // use unified error messages (default false)
+    passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
+  };
+
+  const pressHandler = () => {
+    console.log(' ==>> ', TouchID)
+    TouchID.authenticate('to demo this react-native component', optionalConfigObject)
+    .then(success => {
+      Alert.alert('Authenticated Successfully');
+    })
+    .catch(error => {
+      Alert.alert('Authentication Failed');
+    });
+  }
+
 
   return (
     <Screen
@@ -127,6 +151,11 @@ export const LoginScreen = observer(function LoginScreen() {
           </TouchableOpacity>
         </View>
       </View>
+      <TouchableOpacity onPress={() => pressHandler()}>
+          <Text>
+            Authenticate with Touch ID
+          </Text>
+        </TouchableOpacity>
       <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
       <View style={styles.STEP_CONTAINER}>
         <View style={styles.LOGIN_TYPES_CONTAINER}>
@@ -154,7 +183,7 @@ export const LoginScreen = observer(function LoginScreen() {
                   JSON.stringify(result, null, 2)
                 );
                 const currentProfile = Profile.getCurrentProfile().then(
-                  function(currentProfile) {
+                  function (currentProfile) {
                     if (currentProfile) {
                       console.log("The current logged user is: " +
                         currentProfile.name
@@ -164,8 +193,6 @@ export const LoginScreen = observer(function LoginScreen() {
                     }
                   }
                 )
-
-
               }
             },
             function (error) {
@@ -187,7 +214,7 @@ export const LoginScreen = observer(function LoginScreen() {
         </Text>
       </View>
       {/* <View style={styles.STEP_CONTAINER}>
-      </View> */}
+</View> */}
       <Button
         buttonStyle={{
           bottom: 5,
