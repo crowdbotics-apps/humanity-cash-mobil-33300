@@ -28,7 +28,7 @@ class SetupConsumerProfileSerializer(serializers.ModelSerializer):
         fields = ['username', 'first_name', 'last_name', 'consumer_profile', 'has_consumer_profile']
 
     def update(self, instance, validated_data):
-        consumer_profile = validated_data.pop('consumer_profile')
+        consumer_profile = validated_data.get('consumer_profile')
 
         consumer = Consumer.objects.create(user=instance)
         if consumer_profile:
@@ -95,7 +95,7 @@ class ConsumerMyProfileSerializer(serializers.ModelSerializer):
         return ret
 
     def update(self, instance, validated_data):
-        consumer_profile = validated_data.pop('consumer_profile')
+        consumer_profile = validated_data.get('consumer_profile')
 
         consumer = Consumer.objects.get(user=instance)
 

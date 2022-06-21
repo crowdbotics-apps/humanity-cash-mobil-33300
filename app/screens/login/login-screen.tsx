@@ -63,19 +63,24 @@ export const LoginScreen = observer(function LoginScreen() {
     setLoading(false)
     if (result.kind === "ok") {
       runInAction(() => {
-        loginStore.setUser(result.response.user)
-        loginStore.setApiToken(result.user.token)
+        console.log("postSocialLogin ==> ", result)
+        loginStore.setUser(result.response)
+        loginStore.setApiToken(result.response.token.access)
 
-        if (result.response.user.merchant_data === null && result.response.user.consumer_data === null) {
+        if (result.response.merchant_data == null && result.response.consumer_data == null) {
+          console.log("no_merchant and no_consumer ==> ", result)
           navigation.navigate("setupProfile", {})
         }
-        else if (!(result.response.user.merchant === null)){
+        else if (!(result.response.merchant === null)){
+          console.log("is_merchant ==> ", result)
           loginStore.setSelectedAccount('merchant')
+          navigation.navigate("home", {})
         }
         else {
+          console.log("is_consumer ==> ", result)
           loginStore.setSelectedAccount('consumer')
+          navigation.navigate("home", {})
         }
-        navigation.navigate("home", {})
       })
 
     } else if (result.kind === "bad-data") {
@@ -203,8 +208,9 @@ export const LoginScreen = observer(function LoginScreen() {
               style={styles.LOGIN_TYPE}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => LoginManager.logInWithPermissions(["public_profile"]).then(
+          <TouchableOpacity onPress={() => LoginManager.logInWithPermissions(["public_profile", "email"]).then(
             function (result) {
+              console.log("loginfb==> ", result)
               if (result.isCancelled) {
                 console.log("Login cancelled");
               } else {
@@ -212,20 +218,24 @@ export const LoginScreen = observer(function LoginScreen() {
                   "Login success with permissions: ",
                   JSON.stringify(result, null, 2)
                 );
-                const currentProfile = Profile.getCurrentProfile().then(
-                  function (currentProfile) {
-                    if (currentProfile) {
-                      console.log("The current logged user is: " +
-                        currentProfile.name
-                        + ". His profile id is: " +
-                        JSON.stringify(currentProfile, null, 2)
-                      );
-                    }
-                  }
-                )
-                loginStore.environment.api.loginFacebook(result.accessToken).then((result: any ) => {
-                  console.log(result)
-                  postSocialLogin(result)
+                AccessToken.getCurrentAccessToken().then(accessResult => {
+                  console.log("access_result==> ", accessResult)
+
+                  // const currentProfile = Profile.getCurrentProfile().then(
+                  //   function (currentProfile) {
+                  //     if (currentProfile) {
+                  //       console.log("The current logged user is: " +
+                  //         currentProfile.name
+                  //         + ". His profile id is: " +
+                  //         JSON.stringify(currentProfile, null, 2)
+                  //       );
+                  //     }
+                  //   }
+                  // )
+                  loginStore.environment.api.loginFacebook(accessResult).then((fbloginResult => {
+                    console.log("fbloginResult==>", fbloginResult)
+                    postSocialLogin(fbloginResult)
+                  }))
                 })
               }
             },

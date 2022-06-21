@@ -75,7 +75,7 @@ class LoginFacebookView(APIView):
 
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
-        access_token = data.get('accessToken').get('token')
+        access_token = data.get('accessToken').get('accessToken')
         try:
             graph = facebook.GraphAPI(access_token=access_token)
             user_info = graph.get_object(
@@ -83,7 +83,8 @@ class LoginFacebookView(APIView):
                 fields='first_name, last_name, id,'
                        'email, picture.type(large)'
             )
-        except facebook.GraphAPIError:
+        except facebook.GraphAPIError as e:
+            logger.exception('Facebook error: {}'.format(e))
             return Response('Invalid data', status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.filter(facebook_id=user_info.get('id')).first()
         if user:
