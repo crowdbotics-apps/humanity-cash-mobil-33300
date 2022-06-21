@@ -63,21 +63,17 @@ export const LoginScreen = observer(function LoginScreen() {
     setLoading(false)
     if (result.kind === "ok") {
       runInAction(() => {
-        console.log("postSocialLogin ==> ", result)
         loginStore.setUser(result.response)
         loginStore.setApiToken(result.response.token.access)
 
         if (result.response.merchant_data == null && result.response.consumer_data == null) {
-          console.log("no_merchant and no_consumer ==> ", result)
           navigation.navigate("setupProfile", {})
         }
         else if (!(result.response.merchant === null)){
-          console.log("is_merchant ==> ", result)
           loginStore.setSelectedAccount('merchant')
           navigation.navigate("home", {})
         }
         else {
-          console.log("is_consumer ==> ", result)
           loginStore.setSelectedAccount('consumer')
           navigation.navigate("home", {})
         }
@@ -210,7 +206,6 @@ export const LoginScreen = observer(function LoginScreen() {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => LoginManager.logInWithPermissions(["public_profile", "email"]).then(
             function (result) {
-              console.log("loginfb==> ", result)
               if (result.isCancelled) {
                 console.log("Login cancelled");
               } else {
@@ -219,21 +214,7 @@ export const LoginScreen = observer(function LoginScreen() {
                   JSON.stringify(result, null, 2)
                 );
                 AccessToken.getCurrentAccessToken().then(accessResult => {
-                  console.log("access_result==> ", accessResult)
-
-                  // const currentProfile = Profile.getCurrentProfile().then(
-                  //   function (currentProfile) {
-                  //     if (currentProfile) {
-                  //       console.log("The current logged user is: " +
-                  //         currentProfile.name
-                  //         + ". His profile id is: " +
-                  //         JSON.stringify(currentProfile, null, 2)
-                  //       );
-                  //     }
-                  //   }
-                  // )
                   loginStore.environment.api.loginFacebook(accessResult).then((fbloginResult => {
-                    console.log("fbloginResult==>", fbloginResult)
                     postSocialLogin(fbloginResult)
                   }))
                 })
