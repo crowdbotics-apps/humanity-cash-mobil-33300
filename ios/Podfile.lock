@@ -20,6 +20,8 @@ PODS:
     - ExpoModulesCore
   - EXKeepAwake (10.0.2):
     - ExpoModulesCore
+  - EXLocalAuthentication (12.2.0):
+    - ExpoModulesCore
   - Expo (44.0.6):
     - ExpoModulesCore
   - ExpoAdapterFBSDKNext (8.0.5):
@@ -482,6 +484,8 @@ PODS:
   - Sentry (7.11.0):
     - Sentry/Core (= 7.11.0)
   - Sentry/Core (7.11.0)
+  - TouchID (4.4.1):
+    - React
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -495,6 +499,7 @@ DEPENDENCIES:
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
+  - EXLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
   - Expo (from `../node_modules/expo/ios`)
   - ExpoAdapterFBSDKNext (from `../node_modules/react-native-fbsdk-next/ios`)
   - "ExpoAdapterGoogleSignIn (from `../node_modules/@react-native-google-signin/google-signin/ios`)"
@@ -571,6 +576,7 @@ DEPENDENCIES:
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - TouchID (from `../node_modules/react-native-touch-id`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -618,6 +624,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-font/ios"
   EXKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
+  EXLocalAuthentication:
+    :path: "../node_modules/expo-local-authentication/ios"
   Expo:
     :path: "../node_modules/expo/ios"
   ExpoAdapterFBSDKNext:
@@ -722,6 +730,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  TouchID:
+    :path: "../node_modules/react-native-touch-id"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -736,6 +746,7 @@ SPEC CHECKSUMS:
   EXFileSystem: 08a3033ac372b6346becf07839e1ccef26fb1058
   EXFont: 2597c10ac85a69d348d44d7873eccf5a7576ef5e
   EXKeepAwake: bf48d7f740a5cd2befed6cf9a49911d385c6c47d
+  EXLocalAuthentication: 7f37b242eae73f9acf111d39bdee3f1379e68902
   Expo: 534e51e607aba8229293297da5585f4b26f50fa1
   ExpoAdapterFBSDKNext: 40362269c769bd10bcd3f6c9620b9d14e7ec8c36
   ExpoAdapterGoogleSignIn: 385ea557c00b1feb07f1816e6cf1563e63cfe9c1
@@ -810,6 +821,7 @@ SPEC CHECKSUMS:
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
   Sentry: 0c5cd63d714187b4a39c331c1f0eb04ba7868341
+  TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: 9b6696970c3289e8dea34b3eda93f23e61fb8121
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
