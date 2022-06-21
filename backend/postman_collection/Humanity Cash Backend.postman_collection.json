@@ -1574,6 +1574,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "50 Business Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/business-details/4/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"business-details",
+								"4",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

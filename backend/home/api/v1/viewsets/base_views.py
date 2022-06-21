@@ -4,7 +4,8 @@ from cities_light.models import City, Region
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from home.api.v1.serializers.base_serializers import CityListSerializer, StateListSerializer, WhereToSpendListSerializer
+from home.api.v1.serializers.base_serializers import CityListSerializer, StateListSerializer, \
+    WhereToSpendListSerializer, BusinessDetailsSerializer
 from home.helpers import AuthenticatedAPIView
 from users.constants import Industry
 from users.models import Merchant
@@ -47,7 +48,7 @@ class WhereToSpendView(ListAPIView):
         queryset = self.filter_queryset(self.get_queryset())
         for cat in categories:
             qs = queryset.filter(industry=cat[0])
-            cat_items_serializer = WhereToSpendListSerializer(qs, many=True)
+            cat_items_serializer = WhereToSpendListSerializer(qs, many=True, context={'request': request})
             cat_item = {cat[0]: cat_items_serializer.data}
             cat_list.append(cat_item)
 
@@ -63,4 +64,9 @@ class WhereToSpendView(ListAPIView):
             "merchants": cat_list
         }
         return Response(result)
+
+
+class BusinessDetailsView(AuthenticatedAPIView, RetrieveAPIView):
+    queryset = Merchant.objects.all()
+    serializer_class = BusinessDetailsSerializer
 
