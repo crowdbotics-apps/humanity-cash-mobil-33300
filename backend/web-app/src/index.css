@@ -26,6 +26,13 @@ code {
   min-height: 75vh;
 }
 
+html, body, #app, #app>div {
+  height: 100%
+}
+
+#root {
+  min-height: 100%;
+}
 
 .reaction-container {
   background: linear-gradient(180deg, #E5E5E5 0%, #FFFFFF 100%);

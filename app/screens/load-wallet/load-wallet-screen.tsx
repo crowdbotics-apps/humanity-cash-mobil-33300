@@ -7,13 +7,12 @@ import { COLOR, IMAGES, METRICS } from "../../theme";
 import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from './load-wallet-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
-import Entypo from "react-native-vector-icons/Entypo"
-import { CheckBox } from 'react-native-elements'
-import { PALETTE } from "../../theme/palette";
+import { useStores } from "../../models";
 
 export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const navigation = useNavigation()
-
+	const rootStore = useStores()
+	const { loginStore } = rootStore
 
 	const [Amount, setAmount] = useState('')
 	const [ShowModal, setShowModal] = useState(false)
@@ -21,12 +20,12 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const [TransactionFinished, setTransactionFinished] = useState(false)
 
 	const ConfirmModal = () => (
-		<Modal visible={ShowModal} transparent>
+		<Modal visible={ShowModal}>
 			{TransactionConfirm
 				? <View style={styles.LOADING_RETURN}>
 					{TransactionFinished
 						? [
-							<Text key={'congrat_title'} style={styles.PENDING_TITLE}>{`Congratulations! You 
+							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>{`Congratulations! You 
 have topped up 
 C$ ${Amount}`}
 							</Text>,
@@ -34,8 +33,8 @@ C$ ${Amount}`}
 							<Button
 								key={'congrat_button'}
 								buttonStyle={{
-									backgroundColor: COLOR.PALETTE.green,
-									bottom: 5,
+									backgroundColor: loginStore.getAccountColor,
+									marginTop: METRICS.screenHeight * 0.6,
 									position: 'absolute'
 								}}
 								onPress={() => [
@@ -49,14 +48,22 @@ C$ ${Amount}`}
 							/>
 						]
 						: [
-							<Text key={'pending_title'} style={styles.PENDING_TITLE}>Pending...</Text>,
+							<Text key={'pending_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>Pending...</Text>,
 							<Text key={'pending_sub_title'} style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>,
 							<ActivityIndicator key={'pending_ind'} style={styles.ACTIVITY} size="large" color={'black'} />
 						]
 					}
 
 				</View>
-				: <View style={styles.ROOT_MODAL}>
+				: <View style={[
+					styles.ROOT_MODAL,
+					{
+						backgroundColor:
+							loginStore.getSelectedAccount === 'merchant'
+								? 'rgba(157, 165, 111, 0.50)'
+								: 'rgba(59, 136, 182, 0.50)'
+					}
+				]}>
 					<View style={styles.HEADER_ACTIONS}>
 						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.white} style={{ marginLeft: 10 }} />
@@ -69,10 +76,10 @@ C$ ${Amount}`}
 					</View>
 					<View style={styles.MODAL_CONTAINER}>
 						<View style={styles.MODAL_CONTENT}>
-							<Text style={styles.STEP_TITLE}>Please confirm your transaction.</Text>
+							<Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Please confirm your transaction.</Text>
 							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will load up B$ ${Amount} to your wallet.`}</Text>
 							<TouchableOpacity
-								style={styles.MODAL_BUTTON}
+								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor}]}
 								onPress={() => {
 									setTransactionConfirm(true)
 									setTimeout(function () {
@@ -114,7 +121,7 @@ C$ ${Amount}`}
 				</View>
 
 				<View style={styles.STEP_CONTAINER}>
-					<Text style={styles.STEP_TITLE}>Load Wallet</Text>
+					<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Load Wallet</Text>
 					<Text style={styles.LINE} />
 					<Text style={styles.SUB_TITLE}>
 						{`Specify the amount of Currents 
@@ -127,20 +134,32 @@ C$ ${Amount}`}
 
 					<View style={styles.INPUT_AMOUNT_STYLE_CONTAINER}>
 						<Button
-							buttonStyle={(Amount === '50' || Amount === '50.00') ? styles.BUTTON_AMOUNT_ACTIVE : styles.BUTTON_AMOUNT}
-							buttonLabelStyle={{ color: (Amount === '50' || Amount === '50.00') ? COLOR.PALETTE.white : COLOR.PALETTE.green }}
+							buttonStyle={
+								(Amount === '50' || Amount === '50.00')
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+							}
+							buttonLabelStyle={{ color: (Amount === '50' || Amount === '50.00') ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => setAmount('50.00')}
 							buttonLabel={'C$ 50'}
 						/>
 						<Button
-							buttonStyle={(Amount === '100' || Amount === '100.00') ? styles.BUTTON_AMOUNT_ACTIVE : styles.BUTTON_AMOUNT}
-							buttonLabelStyle={{ color: (Amount === '100' || Amount === '100.00') ? COLOR.PALETTE.white : COLOR.PALETTE.green }}
+							buttonStyle={
+								(Amount === '100' || Amount === '100.00')
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+							}
+							buttonLabelStyle={{ color: (Amount === '100' || Amount === '100.00') ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => setAmount('100.00')}
 							buttonLabel={'C$ 100'}
 						/>
 						<Button
-							buttonStyle={(Amount === '200' || Amount === '200.00') ? styles.BUTTON_AMOUNT_ACTIVE : styles.BUTTON_AMOUNT}
-							buttonLabelStyle={(Amount === '200' || Amount === '200.00') ? { color: COLOR.PALETTE.white } : { color: COLOR.PALETTE.green }}
+							buttonStyle={
+								(Amount === '200' || Amount === '200.00')
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+							}
+							buttonLabelStyle={(Amount === '200' || Amount === '200.00') ? { color: COLOR.PALETTE.white } : { color: loginStore.getAccountColor }}
 							onPress={() => setAmount('200.00')}
 							buttonLabel={'C$ 200'}
 						/>
@@ -150,7 +169,7 @@ C$ ${Amount}`}
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 						<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
 					</View>
-					<View style={styles.INPUT_STYLE_CONTAINER}>
+					<View style={[styles.INPUT_STYLE_CONTAINER]}>
 						<TextInput
 							style={styles.INPUT_STYLE}
 							keyboardType='numeric'
@@ -170,17 +189,17 @@ C$ ${Amount}`}
 					</View>
 
 				</View>
+				{ConfirmModal()}
+			</KeyboardAvoidingView>
 				<Button
 					buttonStyle={{
-						backgroundColor: COLOR.PALETTE.green,
-						top: METRICS.screenHeight - 100,
+						backgroundColor: loginStore.getAccountColor,
+						bottom: 5,
 						position: 'absolute'
 					}}
 					onPress={() => setShowModal(true)}
 					buttonLabel={'Load up'}
 				/>
-				{ConfirmModal()}
-			</KeyboardAvoidingView>
 		</Screen>
 	)
 })

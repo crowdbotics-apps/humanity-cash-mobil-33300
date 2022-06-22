@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework.generics import UpdateAPIView, DestroyAPIView
 
-from home.api.v1.serializers.security_serializers import ChangePasswordSerializer, AllowTouchIdSerializer
+from home.api.v1.serializers.security_serializers import ChangePasswordSerializer, AllowTouchIdSerializer, \
+    DeleteAccountSerializer
 from home.helpers import AuthenticatedAPIView
 
 
@@ -26,7 +27,7 @@ class AllowTouchIdView(AuthenticatedAPIView, UpdateAPIView):
 
 class DeleteAccountView(AuthenticatedAPIView, DestroyAPIView):
     queryset = User.objects.all()
-    serializer_class = ChangePasswordSerializer
+    serializer_class = DeleteAccountSerializer
 
     def get_object(self):
         return self.request.user

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextInput, View, TouchableOpacity, ScrollView } from "react-native"
+import { TextInput, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from "react-native"
 import { Text, Screen, Button, TextInputComponent } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
@@ -531,80 +531,88 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
   return (
     <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>
-      <View style={styles.ROOT}>
-        <View style={styles.STEP_CONTAINER}>
-          <TouchableOpacity
-            onPress={() => backButtonHandler()}
-            style={styles.BACK_BUTON_CONTAINER}
-          >
-            <Icon name={"arrow-back"} size={23} color={"black"} />
-            <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
-          </TouchableOpacity>
-          {renderStep()}
-        </View>
-        <View style={styles.CONTAINER}>
-          {Step === "email" && (
-            <View style={styles.AGREE_CONTAINER}>
-              <CheckBox
-                checked={Agree}
-                onPress={() => [
-                  setAgree(!Agree),
-                  validateEmail(Email, !Agree)
-                ]}
-                checkedColor={COLOR.PALETTE.green}
+      {/* <View style={styles.ROOT}> */}
+      <KeyboardAvoidingView
+        enabled
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        style={styles.ROOT}
+      >
+        <ScrollView>
+          <View style={styles.STEP_CONTAINER}>
+            <TouchableOpacity
+              onPress={() => backButtonHandler()}
+              style={styles.BACK_BUTON_CONTAINER}
+            >
+              <Icon name={"arrow-back"} size={23} color={"black"} />
+              <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
+            </TouchableOpacity>
+            {renderStep()}
+          </View>
+          <View style={styles.CONTAINER}>
+            {Step === "email" && (
+              <View style={styles.AGREE_CONTAINER}>
+                <CheckBox
+                  checked={Agree}
+                  onPress={() => [
+                    setAgree(!Agree),
+                    validateEmail(Email, !Agree)
+                  ]}
+                  checkedColor={COLOR.PALETTE.green}
+                />
+                <Text style={styles.AGREE_LABEL}>
+                  {
+                    "By checking this box, you agree to our partner Humanity Cash's"
+                  }
+                  <Text
+                    style={styles.AGREE_LABEL_LINK}
+                    onPress={() => setStep("legal")}
+                  >
+                    {" "}
+                    {" Terms & Conditions "}
+                  </Text>
+                  and
+                  <Text
+                    style={styles.AGREE_LABEL_LINK}
+                    onPress={() => setStep("legal")}
+                  >
+                    {" "}
+                    {" Privacy Policy"}
+                  </Text>
+                </Text>
+              </View>
+            )}
+            {Step === "verify_email" && (
+              <View style={styles.NEED_HELP_CONTAINER}>
+                <Text
+                  onPress={() => setStep("help")}
+                  style={styles.NEED_HELP_LINK}
+                >
+                  Need help?
+                </Text>
+              </View>
+            )}
+            {Step === "verify_email" && (
+              <View style={styles.NEED_HELP_CONTAINER}>
+                <Text onPress={() => sendCodeAgainHandler()} style={styles.NEED_HELP_LINK}>
+                  Send code again
+                </Text>
+              </View>
+            )}
+            {Step !== "legal" && (
+              <Button
+                buttonStyle={{
+                  backgroundColor: (ButtonDisabled || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green,
+                }}
+                onPress={() => nextButtonHandler()}
+                buttonLabel={'Next'}
+                disabled={ButtonDisabled || Loading}
+                loading={Loading}
               />
-              <Text style={styles.AGREE_LABEL}>
-                {
-                  "By checking this box, you agree to our partner Humanity Cash's"
-                }
-                <Text
-                  style={styles.AGREE_LABEL_LINK}
-                  onPress={() => setStep("legal")}
-                >
-                  {" "}
-                  {" Terms & Conditions "}
-                </Text>
-                and
-                <Text
-                  style={styles.AGREE_LABEL_LINK}
-                  onPress={() => setStep("legal")}
-                >
-                  {" "}
-                  {" Privacy Policy"}
-                </Text>
-              </Text>
-            </View>
-          )}
-          {Step === "verify_email" && (
-            <View style={styles.NEED_HELP_CONTAINER}>
-              <Text
-                onPress={() => setStep("help")}
-                style={styles.NEED_HELP_LINK}
-              >
-                Need help?
-              </Text>
-            </View>
-          )}
-          {Step === "verify_email" && (
-            <View style={styles.NEED_HELP_CONTAINER}>
-              <Text onPress={() => sendCodeAgainHandler()} style={styles.NEED_HELP_LINK}>
-                Send code again
-              </Text>
-            </View>
-          )}
-          {Step !== "legal" && (
-            <Button
-              buttonStyle={{
-                backgroundColor: (ButtonDisabled || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green,
-              }}
-              onPress={() => nextButtonHandler()}
-              buttonLabel={'Next'}
-              disabled={ButtonDisabled || Loading}
-              loading={Loading}
-            />
-          )}
-        </View>
-      </View>
+            )}
+          </View>
+          {/* </View> */}
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   )
 })

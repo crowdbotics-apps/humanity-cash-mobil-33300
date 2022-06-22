@@ -100,7 +100,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		{ id: "WI", title: "WI", description: "Wisconsin" },
 		{ id: "WY", title: "WY", description: "Wyoming" }
 	]
-	const [State, setState] = React.useState(states[1]);
+	const [State, setState] = React.useState('');
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
 
 	function selectImage(type: string) {
@@ -154,7 +154,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				<Text style={styles.INPUT_LABEL_STYLE}>USER NAME*</Text>
 				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={[UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25`}]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
@@ -170,7 +170,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>FIRST NAME</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25`}]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setName(t)}
@@ -181,7 +181,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>LAST NAME</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25`}]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setLastName(t)}
@@ -230,7 +230,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS NAME - THIS NAME WILL BE PUBLIC*</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25`}]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
@@ -256,7 +256,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS CATEGORY</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25`}]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
@@ -270,7 +270,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>WEBSITE - OPCIONAL</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25`}]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
@@ -284,7 +284,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 1</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25`}]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress1(t)}
@@ -296,7 +296,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 2</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25`}]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress2(t)}
@@ -361,7 +361,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>POSTAL CODE</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25`}]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPostalCode(t)}
@@ -372,7 +372,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25`}]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPhoneNumber(t)}
@@ -411,20 +411,25 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		}
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
-				.updateProfileMerchant({ 
+				.updateProfileMerchant({
 					business_name: BusinessName,
 					profile_picture: prof_pic,
 					background_picture: back_pic,
 					business_story: BusinessStory,
-					address_1: Address1
+					address_1: Address1,
+					address_2: Address2,
+					zip_code: PostalCode,
+					phone_number: PhoneNumber,
+					website: BusinessWebsite,
+					industry: BusinessCategory
 				 })
 				.then(result => {
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
-							loginStore.setUser(result.response.user)
-							loginStore.setApiToken(result.response.access_token)
-							loginStore.setSelectedAccount('consumer')
+							console.log("response: ", result.response)
+							loginStore.setMerchantUser(result.response)
+							loginStore.setSelectedAccount('merchant')
 							navigation.navigate("home", {})
 						})
 					} else if (result.kind === "bad-data") {
@@ -437,13 +442,18 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					}
 				})
 			: loginStore.environment.api
-				.updateProfileConsumer({ username: Username, consumer_profile: pic })
+				.updateProfileConsumer({
+					username: Username,
+					consumer_profile: pic,
+					first_name: Name,
+					last_name: LastName
+				})
 				.then(result => {
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
-							loginStore.setUser(result.response.user)
-							loginStore.setApiToken(result.response.access_token)
+							console.log("response: ", result.response)
+							loginStore.setConsumerUser(result.response)
 							loginStore.setSelectedAccount('consumer')
 							navigation.navigate("home", {})
 						})
@@ -467,9 +477,10 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		setBackBusinessImageSource({ uri: loginStore.ProfileDataBusiness.background_picture })
 		setBusinessName(loginStore.ProfileDataBusiness.business_name)
 		setBusinessStory(loginStore.ProfileDataBusiness.business_story)
-		setBusinessCategory(loginStore.ProfileDataBusiness.type_of_business)
-		// setBusinessWebsite(loginStore.ProfileDataBusiness.)
+		setBusinessCategory(loginStore.ProfileDataBusiness.industry)
+		setBusinessWebsite(loginStore.ProfileDataBusiness.website)
 		setCity(loginStore.ProfileDataBusiness.city)
+		setState(loginStore.ProfileDataBusiness.state)
 		setAddress1(loginStore.ProfileDataBusiness.address_1)
 		setAddress2(loginStore.ProfileDataBusiness.address_2)
 		setPostalCode(loginStore.ProfileDataBusiness.zip_code)
@@ -498,7 +509,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 
 							</TouchableOpacity>
 
-							<Text style={styles.STEP_TITLE}>My profile</Text>
+							<Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>My profile</Text>
 							<View style={styles.LINE} />
 							<Text style={styles.STEP_SUB_TITLE}>This information is shared publicly.</Text>
 
@@ -514,8 +525,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						bottom: 5,
 						position: 'absolute',
 						backgroundColor: Loading
-							? `${COLOR.PALETTE.green}40`
-							: COLOR.PALETTE.green
+							? `${loginStore.getAccountColor}40`
+							: loginStore.getAccountColor
 					}}
 					// onPress={() => notifyMessage("Your profile has been updated successfully.")}
 					onPress={() => updateProfile()}
