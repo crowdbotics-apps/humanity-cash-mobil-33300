@@ -30,12 +30,12 @@ export default StyleSheet.create({
   LOGIN_TYPES_CONTAINER: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 250,
+    width: 230,
     alignSelf: 'center',
   },
   LOGIN_TYPE: {
-    width: 50,
-    height: 50
+    width: 45,
+    height: 45
   },
 	STEP_TITLE: {
     fontSize: 32,

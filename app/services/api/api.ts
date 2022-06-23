@@ -71,7 +71,6 @@ export class Api extends ApiBase {
     return this.simple_patch(apiv1 + "/security/change-password/", data)
   }
 
-
   // BASE
   async getCities(data?: any): Promise<Types.SimpleGetResult> {
     let url = apiv1 + "/base/cities/"
@@ -86,4 +85,10 @@ export class Api extends ApiBase {
     console.log(' url => ', url, data)
     return this.simple_get(url)
   }
+
+  // DWOLLA
+  async getDwollaToken(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/dwolla/create-iav-token/")
+  }
+
 }
