@@ -182,9 +182,9 @@ export const LoginScreen = observer(function LoginScreen() {
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity onPress={() => pressHandler()}>
+      {/* <TouchableOpacity onPress={() => pressHandler()}>
         <Text style={styles.LOGIN_TYPES_LABEL}>Authenticate with Touch ID</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
       <View style={styles.STEP_CONTAINER}>
         <View style={styles.LOGIN_TYPES_CONTAINER}>
