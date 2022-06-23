@@ -41,7 +41,7 @@ urlpatterns = [
     path('dwolla/', include([
         path('create-iav-token/', dwolla_views.CreateIavTokenView.as_view(), name='dwolla_iav_token'),
         path('customers/<int:id>/funding-sources/', dwolla_views.DwollaFundingSourcesByCustomerView.as_view(), name='dwolla_funding_sources_by_customer'),
-        path('my-funding-sources/', dwolla_views.DwollaMyFundingSourcesView.as_view(), name='dwolla_my_funding_sources'),
+        path('my-funding-sources/', dwolla_views.DwollaFundingSourcesByCustomerView.as_view(), name='dwolla_my_funding_sources'),
     ])),
     path('base/', include([
         path('cities/', base_views.CityListView.as_view(), name='cities'),
