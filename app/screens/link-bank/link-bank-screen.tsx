@@ -27,7 +27,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const [CustomerDwollaId, setCustomerDwollaId] = useState('')
 
   const temp = () => {
-    loginStore.environment.api.getDwollaToken()
+    loginStore.environment.api.getDwollaToken({"user_type": "merchant"})
         .then(result => {
           console.log('result state ===>>> ', result)
         })

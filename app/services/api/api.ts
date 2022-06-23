@@ -92,8 +92,8 @@ export class Api extends ApiBase {
   }
 
   // DWOLLA
-  async getDwollaToken(): Promise<Types.SimpleGetResult> {
-    return this.simple_get(apiv1 + "/dwolla/create-iav-token/")
+  async getDwollaToken(data?: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/dwolla/create-iav-token/")
   }
 
 }
