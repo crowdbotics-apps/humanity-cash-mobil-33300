@@ -9,6 +9,7 @@ from home.clients.dwolla_api import DwollaClient
 from home.functions import get_dwolla_id_request
 from home.helpers import AuthenticatedAPIView
 from users.models import Merchant, Consumer
+from django.conf import settings
 
 User = get_user_model()
 logger = logging.getLogger('django')
@@ -67,3 +68,8 @@ class DwollaFundingSourcesByCustomerView(AuthenticatedAPIView):
 
 class DwollaIAVTemplateView(TemplateView):
     template_name = 'dwolla/iav.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['environment'] = settings.DWOLLA_ENVIRONMENT
+        return context
