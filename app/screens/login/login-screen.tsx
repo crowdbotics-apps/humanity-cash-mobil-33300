@@ -59,6 +59,37 @@ export const LoginScreen = observer(function LoginScreen() {
       })
   }
 
+  const postSocialLogin = (result: any) => {
+    setLoading(false)
+    if (result.kind === "ok") {
+      runInAction(() => {
+        loginStore.setUser(result.response)
+        loginStore.setApiToken(result.response.token.access)
+
+        if (result.response.merchant_data == null && result.response.consumer_data == null) {
+          navigation.navigate("setupProfile", {})
+        }
+        else if (!(result.response.merchant === null)){
+          loginStore.setSelectedAccount('merchant')
+          navigation.navigate("home", {})
+        }
+        else {
+          loginStore.setSelectedAccount('consumer')
+          navigation.navigate("home", {})
+        }
+      })
+
+    } else if (result.kind === "bad-data") {
+      const key = Object.keys(result?.errors)[0]
+      let msg = `${key}: ${result?.errors?.[key][0]}`
+      console.log('msg -> ', Keyboard)
+      notifyMessage(msg)
+    } else {
+      loginStore.reset()
+      notifyMessage(null)
+    }
+  }
+
   async function onAppleButtonPress() {
     // performs login request
     const appleAuthRequestResponse = await appleAuth.performRequest({
@@ -171,7 +202,7 @@ export const LoginScreen = observer(function LoginScreen() {
               style={styles.LOGIN_TYPE}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => LoginManager.logInWithPermissions(["public_profile"]).then(
+          <TouchableOpacity onPress={() => LoginManager.logInWithPermissions(["public_profile", "email"]).then(
             function (result) {
               if (result.isCancelled) {
                 console.log("Login cancelled");
@@ -180,17 +211,11 @@ export const LoginScreen = observer(function LoginScreen() {
                   "Login success with permissions: ",
                   JSON.stringify(result, null, 2)
                 );
-                const currentProfile = Profile.getCurrentProfile().then(
-                  function (currentProfile) {
-                    if (currentProfile) {
-                      console.log("The current logged user is: " +
-                        currentProfile.name
-                        + ". His profile id is: " +
-                        JSON.stringify(currentProfile, null, 2)
-                      );
-                    }
-                  }
-                )
+                AccessToken.getCurrentAccessToken().then(accessResult => {
+                  loginStore.environment.api.loginFacebook(accessResult).then((fbloginResult => {
+                    postSocialLogin(fbloginResult)
+                  }))
+                })
               }
             },
             function (error) {

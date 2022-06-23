@@ -10,6 +10,122 @@
 			"name": "Login/SignUp",
 			"item": [
 				{
+					"name": "Social Login",
+					"item": [
+						{
+							"name": "Facebook Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/social/fb-login/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"social",
+										"fb-login",
+										""
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Login",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"hassankarimbittar@gmail.com\",\n    \"password\": \"admin123admin123\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/dj-rest-auth/login/",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"dj-rest-auth",
+												"login",
+												""
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 15 Apr 2022 22:41:43 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "WSGIServer/0.2 CPython/3.8.13"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept, Cookie"
+										},
+										{
+											"key": "Allow",
+											"value": "POST, OPTIONS"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Length",
+											"value": "668"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "csrftoken=lRWJ3OSo46jBQhfU4uBwF1Hfuduaff8BBhGzcQxrNXXobdyeanWH4BWlqcgZo8Q9; expires=Fri, 14 Apr 2023 22:41:43 GMT; Max-Age=31449600; Path=/; SameSite=Lax"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "sessionid=asyjbs0nw36fd9otxgg29msljtde348a; expires=Fri, 29 Apr 2022 22:41:43 GMT; HttpOnly; Max-Age=1209600; Path=/; SameSite=Lax"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjUwMTQ4OTAzLCJpYXQiOjE2NTAwNjI1MDMsImp0aSI6Ijg2NzhjZTNmMGJkMTRhYzRiMTRkMzBjMTgxZDkzODE3IiwidXNlcl9pZCI6MjB9.vUd9492JoNQrVtp68somUxZt2QW0WE4pg2na_ZxPY0Y\",\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1MDE0ODkwMywiaWF0IjoxNjUwMDYyNTAzLCJqdGkiOiJjMzg2OGQ3NjJiZjc0MTQwYjU3NDkzZmUyYmY3NGFhNiIsInVzZXJfaWQiOjIwfQ.RC39TUulPkNGuzSzyWA0KGKxfRrdXsb5ZBv2NdkwDr0\",\n    \"user\": {\n        \"id\": 20,\n        \"verified_email\": false,\n        \"first_name\": \"\",\n        \"last_name\": \"\",\n        \"email\": \"hassankarimbittar@gmail.com\",\n        \"username\": \"hassankarimbittar@gmail.com\",\n        \"password_set\": true\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
 					"name": "Sign up",
 					"event": [
 						{
@@ -1453,6 +1569,37 @@
 								"api",
 								"v1",
 								"where-to-spend",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "50 Business Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/business-details/4/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"business-details",
+								"4",
 								""
 							]
 						}

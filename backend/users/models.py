@@ -32,6 +32,8 @@ class User(AbstractUser):
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
     verified_email = models.BooleanField(default=False)
     allow_touch_id = models.BooleanField(default=False)
+    facebook_id = models.CharField('Facebook ID', max_length=64, blank=True, null=True)
+    facebook_token = models.TextField('Facebook Token', blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
