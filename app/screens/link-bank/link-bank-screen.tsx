@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite"
 import { View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Linking, Image } from "react-native"
 import { Text, Button, Screen } from "../../components"
@@ -7,11 +7,15 @@ import styles from "./link-bank-style"
 import { COLOR, METRICS, IMAGES } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
 import Entypo from "react-native-vector-icons/Entypo"
+import { WebView } from 'react-native-webview'
+import { useStores } from "../../models"
 
 import Ionicons from "react-native-vector-icons/Ionicons"
 
 export const LinkBankScreen = observer(function LinkBankScreen() {
   const navigation = useNavigation()
+  const rootStore = useStores()
+  const { loginStore } = rootStore
 
   const [Step, setStep] = useState('banks')
   const [AccountName, setAccountName] = useState("")
@@ -20,13 +24,32 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   const [Search, setSearch] = useState('')
 
+  const [CustomerDwollaId, setCustomerDwollaId] = useState('')
+
+  const temp = () => {
+    loginStore.environment.api.getDwollaToken({"user_type": "consumer"})
+        .then(result => {
+          console.log('result state ===>>> ', result)
+        })
+  }
+
+  useEffect(() => {
+    if (CustomerDwollaId) {
+      loginStore.environment.api.getDwollaToken()
+        .then(result => {
+          console.log('result state ===>>> ', result)
+        })
+     
+    }
+  }, [CustomerDwollaId]);
+
   const RenderBanks = () => (
     <View style={styles.CONTAINER}>
       <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home", {})}>
         <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
         <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
       </TouchableOpacity>
-      <Text style={styles.STEP_TITLE}>{'Select your bank'}</Text>
+      <Text style={styles.STEP_TITLE}>{' Link Bank'}</Text>
       <View style={styles.LINE} />
       <View style={styles.SEARCH_INPUT_CONTAINER}>
         <View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
@@ -40,7 +63,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         </View>
       </View>
       <View style={styles.BANKS_ICON_CONTAINER}>
-        {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map((temp, key) => (
+        {[0].map((temp, key) => (
           <TouchableOpacity onPress={() => setStep('bankLogin')} key={key} style={styles.BANK_ICON_CONTAINER}>
             <Image
               resizeMode="contain"
@@ -48,8 +71,11 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
               style={styles.BANK_ICON}
             />
           </TouchableOpacity>
-        ))
-        }
+        ))}
+        {/* <TouchableOpacity onPress={() => setStep('bankLoginDwolla')} style={styles.BANK_ICON_CONTAINER}> */}
+        <TouchableOpacity onPress={() => temp()} style={styles.BANK_ICON_CONTAINER}>
+        <Icon name={"add"} size={50} color={COLOR.PALETTE.gray} />
+          </TouchableOpacity>
       </View>
     </View>
   )
@@ -105,6 +131,13 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     </View>
   )
 
+  const RenderBankLoginDwolla = () => (
+<WebView
+        source={{ uri: 'https://infinite.red' }}
+        // style={{ marginTop: 20 }}
+      />
+  )
+
   return (
     <Screen
       // preset='scroll'
@@ -123,6 +156,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
             {Step === 'banks' && RenderBanks()}
             {Step === 'bankLogin' && RenderBankLogin()}
+            {Step === 'bankLoginDwolla' && RenderBankLoginDwolla()}
 
           </View>
         </ScrollView>

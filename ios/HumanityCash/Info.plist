@@ -26,6 +26,12 @@
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID allows you quick and secure access to your account.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires access to user location</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app requires access to user location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app requires access to user location</string>
 	<key>NSCameraUsageDescription</key>
 	<string>This App need access to your camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
