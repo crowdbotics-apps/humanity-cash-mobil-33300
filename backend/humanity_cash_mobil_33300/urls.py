@@ -24,6 +24,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 from admin.api.v1.viewsets.user_viewset import password_reset, password_reset_confirm
+from home.api.v1.viewsets.dwolla_views import DwollaIAVTemplateView
 
 urlpatterns = [
     # path("", include("home.urls")),
@@ -41,6 +42,10 @@ urlpatterns = [
     path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls'))
 
 ]
+
+# Dwolla Instant Account Verification (IAV) page used in the React Native app
+# (along with a single-use token that identifies the Dwolla user)
+urlpatterns += [path("iav/", DwollaIAVTemplateView.as_view(), name='iav')]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

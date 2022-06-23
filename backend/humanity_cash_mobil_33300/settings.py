@@ -111,7 +111,9 @@ ROOT_URLCONF = 'humanity_cash_mobil_33300.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'web_build')],
+        'DIRS': [os.path.join(BASE_DIR, 'web_build'),
+                 os.path.join(BASE_DIR, 'templates')
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth import get_user_model
+from django.views.generic import TemplateView
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -63,3 +64,6 @@ class DwollaFundingSourcesByCustomerView(AuthenticatedAPIView):
             return Response({"error": "Cannot get funding sources for Customer from Dwolla"},
                             status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
+
+class DwollaIAVTemplateView(TemplateView):
+    template_name = 'dwolla/iav.html'
