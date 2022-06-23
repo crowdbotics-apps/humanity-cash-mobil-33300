@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0e8a8dab2b772b1f32a72dbbd14efde43ed19cbc59a37cb9b8932212ade1ab25"
+            "sha256": "663d4f797855adf14add1b4c0620fed701409e2f9e62b8c99f6352c7ca9a038b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -303,6 +303,14 @@
             "index": "pypi",
             "version": "==1.20.0"
         },
+        "dwollav2": {
+            "hashes": [
+                "sha256:084b83c88e5312862916f0501d45d195b20ad26bf26da706da7994c59b1dca9c",
+                "sha256:2d7a439a65d19bb27572106f53c9124ea28875eeb80e396ebe6413a942c70959"
+            ],
+            "index": "pypi",
+            "version": "==2.2.1"
+        },
         "facebook-sdk": {
             "hashes": [
                 "sha256:2e987b3e0f466a6f4ee77b935eb023dba1384134f004a2af21f1cfff7fe0806e",
@@ -325,6 +333,12 @@
                 "sha256:f192d238b3b6acb98ee85bd596258a15a171385613b30a7849e5845f8980d722"
             ],
             "version": "==13.13.0"
+        },
+        "future": {
+            "hashes": [
+                "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"
+            ],
+            "version": "==0.18.2"
         },
         "google-api-core": {
             "extras": [

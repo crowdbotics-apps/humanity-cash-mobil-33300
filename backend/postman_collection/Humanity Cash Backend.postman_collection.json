@@ -1517,7 +1517,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"user_type\": \"consumer\"\n}",
+							"raw": "{\n    \"user_type\": \"merchant\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1534,6 +1534,94 @@
 								"v1",
 								"dwolla",
 								"create-iav-token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dwolla Customer Funding Sources",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_type\": \"merchant\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/dwolla/customers/44/funding-sources/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dwolla",
+								"customers",
+								"44",
+								"funding-sources",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dwolla My Funding Sources",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_type\": \"consumer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/dwolla/my-funding-sources/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dwolla",
+								"my-funding-sources",
 								""
 							]
 						}
