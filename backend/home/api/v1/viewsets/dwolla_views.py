@@ -16,14 +16,14 @@ logger = logging.getLogger('django')
 class CreateIavTokenView(AuthenticatedAPIView):
 
     def post(self, request):
-        dwolla_id = get_dwolla_id_request(self.request.user, self.request)
+        req_dwolla_id = get_dwolla_id_request(self.request.user, self.request)
 
-        if isinstance(dwolla_id, Response):  # if errors
-            return dwolla_id
+        if req_dwolla_id.get('error'):
+            return req_dwolla_id.get('response')
 
         try:
             dwolla_client = DwollaClient()
-            iav_token = dwolla_client.get_iav_token(dwolla_id)
+            iav_token = dwolla_client.get_iav_token(req_dwolla_id.get('dwolla_id'))
 
             return Response({"iav_token": iav_token}, status=status.HTTP_200_OK)
 
