@@ -1,5 +1,10 @@
+import logging
 from rest_framework import status
 from rest_framework.response import Response
+
+from home.clients.dwolla_api import DwollaClient
+
+logger = logging.getLogger('django')
 
 
 def get_dwolla_id_request(user, request):
@@ -17,3 +22,38 @@ def get_dwolla_id_request(user, request):
         return {"dwolla_id": None, "error": True, "response": Response({"error": "Merchant has no dwolla_id"}, status=status.HTTP_400_BAD_REQUEST)}
     return {"dwolla_id": None, "error": True,
             "response": Response({"error": "User has no dwolla_id"}, status=status.HTTP_400_BAD_REQUEST)}
+
+
+def create_dwolla_customer_consumer(instance):
+    try:
+        dwolla_client = DwollaClient()
+        dwolla_id = dwolla_client.create_customer(
+            {
+                "firstName": instance.first_name,
+                "lastName": instance.last_name,
+                "email": instance.email
+            }
+        )
+        # TODO: add additional fields
+        instance.consumer.dwolla_id = dwolla_id
+        instance.consumer.save()
+    except Exception as e:
+        logger.exception('Dwolla Error: {}'.format(e))
+
+
+def create_dwolla_customer_merchant(instance):
+    try:
+        dwolla_client = DwollaClient()
+        dwolla_id = dwolla_client.create_customer(
+            {
+                "firstName": instance.owner_first_name,
+                "lastName": instance.owner_last_name,
+                "email": instance.user.email,
+                "businessName": instance.business_name
+            }
+        )
+        # TODO: add additional fields
+        instance.dwolla_id = dwolla_id
+        instance.save()
+    except Exception as e:
+        logger.exception('Dwolla Error: {}'.format(e))
