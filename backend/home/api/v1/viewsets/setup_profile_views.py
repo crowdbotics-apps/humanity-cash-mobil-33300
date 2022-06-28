@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from home.api.v1.serializers import setup_profile_serializers
 from home.clients.dwolla_api import DwollaClient
+from home.functions import create_dwolla_customer_consumer, create_dwolla_customer_merchant
 from home.helpers import AuthenticatedAPIView
 from users.models import Merchant
 
@@ -43,20 +44,7 @@ class SetupConsumerProfileDetailAPIView(AuthenticatedAPIView, UpdateAPIView):
 
         if not self.request.user.consumer.dwolla_id:
             # if dwolla_id is not set yet
-            try:
-                dwolla_client = DwollaClient()
-                dwolla_id = dwolla_client.create_customer(
-                    {
-                        "firstName": instance.first_name,
-                        "lastName": instance.last_name,
-                        "email": instance.email
-                    }
-                )
-                # TODO: add additional fields
-                instance.consumer.dwolla_id = dwolla_id
-                instance.consumer.save()
-            except Exception as e:
-                logger.exception('Dwolla Error: {}'.format(e))
+            create_dwolla_customer_consumer(instance)
 
         return Response(serializer.initial_data)
 
@@ -91,21 +79,7 @@ class SetupMerchantProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIV
 
         if not self.request.user.merchant.dwolla_id:
             # if dwolla_id is not set yet
-            try:
-                dwolla_client = DwollaClient()
-                dwolla_id = dwolla_client.create_customer(
-                    {
-                        "firstName": instance.owner_first_name,
-                        "lastName": instance.owner_last_name,
-                        "email": instance.user.email,
-                        "businessName": instance.business_name
-                    }
-                )
-                # TODO: add additional fields
-                instance.dwolla_id = dwolla_id
-                instance.save()
-            except Exception as e:
-                logger.exception('Dwolla Error: {}'.format(e))
+            create_dwolla_customer_merchant(instance)
 
         return Response(serializer.initial_data)
 
@@ -121,6 +95,19 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
+    def update(self, request, *args, **kwargs):
+        super(ConsumerMyProfileAPIView, self).update(request, *args, **kwargs)
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        if not self.request.user.consumer.dwolla_id:
+            # if dwolla_id is not set yet
+            create_dwolla_customer_consumer(instance)
+
+        return Response(serializer.data)
+
 
 class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
     """
@@ -132,3 +119,16 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
 
     def get_object(self):
         return self.request.user.merchant
+
+    def update(self, request, *args, **kwargs):
+        super(MerchantMyProfileDetailAPIView, self).update(request, *args, **kwargs)
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        if not self.request.user.merchant.dwolla_id:
+            # if dwolla_id is not set yet
+            create_dwolla_customer_merchant(instance)
+
+        return Response(serializer.data)
