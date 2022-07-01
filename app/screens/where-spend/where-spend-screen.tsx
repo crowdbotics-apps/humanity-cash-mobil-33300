@@ -292,6 +292,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
         zoomControlEnabled
         initialRegion={Region}
       >
+        
         <Marker
           coordinate={{
             latitude: 37.78825,

@@ -58,6 +58,7 @@
 		32BB11C19824A84866ED4603 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-HumanityCash-HumanityCashTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		529616C772334EA88B932240 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		53D246E328380C9E00EBE427 /* HumanityCashRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = HumanityCashRelease.entitlements; path = HumanityCash/HumanityCashRelease.entitlements; sourceTree = "<group>"; };
+		53F809C6286B589A00C18DE9 /* HumanityCash.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = HumanityCash.entitlements; path = HumanityCash/HumanityCash.entitlements; sourceTree = "<group>"; };
 		5AE76D1F524C4DCAE7FAFDFD /* libPods-HumanityCash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HumanityCash.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7626BE59F50D48CC9E8AFA03 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		77FAB13618547EBF9C1DB0F3 /* libPods-HumanityCash-HumanityCashTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HumanityCash-HumanityCashTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -135,6 +136,7 @@
 		13B07FAE1A68108700A75B9A /* HumanityCash */ = {
 			isa = PBXGroup;
 			children = (
+				53F809C6286B589A00C18DE9 /* HumanityCash.entitlements */,
 				53D246E328380C9E00EBE427 /* HumanityCashRelease.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -806,6 +808,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = HumanityCash/HumanityCash.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 4;

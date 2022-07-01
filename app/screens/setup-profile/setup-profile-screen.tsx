@@ -869,7 +869,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		>
 			<KeyboardAvoidingView
 				enabled
-				behavior={Platform.OS === 'ios' ? 'padding' : null}
+				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
 				<ScrollView bounces={false}>
@@ -893,7 +893,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					{confirmLogoutModal()}
 					{thankyouModal()}
 				</ScrollView>
-				<View style={styles.CONTAINER}>
+			</KeyboardAvoidingView>
 					{Step !== 'profile_type' &&
 						<Button
 							disabled={ButtonDisabled || Loading}
@@ -904,8 +904,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						/>
 
 					}
-				</View>
-			</KeyboardAvoidingView>
 		</Screen>
 	)
 })

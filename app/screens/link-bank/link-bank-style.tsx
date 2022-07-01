@@ -175,4 +175,9 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80,
     alignSelf: 'center',
   },
+  bankView: {
+    flex: 1,
+    height: METRICS.screenHeight-200,
+    paddingBottom: 10,
+  },
 })
