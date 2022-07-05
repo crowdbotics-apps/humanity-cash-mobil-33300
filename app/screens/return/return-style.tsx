@@ -284,7 +284,30 @@ export default StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 10
+  },
+  DISTANCES_CONTAINER: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  DISTANCE_LABEL: {
+    right: 10,
+    fontSize: 16,
+    color: COLOR.PALETTE.black,
+  },
+  DISTANCE_FILTER_LABEL: {
+    fontSize: 10,
+    color: COLOR.PALETTE.black,
+  },
+  FILTER_CONTAINER: {
+    width: METRICS.screenWidth * 0.95,
+    alignSelf: 'center'
+  },
+
+  CLEAR_FILTERS: {
+    fontSize: 16,
+    textDecorationLine: 'underline',
+    marginVertical: 10,
+    alignSelf: 'center',
+    color: COLOR.PALETTE.lightGrey
   }
-
-
 })

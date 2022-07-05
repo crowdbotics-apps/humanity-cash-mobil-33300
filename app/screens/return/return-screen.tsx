@@ -1,12 +1,13 @@
 import { observer } from "mobx-react-lite";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Screen, Text } from "../../components";
+import { Button, Screen, Text, TextInputComponent } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import styles from './return-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
+import { CheckBox } from 'react-native-elements'
 
 export const ReturnScreen = observer(function ReturnScreen() {
 	const navigation = useNavigation()
@@ -50,11 +51,19 @@ export const ReturnScreen = observer(function ReturnScreen() {
 	const [Loading, setLoading] = useState(false)
 	const [Finish, setFinish] = useState(false)
 	const [Search, setSearch] = useState('')
+	const [ShowFilter, setShowFilter] = useState(false)
+	const [DistanceFilter, setDistanceFilter] = useState('')
+
+	const Filters = () => <View style={styles.FILTER_CONTAINER}>
+		
+		<Text onPress={() => setDistanceFilter('')} style={styles.CLEAR_FILTERS}>Clear filters</Text>
+		<View style={styles.LINE} />
+	</View>
 
 	const ReturnIndex = () => <View style={styles.CONTAINER}>
 		<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
 			<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
-			<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
+			<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
 
 		</TouchableOpacity>
 		<Image
@@ -62,7 +71,7 @@ export const ReturnScreen = observer(function ReturnScreen() {
 			source={IMAGES.logoFull}
 			style={styles.LOGO_STYLE}
 		/>
-		<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>C$ 382.91</Text>
+		<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>C$ 0</Text>
 		<View style={styles.LINE} />
 		<View style={styles.SEARCH_INPUT_CONTAINER}>
 			<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
@@ -74,10 +83,11 @@ export const ReturnScreen = observer(function ReturnScreen() {
 					placeholder={`Search`}
 				/>
 			</View>
-			<View style={styles.SEARCH_INPUT_ADJUSTMENTS}>
+			<TouchableOpacity style={styles.SEARCH_INPUT_ADJUSTMENTS} onPress={() => setShowFilter(!ShowFilter)}>
 				<Image source={IMAGES.shortIcon} resizeMode='contain' style={{ width: 20, height: 20 }} />
-			</View>
+			</TouchableOpacity>
 		</View>
+		{ShowFilter && Filters()}
 		{Object.keys(returns).map((r, key) => ([
 			<Text key={key + '_label'} style={styles.RETURNS_LABEL}>TODAY</Text>,
 			returns[r].map((i, key2) => (
@@ -268,15 +278,16 @@ Thank you
 					<Button
 						buttonStyle={{
 							backgroundColor: loginStore.getAccountColor,
-							bottom: 5,
-							position: 'absolute'
+							// bottom: 125,
+							// position: 'absolute'
 						}}
 						buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
 						onPress={() => [setShowIndex(false), setShowScanModal(true)]}
 						buttonLabel={'Receive or Scan to pay'}
+						showBottonMenu
+						hideButton
 					/>
 				}
-
 			</KeyboardAvoidingView>
 		</Screen>
 	)

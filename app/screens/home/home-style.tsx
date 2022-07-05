@@ -190,7 +190,8 @@ export default StyleSheet.create({
     width: 120,
     height: 25,
     borderRadius: 20,
-    marginRight: 10
+    marginRight: 10,
+    justifyContent: 'center'
   },
   NEWS_CONTAINER: {
     width: METRICS.screenWidth * 0.95,

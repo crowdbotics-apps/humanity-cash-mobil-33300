@@ -99,8 +99,10 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
         super(ConsumerMyProfileAPIView, self).update(request, *args, **kwargs)
 
         instance = self.get_object()
+        request.data.pop('consumer_profile')
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
 
         if not self.request.user.consumer.dwolla_id:
             # if dwolla_id is not set yet

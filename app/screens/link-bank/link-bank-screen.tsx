@@ -39,7 +39,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         .then(result => {
           console.log('result state ===>>> ', result)
         })
-     
+
     }
   }, [CustomerDwollaId]);
 
@@ -73,7 +73,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           </TouchableOpacity>
         ))}
         {/* <TouchableOpacity onPress={() => setStep('bankLoginDwolla')} style={styles.BANK_ICON_CONTAINER}> */}
-        <TouchableOpacity onPress={() => temp()} style={styles.BANK_ICON_CONTAINER}>
+        <TouchableOpacity onPress={() => setStep('bankLoginDwolla')} style={styles.BANK_ICON_CONTAINER}>
         <Icon name={"add"} size={50} color={COLOR.PALETTE.gray} />
           </TouchableOpacity>
       </View>
@@ -127,15 +127,17 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
             <Ionicons name="eye" color={"#39534440"} size={20} />
           </TouchableOpacity>
         </View>
-     
+
     </View>
   )
 
   const RenderBankLoginDwolla = () => (
-<WebView
-        source={{ uri: 'https://infinite.red' }}
-        // style={{ marginTop: 20 }}
-      />
+    <WebView
+    style={styles.bankView}
+    source={{
+      uri: `https://humanity-cash-mobil-33300.botics.co/iav/?iavToken=xrEffXpIWcd7Iijk9zms5g0zLYGIJFU3Z2sIeKS3y022ETV3ih`,
+    }}
+  />
   )
 
   return (
@@ -171,6 +173,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
             onPress={() => { Step === 'help' ? setStep('contact') : Linking.openURL('mailto:support@example.com') }}
             buttonLabel={'Submit'}
             showBottonMenu
+            hideButton
           />
           : <Button
             buttonStyle={{

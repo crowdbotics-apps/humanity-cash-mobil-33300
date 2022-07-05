@@ -121,23 +121,23 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
 
           {console.log(' result ===>>> ', JSON.stringify(loginStore.ProfileData, null, 2))}
 
-          <Text style={styles.TOTAL_CURRENCY}>C$ 100.00</Text>
+          <Text style={styles.TOTAL_CURRENCY}>C$ 0</Text>
 
-          <TouchableOpacity onPress={() => props.navigation.navigate("return", {})} style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("qr", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.scanToPay}
               style={styles.MENU_ITEM_ICON}
             />
-            <Text style={styles.MENU_ITEM_LABEL}>Scan to pay</Text>
+            <Text style={styles.MENU_ITEM_LABEL}>Receive payment / Scan to pay</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("return", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.receive_payment}
               style={styles.MENU_ITEM_ICON}
             />
-            <Text style={styles.MENU_ITEM_LABEL}>Receive payment</Text>
+            <Text style={styles.MENU_ITEM_LABEL}>My Transactions</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => props.navigation.navigate("loadWallet", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
