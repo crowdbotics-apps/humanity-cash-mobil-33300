@@ -1,12 +1,12 @@
-from rest_framework import filters
+from rest_framework import filters, status
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from cities_light.models import City, Region
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from home.api.v1.serializers.base_serializers import CityListSerializer, StateListSerializer, \
-    WhereToSpendListSerializer, BusinessDetailsSerializer
-from home.helpers import AuthenticatedAPIView
+    WhereToSpendListSerializer, BusinessDetailsSerializer, SendQrCodeSerializer
+from home.helpers import AuthenticatedAPIView, send_qr_code_email
 from users.constants import Industry
 from users.models import Merchant
 
@@ -70,3 +70,13 @@ class BusinessDetailsView(AuthenticatedAPIView, RetrieveAPIView):
     queryset = Merchant.objects.all()
     serializer_class = BusinessDetailsSerializer
 
+
+class SendQrCodeView(AuthenticatedAPIView):
+    serializer_class = SendQrCodeSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        send_qr_code_email(user=request.user, qr_code_image=serializer.validated_data.get('qr_code_image'))
+
+        return Response(status=status.HTTP_200_OK)

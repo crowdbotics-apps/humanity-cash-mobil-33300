@@ -51,5 +51,6 @@ urlpatterns = [
     ])),
     path('where-to-spend/', base_views.WhereToSpendView.as_view(), name='where_to_spend'),
     path('business-details/<int:pk>/', base_views.BusinessDetailsView.as_view(), name='business_details'),
+    path('my-qr-code-send/', base_views.SendQrCodeView.as_view(), name='my_qr_code_send'),
     path("", include(router.urls))
 ]

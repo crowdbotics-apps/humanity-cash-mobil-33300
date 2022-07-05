@@ -1,5 +1,7 @@
 import logging
 import random
+import io
+import base64
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -93,3 +95,21 @@ def get_user_by_uidb64(uidb64):
     except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist, ValidationError):
         user = None
     return user
+
+
+def send_qr_code_email(user, qr_code_image):
+    try:
+
+
+        subject = "QR Code"
+        text_content = f"""<h5>Your QR Code</h5><br/>
+        <img src="data:image/png;base64,{base64.b64encode(qr_code_image.open('rb').read()).decode('utf-8')}" alt="QR" style="width:250px;height:50px;">
+        <br/>
+        """
+        send_email(
+            subject=subject,
+            text_content=text_content,
+            user_email=[user.email]
+        )
+    except Exception as e:
+        LOGGER.exception('QR Code sending failed: {}'.format(e))

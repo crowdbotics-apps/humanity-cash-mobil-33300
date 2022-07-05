@@ -44,3 +44,7 @@ class BusinessDetailsSerializer(serializers.ModelSerializer):
         model = Merchant
         fields = ['id', 'business_name', 'business_story', 'background_picture',
                   'address_1', 'address_2', 'zip_code', 'city', 'state', 'website']
+
+
+class SendQrCodeSerializer(serializers.Serializer):
+    qr_code_image = serializers.ImageField()
