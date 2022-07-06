@@ -2,6 +2,7 @@ import logging
 import random
 import io
 import base64
+from email.mime.image import MIMEImage
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -99,17 +100,26 @@ def get_user_by_uidb64(uidb64):
 
 def send_qr_code_email(user, qr_code_image):
     try:
-
-
+        from_email, to = settings.DEFAULT_FROM_EMAIL, [user.email]
         subject = "QR Code"
-        text_content = f"""<h5>Your QR Code</h5><br/>
-        <img src="data:image/png;base64,{base64.b64encode(qr_code_image.open('rb').read()).decode('utf-8')}" alt="QR" style="width:250px;height:50px;">
-        <br/>
+        body_html = """
+        <html>
+            <body>
+                <h5>Your QR Code</h5><br/>
+                <img src="cid:qr_code.png" />
+                <br/>
+            </body>
+        </html>
         """
-        send_email(
-            subject=subject,
-            text_content=text_content,
-            user_email=[user.email]
-        )
+        msg = EmailMultiAlternatives(subject, body_html, from_email, to)
+        msg.mixed_subtype = 'related'
+        msg.attach_alternative(body_html, "text/html")
+
+        img = MIMEImage(qr_code_image.open('r').read())
+        img.add_header('Content-ID', '<{name}>'.format(name='qr_code.png'))
+        img.add_header('Content-Disposition', 'inline', filename='qr_code.png')
+        msg.attach(img)
+        msg.send()
+
     except Exception as e:
         LOGGER.exception('QR Code sending failed: {}'.format(e))
