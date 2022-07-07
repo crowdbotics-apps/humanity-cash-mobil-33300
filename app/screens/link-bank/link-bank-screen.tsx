@@ -11,6 +11,8 @@ import { WebView } from 'react-native-webview'
 import { useStores } from "../../models"
 
 import Ionicons from "react-native-vector-icons/Ionicons"
+import {runInAction} from "mobx";
+import {notifyMessage} from "../../utils/helpers";
 
 export const LinkBankScreen = observer(function LinkBankScreen() {
   const navigation = useNavigation()
@@ -25,6 +27,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const [Search, setSearch] = useState('')
 
   const [CustomerDwollaId, setCustomerDwollaId] = useState('')
+  const [iavToken, setIavToken] = useState('')
 
   const temp = () => {
     loginStore.environment.api.getDwollaToken({"user_type": "consumer"})
@@ -32,16 +35,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           console.log('result state ===>>> ', result)
         })
   }
-
-  useEffect(() => {
-    if (CustomerDwollaId) {
-      loginStore.environment.api.getDwollaToken()
-        .then(result => {
-          console.log('result state ===>>> ', result)
-        })
-
-    }
-  }, [CustomerDwollaId]);
 
   const RenderBanks = () => (
     <View style={styles.CONTAINER}>
@@ -73,7 +66,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           </TouchableOpacity>
         ))}
         {/* <TouchableOpacity onPress={() => setStep('bankLoginDwolla')} style={styles.BANK_ICON_CONTAINER}> */}
-        <TouchableOpacity onPress={() => setStep('bankLoginDwolla')} style={styles.BANK_ICON_CONTAINER}>
+        <TouchableOpacity onPress={() => getDwollaIav()} style={styles.BANK_ICON_CONTAINER}>
         <Icon name={"add"} size={50} color={COLOR.PALETTE.gray} />
           </TouchableOpacity>
       </View>
@@ -131,11 +124,65 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     </View>
   )
 
+    function getIavToken(){
+        // TODO: change user_type argument with the one selected at that moment, consumer o merchant
+        loginStore.environment.api.getDwollaToken({"user_type": "consumer"})
+            .then(result => {
+                console.log('result iav ===>>> ', result)
+                if (result.kind === "ok") {
+                    runInAction(() => {
+                        setIavToken(result.response.iav_token)
+                    })
+                } else if (result.kind === "bad-data") {
+                    const key = Object.keys(result?.errors)[0]
+                    let msg = `${key}: ${result?.errors?.[key][0]}`
+                    notifyMessage(msg)
+                } else {
+                    loginStore.reset()
+                    notifyMessage(null)
+                }
+            })
+    }
+
+    function bankLoginDwolla(){
+        setStep('bankLoginDwolla')
+    }
+
+    function getDwollaIav() {
+        getIavToken();
+        bankLoginDwolla();
+    }
+
+    const jsCode = `
+    window.addEventListener('message', function(t){
+      if (t.data.topic === 'iav.state'){
+        window.ReactNativeWebView.postMessage(t.data.payload[0].currentPage)
+      }
+    })
+    true;
+    `;
+
+    function onMessage(event) {
+        if (event.nativeEvent.data !== "undefined") {
+            if (event.nativeEvent.data === 'SuccessIAV'){
+                setTimeout(() => {  setStep('banks') }, 3000);
+            }
+
+        }
+    }
+
+
   const RenderBankLoginDwolla = () => (
     <WebView
     style={styles.bankView}
+    javascriptEnabled
+    originWhitelist={['*']}
+    domStorageEnabled={true}
+    startInLoadingState={true}
+    injectedJavaScript={jsCode}
+    onMessage={onMessage}
     source={{
-      uri: `https://humanity-cash-mobil-33300.botics.co/iav/?iavToken=xrEffXpIWcd7Iijk9zms5g0zLYGIJFU3Z2sIeKS3y022ETV3ih`,
+      uri: `https://humanity-cash-mobil-33300.botics.co/iav/?iavToken=${iavToken}`,
     }}
   />
   )
