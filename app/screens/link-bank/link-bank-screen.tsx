@@ -13,6 +13,7 @@ import { useStores } from "../../models"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import {runInAction} from "mobx";
 import {notifyMessage} from "../../utils/helpers";
+import {DEFAULT_API_CONFIG} from "../../services/api/api-config";
 
 export const LinkBankScreen = observer(function LinkBankScreen() {
   const navigation = useNavigation()
@@ -182,7 +183,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     injectedJavaScript={jsCode}
     onMessage={onMessage}
     source={{
-      uri: `https://humanity-cash-mobil-33300.botics.co/iav/?iavToken=${iavToken}`,
+      uri: `${DEFAULT_API_CONFIG.url}/iav/?iavToken=${iavToken}`,
     }}
   />
   )
