@@ -22,7 +22,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80,
     alignItems: 'center',
     alignSelf: 'center',
-    marginBottom: 50
+    marginBottom: 100
   },
   BACK_BUTON_LABEL: {
     fontSize: 16,

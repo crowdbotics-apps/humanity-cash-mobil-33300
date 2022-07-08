@@ -314,12 +314,12 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
     >
       <KeyboardAvoidingView
         enabled
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        // behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.ROOT}
       >
         {ShowMap
           ? MapContainer()
-          : <ScrollView bounces={false}>
+          : <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
             <View style={styles.ROOT_CONTAINER}>
               <View style={styles.CONTAINER}>
                 <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home", {})}>
@@ -356,6 +356,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
         buttonLabel={''}
         hideButton
         showBottonMenu={!ShowMap}
+        accountType={loginStore.getSelectedAccount}
       />
     </Screen>
   )

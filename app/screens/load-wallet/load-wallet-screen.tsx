@@ -108,7 +108,7 @@ C$ ${Amount}`}
 		>
 			<KeyboardAvoidingView
 				enabled
-				behavior={Platform.OS === 'ios' ? 'padding' : null}
+				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
 				<View style={styles.HEADER_ACTIONS}>

@@ -72,7 +72,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
     >
       <KeyboardAvoidingView
         enabled
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        // behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.ROOT}
       >
         <ScrollView bounces={false}>

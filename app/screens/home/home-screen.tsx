@@ -53,6 +53,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getProfileConsumer()
 			.then(result => {
+				console.log(' ====>>>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
@@ -74,6 +75,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getProfileMerchant()
 			.then(result => {
+				console.log(' ====>>>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
@@ -186,7 +188,7 @@ export const HomeScreen = observer(function HomeScreen() {
 								source={IMAGES.currentDollarIcon}
 								style={styles.AMOUNT_ICON}
 							/>
-							<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>382.91</Text>
+							<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>0</Text>
 						</View>
 						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}> */}
 						<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => setShowBankModal(true)} >
@@ -263,7 +265,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		>
 			<KeyboardAvoidingView
 				enabled
-				behavior={Platform.OS === 'ios' ? 'padding' : null}
+				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
 				{loginStore.getSelectedAccount === 'merchant'
@@ -281,6 +283,7 @@ export const HomeScreen = observer(function HomeScreen() {
 							buttonLabel={'Scan to Pay or Receive'}
 							showBottonMenu
 							hideButton
+							accountType={loginStore.getSelectedAccount}
 						/>
 					]
 				}

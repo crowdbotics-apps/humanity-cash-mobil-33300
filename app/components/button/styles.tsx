@@ -60,6 +60,20 @@ export default StyleSheet.create({
 
         alignItems: 'center'
     },
+    QR_BUTTON_MERCHANT: {
+        width: 66,
+        height: 66,
+        borderRadius: 33,
+        backgroundColor: COLOR.PALETTE.green,
+        bottom: (METRICS.screenWidth / 4) - 35,
+        elevation: 10,
+        shadowColor: 'black',
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        justifyContent: 'center',
+
+        alignItems: 'center'
+    },
     BOTTON_MENU_ICON_HOME: {
         width: 50,
         height: 50,

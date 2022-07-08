@@ -715,12 +715,12 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Thank you! Welcome to the Currents App. Now it is time to add some Currents to your wallet!</Text>
 				<View style={styles.CONTAINER}>
-					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home", {})]} style={[styles.NEED_HELP_LINK, {marginBottom: 100}]}>Skip for now</Text>
+					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home", {})]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
 					<Button
-							// onPress={() => nextButtonHandler()}
-							buttonLabel={'Link my personal bank account'}
-							buttonStyle={styles.SUBMIT_BUTTON}
-						/>
+						// onPress={() => nextButtonHandler()}
+						buttonLabel={'Link my personal bank account'}
+						buttonStyle={styles.SUBMIT_BUTTON}
+					/>
 				</View>
 			</View>
 		</Modal>
@@ -894,16 +894,16 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					{thankyouModal()}
 				</ScrollView>
 			</KeyboardAvoidingView>
-					{Step !== 'profile_type' &&
-						<Button
-							disabled={ButtonDisabled || Loading}
-							onPress={() => nextButtonHandler()}
-							loading={Loading}
-							buttonLabel={Step === 'business_exec' ? 'Confirm' : 'Next'}
-							buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
-						/>
+			{Step !== 'profile_type' &&
+				<Button
+					disabled={ButtonDisabled || Loading}
+					onPress={() => nextButtonHandler()}
+					loading={Loading}
+					buttonLabel={Step === 'business_exec' ? 'Confirm' : 'Next'}
+					buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
+				/>
 
-					}
+			}
 		</Screen>
 	)
 })

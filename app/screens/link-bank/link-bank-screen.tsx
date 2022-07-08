@@ -27,20 +27,25 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const [CustomerDwollaId, setCustomerDwollaId] = useState('')
 
   const temp = () => {
-    loginStore.environment.api.getDwollaToken({"user_type": "consumer"})
+    loginStore.environment.api.getDwollaToken({"user_type": "merchant"})
         .then(result => {
           console.log('result state ===>>> ', result)
         })
   }
 
   useEffect(() => {
-    if (CustomerDwollaId) {
-      loginStore.environment.api.getDwollaToken()
+    if (CustomerDwollaId === '' || !CustomerDwollaId) {
+      loginStore.environment.api.getDwollaToken({
+        "user_type": "merchant"
+      })
         .then(result => {
           console.log('result state ===>>> ', result)
+          if (result.kind === 'ok') {
+            setCustomerDwollaId(result.response.iav_token)
+          }
         })
-
     }
+    console.log(' CustomerDwollaId  ==>>> ', CustomerDwollaId)
   }, [CustomerDwollaId]);
 
   const RenderBanks = () => (
@@ -72,7 +77,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
             />
           </TouchableOpacity>
         ))}
-        {/* <TouchableOpacity onPress={() => setStep('bankLoginDwolla')} style={styles.BANK_ICON_CONTAINER}> */}
+        {/* <TouchableOpacity onPress={() => temp()} style={styles.BANK_ICON_CONTAINER}> */}
         <TouchableOpacity onPress={() => setStep('bankLoginDwolla')} style={styles.BANK_ICON_CONTAINER}>
         <Icon name={"add"} size={50} color={COLOR.PALETTE.gray} />
           </TouchableOpacity>
@@ -135,7 +140,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     <WebView
     style={styles.bankView}
     source={{
-      uri: `https://humanity-cash-mobil-33300.botics.co/iav/?iavToken=xrEffXpIWcd7Iijk9zms5g0zLYGIJFU3Z2sIeKS3y022ETV3ih`,
+      uri: `https://humanity-cash-mobil-33300.botics.co/iav/?iavToken=${CustomerDwollaId}`,
     }}
   />
   )
@@ -150,7 +155,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     >
       <KeyboardAvoidingView
         enabled
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        // behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.ROOT}
       >
         <ScrollView bounces={false}>
@@ -163,7 +168,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-        {Step !== 'banks'
+        {Step !== 'bankLoginDwolla'  && (Step !== 'banks'
           ? <Button
             buttonStyle={{
               backgroundColor: COLOR.PALETTE.blue,
@@ -185,7 +190,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
             showBottonMenu
             hideButton
           />
-        }
+        )}
     </Screen>
   )
 })

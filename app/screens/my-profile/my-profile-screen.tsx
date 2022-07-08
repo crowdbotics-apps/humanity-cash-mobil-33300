@@ -18,6 +18,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const { loginStore } = rootStore
 
 	const [Loading, setLoading] = useState(false)
+	const [Email, setEmail] = useState('')
 
 	// personal
 	const [Username, setUsername] = useState('')
@@ -388,24 +389,24 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		const pic = {
 			uri:
 				Platform.OS === "android"
-					? imageSource.uri
-					: imageSource.uri.replace("file://", ""),
+					? imageSource?.uri
+					: imageSource?.uri?.replace("file://", ""),
 			type: imageSource.type,
 			name: imageSource.fileName
 		}
 		const prof_pic = {
 			uri:
 				Platform.OS === "android"
-					? BusinessImageSource.uri
-					: BusinessImageSource.uri.replace("file://", ""),
+					? BusinessImageSource?.uri
+					: BusinessImageSource?.uri?.replace("file://", ""),
 			type: BusinessImageSource.type,
 			name: BusinessImageSource.fileName
 		}
 		const back_pic = {
 			uri:
 				Platform.OS === "android"
-					? BackBusinessImageSource.uri
-					: BackBusinessImageSource.uri.replace("file://", ""),
+					? BackBusinessImageSource?.uri
+					: BackBusinessImageSource?.uri?.replace("file://", ""),
 			type: BackBusinessImageSource.type,
 			name: BackBusinessImageSource.fileName
 		}
@@ -449,6 +450,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					last_name: LastName
 				})
 				.then(result => {
+					console.log(' updateProfileConsumer ====>>>>> ', JSON.stringify(result, null, 2))
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
@@ -485,6 +487,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		setAddress2(loginStore.ProfileDataBusiness.address_2)
 		setPostalCode(loginStore.ProfileDataBusiness.zip_code)
 		setPhoneNumber(loginStore.ProfileDataBusiness.phone_number)
+		setEmail(loginStore.getAllData.email)
 	}, [])
 
 	return (
@@ -496,7 +499,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		>
 			<KeyboardAvoidingView
 				enabled
-				behavior={Platform.OS === 'ios' ? 'padding' : null}
+				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
 				<ScrollView bounces={false}>
@@ -520,6 +523,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						</View>
 					</View>
 				</ScrollView>
+			</KeyboardAvoidingView>
 				<Button
 					buttonStyle={{
 						bottom: 5,
@@ -534,7 +538,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					disabled={Loading}
 					loading={Loading}
 				/>
-			</KeyboardAvoidingView>
 		</Screen>
 	)
 })

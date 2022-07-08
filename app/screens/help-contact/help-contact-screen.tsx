@@ -270,7 +270,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     >
       <KeyboardAvoidingView
         enabled
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        // behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.ROOT}
       >
         <ScrollView bounces={false}>
