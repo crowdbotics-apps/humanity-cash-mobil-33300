@@ -29,13 +29,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   const [CustomerDwollaId, setCustomerDwollaId] = useState('')
   const [iavToken, setIavToken] = useState('')
-
-  const temp = () => {
-    loginStore.environment.api.getDwollaToken({"user_type": "consumer"})
-        .then(result => {
-          console.log('result state ===>>> ', result)
-        })
-  }
+  const [fundingSources, setFundingSources] = useState([])
 
   const RenderBanks = () => (
     <View style={styles.CONTAINER}>
@@ -124,6 +118,27 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
     </View>
   )
+
+    const getFundingSourcesList = async () =>  {
+        // TODO: change user_type argument with the one selected at that moment, consumer o merchant
+        loginStore.environment.api.getFundingSources({"user_type": "consumer"})
+            .then(result => {
+                console.log('result funding_sources ===>>> ', result)
+                if (result.kind === "ok") {
+                    runInAction(() => {
+                        setFundingSources(result.data)
+                    })
+                } else if (result.kind === "bad-data") {
+                    const key = Object.keys(result?.errors)[0]
+                    let msg = `${key}: ${result?.errors?.[key][0]}`
+                    notifyMessage(msg)
+                } else {
+                    loginStore.reset()
+                    notifyMessage(null)
+                }
+            })
+    }
+
 
     function getIavToken(){
         // TODO: change user_type argument with the one selected at that moment, consumer o merchant
