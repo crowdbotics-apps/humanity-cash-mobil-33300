@@ -1071,14 +1071,20 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "consumer_profile.profile_picture",
+											"key": "consumer_profile",
 											"type": "file",
 											"src": "/home/daniel/Imágenes/80x80.png"
 										},
 										{
 											"key": "username",
-											"value": "el_user2",
+											"value": "new_test53",
 											"type": "text"
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
@@ -1688,6 +1694,51 @@
 								"v1",
 								"business-details",
 								"4",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "QR code",
+			"item": [
+				{
+					"name": "Send QR code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "qr_code_image",
+									"type": "file",
+									"src": "/home/daniel/Imágenes/site-logo.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/my-qr-code-send/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"my-qr-code-send",
 								""
 							]
 						}
