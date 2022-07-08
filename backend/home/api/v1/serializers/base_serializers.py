@@ -1,3 +1,4 @@
+from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 from cities_light.models import City, Region
 from rest_framework.generics import RetrieveAPIView
@@ -28,10 +29,11 @@ class StateListSerializer(serializers.ModelSerializer):
 
 class WhereToSpendListSerializer(serializers.ModelSerializer):
     background_picture = serializers.SerializerMethodField()
+    location = PointField(required=False)
 
     class Meta:
         model = Merchant
-        fields = ['id', 'background_picture', 'business_name', 'website']
+        fields = ['id', 'background_picture', 'business_name', 'website', 'location']
 
     def get_background_picture(self, obj):
         if obj.background_picture:

@@ -744,6 +744,46 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "75 Set up Merchant Profile Detail with location",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type_of_business\": \"LLC\",\n    \"registered_business_name\": \"New business name 55\",\n    \"industry\": \"Shopping\",\n    \"employer_identification_number\": \"22222\",\n    \"social_security_number\": \"999999\",\n    \"city\": 1988,\n    \"state\": 28,\n    \"address_1\": \"Addr1\",\n    \"address_2\": \"Addr2\",\n    \"zip_code\": \"12345\",\n    \"location\": {\n        \"latitude\": 40.72883607809067,\n        \"longitude\": -74.06573657503567\n    },\n    \"phone_number\": \"+1-212-456-7890\",\n    \"owner_first_name\": \"Owner name 55\",\n    \"owner_last_name\": \"Owner name 55\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/merchant-detail/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"merchant-detail",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
@@ -1011,7 +1051,78 @@
 									"formdata": [
 										{
 											"key": "business_name",
-											"value": "OKI Company",
+											"value": "Test55business",
+											"type": "text"
+										},
+										{
+											"key": "business_story",
+											"value": "Story...1",
+											"type": "text"
+										},
+										{
+											"key": "profile_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/80x80.png"
+										},
+										{
+											"key": "background_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/1000x1000.gif"
+										},
+										{
+											"key": "address_1",
+											"value": "Street 12",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "www.google.com",
+											"type": "text"
+										},
+										{
+											"key": "industry",
+											"value": "Lodging",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/my-profile/merchant/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"my-profile",
+										"merchant",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "109 My profile Merchant Update with location",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "business_name",
+											"value": "55 Company",
 											"type": "text"
 										},
 										{
@@ -1032,6 +1143,11 @@
 										{
 											"key": "address_1",
 											"value": "Street 1",
+											"type": "text"
+										},
+										{
+											"key": "location",
+											"value": "{\"latitude\": 40.584042942129535, \"longitude\": -73.97103851772455}",
 											"type": "text"
 										}
 									]
@@ -1641,6 +1757,9 @@
 			"item": [
 				{
 					"name": "49 Where to spend",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1654,6 +1773,15 @@
 						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"industry\": \"Shopping\",\n    \"latitude\": 40.58562497727944, \n    \"longitude\": -73.96510767916448,\n    \"distance\": 2 \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{BASE_URL}}/api/v1/where-to-spend/",
 							"host": [

@@ -67,7 +67,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites'
+    'django.contrib.sites',
+    'django.contrib.gis'
 ]
 LOCAL_APPS = [
     'home',
@@ -141,7 +142,7 @@ DATABASES = {
 
 if env.str("DATABASE_URL", default=None):
     DATABASES = {
-        'default': env.db()
+        'default': env.db(engine='django.contrib.gis.db.backends.postgis')
     }
 
 

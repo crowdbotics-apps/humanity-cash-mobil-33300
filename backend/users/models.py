@@ -1,6 +1,6 @@
 from cities_light.models import City, Region
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.contrib.gis.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -103,6 +103,7 @@ class Merchant(BaseProfileModel):
     owner_city = models.CharField(max_length=100, null=True, blank=True)
     owner_state = models.CharField(max_length=2, null=True, blank=True)
     owner_zip_code = models.CharField(max_length=16, null=True, blank=True)
+    location = models.PointField(null=True, blank=True)
 
     class Meta:
         db_table = 'merchant'

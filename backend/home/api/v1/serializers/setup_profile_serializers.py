@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 
 from users.models import Consumer, Merchant
@@ -72,6 +73,7 @@ class SetupMerchantProfileSerializer(serializers.ModelSerializer):
 
 
 class SetupMerchantProfileDetailSerializer(serializers.ModelSerializer):
+    location = PointField(required=False)
 
     class Meta:
         model = Merchant
@@ -79,7 +81,7 @@ class SetupMerchantProfileDetailSerializer(serializers.ModelSerializer):
                   'owner_first_name', 'owner_last_name',
                   'registered_business_name', 'industry',
                   'employer_identification_number', 'social_security_number',
-                  'address_1', 'address_2', 'city', 'state', 'zip_code', 'phone_number']
+                  'address_1', 'address_2', 'city', 'state', 'location', 'zip_code', 'phone_number']
 
 
 class ConsumerMyProfileSerializer(serializers.ModelSerializer):
@@ -115,6 +117,7 @@ class MerchantMyProfileSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False, allow_empty_file=True)
     background_picture = serializers.ImageField(required=False, allow_empty_file=True)
     dwolla_id = serializers.CharField(read_only=True)
+    location = PointField(required=False)
 
     class Meta:
         model = Merchant
@@ -122,7 +125,7 @@ class MerchantMyProfileSerializer(serializers.ModelSerializer):
                   'profile_picture', 'background_picture',
                   'owner_first_name', 'owner_last_name',
                   'registered_business_name', 'industry', 'website',
-                  'employer_identification_number', 'social_security_number',
+                  'employer_identification_number', 'social_security_number', 'location',
                   'address_1', 'address_2', 'city', 'state', 'zip_code', 'phone_number', 'dwolla_id']
 
 

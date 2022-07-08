@@ -1,3 +1,6 @@
+from django.contrib.gis.db.models.functions import Distance
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 from rest_framework import filters, status
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from cities_light.models import City, Region
@@ -48,9 +51,10 @@ class WhereToSpendView(ListAPIView):
         queryset = self.filter_queryset(self.get_queryset())
         for cat in categories:
             qs = queryset.filter(industry=cat[0])
-            cat_items_serializer = WhereToSpendListSerializer(qs, many=True, context={'request': request})
-            cat_item = {cat[0]: cat_items_serializer.data}
-            cat_list.append(cat_item)
+            if qs.exists():
+                cat_items_serializer = WhereToSpendListSerializer(qs, many=True, context={'request': request})
+                cat_item = {cat[0]: cat_items_serializer.data}
+                cat_list.append(cat_item)
 
         merchant = Merchant.objects.order_by('?').first()
         merchant_month = {
@@ -64,6 +68,25 @@ class WhereToSpendView(ListAPIView):
             "merchants": cat_list
         }
         return Response(result)
+
+    def get_queryset(self):
+        queryset = self.queryset
+        latitude = self.request.data.get('latitude')
+        longitude = self.request.data.get('longitude')
+        industry = self.request.data.get('industry')
+        distance = self.request.data.get('distance')
+        if industry:
+            queryset = queryset.filter(industry=industry)
+        if latitude and longitude and distance:
+            latitude = float(latitude)
+            longitude = float(longitude)
+            user_location = Point(x=longitude, y=latitude, srid=4326)
+            queryset = queryset.filter(location__distance_lte=(user_location, D(mi=distance)))\
+                .only('id', 'business_name', 'business_story', 'background_picture', 'website', 'location').annotate(
+                distance=Distance('location', user_location)).order_by('distance')
+            # queryset = queryset.annotate(distance=Distance('location', user_location)).order_by('distance')
+
+        return queryset
 
 
 class BusinessDetailsView(AuthenticatedAPIView, RetrieveAPIView):
