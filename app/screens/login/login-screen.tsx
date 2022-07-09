@@ -37,7 +37,7 @@ export const LoginScreen = observer(function LoginScreen() {
     setLoading(true)
     loginStore.environment.api
       .login({ email: Username, password: Pass })
-      .then(result => {
+      .then((result: any) => {
         console.log(' =====>>>>>>> ', JSON.stringify(result))
         setLoading(false)
         if (result.kind === "ok") {
@@ -69,7 +69,7 @@ export const LoginScreen = observer(function LoginScreen() {
         if (result.response.merchant_data == null && result.response.consumer_data == null) {
           navigation.navigate("setupProfile", {})
         }
-        else if (!(result.response.merchant === null)){
+        else if (!(result.response.merchant === null)) {
           loginStore.setSelectedAccount('merchant')
           navigation.navigate("home", {})
         }
@@ -122,12 +122,12 @@ export const LoginScreen = observer(function LoginScreen() {
   const pressHandler = () => {
     console.log(' ==>> ', TouchID)
     TouchID.authenticate('to demo this react-native component', optionalConfigObject)
-    .then(success => {
-      Alert.alert('Authenticated Successfully');
-    })
-    .catch(error => {
-      Alert.alert('Authentication Failed');
-    });
+      .then(success => {
+        Alert.alert('Authenticated Successfully');
+      })
+      .catch(error => {
+        Alert.alert('Authentication Failed');
+      });
   }
 
 

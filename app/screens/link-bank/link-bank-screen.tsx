@@ -31,7 +31,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   const temp = () => {
     loginStore.environment.api.getDwollaToken({ "user_type": "merchant" })
-      .then(result => {
+      .then((result: any) => {
         console.log('result state ===>>> ', result)
       })
   }
@@ -41,7 +41,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
       loginStore.environment.api.getDwollaToken({
         "user_type": "merchant"
       })
-        .then(result => {
+        .then((result: any) => {
           console.log('result state ===>>> ', result)
           if (result.kind === 'ok') {
             setCustomerDwollaId(result.response.iav_token)
@@ -144,7 +144,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const getFundingSourcesList = async () => {
     // TODO: change user_type argument with the one selected at that moment, consumer o merchant
     loginStore.environment.api.getFundingSources({ "user_type": "consumer" })
-      .then(result => {
+      .then((result: any) => {
         console.log('result funding_sources ===>>> ', result)
         if (result.kind === "ok") {
           runInAction(() => {
@@ -152,8 +152,11 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           })
         } else if (result.kind === "bad-data") {
           const key = Object.keys(result?.errors)[0]
-          let msg = `${key}: ${result?.errors?.[key][0]}`
+          const msg = `${key}: ${result?.errors?.[key][0]}`
           notifyMessage(msg)
+        } else if (result.kind === "unauthorized") {
+          loginStore.reset()
+          navigation.navigate("login", {})
         } else {
           loginStore.reset()
           notifyMessage(null)
@@ -165,7 +168,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   function getIavToken() {
     // TODO: change user_type argument with the one selected at that moment, consumer o merchant
     loginStore.environment.api.getDwollaToken({ "user_type": "consumer" })
-      .then(result => {
+      .then((result: any) => {
         console.log('result iav ===>>> ', result)
         if (result.kind === "ok") {
           runInAction(() => {

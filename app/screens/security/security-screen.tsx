@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react"
+import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, TextInput, Switch } from "react-native"
 import { Text, Button, Screen } from "../../components"
@@ -8,8 +8,8 @@ import { COLOR, METRICS } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import Ionicons from "react-native-vector-icons/Ionicons"
-import {runInAction} from "mobx";
-import {notifyMessage} from "../../utils/helpers";
+import { runInAction } from "mobx";
+import { notifyMessage } from "../../utils/helpers";
 
 
 export const SecurityScreen = observer(function SecurityScreen() {
@@ -43,7 +43,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
         new_password_confirm: NewPassConfirmation,
         allow_touch_id: allowTouchId
       })
-      .then(result => {
+      .then((result: any) => {
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
@@ -53,8 +53,11 @@ export const SecurityScreen = observer(function SecurityScreen() {
           })
         } else if (result.kind === "bad-data") {
           const key = Object.keys(result?.errors)[0]
-          let msg = `${key}: ${result?.errors?.[key][0]}`
+          const msg = `${key}: ${result?.errors?.[key][0]}`
           notifyMessage(msg)
+        } else if (result.kind === "unauthorized") {
+          loginStore.reset()
+          navigation.navigate("login", {})
         } else {
           loginStore.reset()
           notifyMessage(null)
@@ -78,7 +81,6 @@ export const SecurityScreen = observer(function SecurityScreen() {
         <ScrollView bounces={false}>
           <View style={styles.ROOT_CONTAINER}>
             <View style={styles.CONTAINER}>
-
               <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings", {})}>
                 <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
                 <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
@@ -96,7 +98,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
                   ios_backgroundColor="#3e3e3e"
                   onValueChange={toggleSwitch}
                   value={allowTouchId}
-                  style={{ marginRight: 10}}
+                  style={{ marginRight: 10 }}
                 />
               </View>
 
@@ -157,14 +159,14 @@ export const SecurityScreen = observer(function SecurityScreen() {
           </View>
         </ScrollView>
         <Button
-					buttonStyle={{
-						backgroundColor: loginStore.getAccountColor,
-                        bottom: 5,
-						position: 'absolute'
-					}}
-					onPress={() => updateSecurity()}
-					buttonLabel={'Save changes'}
-				/>
+          buttonStyle={{
+            backgroundColor: loginStore.getAccountColor,
+            bottom: 5,
+            position: 'absolute'
+          }}
+          onPress={() => updateSecurity()}
+          buttonLabel={'Save changes'}
+        />
       </KeyboardAvoidingView>
     </Screen>
   )

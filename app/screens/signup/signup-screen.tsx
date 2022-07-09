@@ -127,7 +127,7 @@ export const SignupScreen = observer(function SignupScreen() {
 
   const sendVerificationCode = () => {
     setLoading(true)
-    loginStore.environment.api.sendVerificaitonCode().then(result => {
+    loginStore.environment.api.sendVerificaitonCode().then(() => {
       setLoading(false)
     })
   }

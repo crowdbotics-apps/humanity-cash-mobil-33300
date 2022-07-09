@@ -5,21 +5,16 @@ import {
 	Text,
 	Button,
 	Screen,
-	Checkbox,
 	ModalSelector
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import styles from './setup-profile-style';
-import { COLOR, TYPOGRAPHY } from '../../theme';
-import { StackActions, useNavigation } from "@react-navigation/native"
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { useNavigation } from "@react-navigation/native"
+import { launchImageLibrary } from 'react-native-image-picker';
 import { IMAGES, METRICS } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
-import { CheckBox } from 'react-native-elements'
 import { useStores } from "../../models"
-import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 
 
@@ -119,11 +114,11 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		launchImageLibrary(options, (response: any) => {
 			if (response.didCancel) {
 				return;
-			} else if (response.errorCode == 'camera_unavailable') {
+			} else if (response.errorCode === 'camera_unavailable') {
 				return;
-			} else if (response.errorCode == 'permission') {
+			} else if (response.errorCode === 'permission') {
 				return;
-			} else if (response.errorCode == 'others') {
+			} else if (response.errorCode === 'others') {
 				return;
 			}
 			if (type === 'user_image') setImageSource(response.assets[0]);
@@ -145,19 +140,22 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			type: imageSource?.type,
 			name: imageSource?.fileName
 		}
-		loginStore.environment.api.setupConsumer({ username: Username, consumer_profile: pic }).then(result => {
+		loginStore.environment.api.setupConsumer({ username: Username, consumer_profile: pic }).then((result:any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setStep("name")
 			} else if (result.kind === "bad-data") {
 				const key = Object.keys(result?.errors)[0]
-				let msg = `${key}: ${result?.errors?.[key][0]}`
+				const msg = `${key}: ${result?.errors?.[key][0]}`
 				if (key === 'username') {
 					setUsernameError(true)
 					setUsernameErrorMsg(result?.errors?.[key][0])
 				}
 				notifyMessage(msg)
-			} else {
+			} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
+				} else {
 				notifyMessage(null)
 			}
 		})
@@ -165,15 +163,18 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const setupConsumerDetail = () => {
 		setLoading(true)
-		loginStore.environment.api.setupConsumerDetail({ first_name: Name, last_name: LastName }).then(result => {
+		loginStore.environment.api.setupConsumerDetail({ first_name: Name, last_name: LastName }).then((result:any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setShowThankyouModal(true)
 			} else if (result.kind === "bad-data") {
 				const key = Object.keys(result?.errors)[0]
-				let msg = `${key}: ${result?.errors?.[key][0]}`
+				const msg = `${key}: ${result?.errors?.[key][0]}`
 				notifyMessage(msg)
-			} else {
+			} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
+				} else {
 				notifyMessage(null)
 			}
 		})
@@ -203,7 +204,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			background_picture: back_pic,
 			business_story: BusinessStory
 		})
-			.then(result => {
+			.then((result:any) => {
 				setLoading(false)
 				console.log('result ===>>> ', result)
 				setStep('business_type')
@@ -211,8 +212,11 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					setStep('business_type')
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					let msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
 				} else {
 					notifyMessage(null)
 				}
@@ -222,15 +226,18 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const setupMerchantDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
-			.then(result => {
+			.then((result:any) => {
 				setLoading(false)
 				console.log('result ===>>> ', result)
 				if (result.kind === "ok") {
 					setStep('business_exec')
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					let msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
 				} else {
 					notifyMessage(null)
 				}
@@ -254,15 +261,18 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			zip_code: PostalCode,
 			phone_number: PhoneNumber
 		})
-			.then(result => {
+			.then((result:any) => {
 				setLoading(false)
 				console.log('result ===>>> ', result)
 				if (result.kind === "ok") {
 					setShowThankyouModal(true)
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					let msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
 				} else {
 					notifyMessage(null)
 				}
@@ -787,12 +797,12 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 
 		loginStore.environment.api.getCities({ value: 'wash' })
-			.then(result => {
+			.then((result:any) => {
 				console.log('result citie ===>>> ', result)
 			})
 
 		loginStore.environment.api.getStates({ value: 'wash' })
-			.then(result => {
+			.then((result:any) => {
 				console.log('result state ===>>> ', result)
 			})
 

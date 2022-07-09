@@ -52,7 +52,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	const getProfileConsumer = () => {
 		loginStore.environment.api
 			.getProfileConsumer()
-			.then(result => {
+			.then((result:any) => {
 				console.log(' ====>>>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
@@ -62,8 +62,11 @@ export const HomeScreen = observer(function HomeScreen() {
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					let msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
 				} else {
 					//   loginStore.reset()
 					notifyMessage(null)
@@ -74,7 +77,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	const getProfileMerchant = () => {
 		loginStore.environment.api
 			.getProfileMerchant()
-			.then(result => {
+			.then((result:any) => {
 				console.log(' ====>>>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
@@ -84,8 +87,11 @@ export const HomeScreen = observer(function HomeScreen() {
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					let msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
 				} else {
 					//   loginStore.reset()
 					notifyMessage(null)
@@ -129,8 +135,6 @@ export const HomeScreen = observer(function HomeScreen() {
 									</Text>
 								</Text>
 							</View>
-
-
 							<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => [setShowBankModal(false), navigation.navigate("linkBank", {})]}>
 								<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
 							</TouchableOpacity>
@@ -168,7 +172,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	)
 
 	const ConsumerView = () => (
-		<ScrollView bounces={false}>
+		<ScrollView key="consumer_view" bounces={false}>
 			<View style={styles.ROOT_CONTAINER}>
 				<View style={styles.STEP_CONTAINER}>
 					<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
@@ -273,6 +277,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					: [
 						ConsumerView(),
 						<Button
+							key="button_botton"
 							buttonStyle={{
 								backgroundColor: loginStore.getAccountColor,
 								// bottom: 125,

@@ -78,6 +78,7 @@ export function Button(props: ButtonProps) {
       }
       {props.showBottonMenu && [
         <Image
+          key='button_img'
           resizeMode='contain'
           source={props.accountType === 'merchant' ? IMAGES.menu_merchant : IMAGES.menu_consumer}
           style={styles.BOTTON_MENU}

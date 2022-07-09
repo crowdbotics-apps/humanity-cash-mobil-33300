@@ -36,7 +36,7 @@ export function ModalContactsFriends(props: ModalContactsFriendsProps) {
 
   const sendInvitation = data => {
     setLoading(true);
-    loginStore.environment.api.sendInvitation(data).then(result => {
+    loginStore.environment.api.sendInvitation(data).then((result:any) => {
       setLoading(false);
       if (result.kind === 'ok') {
         notifyMessage('Invitation sent successfully', 'success');
