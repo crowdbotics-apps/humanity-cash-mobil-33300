@@ -13,7 +13,7 @@ import { CheckBox } from 'react-native-elements'
 import MapView, { Marker } from 'react-native-maps'
 import Geolocation from '@react-native-community/geolocation';
 
-const industry_types = [
+const industryTypes = [
   {
     type: 'Arts & entertainment',
     business: [
@@ -131,7 +131,7 @@ const industry_types = [
   },
 ]
 
-const merchant_of_the_month = {
+const merchantOfTheMonth = {
   name: 'DORY & GINGER',
   image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
   about: 'We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.'
@@ -179,11 +179,11 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
       <View style={styles.LINE} />
       <View style={styles.BUSINESS_CONTAINER}>
         <View style={styles.TOP_MONTH}>
-          <Text style={styles.MONTH_BUSINESS_NAME}>{merchant_of_the_month.name}</Text>
-          <Text style={styles.MONTH_BUSINESS_ABOUT}>{merchant_of_the_month.about}</Text>
+          <Text style={styles.MONTH_BUSINESS_NAME}>{merchantOfTheMonth.name}</Text>
+          <Text style={styles.MONTH_BUSINESS_ABOUT}>{merchantOfTheMonth.about}</Text>
         </View>
         <Image
-          source={{ uri: merchant_of_the_month.image }}
+          source={{ uri: merchantOfTheMonth.image }}
           resizeMode='cover'
           style={styles.MONTH_BUSINESS_IMAGE}
         />
@@ -193,7 +193,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
 
   const RenderCategories = () => {
     return (
-      industry_types.map((i, key) => (
+      industryTypes.map((i, key) => (
         <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
           <Text style={styles.INDUSTRY_TITLE}>{i.type}</Text>
           <View style={styles.LINE} />
@@ -352,7 +352,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
         }
       </KeyboardAvoidingView>
       <Button
-        onPress={() => { }}
+        // onPress={() => {}}
         buttonLabel={''}
         hideButton
         showBottonMenu={!ShowMap}

@@ -12,13 +12,6 @@ import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import { COLOR } from '../../theme';
 import { CheckBox } from 'react-native-elements'
-interface SignupFields {
-  email: string;
-  password: string;
-  password_confirm: string;
-  phone_number: string;
-  name: string;
-}
 
 const steps = [
   "email",
@@ -89,7 +82,7 @@ export const SignupScreen = observer(function SignupScreen() {
   }
 
   const validateEmail = (email, agree) => {
-    let valid = String(email)
+    const valid = String(email)
       .toLowerCase()
       .match(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -479,7 +472,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     }
   }
   const nextButtonHandler = () => {
-    let signupData = { Email, Phone, Code1, Code2, Code3, Code4, Code5, Code6, }
+    const signupData = { Email, Phone, Code1, Code2, Code3, Code4, Code5, Code6, }
     loginStore.setSignupData(signupData)
     switch (Step) {
       case "email":
@@ -512,13 +505,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     }
   }
 
-  const sendCodeAgainHandler = () => {
-    sendVerificationCode()
-  }
+  const sendCodeAgainHandler = () => sendVerificationCode()
 
   useEffect(() => {
     console.log(' useEffect ===>>> ', loginStore)
-    let data = loginStore.getSignupData
+    const data = loginStore.getSignupData
     if (data?.Email) setEmail(data.Email)
     if (data?.Phone) setPhone(data.Phone)
     if (data?.Code1) setCode1(data.Code1)
@@ -547,9 +538,23 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
               <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
             </TouchableOpacity>
             {renderStep()}
+          {/* </View> */}
+          {/* <View style={styles.CONTAINER}>/ */}
+            {/* {Step === "verify_email" && (
+              <View style={styles.NEED_HELP_CONTAINER}>
+                <Text
+                  onPress={() => setStep("help")}
+                  style={styles.NEED_HELP_LINK}
+                >
+                  Need help?
+                </Text>
+              </View>
+            )} */}
+          
           </View>
-          <View style={styles.CONTAINER}>
-            {Step === "email" && (
+          {/* </View> */}
+        </ScrollView>
+      {Step === "email" && (
               <View style={styles.AGREE_CONTAINER}>
                 <CheckBox
                   checked={Agree}
@@ -581,17 +586,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 </Text>
               </View>
             )}
-            {Step === "verify_email" && (
-              <View style={styles.NEED_HELP_CONTAINER}>
-                <Text
-                  onPress={() => setStep("help")}
-                  style={styles.NEED_HELP_LINK}
-                >
-                  Need help?
-                </Text>
-              </View>
-            )}
-            {Step === "verify_email" && (
+              {Step === "verify_email" && (
               <View style={styles.NEED_HELP_CONTAINER}>
                 <Text onPress={() => sendCodeAgainHandler()} style={styles.NEED_HELP_LINK}>
                   Send code again
@@ -609,9 +604,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 loading={Loading}
               />
             )}
-          </View>
-          {/* </View> */}
-        </ScrollView>
       </KeyboardAvoidingView>
     </Screen>
   )

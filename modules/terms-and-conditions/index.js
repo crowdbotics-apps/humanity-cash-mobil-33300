@@ -30,7 +30,7 @@ const TermsAndConditions = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={options.styles.header}>{options.title}</Text>
       </View>
-      <ScrollView style={{flex: 1}}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
         <HTML source={{html: htmlContent}} contentWidth={contentWidth} />
       </ScrollView>
     </View>

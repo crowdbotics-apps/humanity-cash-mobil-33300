@@ -31,7 +31,7 @@ export const LegalScreen = observer(function LegalScreen() {
         // behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.ROOT}
       >
-        <ScrollView bounces={false}>
+        <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
           <View style={styles.ROOT_CONTAINER}>
             <View style={styles.CONTAINER}>
 

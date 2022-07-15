@@ -113,7 +113,7 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
-				<ScrollView bounces={false}>
+				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.STEP_CONTAINER}>
 							<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>

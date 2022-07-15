@@ -3,12 +3,10 @@ import { observer } from "mobx-react-lite"
 import { TextInput, View, TouchableOpacity, Image, Keyboard, Alert } from "react-native"
 import { Text, Button, Screen, Checkbox } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
-import Entypo from "react-native-vector-icons/Entypo"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from "./login-style"
-import { COLOR, TYPOGRAPHY } from "../../theme"
-import { StackActions, useNavigation } from "@react-navigation/native"
-import { IMAGES } from "../../theme"
+import { COLOR, IMAGES } from "../../theme"
+import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
@@ -17,9 +15,9 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin'
-import { AppleButton } from '@invertase/react-native-apple-authentication'
-import { appleAuth } from '@invertase/react-native-apple-authentication'
-import { LoginButton, AccessToken, LoginManager, Profile } from 'react-native-fbsdk-next'
+import { AppleButton , appleAuth } from '@invertase/react-native-apple-authentication'
+
+import { AccessToken, LoginManager } from 'react-native-fbsdk-next'
 
 import TouchID from 'react-native-touch-id'
 
@@ -49,7 +47,7 @@ export const LoginScreen = observer(function LoginScreen() {
           })
         } else if (result.kind === "bad-data") {
           const key = Object.keys(result?.errors)[0]
-          let msg = `${key}: ${result?.errors?.[key][0]}`
+          const msg = `${key}: ${result?.errors?.[key][0]}`
           console.log('msg -> ', Keyboard)
           notifyMessage(msg)
         } else {
@@ -81,7 +79,7 @@ export const LoginScreen = observer(function LoginScreen() {
 
     } else if (result.kind === "bad-data") {
       const key = Object.keys(result?.errors)[0]
-      let msg = `${key}: ${result?.errors?.[key][0]}`
+      const msg = `${key}: ${result?.errors?.[key][0]}`
       console.log('msg -> ', Keyboard)
       notifyMessage(msg)
     } else {
@@ -231,8 +229,7 @@ export const LoginScreen = observer(function LoginScreen() {
         </View>
       </View>
       <View style={styles.NEED_HELP_CONTAINER}>
-        <Text onPress={() => {
-        }} style={styles.NEED_HELP_LINK}>
+        <Text style={styles.NEED_HELP_LINK}>
           Forgot password
         </Text>
       </View>
@@ -240,11 +237,8 @@ export const LoginScreen = observer(function LoginScreen() {
 </View> */}
       <Button
         buttonStyle={{
-          bottom: 5,
-          // position: 'absolute',
-          backgroundColor: Loading
-            ? `${COLOR.PALETTE.green}40`
-            : COLOR.PALETTE.green
+          // bottom: 5,
+          backgroundColor: Loading ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green
         }}
         onPress={() => login()}
         buttonLabel={"Log in"}

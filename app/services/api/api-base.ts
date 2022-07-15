@@ -102,13 +102,14 @@ export class ApiBase {
         }
 
         const response: ApiResponse<any> = await this.apisauce.get(path, extra_params, axios)
-
+        console.log(' response ===>>> ', response)
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T
             } else {
-                const problem = getGeneralApiProblem(response)
-                if (problem) {return problem as T}
+                // TODO
+                // const problem = getGeneralApiProblem(response)
+                // if (problem) {return problem as T}
             }
         }
 

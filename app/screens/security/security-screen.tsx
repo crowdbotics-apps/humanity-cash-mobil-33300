@@ -78,7 +78,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
         // behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.ROOT}
       >
-        <ScrollView bounces={false}>
+        <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
           <View style={styles.ROOT_CONTAINER}>
             <View style={styles.CONTAINER}>
               <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings", {})}>

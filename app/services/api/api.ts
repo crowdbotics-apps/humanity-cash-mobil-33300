@@ -61,12 +61,15 @@ export class Api extends ApiBase {
   async getProfileConsumer(): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/my-profile/consumer/")
   }
+
   async getProfileMerchant(): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/my-profile/merchant/")
   }
+
   async updateProfileConsumer(data: any): Promise<Types.SimplePostResult> {
     return this.multipart_form_data_patch(apiv1 + "/my-profile/consumer/", data, ["consumer_profile"])
   }
+
   async updateProfileMerchant(data: any): Promise<Types.SimplePostResult> {
     return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
   }

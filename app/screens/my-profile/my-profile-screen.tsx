@@ -508,7 +508,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
-				<ScrollView bounces={false}>
+				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
 

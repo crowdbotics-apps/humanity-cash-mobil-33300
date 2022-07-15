@@ -273,7 +273,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         // behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.ROOT}
       >
-        <ScrollView bounces={false}>
+        <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
           <View style={styles.ROOT_CONTAINER}>
 
             {(Step === 'help')
