@@ -99,7 +99,6 @@ export const SignupScreen = observer(function SignupScreen() {
   const register = () => {
     setLoading(true)
     loginStore.environment.api.userRegister({ email: Email }).then(result => {
-      console.log(' result ===>>> ', result)
       setLoading(false)
       if (result.kind === "ok") {
         runInAction(() => {
@@ -131,7 +130,6 @@ export const SignupScreen = observer(function SignupScreen() {
     loginStore.environment.api
       .verifyUserAuthenticationCode({ verification_code: code })
       .then(result => {
-        console.log(' result ===>>> ', result)
         setLoading(false)
         if (result.kind === "ok") {
           notifyMessage("Email verified", "success")
@@ -508,7 +506,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const sendCodeAgainHandler = () => sendVerificationCode()
 
   useEffect(() => {
-    console.log(' useEffect ===>>> ', loginStore)
     const data = loginStore.getSignupData
     if (data?.Email) setEmail(data.Email)
     if (data?.Phone) setPhone(data.Phone)

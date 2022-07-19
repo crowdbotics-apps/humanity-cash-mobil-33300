@@ -52,8 +52,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	const getProfileConsumer = () => {
 		loginStore.environment.api
 			.getProfileConsumer()
-			.then((result:any) => {
-				console.log(' ====>>>>> ', JSON.stringify(result, null, 2))
+			.then((result: any) => {
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
@@ -77,8 +76,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	const getProfileMerchant = () => {
 		loginStore.environment.api
 			.getProfileMerchant()
-			.then((result:any) => {
-				console.log(' ====>>>>> ', JSON.stringify(result, null, 2))
+			.then((result: any) => {
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
@@ -126,10 +124,12 @@ export const HomeScreen = observer(function HomeScreen() {
 									checkedColor={COLOR.PALETTE.green}
 								/>
 								<Text style={styles.AGREE_LABEL}>{`By checking this box, you agree to the `}
+									{/* TODO */}
 									<Text style={styles.AGREE_LABEL_LINK} onPress={() => console.log('dwolla')}>
 										{"Dwolla Terms of Service "}
 									</Text>
 									{`and `}
+									{/* TODO */}
 									<Text style={styles.AGREE_LABEL_LINK} onPress={() => console.log('dwolla')}>
 										{"Dwolla Privacy Policy"}
 									</Text>
@@ -210,54 +210,54 @@ export const HomeScreen = observer(function HomeScreen() {
 	)
 
 	const MerchantView = () => (
-			<View style={styles.ROOT_CONTAINER}>
-				<View style={styles.STEP_CONTAINER}>
-					<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-						<Icon name={"menu"} size={23} color={COLOR.PALETTE.green} />
-						<Text style={[styles.BACK_BUTON_LABEL, {color: loginStore.getAccountColor}]}>{` Home`}</Text>
-					</TouchableOpacity>
+		<View style={styles.ROOT_CONTAINER}>
+			<View style={styles.STEP_CONTAINER}>
+				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+					<Icon name={"menu"} size={23} color={COLOR.PALETTE.green} />
+					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
+				</TouchableOpacity>
 
-					<TouchableOpacity style={styles.CASHIER_BUTTON_BIG}>
-						<Image
-							resizeMode="contain"
-							source={IMAGES.currentDollarIconCashier}
-							style={styles.CASHIER_BUTTON_ICON_BIG}
-						/>
-						<Text style={styles.CASHIER_BUTTON_LABEL}>Receive payment</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
-						<Image
-							resizeMode="contain"
-							source={IMAGES.transactions_cashier}
-							style={styles.CASHIER_BUTTON_ICON}
-						/>
-						<Text style={styles.CASHIER_BUTTON_LABEL}>Transactions</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
-						<Image
-							resizeMode="contain"
-							source={IMAGES.return_cashier}
-							style={styles.CASHIER_BUTTON_ICON}
-						/>
-						<Text style={styles.CASHIER_BUTTON_LABEL}>Make a return</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
-						<Image
-							resizeMode="contain"
-							source={IMAGES.report_cashier}
-							style={styles.CASHIER_BUTTON_ICON}
-						/>
-						<Text style={styles.CASHIER_BUTTON_LABEL}>Make a report</Text>
-					</TouchableOpacity>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_BIG}>
+					<Image
+						resizeMode="contain"
+						source={IMAGES.currentDollarIconCashier}
+						style={styles.CASHIER_BUTTON_ICON_BIG}
+					/>
+					<Text style={styles.CASHIER_BUTTON_LABEL}>Receive payment</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+					<Image
+						resizeMode="contain"
+						source={IMAGES.transactions_cashier}
+						style={styles.CASHIER_BUTTON_ICON}
+					/>
+					<Text style={styles.CASHIER_BUTTON_LABEL}>Transactions</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+					<Image
+						resizeMode="contain"
+						source={IMAGES.return_cashier}
+						style={styles.CASHIER_BUTTON_ICON}
+					/>
+					<Text style={styles.CASHIER_BUTTON_LABEL}>Make a return</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+					<Image
+						resizeMode="contain"
+						source={IMAGES.report_cashier}
+						style={styles.CASHIER_BUTTON_ICON}
+					/>
+					<Text style={styles.CASHIER_BUTTON_LABEL}>Make a report</Text>
+				</TouchableOpacity>
 
-					<View style={{ height: 200 }} />
-				</View>
-				<View style={styles.STEP_CONTAINER}>
-          <TouchableOpacity onPress={() => navigation.navigate("helpContact", {})} style={styles.NEED_HELP_CONTAINER}>
-            <Text style={styles.NEED_HELP_LINK}>Need help?</Text>
-          </TouchableOpacity>
-        </View>
+				<View style={{ height: 200 }} />
 			</View>
+			<View style={styles.STEP_CONTAINER}>
+				<TouchableOpacity onPress={() => navigation.navigate("helpContact", {})} style={styles.NEED_HELP_CONTAINER}>
+					<Text style={styles.NEED_HELP_LINK}>Need help?</Text>
+				</TouchableOpacity>
+			</View>
+		</View>
 	)
 
 	return (

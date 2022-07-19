@@ -168,7 +168,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
         setLatitud(location.latitude)
         setLongitud(location.longitude)
       },
-      console.log,
+      console.warn,
       { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
     )
   })

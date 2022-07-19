@@ -31,6 +31,11 @@ export const QRScreen = observer(function QRScreen() {
     setShowQR(true)
   }
 
+  useEffect(() => {
+    // TODO: redirect on acc connect if necessary
+    console.log(' ===>>> entre aca ', JSON.stringify(loginStore.getBillingData, null, 2))
+  })
+
   const inputQR = () => <View style={{ flex: 1, justifyContent: 'space-between' }}>
     <View>
       <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
@@ -120,7 +125,7 @@ export const QRScreen = observer(function QRScreen() {
           </View>
         </View>
         {ScanQR
-          ? <QRCodeScanner onRead={e => console.log(' ===>>>>> ', e)} />
+          ? <QRCodeScanner onRead={e => console.warn(' ===>>>>> ', e)} />
           : inputQR()
         }
         {viewQR()}

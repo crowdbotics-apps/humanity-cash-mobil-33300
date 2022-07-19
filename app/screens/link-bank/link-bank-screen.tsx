@@ -29,27 +29,19 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   const [CustomerDwollaId, setCustomerDwollaId] = useState('')
 
-  const temp = () => {
-    loginStore.environment.api.getDwollaToken({ "user_type": "merchant" })
-      .then((result: any) => {
-        console.log('result state ===>>> ', result)
-      })
-  }
-
   useEffect(() => {
     if (CustomerDwollaId === '' || !CustomerDwollaId) {
       loginStore.environment.api.getDwollaToken({
         "user_type": "merchant"
       })
         .then((result: any) => {
-          console.log('result state ===>>> ', result)
           if (result.kind === 'ok') {
             setCustomerDwollaId(result.response.iav_token)
           }
         })
     }
-    console.log(' CustomerDwollaId  ==>>> ', CustomerDwollaId)
   }, [CustomerDwollaId]);
+  
   const [iavToken, setIavToken] = useState('')
   const [fundingSources, setFundingSources] = useState([])
 
@@ -145,7 +137,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     // TODO: change user_type argument with the one selected at that moment, consumer o merchant
     loginStore.environment.api.getFundingSources({ "user_type": "consumer" })
       .then((result: any) => {
-        console.log('result funding_sources ===>>> ', result)
         if (result.kind === "ok") {
           runInAction(() => {
             setFundingSources(result.data)
@@ -164,19 +155,17 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
       })
   }
 
-
   function getIavToken() {
     // TODO: change user_type argument with the one selected at that moment, consumer o merchant
     loginStore.environment.api.getDwollaToken({ "user_type": "consumer" })
       .then((result: any) => {
-        console.log('result iav ===>>> ', result)
         if (result.kind === "ok") {
           runInAction(() => {
             setIavToken(result.response.iav_token)
           })
         } else if (result.kind === "bad-data") {
           const key = Object.keys(result?.errors)[0]
-          let msg = `${key}: ${result?.errors?.[key][0]}`
+          const msg = `${key}: ${result?.errors?.[key][0]}`
           notifyMessage(msg)
         } else {
           loginStore.reset()
@@ -253,22 +242,14 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
       </KeyboardAvoidingView>
       {Step !== 'bankLoginDwolla' && (Step !== 'banks'
         ? <Button
-          buttonStyle={{
-            backgroundColor: COLOR.PALETTE.blue,
-            bottom: 125,
-            position: 'absolute'
-          }}
+          buttonStyle={styles.buttonStyle}
           onPress={() => { Step === 'help' ? setStep('contact') : Linking.openURL('mailto:support@example.com') }}
           buttonLabel={'Submit'}
           showBottonMenu
           hideButton
         />
         : <Button
-          buttonStyle={{
-            backgroundColor: COLOR.PALETTE.blue,
-            bottom: 125,
-            position: 'absolute'
-          }}
+          buttonStyle={styles.buttonStyle}
           buttonLabel={'Scan to Pay or Receive'}
           showBottonMenu
           hideButton

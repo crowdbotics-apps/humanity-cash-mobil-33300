@@ -96,10 +96,12 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
+	const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
-	const states = ["AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE", "DC"]
-	const [State, setState] = React.useState(states[1]);
+	const [States, setStates] = React.useState([]);
+	const [State, setState] = React.useState('');
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
+	const [SelectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
@@ -128,6 +130,19 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		});
 	}
 
+	const fetchCity = (data?: string) => {
+		loginStore.environment.api.getCities({ value: data})
+			.then((result: any) => {
+				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name})))
+			})
+	}
+	const fetchState = (data?: string) => {
+		loginStore.environment.api.getStates({ value: data})
+		.then((result: any) => {
+			setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+		})
+	}
+
 	const setupConsumer = () => {
 		setLoading(true)
 		setUsernameErrorMsg("")
@@ -144,7 +159,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			username: Username,
 			consumer_profile: pic
 		}).then((result:any) => {
-			console.log(' setupConsumer ===>>> ', result)
 			setLoading(false)
 			if (result.kind === "ok") {
 				setStep("name")
@@ -171,7 +185,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			first_name: Name,
 			last_name: LastName
 		}).then((result:any) => {
-			console.log(' setupConsumerDetail ===>>> ', result)
 			setLoading(false)
 			if (result.kind === "ok") {
 				setShowThankyouModal(true)
@@ -214,7 +227,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		})
 			.then((result:any) => {
 				setLoading(false)
-				console.log('result ===>>> ', result)
 				setStep('business_type')
 				if (result.kind === "ok") {
 					setStep('business_type')
@@ -236,7 +248,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
 			.then((result:any) => {
 				setLoading(false)
-				console.log('result ===>>> ', result)
 				if (result.kind === "ok") {
 					setStep('business_exec')
 				} else if (result.kind === "bad-data") {
@@ -269,7 +280,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		})
 			.then((result:any) => {
 				setLoading(false)
-				console.log('result ===>>> ', result)
 				if (result.kind === "ok") {
 					setShowThankyouModal(true)
 				} else if (result.kind === "bad-data") {
@@ -613,50 +623,42 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				/>
 			</View>
 
-
-			<View style={{
-				// backgroundColor: 'red'
-				flexDirection: 'row',
-				justifyContent: 'space-between',
-				width: METRICS.screenWidth * 0.95,
-				alignSelf: 'center',
-			}}>
+			<View style={styles.SELECTS_CONTAINER}>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
-					<View style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
-						<TextInput
-							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.6 }]}
-							onChangeText={t => setCity(t)}
+					<TouchableOpacity
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
+						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
+					>
+						<ModalSelector
+							options={Citys}
+							action={setCity}
+							title={""}
 							value={City}
-							placeholder={'City'}
+							visible={SelectCityOpen}
+							setVisible={setSelectCityOpen}
+							displaySelector
+							closeOnClick
+							searchAction={fetchCity}
 						/>
-					</View>
+					</TouchableOpacity>
 				</View>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>STATE</Text>
 					</View>
 					<View style={[
-						SelectStateOpen ?
-							styles.SELECT_INPUT_STYLE_CONTAINER_OPEN
-							: styles.SELECT_INPUT_STYLE_CONTAINER,
+						styles.SELECT_INPUT_STYLE_CONTAINER,
 						{ width: METRICS.screenWidth * 0.25 }
 					]}>
 						<TouchableOpacity
 							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
 							onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
 						>
-							{/* <Text style={styles.SELECT_LABEL}>{State.title}</Text>
-							<Entypo
-								name={"chevron-down"}
-								size={23} color={'black'}
-								style={{ marginRight: 20 }}
-							/> */}
-
 							<ModalSelector
-								options={states}
+								options={States}
 								action={setState}
 								title={""}
 								value={State}
@@ -664,6 +666,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 								setVisible={setSelectStateOpen}
 								displaySelector
 								closeOnClick
+								searchAction={fetchState}
 							/>
 						</TouchableOpacity>
 					</View>
@@ -794,16 +797,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			PostalCode,
 			PhoneNumber,
 		}
+		// city and state picker || map
 		loginStore.setSetupData(setupData)
-		loginStore.environment.api.getCities({ value: 'wash' })
-			.then((result:any) => {
-				console.log('result citie ===>>> ', result)
-			})
-
-		loginStore.environment.api.getStates({ value: 'wash' })
-			.then((result:any) => {
-				console.log('result state ===>>> ', result)
-			})
 		switch (Step) {
 			case 'pic_username':
 				setupConsumer()
@@ -863,6 +858,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		if (data?.PostalCode) setPostalCode(data.PostalCode)
 		if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
 		setRandonPic(randomImages[Math.round(Math.random() * 3)])
+
+		fetchCity()
+		fetchState()
 	}, [])
 
 	return (

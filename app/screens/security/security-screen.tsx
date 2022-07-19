@@ -47,7 +47,6 @@ export const SecurityScreen = observer(function SecurityScreen() {
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
-            console.log("response: ", result.response)
             loginStore.setAllowTouchId(result.response)
             navigation.navigate("settings", {})
           })

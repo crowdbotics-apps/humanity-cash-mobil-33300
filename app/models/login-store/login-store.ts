@@ -39,22 +39,9 @@ export const LoginStoreModel = types
     state: types.maybeNull(types.string),
     zip_code: types.maybeNull(types.string),
     phone_number: types.maybeNull(types.string),
-
-    phone_number_national: types.maybeNull(types.string),
-    phone_number_national_iso: types.maybeNull(types.string),
-    access_token: types.maybeNull(types.string),
-    refresh_token: types.maybeNull(types.string),
-    passcode: types.maybeNull(types.boolean),
-    finplan_admin: types.maybeNull(types.boolean),
-    current_balance: types.maybeNull(types.number),
-    read_contacts_permission: types.optional(types.boolean, false),
-    payment_method_id: types.maybeNull(types.number),
-    payment_method_choice: types.maybeNull(types.number),
-    recurring_selected_option: types.maybeNull(types.number),
-    line1: types.maybeNull(types.string),
-    postal_code: types.maybeNull(types.string),
-    country: types.maybeNull(types.string),
     billing_data_added: types.maybeNull(types.boolean),
+
+    access_token: types.maybeNull(types.string),
     // currentStep
     currentStep: types.maybeNull(types.string),
     // signup
@@ -81,6 +68,11 @@ export const LoginStoreModel = types
     get getAccountColor() {
       return self.account_base_color
     },
+    get getBillingData() {
+      return {
+        billing_data_added: self.billing_data_added,
+      }
+    },
     get getAllData() {
       return {
         id: self.id,
@@ -91,24 +83,11 @@ export const LoginStoreModel = types
         allow_touch_id: self.allow_touch_id,
         email: self.email,
         phone_number: self.phone_number,
-        phone_number_national: self.phone_number_national,
-        phone_number_national_iso: self.phone_number_national_iso,
         profile_picture: self.profile_picture,
         profile_picture_merchant: self.profile_picture_merchant,
         access_token: self.access_token,
-        refresh_token: self.refresh_token,
-        passcode: self.passcode,
-        finplan_admin: self.finplan_admin,
-        current_balance: self.current_balance,
-        payment_method_id: self.payment_method_id,
-        payment_method_choice: self.payment_method_choice,
-        recurring_selected_option: self.recurring_selected_option,
-        read_contacts_permission : self.read_contacts_permission ,
-        line1: self.line1,
         city: self.city,
         state: self.state,
-        postal_code: self.postal_code,
-        country: self.country,
         billing_data_added: self.billing_data_added,
       }
     },
@@ -223,9 +202,6 @@ export const LoginStoreModel = types
         api.deleteHeader("Authorization")
       }
     },
-    setReadContactsPermission(read_contacts_permission: boolean) {
-      self.read_contacts_permission = read_contacts_permission
-    },
     reset() {
       const api = self.environment.api.apisauce
       api.deleteHeader("Authorization")
@@ -238,24 +214,11 @@ export const LoginStoreModel = types
       self.allow_touch_id = null
       self.email = null
       self.phone_number = null
-      self.phone_number_national = null
-      self.phone_number_national_iso = null
       self.profile_picture = null
       self.access_token = null
-      self.refresh_token = null
-      self.passcode = null
-      self.finplan_admin = null
-      self.current_balance = null
-      self.payment_method_id = null
-      self.payment_method_choice = null
-      self.recurring_selected_option = null
-      self.read_contacts_permission = false
-      self.line1 = null
       self.city = null
       self.state = null
-      self.postal_code = null
-      self.country = null
-      self.billing_data_added = null
+      self.billing_data_added = false
     }
   }))
 

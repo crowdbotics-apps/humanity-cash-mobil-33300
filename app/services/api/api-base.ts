@@ -102,7 +102,6 @@ export class ApiBase {
         }
 
         const response: ApiResponse<any> = await this.apisauce.get(path, extra_params, axios)
-        console.log(' response ===>>> ', response)
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T
@@ -132,7 +131,6 @@ export class ApiBase {
         }
 
         const response: ApiResponse<any> = await this.apisauce.post(path, params, axios)
-        console.log(' simple_post ===>>> ', response)
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T
@@ -305,7 +303,6 @@ export class ApiBase {
 
         }
         let response
-        console.log(' header -> ', this.apisauce.headers.Authorization)
         const headers = {
             "Content-Type": "multipart/form-data",
             "Authorization": this.apisauce.headers.Authorization
@@ -318,8 +315,6 @@ export class ApiBase {
             }
             response = {status: 500}
         }
-
-        console.log(' response multipart_form_data_patch ===>>> ', response)
 
         if (response.status === 400) {
             // @ts-ignore

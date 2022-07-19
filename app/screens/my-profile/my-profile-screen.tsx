@@ -39,70 +39,12 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
+	const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
-	const states = [
-		{ id: "AL", title: "AL", description: "Alabama" },
-		{ id: "AK", title: "AK", description: "Alaska" },
-		{ id: "AS", title: "AS", description: "American Samoa" },
-		{ id: "AZ", title: "AZ", description: "Arizona" },
-		{ id: "AR", title: "AR", description: "Arkansas" },
-		{ id: "CA", title: "CA", description: "California" },
-		{ id: "CO", title: "CO", description: "Colorado" },
-		{ id: "CT", title: "CT", description: "Connecticut" },
-		{ id: "DE", title: "DE", description: "Delaware" },
-		{ id: "DC", title: "DC", description: "District Of Columbia" },
-		{ id: "FM", title: "FM", description: "Federated States Of Micronesia" },
-		{ id: "FL", title: "FL", description: "Florida" },
-		{ id: "GA", title: "GA", description: "Georgia" },
-		{ id: "GU", title: "GU", description: "Guam" },
-		{ id: "HI", title: "HI", description: "Hawaii" },
-		{ id: "ID", title: "ID", description: "Idaho" },
-		{ id: "IL", title: "IL", description: "Illinois" },
-		{ id: "IN", title: "IN", description: "Indiana" },
-		{ id: "IA", title: "IA", description: "Iowa" },
-		{ id: "KS", title: "KS", description: "Kansas" },
-		{ id: "KY", title: "KY", description: "Kentucky" },
-		{ id: "LA", title: "LA", description: "Louisiana" },
-		{ id: "ME", title: "ME", description: "Maine" },
-		{ id: "MH", title: "MH", description: "Marshall Islands" },
-		{ id: "MD", title: "MD", description: "Maryland" },
-		{ id: "MA", title: "MA", description: "Massachusetts" },
-		{ id: "MI", title: "MI", description: "Michigan" },
-		{ id: "MN", title: "MN", description: "Minnesota" },
-		{ id: "MS", title: "MS", description: "Mississippi" },
-		{ id: "MO", title: "MO", description: "Missouri" },
-		{ id: "MT", title: "MT", description: "Montana" },
-		{ id: "NE", title: "NE", description: "Nebraska" },
-		{ id: "NV", title: "NV", description: "Nevada" },
-		{ id: "NH", title: "NH", description: "New Hampshire" },
-		{ id: "NJ", title: "NJ", description: "New Jersey" },
-		{ id: "NM", title: "NM", description: "New Mexico" },
-		{ id: "NY", title: "NY", description: "New York" },
-		{ id: "NC", title: "NC", description: "North Carolina" },
-		{ id: "ND", title: "ND", description: "North Dakota" },
-		{ id: "MP", title: "MP", description: "Northern Mariana Islands" },
-		{ id: "OH", title: "OH", description: "Ohio" },
-		{ id: "OK", title: "OK", description: "Oklahoma" },
-		{ id: "OR", title: "OR", description: "Oregon" },
-		{ id: "PW", title: "PW", description: "Palau" },
-		{ id: "PA", title: "PA", description: "Pennsylvania" },
-		{ id: "PR", title: "PR", description: "Puerto Rico" },
-		{ id: "RI", title: "RI", description: "Rhode Island" },
-		{ id: "SC", title: "SC", description: "South Carolina" },
-		{ id: "SD", title: "SD", description: "South Dakota" },
-		{ id: "TN", title: "TN", description: "Tennessee" },
-		{ id: "TX", title: "TX", description: "Texas" },
-		{ id: "UT", title: "UT", description: "Utah" },
-		{ id: "VT", title: "VT", description: "Vermont" },
-		{ id: "VI", title: "VI", description: "Virgin Islands" },
-		{ id: "VA", title: "VA", description: "Virginia" },
-		{ id: "WA", title: "WA", description: "Washington" },
-		{ id: "WV", title: "WV", description: "West Virginia" },
-		{ id: "WI", title: "WI", description: "Wisconsin" },
-		{ id: "WY", title: "WY", description: "Wyoming" }
-	]
+	const [States, setStates] = React.useState([]);
 	const [State, setState] = React.useState('');
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
+	const [SelectCityOpen, setSelectCityOpen] = React.useState(false);
 
 	function selectImage(type: string) {
 		let options = {
@@ -116,11 +58,11 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		launchImageLibrary(options, (response: any) => {
 			if (response.didCancel) {
 				return;
-			} else if (response.errorCode == 'camera_unavailable') {
+			} else if (response.errorCode === 'camera_unavailable') {
 				return;
-			} else if (response.errorCode == 'permission') {
+			} else if (response.errorCode === 'permission') {
 				return;
-			} else if (response.errorCode == 'others') {
+			} else if (response.errorCode === 'others') {
 				return;
 			}
 			if (type === 'user_image') setImageSource(response.assets[0]);
@@ -128,6 +70,19 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			if (type === 'business_back') setBackBusinessImageSource(response.assets[0]);
 
 		});
+	}
+
+	const fetchCity = (data?: string) => {
+		loginStore.environment.api.getCities({ value: data})
+			.then((result: any) => {
+				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name})))
+			})
+	}
+	const fetchState = (data?: string) => {
+		loginStore.environment.api.getStates({ value: data})
+		.then((result: any) => {
+			setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+		})
 	}
 
 	const PersonalProfile = () => (
@@ -306,25 +261,27 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				/>
 			</View>
 
-			<View style={{
-				// backgroundColor: 'red'
-				flexDirection: 'row',
-				justifyContent: 'space-between',
-				width: METRICS.screenWidth * 0.95,
-				alignSelf: 'center',
-			}}>
+			<View style={styles.SELECTS_CONTAINER}>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
-					<View style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
-						<TextInput
-							style={[styles.INPUT_STYLE, , { width: METRICS.screenWidth * 0.6 }]}
-							onChangeText={t => setCity(t)}
+					<TouchableOpacity
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
+						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
+					>
+						<ModalSelector
+							options={Citys}
+							action={setCity}
+							title={""}
 							value={City}
-							placeholder={'City'}
+							visible={SelectCityOpen}
+							setVisible={setSelectCityOpen}
+							displaySelector
+							closeOnClick
+							searchAction={fetchCity}
 						/>
-					</View>
+					</TouchableOpacity>
 				</View>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
@@ -338,14 +295,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
 							onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
 						>
-							{/* <Text style={styles.SELECT_LABEL}>{State.title}</Text>
-							<Entypo
-								name={"chevron-down"}
-								size={23} color={'black'}
-								style={{ marginRight: 20 }}
-							/> */}
 							<ModalSelector
-								options={states}
+								options={States}
 								action={setState}
 								title={""}
 								value={State}
@@ -353,6 +304,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 								setVisible={setSelectStateOpen}
 								displaySelector
 								closeOnClick
+								searchAction={fetchState}
 							/>
 						</TouchableOpacity>
 					</View>
@@ -424,12 +376,11 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					website: BusinessWebsite,
 					industry: BusinessCategory
 				})
-				.then((result:any) => {
+				.then((result: any) => {
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
-							console.log("response: ", result.response)
-							loginStore.setMerchantUser(result.response)
+							// loginStore.setMerchantUser(result.response)
 							loginStore.setSelectedAccount('merchant')
 							navigation.navigate("home", {})
 						})
@@ -452,13 +403,11 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					first_name: Name,
 					last_name: LastName
 				})
-				.then((result:any) => {
-					console.log(' updateProfileConsumer ====>>>>> ', JSON.stringify(result, null, 2))
+				.then((result: any) => {
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
-							console.log("response: ", result.response)
-							loginStore.setConsumerUser(result.response)
+							// loginStore.setConsumerUser(result.response)
 							loginStore.setSelectedAccount('consumer')
 							navigation.navigate("home", {})
 						})
@@ -494,6 +443,9 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		setPostalCode(loginStore.ProfileDataBusiness.zip_code)
 		setPhoneNumber(loginStore.ProfileDataBusiness.phone_number)
 		setEmail(loginStore.getAllData.email)
+
+		fetchCity()
+		fetchState()
 	}, [])
 
 	return (

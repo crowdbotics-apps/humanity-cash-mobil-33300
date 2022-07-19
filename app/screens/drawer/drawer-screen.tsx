@@ -1,17 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { TextInput, View, TouchableOpacity, Image } from 'react-native';
-import {
-  Text,
-  Button,
-  Screen,
-  Checkbox
-} from '../../components';
+import { View, TouchableOpacity, Image } from 'react-native';
+import { Text, Screen } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
-import Entypo from "react-native-vector-icons/Entypo"
-import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from './drawer-style';
-import { COLOR, TYPOGRAPHY } from '../../theme';
 import { useNavigation } from "@react-navigation/native"
 import { IMAGES } from "../../theme"
 import { useStores } from "../../models"
@@ -35,13 +27,12 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         <View style={styles.HEADER}>
           <TouchableOpacity onPress={() => props.navigation.closeDrawer()} style={styles.BACK_BUTON_CONTAINER}>
             <Icon name={"close"} size={23} color={loginStore.getAccountColor} />
-            <Text style={[styles.BACK_BUTON_LABEL, {color: loginStore.getAccountColor}]}>{` Menu`}</Text>
+            <Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
           </TouchableOpacity>
-
-
           {ChangeAccountOpen
             ? [
               <TouchableOpacity
+                key={'consumer_profile'}
                 style={styles.USER_CONTAINER_CHANGE}
                 onPress={() => [
                   loginStore.setSelectedAccount('consumer'),
@@ -64,6 +55,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 </View>
               </TouchableOpacity>,
               <TouchableOpacity
+                key={'merchant_profile'}
                 style={styles.USER_CONTAINER_CHANGE}
                 onPress={() => [
                   loginStore.setSelectedAccount('merchant'),
@@ -87,40 +79,37 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
               </TouchableOpacity>
             ]
             : loginStore.getSelectedAccount === 'consumer'
-             ? <View style={styles.USER_CONTAINER}>
-              <View style={styles.USER_IMAGE_CONTAINER}>
-                <Image
-                  resizeMode="cover"
-                  source={{ uri: loginStore.ProfileData.profile_picture }}
-                  style={styles.USER_IMAGE}
-                />
+              ? <View style={styles.USER_CONTAINER}>
+                <View style={styles.USER_IMAGE_CONTAINER}>
+                  <Image
+                    resizeMode="cover"
+                    source={{ uri: loginStore.ProfileData.profile_picture }}
+                    style={styles.USER_IMAGE}
+                  />
+                </View>
+                <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
+                  <Text style={styles.USER_NAME_BLACK}>{loginStore.ProfileData.first_name + ' ' + loginStore.ProfileData.last_name}</Text>
+                  <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
+                    <Text style={[styles.SWITCH_ACCOUNT_LABEL_BLUE, { color: loginStore.getAccountColor }]}>Switch account</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
-                <Text style={styles.USER_NAME_BLACK}>{loginStore.ProfileData.first_name + ' ' + loginStore.ProfileData.last_name}</Text>
-                <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
-                  <Text style={[styles.SWITCH_ACCOUNT_LABEL_BLUE, { color: loginStore.getAccountColor}]}>Switch account</Text>
-                </TouchableOpacity>
+              : <View style={styles.USER_CONTAINER}>
+                <View style={styles.USER_IMAGE_CONTAINER}>
+                  <Image
+                    resizeMode="cover"
+                    source={{ uri: loginStore.ProfileDataBusiness.profile_picture_merchant }}
+                    style={styles.USER_IMAGE}
+                  />
+                </View>
+                <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
+                  <Text style={styles.USER_NAME_BLACK}>{loginStore.ProfileDataBusiness.business_name}</Text>
+                  <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
+                    <Text style={[styles.SWITCH_ACCOUNT_LABEL_BLUE, { color: loginStore.getAccountColor }]}>Switch account</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-             : <View style={styles.USER_CONTAINER}>
-             <View style={styles.USER_IMAGE_CONTAINER}>
-               <Image
-                 resizeMode="cover"
-                 source={{ uri: loginStore.ProfileDataBusiness.profile_picture_merchant }}
-                 style={styles.USER_IMAGE}
-               />
-             </View>
-             <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
-               <Text style={styles.USER_NAME_BLACK}>{loginStore.ProfileDataBusiness.business_name}</Text>
-               <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
-                 <Text style={[styles.SWITCH_ACCOUNT_LABEL_BLUE, { color: loginStore.getAccountColor}]}>Switch account</Text>
-               </TouchableOpacity>
-             </View>
-           </View>
           }
-
-          {console.log(' result ===>>> ', JSON.stringify(loginStore.ProfileData, null, 2))}
-
           <Text style={styles.TOTAL_CURRENCY}>C$ 0</Text>
 
           <TouchableOpacity onPress={() => props.navigation.navigate("qr", {})} style={styles.MENU_ITEM_CONTAINER}>

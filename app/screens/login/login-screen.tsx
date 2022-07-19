@@ -15,7 +15,7 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin'
-import { AppleButton , appleAuth } from '@invertase/react-native-apple-authentication'
+import { AppleButton, appleAuth } from '@invertase/react-native-apple-authentication'
 
 import { AccessToken, LoginManager } from 'react-native-fbsdk-next'
 
@@ -36,7 +36,6 @@ export const LoginScreen = observer(function LoginScreen() {
     loginStore.environment.api
       .login({ email: Username, password: Pass })
       .then((result: any) => {
-        console.log(' =====>>>>>>> ', JSON.stringify(result))
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
@@ -48,7 +47,6 @@ export const LoginScreen = observer(function LoginScreen() {
         } else if (result.kind === "bad-data") {
           const key = Object.keys(result?.errors)[0]
           const msg = `${key}: ${result?.errors?.[key][0]}`
-          console.log('msg -> ', Keyboard)
           notifyMessage(msg)
         } else {
           loginStore.reset()
@@ -63,7 +61,6 @@ export const LoginScreen = observer(function LoginScreen() {
       runInAction(() => {
         loginStore.setUser(result.response)
         loginStore.setApiToken(result.response.token.access)
-
         if (result.response.merchant_data == null && result.response.consumer_data == null) {
           navigation.navigate("setupProfile", {})
         }
@@ -80,7 +77,6 @@ export const LoginScreen = observer(function LoginScreen() {
     } else if (result.kind === "bad-data") {
       const key = Object.keys(result?.errors)[0]
       const msg = `${key}: ${result?.errors?.[key][0]}`
-      console.log('msg -> ', Keyboard)
       notifyMessage(msg)
     } else {
       loginStore.reset()
@@ -118,7 +114,6 @@ export const LoginScreen = observer(function LoginScreen() {
   };
 
   const pressHandler = () => {
-    console.log(' ==>> ', TouchID)
     TouchID.authenticate('to demo this react-native component', optionalConfigObject)
       .then(success => {
         Alert.alert('Authenticated Successfully');
@@ -203,9 +198,9 @@ export const LoginScreen = observer(function LoginScreen() {
           <TouchableOpacity onPress={() => LoginManager.logInWithPermissions(["public_profile", "email"]).then(
             function (result) {
               if (result.isCancelled) {
-                console.log("Login cancelled");
+                console.warn("Login cancelled");
               } else {
-                console.log(
+                console.warn(
                   "Login success with permissions: ",
                   JSON.stringify(result, null, 2)
                 );
@@ -217,7 +212,7 @@ export const LoginScreen = observer(function LoginScreen() {
               }
             },
             function (error) {
-              console.log("Login fail with error: " + error);
+              console.warn("Login fail with error: " + error);
             }
           )}>
             <Image

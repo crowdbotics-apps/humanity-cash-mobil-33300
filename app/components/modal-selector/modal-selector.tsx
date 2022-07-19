@@ -18,6 +18,7 @@ type ModalSelectortProps = {
     closeOnClick?: boolean
     itemKey?: string
     alternativeStyle?: boolean
+    searchAction?: any
 }
 
 export function ModalSelector(props: ModalSelectortProps) {
@@ -25,7 +26,6 @@ export function ModalSelector(props: ModalSelectortProps) {
     const [Search, setSearch] = useState('')
     const closeOnClick = false || props.closeOnClick
     const alternativeStyle = props.alternativeStyle
-    console.log(props)
     useEffect(() => {
         if (props.value === null) {
             setSelectedValue(null)
@@ -53,11 +53,14 @@ export function ModalSelector(props: ModalSelectortProps) {
                         <Text>{props.title}</Text>
                     </View>
                     <TextInput
-					style={{
-                        borderBottomWidth: 0.5,
-                        borderBottomColor: COLOR.PALETTE.black,
-                    }}
-                        onChangeText={t => setSearch(t)}
+                        style={{
+                            borderBottomWidth: 0.5,
+                            borderBottomColor: COLOR.PALETTE.black,
+                        }}
+                        onChangeText={t => {
+                            setSearch(t)
+                            if (props.searchAction) props.searchAction(t)
+                        }}
                         value={Search}
                         placeholder={'Search'}
                     />
@@ -74,9 +77,12 @@ export function ModalSelector(props: ModalSelectortProps) {
                                 }
                             }
 
-                            if (Search !== '' && !option.title.toLocaleLowerCase().includes(Search.toLocaleLowerCase()) && !option.description.toLocaleLowerCase().includes(Search.toLocaleLowerCase())) {                                
+                            if (Search !== '' &&
+                                !option?.title?.toLocaleLowerCase().includes(Search.toLocaleLowerCase()) &&
+                                !option?.description?.toLocaleLowerCase().includes(Search.toLocaleLowerCase())
+                            ) {
                                 return null
-                            } 
+                            }
 
                             return (
                                 <TouchableOpacity
