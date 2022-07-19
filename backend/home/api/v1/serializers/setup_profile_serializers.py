@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 
 from users.models import Consumer, Merchant
@@ -28,7 +29,7 @@ class SetupConsumerProfileSerializer(serializers.ModelSerializer):
         fields = ['username', 'first_name', 'last_name', 'consumer_profile', 'has_consumer_profile']
 
     def update(self, instance, validated_data):
-        consumer_profile = validated_data.pop('consumer_profile')
+        consumer_profile = validated_data.get('consumer_profile')
 
         consumer = Consumer.objects.create(user=instance)
         if consumer_profile:
@@ -72,6 +73,7 @@ class SetupMerchantProfileSerializer(serializers.ModelSerializer):
 
 
 class SetupMerchantProfileDetailSerializer(serializers.ModelSerializer):
+    location = PointField(required=False)
 
     class Meta:
         model = Merchant
@@ -79,43 +81,52 @@ class SetupMerchantProfileDetailSerializer(serializers.ModelSerializer):
                   'owner_first_name', 'owner_last_name',
                   'registered_business_name', 'industry',
                   'employer_identification_number', 'social_security_number',
-                  'address_1', 'address_2', 'city', 'state', 'zip_code', 'phone_number']
+                  'address_1', 'address_2', 'city', 'state', 'location', 'zip_code', 'phone_number']
 
 
 class ConsumerMyProfileSerializer(serializers.ModelSerializer):
-    consumer_profile = ConsumerProfileSerializer(required=False)
+    consumer_profile = serializers.ImageField(required=False, allow_empty_file=True)
+    dwolla_id = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'consumer_profile']
+        fields = ['id', 'username', 'first_name', 'last_name', 'consumer_profile', 'dwolla_id']
+
+    def get_dwolla_id(self, obj):
+        if obj.get_consumer_data:
+            return obj.consumer.dwolla_id
 
     def to_representation(self, instance):
         ret = super(ConsumerMyProfileSerializer, self).to_representation(instance)
-        ret['consumer_profile'] = ConsumerProfileSerializer(context=self.context).to_representation(instance.consumer)
+        ret['consumer_profile'] = self.context['request'].build_absolute_uri(instance.consumer.profile_picture.url)
         return ret
 
     def update(self, instance, validated_data):
-        consumer_profile = validated_data.pop('consumer_profile')
+        consumer_profile = validated_data.get('consumer_profile')
 
         consumer = Consumer.objects.get(user=instance)
-        profile_picture = consumer_profile.get('profile_picture')
-        if profile_picture:
-            consumer.profile_picture = profile_picture
+
+        if consumer_profile:
+            consumer.profile_picture = consumer_profile
             consumer.save()
 
         return super(ConsumerMyProfileSerializer, self).update(instance, validated_data)
 
 
 class MerchantMyProfileSerializer(serializers.ModelSerializer):
+    profile_picture = serializers.ImageField(required=False, allow_empty_file=True)
+    background_picture = serializers.ImageField(required=False, allow_empty_file=True)
+    dwolla_id = serializers.CharField(read_only=True)
+    location = PointField(required=False)
 
     class Meta:
         model = Merchant
         fields = ['id', 'business_name', 'type_of_business', 'business_story',
                   'profile_picture', 'background_picture',
                   'owner_first_name', 'owner_last_name',
-                  'registered_business_name', 'industry',
-                  'employer_identification_number', 'social_security_number',
-                  'address_1', 'address_2', 'city', 'state', 'zip_code', 'phone_number']
+                  'registered_business_name', 'industry', 'website',
+                  'employer_identification_number', 'social_security_number', 'location',
+                  'address_1', 'address_2', 'city', 'state', 'zip_code', 'phone_number', 'dwolla_id']
 
 
 class ConsumerProfileDetailSerializer(serializers.ModelSerializer):

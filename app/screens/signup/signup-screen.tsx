@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextInput, View, TouchableOpacity, ScrollView } from "react-native"
+import { TextInput, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from "react-native"
 import { Text, Screen, Button, TextInputComponent } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
@@ -12,13 +12,6 @@ import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import { COLOR } from '../../theme';
 import { CheckBox } from 'react-native-elements'
-interface SignupFields {
-  email: string;
-  password: string;
-  password_confirm: string;
-  phone_number: string;
-  name: string;
-}
 
 const steps = [
   "email",
@@ -89,7 +82,7 @@ export const SignupScreen = observer(function SignupScreen() {
   }
 
   const validateEmail = (email, agree) => {
-    let valid = String(email)
+    const valid = String(email)
       .toLowerCase()
       .match(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -106,7 +99,6 @@ export const SignupScreen = observer(function SignupScreen() {
   const register = () => {
     setLoading(true)
     loginStore.environment.api.userRegister({ email: Email }).then(result => {
-      console.log(' result ===>>> ', result)
       setLoading(false)
       if (result.kind === "ok") {
         runInAction(() => {
@@ -127,7 +119,7 @@ export const SignupScreen = observer(function SignupScreen() {
 
   const sendVerificationCode = () => {
     setLoading(true)
-    loginStore.environment.api.sendVerificaitonCode().then(result => {
+    loginStore.environment.api.sendVerificaitonCode().then(() => {
       setLoading(false)
     })
   }
@@ -138,7 +130,6 @@ export const SignupScreen = observer(function SignupScreen() {
     loginStore.environment.api
       .verifyUserAuthenticationCode({ verification_code: code })
       .then(result => {
-        console.log(' result ===>>> ', result)
         setLoading(false)
         if (result.kind === "ok") {
           notifyMessage("Email verified", "success")
@@ -479,7 +470,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     }
   }
   const nextButtonHandler = () => {
-    let signupData = { Email, Phone, Code1, Code2, Code3, Code4, Code5, Code6, }
+    const signupData = { Email, Phone, Code1, Code2, Code3, Code4, Code5, Code6, }
     loginStore.setSignupData(signupData)
     switch (Step) {
       case "email":
@@ -512,13 +503,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     }
   }
 
-  const sendCodeAgainHandler = () => {
-    sendVerificationCode()
-  }
+  const sendCodeAgainHandler = () => sendVerificationCode()
 
   useEffect(() => {
-    console.log(' useEffect ===>>> ', loginStore)
-    let data = loginStore.getSignupData
+    const data = loginStore.getSignupData
     if (data?.Email) setEmail(data.Email)
     if (data?.Phone) setPhone(data.Phone)
     if (data?.Code1) setCode1(data.Code1)
@@ -531,80 +519,89 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
   return (
     <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>
-      <View style={styles.ROOT}>
-        <View style={styles.STEP_CONTAINER}>
-          <TouchableOpacity
-            onPress={() => backButtonHandler()}
-            style={styles.BACK_BUTON_CONTAINER}
-          >
-            <Icon name={"arrow-back"} size={23} color={"black"} />
-            <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
-          </TouchableOpacity>
-          {renderStep()}
-        </View>
-        <View style={styles.CONTAINER}>
-          {Step === "email" && (
-            <View style={styles.AGREE_CONTAINER}>
-              <CheckBox
-                checked={Agree}
-                onPress={() => [
-                  setAgree(!Agree),
-                  validateEmail(Email, !Agree)
-                ]}
-                checkedColor={COLOR.PALETTE.green}
+      {/* <View style={styles.ROOT}> */}
+      <KeyboardAvoidingView
+        enabled
+        // behavior={Platform.OS === 'ios' ? 'padding' : null}
+        style={styles.ROOT}
+      >
+        <ScrollView>
+          <View style={styles.STEP_CONTAINER}>
+            <TouchableOpacity
+              onPress={() => backButtonHandler()}
+              style={styles.BACK_BUTON_CONTAINER}
+            >
+              <Icon name={"arrow-back"} size={23} color={"black"} />
+              <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
+            </TouchableOpacity>
+            {renderStep()}
+          {/* </View> */}
+          {/* <View style={styles.CONTAINER}>/ */}
+            {/* {Step === "verify_email" && (
+              <View style={styles.NEED_HELP_CONTAINER}>
+                <Text
+                  onPress={() => setStep("help")}
+                  style={styles.NEED_HELP_LINK}
+                >
+                  Need help?
+                </Text>
+              </View>
+            )} */}
+          
+          </View>
+          {/* </View> */}
+        </ScrollView>
+      {Step === "email" && (
+              <View style={styles.AGREE_CONTAINER}>
+                <CheckBox
+                  checked={Agree}
+                  onPress={() => [
+                    setAgree(!Agree),
+                    validateEmail(Email, !Agree)
+                  ]}
+                  checkedColor={COLOR.PALETTE.green}
+                />
+                <Text style={styles.AGREE_LABEL}>
+                  {
+                    "By checking this box, you agree to our partner Humanity Cash's"
+                  }
+                  <Text
+                    style={styles.AGREE_LABEL_LINK}
+                    onPress={() => setStep("legal")}
+                  >
+                    {" "}
+                    {" Terms & Conditions "}
+                  </Text>
+                  and
+                  <Text
+                    style={styles.AGREE_LABEL_LINK}
+                    onPress={() => setStep("legal")}
+                  >
+                    {" "}
+                    {" Privacy Policy"}
+                  </Text>
+                </Text>
+              </View>
+            )}
+              {Step === "verify_email" && (
+              <View style={styles.NEED_HELP_CONTAINER}>
+                <Text onPress={() => sendCodeAgainHandler()} style={styles.NEED_HELP_LINK}>
+                  Send code again
+                </Text>
+              </View>
+            )}
+            {Step !== "legal" && (
+              <Button
+                buttonStyle={{
+                  backgroundColor: (ButtonDisabled || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green,
+                }}
+                onPress={() => nextButtonHandler()}
+                buttonLabel={'Next'}
+                disabled={ButtonDisabled || Loading}
+                loading={Loading}
               />
-              <Text style={styles.AGREE_LABEL}>
-                {
-                  "By checking this box, you agree to our partner Humanity Cash's"
-                }
-                <Text
-                  style={styles.AGREE_LABEL_LINK}
-                  onPress={() => setStep("legal")}
-                >
-                  {" "}
-                  {" Terms & Conditions "}
-                </Text>
-                and
-                <Text
-                  style={styles.AGREE_LABEL_LINK}
-                  onPress={() => setStep("legal")}
-                >
-                  {" "}
-                  {" Privacy Policy"}
-                </Text>
-              </Text>
-            </View>
-          )}
-          {Step === "verify_email" && (
-            <View style={styles.NEED_HELP_CONTAINER}>
-              <Text
-                onPress={() => setStep("help")}
-                style={styles.NEED_HELP_LINK}
-              >
-                Need help?
-              </Text>
-            </View>
-          )}
-          {Step === "verify_email" && (
-            <View style={styles.NEED_HELP_CONTAINER}>
-              <Text onPress={() => sendCodeAgainHandler()} style={styles.NEED_HELP_LINK}>
-                Send code again
-              </Text>
-            </View>
-          )}
-          {Step !== "legal" && (
-            <Button
-              buttonStyle={{
-                backgroundColor: (ButtonDisabled || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green,
-              }}
-              onPress={() => nextButtonHandler()}
-              buttonLabel={'Next'}
-              disabled={ButtonDisabled || Loading}
-              loading={Loading}
-            />
-          )}
-        </View>
-      </View>
+            )}
+      </KeyboardAvoidingView>
     </Screen>
   )
 })

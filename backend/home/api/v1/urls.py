@@ -7,7 +7,8 @@ import home.api.v1.viewsets.signup_signin_views as signup_signin_views
 #     # SignupViewSet,
 #     # LoginViewSet,
 # )
-from home.api.v1.viewsets import setup_profile_views, base_views, security_views
+from home.api.v1.viewsets import setup_profile_views, base_views, security_views, dwolla_views
+from home.api.v1.viewsets.signup_signin_views import LoginFacebookView
 
 router = DefaultRouter()
 # router.register("signup", SignupViewSet, basename="signup")
@@ -18,6 +19,9 @@ urlpatterns = [
         path('set-password/', signup_signin_views.SetPasswordView.as_view(), name='set_password'),
         path('verify-user-account/', signup_signin_views.VerifyUserAccountAPIView.as_view(), name='verify_user_account'),
         path('send-verification-code/', signup_signin_views.ResendVerificationCodeAPIView.as_view(), name='send_verifiction_code'),
+    ])),
+    path('social/', include([
+        path('fb-login/', LoginFacebookView.as_view()),
     ])),
     path('set-up-profile/', include([
         path('consumer/', setup_profile_views.SetupConsumerProfileAPIView.as_view(), name='setup_consumer_profile'),
@@ -34,11 +38,19 @@ urlpatterns = [
         path('allow-touch-id/', security_views.AllowTouchIdView.as_view(), name='allow_touch_id'),
         path('delete-account/', security_views.DeleteAccountView.as_view(), name='delete_account'),
     ])),
+    path('dwolla/', include([
+        path('create-iav-token/', dwolla_views.CreateIavTokenView.as_view(), name='dwolla_iav_token'),
+        path('customers/<int:id>/funding-sources/', dwolla_views.DwollaFundingSourcesByCustomerView.as_view(), name='dwolla_funding_sources_by_customer'),
+        path('my-funding-sources/', dwolla_views.DwollaFundingSourcesByCustomerView.as_view(), name='dwolla_my_funding_sources'),
+    ])),
     path('base/', include([
         path('cities/', base_views.CityListView.as_view(), name='cities'),
         path('cities/<int:pk>/', base_views.CityRetrieveView.as_view(), name='city'),
         path('states/', base_views.StateListView.as_view(), name='states'),
         path('states/<int:pk>/', base_views.StateRetrieveView.as_view(), name='state'),
     ])),
+    path('where-to-spend/', base_views.WhereToSpendView.as_view(), name='where_to_spend'),
+    path('business-details/<int:pk>/', base_views.BusinessDetailsView.as_view(), name='business_details'),
+    path('my-qr-code-send/', base_views.SendQrCodeView.as_view(), name='my_qr_code_send'),
     path("", include(router.urls))
 ]

@@ -52,7 +52,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	const getProfileConsumer = () => {
 		loginStore.environment.api
 			.getProfileConsumer()
-			.then(result => {
+			.then((result: any) => {
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
@@ -61,8 +61,11 @@ export const HomeScreen = observer(function HomeScreen() {
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					let msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
 				} else {
 					//   loginStore.reset()
 					notifyMessage(null)
@@ -73,7 +76,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	const getProfileMerchant = () => {
 		loginStore.environment.api
 			.getProfileMerchant()
-			.then(result => {
+			.then((result: any) => {
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
@@ -82,15 +85,17 @@ export const HomeScreen = observer(function HomeScreen() {
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					let msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
 				} else {
 					//   loginStore.reset()
 					notifyMessage(null)
 				}
 			})
 	}
-
 
 	useEffect(() => {
 		if (!userData.profile.name) navigation.navigate("setupProfile", {})
@@ -119,17 +124,17 @@ export const HomeScreen = observer(function HomeScreen() {
 									checkedColor={COLOR.PALETTE.green}
 								/>
 								<Text style={styles.AGREE_LABEL}>{`By checking this box, you agree to the `}
+									{/* TODO */}
 									<Text style={styles.AGREE_LABEL_LINK} onPress={() => console.log('dwolla')}>
 										{"Dwolla Terms of Service "}
 									</Text>
 									{`and `}
+									{/* TODO */}
 									<Text style={styles.AGREE_LABEL_LINK} onPress={() => console.log('dwolla')}>
 										{"Dwolla Privacy Policy"}
 									</Text>
 								</Text>
 							</View>
-
-
 							<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => [setShowBankModal(false), navigation.navigate("linkBank", {})]}>
 								<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
 							</TouchableOpacity>
@@ -167,12 +172,12 @@ export const HomeScreen = observer(function HomeScreen() {
 	)
 
 	const ConsumerView = () => (
-		<ScrollView bounces={false}>
+		<ScrollView key="consumer_view" showsVerticalScrollIndicator={false} bounces={false}>
 			<View style={styles.ROOT_CONTAINER}>
 				<View style={styles.STEP_CONTAINER}>
 					<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-						<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
-						<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+						<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+						<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 
 					</TouchableOpacity>
 					<Image
@@ -187,12 +192,12 @@ export const HomeScreen = observer(function HomeScreen() {
 								source={IMAGES.currentDollarIcon}
 								style={styles.AMOUNT_ICON}
 							/>
-							<Text style={styles.AMOUNT}>382.91</Text>
+							<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>0</Text>
 						</View>
 						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}> */}
-						<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => setShowBankModal(true)} >
+						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => setShowBankModal(true)} >
 							<Text style={styles.LOAD_WALLET_LABEL}>Load Wallet</Text>
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 					</View>
 					<View style={styles.LINE} />
 					{renderNews()}
@@ -205,54 +210,54 @@ export const HomeScreen = observer(function HomeScreen() {
 	)
 
 	const MerchantView = () => (
-			<View style={styles.ROOT_CONTAINER}>
-				<View style={styles.STEP_CONTAINER}>
-					<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-						<Icon name={"menu"} size={23} color={COLOR.PALETTE.blue} />
-						<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
-					</TouchableOpacity>
+		<View style={styles.ROOT_CONTAINER}>
+			<View style={styles.STEP_CONTAINER}>
+				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+					<Icon name={"menu"} size={23} color={COLOR.PALETTE.green} />
+					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
+				</TouchableOpacity>
 
-					<TouchableOpacity style={styles.CASHIER_BUTTON_BIG}>
-						<Image
-							resizeMode="contain"
-							source={IMAGES.currentDollarIconCashier}
-							style={styles.CASHIER_BUTTON_ICON_BIG}
-						/>
-						<Text style={styles.CASHIER_BUTTON_LABEL}>Receive payment</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
-						<Image
-							resizeMode="contain"
-							source={IMAGES.transactions_cashier}
-							style={styles.CASHIER_BUTTON_ICON}
-						/>
-						<Text style={styles.CASHIER_BUTTON_LABEL}>Transactions</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
-						<Image
-							resizeMode="contain"
-							source={IMAGES.return_cashier}
-							style={styles.CASHIER_BUTTON_ICON}
-						/>
-						<Text style={styles.CASHIER_BUTTON_LABEL}>Make a return</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
-						<Image
-							resizeMode="contain"
-							source={IMAGES.report_cashier}
-							style={styles.CASHIER_BUTTON_ICON}
-						/>
-						<Text style={styles.CASHIER_BUTTON_LABEL}>Make a report</Text>
-					</TouchableOpacity>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_BIG}>
+					<Image
+						resizeMode="contain"
+						source={IMAGES.currentDollarIconCashier}
+						style={styles.CASHIER_BUTTON_ICON_BIG}
+					/>
+					<Text style={styles.CASHIER_BUTTON_LABEL}>Receive payment</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+					<Image
+						resizeMode="contain"
+						source={IMAGES.transactions_cashier}
+						style={styles.CASHIER_BUTTON_ICON}
+					/>
+					<Text style={styles.CASHIER_BUTTON_LABEL}>Transactions</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+					<Image
+						resizeMode="contain"
+						source={IMAGES.return_cashier}
+						style={styles.CASHIER_BUTTON_ICON}
+					/>
+					<Text style={styles.CASHIER_BUTTON_LABEL}>Make a return</Text>
+				</TouchableOpacity>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+					<Image
+						resizeMode="contain"
+						source={IMAGES.report_cashier}
+						style={styles.CASHIER_BUTTON_ICON}
+					/>
+					<Text style={styles.CASHIER_BUTTON_LABEL}>Make a report</Text>
+				</TouchableOpacity>
 
-					<View style={{ height: 200 }} />
-				</View>
-				<View style={styles.STEP_CONTAINER}>
-          <TouchableOpacity onPress={() => navigation.navigate("helpContact", {})} style={styles.NEED_HELP_CONTAINER}>
-            <Text style={styles.NEED_HELP_LINK}>Need help?</Text>
-          </TouchableOpacity>
-        </View>
+				<View style={{ height: 200 }} />
 			</View>
+			<View style={styles.STEP_CONTAINER}>
+				<TouchableOpacity onPress={() => navigation.navigate("helpContact", {})} style={styles.NEED_HELP_CONTAINER}>
+					<Text style={styles.NEED_HELP_LINK}>Need help?</Text>
+				</TouchableOpacity>
+			</View>
+		</View>
 	)
 
 	return (
@@ -264,7 +269,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		>
 			<KeyboardAvoidingView
 				enabled
-				behavior={Platform.OS === 'ios' ? 'padding' : null}
+				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
 				{loginStore.getSelectedAccount === 'merchant'
@@ -272,16 +277,18 @@ export const HomeScreen = observer(function HomeScreen() {
 					: [
 						ConsumerView(),
 						<Button
+							key="button_botton"
 							buttonStyle={{
-								backgroundColor: COLOR.PALETTE.blue,
-								bottom: 125,
-								position: 'absolute'
+								backgroundColor: loginStore.getAccountColor,
+								// bottom: 125,
+								// position: 'absolute'
 							}}
 							buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
 							onPress={() => navigation.navigate("return", {})}
 							buttonLabel={'Scan to Pay or Receive'}
 							showBottonMenu
 							hideButton
+							accountType={loginStore.getSelectedAccount}
 						/>
 					]
 				}

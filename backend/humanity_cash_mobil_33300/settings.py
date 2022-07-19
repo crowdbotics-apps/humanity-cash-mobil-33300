@@ -67,7 +67,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites'
+    'django.contrib.sites',
+    'django.contrib.gis'
 ]
 LOCAL_APPS = [
     'home',
@@ -111,7 +112,9 @@ ROOT_URLCONF = 'humanity_cash_mobil_33300.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'web_build')],
+        'DIRS': [os.path.join(BASE_DIR, 'web_build'),
+                 os.path.join(BASE_DIR, 'templates')
+                 ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,7 +142,7 @@ DATABASES = {
 
 if env.str("DATABASE_URL", default=None):
     DATABASES = {
-        'default': env.db()
+        'default': env.db(engine='django.contrib.gis.db.backends.postgis')
     }
 
 
@@ -295,9 +298,19 @@ if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
     else:
         EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+# Twilio
 TWILIO_ACCOUNT_SID = env.str("TWILIO_ACCOUNT_SID", "")
 TWILIO_AUTH_TOKEN = env.str("TWILIO_AUTH_TOKEN", "")
 TWILIO_NUMBER = env.str("TWILIO_NUMBER", "")
+
+
+# Dwolla
+DWOLLA_ENVIRONMENT = env.str("DWOLLA_ENVIRONMENT", default='sandbox')
+DWOLLA_SANDBOX_APP_KEY = env.str("DWOLLA_SANDBOX_APP_KEY", "")
+DWOLLA_SANDBOX_APP_SECRET = env.str("DWOLLA_SANDBOX_APP_SECRET", "")
+
+DWOLLA_PRODUCTION_APP_KEY = env.str("DWOLLA_PRODUCTION_APP_KEY", "")
+DWOLLA_PRODUCTION_APP_SECRET = env.str("DWOLLA_PRODUCTION_APP_SECRET", "")
 
 # GCP config 
 GS_BUCKET_NAME = env.str("GS_BUCKET_NAME", "")

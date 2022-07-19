@@ -31,8 +31,8 @@ const ROOT: ViewStyle = {
   flexDirection: "row",
   paddingHorizontal: 8,
   alignItems: "center",
-  paddingTop: 24,
-  paddingBottom: 16,
+  paddingTop: 4,
+  paddingBottom: 6,
   justifyContent: "flex-start",
   backgroundColor: COLOR.PALETTE.white
 }

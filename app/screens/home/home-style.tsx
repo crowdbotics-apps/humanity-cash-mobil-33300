@@ -22,7 +22,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80,
     alignItems: 'center',
     alignSelf: 'center',
-    marginBottom: 50
+    marginBottom: 100
   },
   BACK_BUTON_LABEL: {
     fontSize: 16,
@@ -190,7 +190,8 @@ export default StyleSheet.create({
     width: 120,
     height: 25,
     borderRadius: 20,
-    marginRight: 10
+    marginRight: 10,
+    justifyContent: 'center'
   },
   NEWS_CONTAINER: {
     width: METRICS.screenWidth * 0.95,

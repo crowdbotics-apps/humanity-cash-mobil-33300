@@ -5,28 +5,23 @@ import {
 	Text,
 	Button,
 	Screen,
-	Checkbox,
 	ModalSelector
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import styles from './setup-profile-style';
-import { COLOR, TYPOGRAPHY } from '../../theme';
-import { StackActions, useNavigation } from "@react-navigation/native"
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { useNavigation } from "@react-navigation/native"
+import { launchImageLibrary } from 'react-native-image-picker';
 import { IMAGES, METRICS } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
-import { CheckBox } from 'react-native-elements'
 import { useStores } from "../../models"
-import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 
 
-const steps_user = ['pic_username', 'name']
-const steps_business = ['pic_bname', 'business_type', 'business_exec', 'business_data', 'business_addresss']
+// const steps_user = ['pic_username', 'name']
+// const steps_business = ['pic_bname', 'business_type', 'business_exec', 'business_data', 'business_addresss']
 const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
-const profile_types = [
+const profileTypes = [
 	{
 		label: 'Personal',
 		value: 'personal',
@@ -39,7 +34,7 @@ const profile_types = [
 	},
 ]
 
-const business_types = [
+const businessTypes = [
 	'Sole Proprietorship',
 	'Corporation',
 	'LLC',
@@ -47,7 +42,7 @@ const business_types = [
 	'Non-profit',
 ]
 
-const industry_types = [
+const industryTypes = [
 	'Arts & entertainment',
 	'Communication & education',
 	'Food & drink',
@@ -101,15 +96,17 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
+	const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
-	const states = ["AL", "AK", "AS", "AZ", "AR", "CA", "CO", "CT", "DE", "DC"]
-	const [State, setState] = React.useState(states[1]);
+	const [States, setStates] = React.useState([]);
+	const [State, setState] = React.useState('');
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
+	const [SelectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
 	function selectImage(type: string) {
-		let options = {
+		const options: any = {
 			mediaType: "photo",
 			includeBase64: false,
 			maxWidth: 512,
@@ -119,11 +116,11 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		launchImageLibrary(options, (response: any) => {
 			if (response.didCancel) {
 				return;
-			} else if (response.errorCode == 'camera_unavailable') {
+			} else if (response.errorCode === 'camera_unavailable') {
 				return;
-			} else if (response.errorCode == 'permission') {
+			} else if (response.errorCode === 'permission') {
 				return;
-			} else if (response.errorCode == 'others') {
+			} else if (response.errorCode === 'others') {
 				return;
 			}
 			if (type === 'user_image') setImageSource(response.assets[0]);
@@ -133,6 +130,19 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		});
 	}
 
+	const fetchCity = (data?: string) => {
+		loginStore.environment.api.getCities({ value: data})
+			.then((result: any) => {
+				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name})))
+			})
+	}
+	const fetchState = (data?: string) => {
+		loginStore.environment.api.getStates({ value: data})
+		.then((result: any) => {
+			setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+		})
+	}
+
 	const setupConsumer = () => {
 		setLoading(true)
 		setUsernameErrorMsg("")
@@ -140,24 +150,30 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		const pic = {
 			uri:
 				Platform.OS === "android"
-					? imageSource.uri
-					: imageSource.uri.replace("file://", ""),
-			type: imageSource.type,
-			name: imageSource.fileName
+					? imageSource?.uri
+					: imageSource?.uri.replace("file://", ""),
+			type: imageSource?.type,
+			name: imageSource?.fileName
 		}
-		loginStore.environment.api.setupConsumer({ username: Username, consumer_profile: pic }).then(result => {
+		loginStore.environment.api.setupConsumer({
+			username: Username,
+			consumer_profile: pic
+		}).then((result:any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setStep("name")
 			} else if (result.kind === "bad-data") {
 				const key = Object.keys(result?.errors)[0]
-				let msg = `${key}: ${result?.errors?.[key][0]}`
+				const msg = `${key}: ${result?.errors?.[key][0]}`
 				if (key === 'username') {
 					setUsernameError(true)
 					setUsernameErrorMsg(result?.errors?.[key][0])
 				}
 				notifyMessage(msg)
-			} else {
+			} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
+				} else {
 				notifyMessage(null)
 			}
 		})
@@ -165,15 +181,21 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const setupConsumerDetail = () => {
 		setLoading(true)
-		loginStore.environment.api.setupConsumerDetail({ first_name: Name, last_name: LastName }).then(result => {
+		loginStore.environment.api.setupConsumerDetail({
+			first_name: Name,
+			last_name: LastName
+		}).then((result:any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setShowThankyouModal(true)
 			} else if (result.kind === "bad-data") {
 				const key = Object.keys(result?.errors)[0]
-				let msg = `${key}: ${result?.errors?.[key][0]}`
+				const msg = `${key}: ${result?.errors?.[key][0]}`
 				notifyMessage(msg)
-			} else {
+			} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
+				} else {
 				notifyMessage(null)
 			}
 		})
@@ -181,38 +203,40 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const setupMerchant = () => {
 		setLoading(true)
-		const prof_pic = {
+		const profPic = {
 			uri:
 				Platform.OS === "android"
-					? BusinessImageSource.uri
-					: BusinessImageSource.uri.replace("file://", ""),
-			type: BusinessImageSource.type,
-			name: BusinessImageSource.fileName
+					? BusinessImageSource?.uri
+					: BusinessImageSource?.uri.replace("file://", ""),
+			type: BusinessImageSource?.type,
+			name: BusinessImageSource?.fileName
 		}
-		const back_pic = {
+		const backPic = {
 			uri:
 				Platform.OS === "android"
-					? BackBusinessImageSource.uri
-					: BackBusinessImageSource.uri.replace("file://", ""),
-			type: BackBusinessImageSource.type,
-			name: BackBusinessImageSource.fileName
+					? BackBusinessImageSource?.uri
+					: BackBusinessImageSource?.uri.replace("file://", ""),
+			type: BackBusinessImageSource?.type,
+			name: BackBusinessImageSource?.fileName
 		}
 		loginStore.environment.api.setupMerchant({
 			business_name: BusinessName,
-			profile_picture: prof_pic,
-			background_picture: back_pic,
+			profile_picture: profPic,
+			background_picture: backPic,
 			business_story: BusinessStory
 		})
-			.then(result => {
+			.then((result:any) => {
 				setLoading(false)
-				console.log('result ===>>> ', result)
 				setStep('business_type')
 				if (result.kind === "ok") {
 					setStep('business_type')
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					let msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
 				} else {
 					notifyMessage(null)
 				}
@@ -222,24 +246,24 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const setupMerchantDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
-			.then(result => {
+			.then((result:any) => {
 				setLoading(false)
-				console.log('result ===>>> ', result)
 				if (result.kind === "ok") {
 					setStep('business_exec')
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					let msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
 				} else {
 					notifyMessage(null)
 				}
 			})
 	}
-
 	const setupMerchantDetailComplete = () => {
 		setLoading(true)
-
 		loginStore.environment.api.setupMerchantDetail({
 			registered_business_name: BusinessRegName,
 			industry: BusinessIndustryType,
@@ -254,30 +278,33 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			zip_code: PostalCode,
 			phone_number: PhoneNumber
 		})
-			.then(result => {
+			.then((result:any) => {
 				setLoading(false)
-				console.log('result ===>>> ', result)
 				if (result.kind === "ok") {
 					setShowThankyouModal(true)
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					let msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
 				} else {
 					notifyMessage(null)
 				}
 			})
 	}
-
 	const renderStep = () => {
 		let render
 		switch (Step) {
+			// consumer
 			case 'pic_username':
 				render = renderPicUsername()
 				break;
 			case 'name':
 				render = renderName()
 				break;
+			// merchant
 			case 'pic_bname':
 				render = renderPicBName()
 				break;
@@ -298,13 +325,12 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		}
 		return render
 	}
-
 	const renderSelectBusinessType = () => (
 		<View style={styles.STEP_CONTAINER}>
 			<Text style={styles.STEP_TITLE}>Hi</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>Select the profile you’d like to create. If you’re a business owner, you can automatically set up a personal profile. You can have one account login with two profiles.</Text>
-			{profile_types.map((t, key) => (
+			{profileTypes.map((t, key) => (
 				<TouchableOpacity key={key + '_ptype'} style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(t.value), setStep(t.first_step)]}>
 					<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{t.label}</Text>
 				</TouchableOpacity>
@@ -322,7 +348,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				style={styles.IMAGE_CONTAINER}
 			>
 				{!imageSource?.uri
-					// ? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
 					? <Image
 						source={RandonPic}
 						style={styles.IMAGE_BOX}
@@ -345,7 +370,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setUsername(t)}
-					value={Username.charAt(0) == '@' ? Username : '@' + Username}
+					value={Username.charAt(0) === '@' ? Username : '@' + Username}
 					placeholder={'@username'}
 				/>
 			</View>
@@ -463,7 +488,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					<Text style={styles.SELECT_LABEL}>{BusinessType !== '' ? BusinessType : 'Select'}</Text>
 					<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
 				</TouchableOpacity>
-				{SelectOpen && business_types.map((t, key) => (
+				{SelectOpen && businessTypes.map((t, key) => (
 					<TouchableOpacity key={key + 'btype'} style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setBusinessType(t)]}>
 						<Text style={styles.SELECT_LABEL}>{t}</Text>
 					</TouchableOpacity>
@@ -525,7 +550,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					<Text style={styles.SELECT_LABEL}>{BusinessIndustryType !== '' ? BusinessIndustryType : 'Select'}</Text>
 					<Entypo name={SelectIndustryOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
 				</TouchableOpacity>
-				{SelectIndustryOpen && industry_types.map((t, key) => (
+				{SelectIndustryOpen && industryTypes.map((t, key) => (
 					<TouchableOpacity key={key + 'itype'} style={styles.SELECT_ICON} onPress={() => [setSelectIndustryOpen(!SelectIndustryOpen), setBusinessIndustryType(t)]}>
 						<Text style={styles.SELECT_LABEL}>{t}</Text>
 					</TouchableOpacity>
@@ -575,9 +600,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			<Text style={styles.STEP_TITLE}>Business information</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>Where can customers find you?</Text>
-
-
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 1</Text>
 			</View>
@@ -589,7 +611,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					placeholder={'Street number, street name'}
 				/>
 			</View>
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 2</Text>
 			</View>
@@ -602,50 +623,42 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				/>
 			</View>
 
-
-			<View style={{
-				// backgroundColor: 'red'
-				flexDirection: 'row',
-				justifyContent: 'space-between',
-				width: METRICS.screenWidth * 0.95,
-				alignSelf: 'center',
-			}}>
+			<View style={styles.SELECTS_CONTAINER}>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
-					<View style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
-						<TextInput
-							style={[styles.INPUT_STYLE, , { width: METRICS.screenWidth * 0.6 }]}
-							onChangeText={t => setCity(t)}
+					<TouchableOpacity
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
+						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
+					>
+						<ModalSelector
+							options={Citys}
+							action={setCity}
+							title={""}
 							value={City}
-							placeholder={'City'}
+							visible={SelectCityOpen}
+							setVisible={setSelectCityOpen}
+							displaySelector
+							closeOnClick
+							searchAction={fetchCity}
 						/>
-					</View>
+					</TouchableOpacity>
 				</View>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>STATE</Text>
 					</View>
 					<View style={[
-						SelectStateOpen ?
-							styles.SELECT_INPUT_STYLE_CONTAINER_OPEN
-							: styles.SELECT_INPUT_STYLE_CONTAINER,
+						styles.SELECT_INPUT_STYLE_CONTAINER,
 						{ width: METRICS.screenWidth * 0.25 }
 					]}>
 						<TouchableOpacity
 							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
 							onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
 						>
-							{/* <Text style={styles.SELECT_LABEL}>{State.title}</Text>
-							<Entypo
-								name={"chevron-down"}
-								size={23} color={'black'}
-								style={{ marginRight: 20 }}
-							/> */}
-
 							<ModalSelector
-								options={states}
+								options={States}
 								action={setState}
 								title={""}
 								value={State}
@@ -653,6 +666,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 								setVisible={setSelectStateOpen}
 								displaySelector
 								closeOnClick
+								searchAction={fetchState}
 							/>
 						</TouchableOpacity>
 					</View>
@@ -700,7 +714,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text>
 						<TouchableOpacity
 							style={styles.MODAL_BUTTON}
-							onPress={() => [navigation.navigate("splash", {}), loginStore.setApiToken(null)]}>
+							onPress={() => [navigation.navigate("splash", {}), loginStore.setApiToken(null), setShowConfirmLogoutModal(false)]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
 					</View>
@@ -715,12 +729,12 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Thank you! Welcome to the Currents App. Now it is time to add some Currents to your wallet!</Text>
 				<View style={styles.CONTAINER}>
-					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home", {})]} style={[styles.NEED_HELP_LINK, {marginBottom: 100}]}>Skip for now</Text>
+					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home", {})]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
 					<Button
-							// onPress={() => nextButtonHandler()}
-							buttonLabel={'Link my personal bank account'}
-							buttonStyle={styles.SUBMIT_BUTTON}
-						/>
+						// onPress={() => nextButtonHandler()}
+						buttonLabel={'Link my personal bank account'}
+						buttonStyle={styles.SUBMIT_BUTTON}
+					/>
 				</View>
 			</View>
 		</Modal>
@@ -734,6 +748,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				} else {
 					navigation.navigate("login", {})
 				}
+				break;
 			case 'pic_username':
 				setStep('profile_type')
 				break;
@@ -757,9 +772,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				break;
 		}
 	}
-
 	const nextButtonHandler = () => {
-		let setupData = {
+		const setupData = {
 			Username,
 			imageSource,
 			Name,
@@ -783,19 +797,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			PostalCode,
 			PhoneNumber,
 		}
+		// city and state picker || map
 		loginStore.setSetupData(setupData)
-
-
-		loginStore.environment.api.getCities({ value: 'wash' })
-			.then(result => {
-				console.log('result citie ===>>> ', result)
-			})
-
-		loginStore.environment.api.getStates({ value: 'wash' })
-			.then(result => {
-				console.log('result state ===>>> ', result)
-			})
-
 		switch (Step) {
 			case 'pic_username':
 				setupConsumer()
@@ -825,7 +828,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	}
 
 	useEffect(() => {
-		let data = loginStore.getSetupData
+		const data = loginStore.getSetupData
 		if (data?.Username) {
 			setUsername(data.Username)
 			setButtonDisabled(false)
@@ -856,8 +859,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
 		setRandonPic(randomImages[Math.round(Math.random() * 3)])
 
-
-
+		fetchCity()
+		fetchState()
 	}, [])
 
 	return (
@@ -869,10 +872,10 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		>
 			<KeyboardAvoidingView
 				enabled
-				behavior={Platform.OS === 'ios' ? 'padding' : null}
+				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
-				<ScrollView bounces={false}>
+				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
 							<View style={styles.HEADER_ACTIONS}>
@@ -886,26 +889,20 @@ IDENTIFICATION NUMBER (ENTER ONE)
 							</View>
 							{renderStep()}
 						</View>
-
-
-
 					</View>
 					{confirmLogoutModal()}
 					{thankyouModal()}
 				</ScrollView>
-				<View style={styles.CONTAINER}>
-					{Step !== 'profile_type' &&
-						<Button
-							disabled={ButtonDisabled || Loading}
-							onPress={() => nextButtonHandler()}
-							loading={Loading}
-							buttonLabel={Step === 'business_exec' ? 'Confirm' : 'Next'}
-							buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
-						/>
-
-					}
-				</View>
 			</KeyboardAvoidingView>
+			{Step !== 'profile_type' &&
+				<Button
+					disabled={ButtonDisabled || Loading}
+					onPress={() => nextButtonHandler()}
+					loading={Loading}
+					buttonLabel={Step === 'business_exec' ? 'Confirm' : 'Next'}
+					buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
+				/>
+			}
 		</Screen>
 	)
 })

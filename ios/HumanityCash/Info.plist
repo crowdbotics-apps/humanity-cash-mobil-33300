@@ -24,6 +24,20 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Enabling Face ID allows you quick and secure access to your account.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires access to user location</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app requires access to user location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app requires access to user location</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This App need access to your camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This App need access to your photo library</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This App need access to your microphone</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -72,5 +86,20 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb487091709883156</string>
+			</array>
+		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>487091709883156</string>
+	<key>FacebookClientToken</key>
+	<string>a96260dd6e34b4603f7f6760a886b8c8</string>
+	<key>FacebookDisplayName</key>
+	<string>HumanityCash</string>
 </dict>
 </plist>

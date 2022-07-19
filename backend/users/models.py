@@ -1,10 +1,12 @@
 from cities_light.models import City, Region
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.contrib.gis.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+
+from users.constants import Industry
 
 
 def code_live_time():
@@ -30,6 +32,8 @@ class User(AbstractUser):
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
     verified_email = models.BooleanField(default=False)
     allow_touch_id = models.BooleanField(default=False)
+    facebook_id = models.CharField('Facebook ID', max_length=64, blank=True, null=True)
+    facebook_token = models.TextField('Facebook Token', blank=True, null=True)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
@@ -87,7 +91,8 @@ class Merchant(BaseProfileModel):
     business_story = models.CharField(max_length=50, null=True, blank=True)
     type_of_business = models.CharField(max_length=50, null=True, blank=True)
     registered_business_name = models.CharField(max_length=50, null=True, blank=True)
-    industry = models.CharField(max_length=50, null=True, blank=True)
+    industry = models.CharField(max_length=50, choices=Industry.choices, null=True, blank=True)
+    website = models.CharField(max_length=250, null=True, blank=True)
     employer_identification_number = models.CharField(max_length=50, null=True, blank=True)
     social_security_number = models.CharField(max_length=50, null=True, blank=True)
     phone_number = PhoneNumberField(null=True, blank=True)
@@ -98,6 +103,7 @@ class Merchant(BaseProfileModel):
     owner_city = models.CharField(max_length=100, null=True, blank=True)
     owner_state = models.CharField(max_length=2, null=True, blank=True)
     owner_zip_code = models.CharField(max_length=16, null=True, blank=True)
+    location = models.PointField(null=True, blank=True)
 
     class Meta:
         db_table = 'merchant'

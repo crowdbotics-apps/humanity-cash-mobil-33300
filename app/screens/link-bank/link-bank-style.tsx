@@ -2,177 +2,187 @@ import { Animated, StyleSheet } from 'react-native';
 import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
-	ROOT: {
-		backgroundColor: COLOR.PALETTE.white,
-	},
-  CONTAINER: {},
-  ROOT_CONTAINER: {
-    flex: 1,
-    backgroundColor: COLOR.PALETTE.white,
-    justifyContent: 'space-between',
-    minHeight: METRICS.screenHeight,
-    marginBottom: 80
+  BACK_BUTON_LABEL: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16
   },
+  BANKS_ICON_CONTAINER: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: METRICS.screenWidth * 0.95
+  },
+  BANK_ICON: {
+    height: 80,
+    width: 80
+  },
+  BANK_ICON_CONTAINER: {
+    alignItems: 'center',
+    backgroundColor: COLOR.PALETTE.lightGray,
+    height: 100,
+    justifyContent: 'center',
+    marginBottom: 10,
+    width: METRICS.screenWidth * 0.46
+  },
+  BANK_ICON_CONTAINER_VIEW: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.lightGray,
+    height: 100,
+    justifyContent: 'center',
+    marginTop: 30,
+    width: METRICS.screenWidth * 0.46
+  },
+  CONTAINER: {},
   HEADER: {
+    flexDirection: 'row',
     marginLeft: 10,
     marginTop: 10,
+  },
+  INPUT_LABEL_STYLE: {
+    color: COLOR.PALETTE.black,
+    fontSize: 10,
+
+  },
+  INPUT_LABEL_STYLE_CONTAINER: {
+    alignSelf: 'center',
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 30,
+    width: METRICS.screenWidth * 0.95
   },
-  STEP_TITLE: {
-    fontSize: 32,
-    color: COLOR.PALETTE.blue,
-    marginLeft: 10,
-    marginTop: 10
+  INPUT_STYLE: {
+    alignSelf: 'center',
+    height: 55,
+    width: METRICS.screenWidth * 0.90,
   },
-  BACK_BUTON_LABEL: {
-    fontSize: 16,
-    color: COLOR.PALETTE.black
+  INPUT_STYLE_CONTAINER: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    borderRadius: 5,
+    flexDirection: 'row',
+    height: 55,
+    justifyContent: 'center',
+    marginBottom: -10,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.95
   },
   LINE: {
-    width: METRICS.screenWidth * 0.95,
+    alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.strongGreen,
     height: 1,
+    marginVertical: 10,
+    width: METRICS.screenWidth * 0.95
+  },
+  PASS_INPUT_STYLE: {
     alignSelf: 'center',
-    marginVertical: 10
+    height: 55,
+    width: METRICS.screenWidth * 0.80,
+  },
+  POLICY_OPEN_CONTAINER: {
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.background,
+    marginBottom: 250,
+    width: METRICS.screenWidth * 0.95,
+  },
+  ROOT: {
+    backgroundColor: COLOR.PALETTE.white,
+  },
+  ROOT_CONTAINER: {
+    backgroundColor: COLOR.PALETTE.white,
+    flex: 1,
+    justifyContent: 'space-between',
+    marginBottom: 80,
+    minHeight: METRICS.screenHeight
+  },
+  SEARCH_INPUT_ADJUSTMENTS: {
+    alignItems: 'center',
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    height: 55,
+    justifyContent: 'center',
+    width: METRICS.screenWidth * 0.15
+  },
+  SEARCH_INPUT_CONTAINER: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.95
+  },
+
+  SEARCH_INPUT_STYLE: {
+    alignSelf: 'center',
+    height: 55,
+    width: METRICS.screenWidth * 0.85,
+  },
+  SEARCH_INPUT_STYLE_CONTAINER: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    borderRadius: 3,
+    flexDirection: 'row',
+    height: 55,
+    justifyContent: 'center',
+    width: METRICS.screenWidth * 0.95
   },
   STEP_SUB_TITLE: {
-    fontSize: 16,
     color: COLOR.PALETTE.black,
+    fontSize: 16,
     marginLeft: 10,
     width: METRICS.screenWidth * 0.90,
   },
+  STEP_TITLE: {
+    color: COLOR.PALETTE.blue,
+    fontSize: 32,
+    marginLeft: 10,
+    marginTop: 10
+  },
   TERMS_CLOSE_CONTAINER: {
-    width: METRICS.screenWidth * 0.95,
-    height: 80,
-    backgroundColor: COLOR.PALETTE.background,
-    alignSelf: 'center',
-    marginBottom: 15,
-    justifyContent: 'space-between',
     alignItems: 'center',
-    flexDirection: 'row'
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.background,
+    flexDirection: 'row',
+    height: 80,
+    justifyContent: 'space-between',
+    marginBottom: 15,
+    width: METRICS.screenWidth * 0.95
+  },
+  TERMS_OPEN_CONTAINER: {
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.background,
+    marginBottom: 15,
+    width: METRICS.screenWidth * 0.95
+  },
+  TERMS_OPEN_CONTENT: {
+    alignSelf: 'center',
+    color: COLOR.PALETTE.strongGreen,
+    fontSize: 10,
+    width: METRICS.screenWidth * 0.80
+  },
+  TERMS_OPEN_TITLE_CONTAINER: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    height: 60,
+    justifyContent: 'space-between',
+    width: METRICS.screenWidth * 0.95,
   },
   TERMS_TITLE: {
     color: COLOR.PALETTE.strongGreen,
     fontSize: 16,
     marginLeft: 15
   },
-  TERMS_OPEN_CONTAINER: {
-    width: METRICS.screenWidth * 0.95,
-    backgroundColor: COLOR.PALETTE.background,
-    alignSelf: 'center',
-    marginBottom: 15
+  bankView: {
+    flex: 1,
+    height: METRICS.screenHeight - 200,
+    paddingBottom: 10,
   },
-  TERMS_OPEN_TITLE_CONTAINER: {
-    height: 60,
-    width: METRICS.screenWidth * 0.95,
-    alignSelf: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  TERMS_OPEN_CONTENT: {
-    color: COLOR.PALETTE.strongGreen,
-    fontSize: 10,
-    width: METRICS.screenWidth * 0.80,
-    alignSelf:'center'
-  },
-  POLICY_OPEN_CONTAINER: {
-    width: METRICS.screenWidth * 0.95,
-    backgroundColor: COLOR.PALETTE.background,
-    alignSelf: 'center',
-    marginBottom: 250,
-  },
-  SEARCH_INPUT_CONTAINER: {
-    width: METRICS.screenWidth * 0.95,
-    flexDirection: 'row',
-    alignSelf: 'center',
-    justifyContent: 'space-between',
-    marginTop: 10,
-    marginBottom: 20
-  },
-  SEARCH_INPUT_STYLE_CONTAINER: {
-    borderRadius: 3,
-    height: 55,
-    width: METRICS.screenWidth * 0.95,
-    backgroundColor: `${COLOR.PALETTE.green}25`,
-    alignSelf: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  SEARCH_INPUT_STYLE: {
-    height: 55,
-    width: METRICS.screenWidth * 0.85,
-    alignSelf: 'center',
-  },
-  SEARCH_INPUT_ADJUSTMENTS: {
-    height: 55,
-    width: METRICS.screenWidth * 0.15,
-    backgroundColor: `${COLOR.PALETTE.green}25`,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  
-  BANKS_ICON_CONTAINER: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    width: METRICS.screenWidth * 0.95,
-    alignSelf: 'center'
-  },
-  BANK_ICON_CONTAINER: {
-    backgroundColor: COLOR.PALETTE.lightGray,
-    width: METRICS.screenWidth * 0.46,
-    height: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10
-  },
-  BANK_ICON_CONTAINER_VIEW: {
-    backgroundColor: COLOR.PALETTE.lightGray,
-    width: METRICS.screenWidth * 0.46,
-    height: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    marginTop: 30
-  },
-  BANK_ICON: {
-    width: 80,
-    height: 80
-  },
-  INPUT_LABEL_STYLE_CONTAINER: {
-    flexDirection: 'row',
-    width: METRICS.screenWidth * 0.95,
-    justifyContent: 'space-between',
-    alignSelf: 'center',
-    marginTop: 30
-  },
-  INPUT_LABEL_STYLE: {
-    fontSize: 10,
-    color: COLOR.PALETTE.black,
-    
-  },
-  INPUT_STYLE_CONTAINER: {
-    borderRadius: 5,
-    height: 55,
-    width: METRICS.screenWidth * 0.95,
-    backgroundColor: `${COLOR.PALETTE.green}25`,
-    alignSelf: 'center',
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: -10
-  },
-  INPUT_STYLE: {
-    height: 55,
-    width: METRICS.screenWidth * 0.90,
-    alignSelf: 'center',
-  },
-  PASS_INPUT_STYLE: {
-    height: 55,
-    width: METRICS.screenWidth * 0.80,
-    alignSelf: 'center',
-  },
+  buttonStyle: {
+    backgroundColor: COLOR.PALETTE.blue,
+    bottom: 125,
+    position: 'absolute'
+  }
 })

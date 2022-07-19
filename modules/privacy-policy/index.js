@@ -35,7 +35,7 @@ const PrivacyPolicy = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.header}>Privacy Policy</Text>
       </View>
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
         <HTML source={{ html: htmlContent }} contentWidth={contentWidth} style={styles.heading}/>
       </ScrollView>
     </View>

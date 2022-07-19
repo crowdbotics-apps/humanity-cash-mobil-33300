@@ -2,7 +2,7 @@ FROM python:3.8-slim as base
 
 # libpq-dev and python3-dev help with psycopg2
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3-dev libpq-dev gcc curl \
+  && apt-get install -y --no-install-recommends python3-dev libpq-dev gcc curl binutils libproj-dev gdal-bin \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
   # You can add additional steps to the build by appending commands down here using the

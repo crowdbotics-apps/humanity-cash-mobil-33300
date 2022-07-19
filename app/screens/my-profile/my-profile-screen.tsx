@@ -18,6 +18,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const { loginStore } = rootStore
 
 	const [Loading, setLoading] = useState(false)
+	const [Email, setEmail] = useState('')
 
 	// personal
 	const [Username, setUsername] = useState('')
@@ -38,70 +39,12 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
+	const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
-	const states = [
-		{ id: "AL", title: "AL", description: "Alabama" },
-		{ id: "AK", title: "AK", description: "Alaska" },
-		{ id: "AS", title: "AS", description: "American Samoa" },
-		{ id: "AZ", title: "AZ", description: "Arizona" },
-		{ id: "AR", title: "AR", description: "Arkansas" },
-		{ id: "CA", title: "CA", description: "California" },
-		{ id: "CO", title: "CO", description: "Colorado" },
-		{ id: "CT", title: "CT", description: "Connecticut" },
-		{ id: "DE", title: "DE", description: "Delaware" },
-		{ id: "DC", title: "DC", description: "District Of Columbia" },
-		{ id: "FM", title: "FM", description: "Federated States Of Micronesia" },
-		{ id: "FL", title: "FL", description: "Florida" },
-		{ id: "GA", title: "GA", description: "Georgia" },
-		{ id: "GU", title: "GU", description: "Guam" },
-		{ id: "HI", title: "HI", description: "Hawaii" },
-		{ id: "ID", title: "ID", description: "Idaho" },
-		{ id: "IL", title: "IL", description: "Illinois" },
-		{ id: "IN", title: "IN", description: "Indiana" },
-		{ id: "IA", title: "IA", description: "Iowa" },
-		{ id: "KS", title: "KS", description: "Kansas" },
-		{ id: "KY", title: "KY", description: "Kentucky" },
-		{ id: "LA", title: "LA", description: "Louisiana" },
-		{ id: "ME", title: "ME", description: "Maine" },
-		{ id: "MH", title: "MH", description: "Marshall Islands" },
-		{ id: "MD", title: "MD", description: "Maryland" },
-		{ id: "MA", title: "MA", description: "Massachusetts" },
-		{ id: "MI", title: "MI", description: "Michigan" },
-		{ id: "MN", title: "MN", description: "Minnesota" },
-		{ id: "MS", title: "MS", description: "Mississippi" },
-		{ id: "MO", title: "MO", description: "Missouri" },
-		{ id: "MT", title: "MT", description: "Montana" },
-		{ id: "NE", title: "NE", description: "Nebraska" },
-		{ id: "NV", title: "NV", description: "Nevada" },
-		{ id: "NH", title: "NH", description: "New Hampshire" },
-		{ id: "NJ", title: "NJ", description: "New Jersey" },
-		{ id: "NM", title: "NM", description: "New Mexico" },
-		{ id: "NY", title: "NY", description: "New York" },
-		{ id: "NC", title: "NC", description: "North Carolina" },
-		{ id: "ND", title: "ND", description: "North Dakota" },
-		{ id: "MP", title: "MP", description: "Northern Mariana Islands" },
-		{ id: "OH", title: "OH", description: "Ohio" },
-		{ id: "OK", title: "OK", description: "Oklahoma" },
-		{ id: "OR", title: "OR", description: "Oregon" },
-		{ id: "PW", title: "PW", description: "Palau" },
-		{ id: "PA", title: "PA", description: "Pennsylvania" },
-		{ id: "PR", title: "PR", description: "Puerto Rico" },
-		{ id: "RI", title: "RI", description: "Rhode Island" },
-		{ id: "SC", title: "SC", description: "South Carolina" },
-		{ id: "SD", title: "SD", description: "South Dakota" },
-		{ id: "TN", title: "TN", description: "Tennessee" },
-		{ id: "TX", title: "TX", description: "Texas" },
-		{ id: "UT", title: "UT", description: "Utah" },
-		{ id: "VT", title: "VT", description: "Vermont" },
-		{ id: "VI", title: "VI", description: "Virgin Islands" },
-		{ id: "VA", title: "VA", description: "Virginia" },
-		{ id: "WA", title: "WA", description: "Washington" },
-		{ id: "WV", title: "WV", description: "West Virginia" },
-		{ id: "WI", title: "WI", description: "Wisconsin" },
-		{ id: "WY", title: "WY", description: "Wyoming" }
-	]
-	const [State, setState] = React.useState(states[1]);
+	const [States, setStates] = React.useState([]);
+	const [State, setState] = React.useState('');
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
+	const [SelectCityOpen, setSelectCityOpen] = React.useState(false);
 
 	function selectImage(type: string) {
 		let options = {
@@ -115,11 +58,11 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		launchImageLibrary(options, (response: any) => {
 			if (response.didCancel) {
 				return;
-			} else if (response.errorCode == 'camera_unavailable') {
+			} else if (response.errorCode === 'camera_unavailable') {
 				return;
-			} else if (response.errorCode == 'permission') {
+			} else if (response.errorCode === 'permission') {
 				return;
-			} else if (response.errorCode == 'others') {
+			} else if (response.errorCode === 'others') {
 				return;
 			}
 			if (type === 'user_image') setImageSource(response.assets[0]);
@@ -127,6 +70,19 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			if (type === 'business_back') setBackBusinessImageSource(response.assets[0]);
 
 		});
+	}
+
+	const fetchCity = (data?: string) => {
+		loginStore.environment.api.getCities({ value: data})
+			.then((result: any) => {
+				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name})))
+			})
+	}
+	const fetchState = (data?: string) => {
+		loginStore.environment.api.getStates({ value: data})
+		.then((result: any) => {
+			setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+		})
 	}
 
 	const PersonalProfile = () => (
@@ -154,7 +110,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				<Text style={styles.INPUT_LABEL_STYLE}>USER NAME*</Text>
 				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? 'SORRY, THAT NAME IS ALREADY TAKEN' : ''}</Text>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={[UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
@@ -170,7 +126,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>FIRST NAME</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setName(t)}
@@ -181,7 +137,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>LAST NAME</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setLastName(t)}
@@ -230,7 +186,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS NAME - THIS NAME WILL BE PUBLIC*</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
@@ -256,7 +212,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS CATEGORY</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
@@ -270,7 +226,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>WEBSITE - OPCIONAL</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
@@ -284,7 +240,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 1</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress1(t)}
@@ -296,7 +252,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 2</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress2(t)}
@@ -305,25 +261,27 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				/>
 			</View>
 
-			<View style={{
-				// backgroundColor: 'red'
-				flexDirection: 'row',
-				justifyContent: 'space-between',
-				width: METRICS.screenWidth * 0.95,
-				alignSelf: 'center',
-			}}>
+			<View style={styles.SELECTS_CONTAINER}>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
-					<View style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
-						<TextInput
-							style={[styles.INPUT_STYLE, , { width: METRICS.screenWidth * 0.6 }]}
-							onChangeText={t => setCity(t)}
+					<TouchableOpacity
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
+						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
+					>
+						<ModalSelector
+							options={Citys}
+							action={setCity}
+							title={""}
 							value={City}
-							placeholder={'City'}
+							visible={SelectCityOpen}
+							setVisible={setSelectCityOpen}
+							displaySelector
+							closeOnClick
+							searchAction={fetchCity}
 						/>
-					</View>
+					</TouchableOpacity>
 				</View>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
@@ -337,14 +295,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
 							onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
 						>
-							{/* <Text style={styles.SELECT_LABEL}>{State.title}</Text>
-							<Entypo
-								name={"chevron-down"}
-								size={23} color={'black'}
-								style={{ marginRight: 20 }}
-							/> */}
 							<ModalSelector
-								options={states}
+								options={States}
 								action={setState}
 								title={""}
 								value={State}
@@ -352,6 +304,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 								setVisible={setSelectStateOpen}
 								displaySelector
 								closeOnClick
+								searchAction={fetchState}
 							/>
 						</TouchableOpacity>
 					</View>
@@ -361,7 +314,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>POSTAL CODE</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPostalCode(t)}
@@ -372,7 +325,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPhoneNumber(t)}
@@ -388,69 +341,83 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		const pic = {
 			uri:
 				Platform.OS === "android"
-					? imageSource.uri
-					: imageSource.uri.replace("file://", ""),
+					? imageSource?.uri
+					: imageSource?.uri?.replace("file://", ""),
 			type: imageSource.type,
 			name: imageSource.fileName
 		}
 		const prof_pic = {
 			uri:
 				Platform.OS === "android"
-					? BusinessImageSource.uri
-					: BusinessImageSource.uri.replace("file://", ""),
+					? BusinessImageSource?.uri
+					: BusinessImageSource?.uri?.replace("file://", ""),
 			type: BusinessImageSource.type,
 			name: BusinessImageSource.fileName
 		}
 		const back_pic = {
 			uri:
 				Platform.OS === "android"
-					? BackBusinessImageSource.uri
-					: BackBusinessImageSource.uri.replace("file://", ""),
+					? BackBusinessImageSource?.uri
+					: BackBusinessImageSource?.uri?.replace("file://", ""),
 			type: BackBusinessImageSource.type,
 			name: BackBusinessImageSource.fileName
 		}
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
-				.updateProfileMerchant({ 
+				.updateProfileMerchant({
 					business_name: BusinessName,
 					profile_picture: prof_pic,
 					background_picture: back_pic,
 					business_story: BusinessStory,
-					address_1: Address1
-				 })
-				.then(result => {
+					address_1: Address1,
+					address_2: Address2,
+					zip_code: PostalCode,
+					phone_number: PhoneNumber,
+					website: BusinessWebsite,
+					industry: BusinessCategory
+				})
+				.then((result: any) => {
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
-							loginStore.setUser(result.response.user)
-							loginStore.setApiToken(result.response.access_token)
-							loginStore.setSelectedAccount('consumer')
+							// loginStore.setMerchantUser(result.response)
+							loginStore.setSelectedAccount('merchant')
 							navigation.navigate("home", {})
 						})
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]
-						let msg = `${key}: ${result?.errors?.[key][0]}`
+						const msg = `${key}: ${result?.errors?.[key][0]}`
 						notifyMessage(msg)
+					} else if (result.kind === "unauthorized") {
+						loginStore.reset()
+						navigation.navigate("login", {})
 					} else {
 						loginStore.reset()
 						notifyMessage(null)
 					}
 				})
 			: loginStore.environment.api
-				.updateProfileConsumer({ username: Username, consumer_profile: pic })
-				.then(result => {
+				.updateProfileConsumer({
+					username: Username,
+					consumer_profile: pic,
+					first_name: Name,
+					last_name: LastName
+				})
+				.then((result: any) => {
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
-							loginStore.setUser(result.response.user)
-							loginStore.setApiToken(result.response.access_token)
+							// loginStore.setConsumerUser(result.response)
 							loginStore.setSelectedAccount('consumer')
 							navigation.navigate("home", {})
 						})
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]
-						let msg = `${key}: ${result?.errors?.[key][0]}`
+						const msg = `${key}: ${result?.errors?.[key][0]}`
 						notifyMessage(msg)
+					} else if (result.kind === "unauthorized") {
+						loginStore.reset()
+						navigation.navigate("login", {})
 					} else {
 						loginStore.reset()
 						notifyMessage(null)
@@ -467,13 +434,18 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		setBackBusinessImageSource({ uri: loginStore.ProfileDataBusiness.background_picture })
 		setBusinessName(loginStore.ProfileDataBusiness.business_name)
 		setBusinessStory(loginStore.ProfileDataBusiness.business_story)
-		setBusinessCategory(loginStore.ProfileDataBusiness.type_of_business)
-		// setBusinessWebsite(loginStore.ProfileDataBusiness.)
+		setBusinessCategory(loginStore.ProfileDataBusiness.industry)
+		setBusinessWebsite(loginStore.ProfileDataBusiness.website)
 		setCity(loginStore.ProfileDataBusiness.city)
+		setState(loginStore.ProfileDataBusiness.state)
 		setAddress1(loginStore.ProfileDataBusiness.address_1)
 		setAddress2(loginStore.ProfileDataBusiness.address_2)
 		setPostalCode(loginStore.ProfileDataBusiness.zip_code)
 		setPhoneNumber(loginStore.ProfileDataBusiness.phone_number)
+		setEmail(loginStore.getAllData.email)
+
+		fetchCity()
+		fetchState()
 	}, [])
 
 	return (
@@ -485,10 +457,10 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		>
 			<KeyboardAvoidingView
 				enabled
-				behavior={Platform.OS === 'ios' ? 'padding' : null}
+				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
-				<ScrollView bounces={false}>
+				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
 
@@ -498,7 +470,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 
 							</TouchableOpacity>
 
-							<Text style={styles.STEP_TITLE}>My profile</Text>
+							<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>My profile</Text>
 							<View style={styles.LINE} />
 							<Text style={styles.STEP_SUB_TITLE}>This information is shared publicly.</Text>
 
@@ -509,21 +481,21 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						</View>
 					</View>
 				</ScrollView>
-				<Button
-					buttonStyle={{
-						bottom: 5,
-						position: 'absolute',
-						backgroundColor: Loading
-							? `${COLOR.PALETTE.green}40`
-							: COLOR.PALETTE.green
-					}}
-					// onPress={() => notifyMessage("Your profile has been updated successfully.")}
-					onPress={() => updateProfile()}
-					buttonLabel={'Save changes'}
-					disabled={Loading}
-					loading={Loading}
-				/>
 			</KeyboardAvoidingView>
+			<Button
+				buttonStyle={{
+					bottom: 5,
+					position: 'absolute',
+					backgroundColor: Loading
+						? `${loginStore.getAccountColor}40`
+						: loginStore.getAccountColor
+				}}
+				// onPress={() => notifyMessage("Your profile has been updated successfully.")}
+				onPress={() => updateProfile()}
+				buttonLabel={'Save changes'}
+				disabled={Loading}
+				loading={Loading}
+			/>
 		</Screen>
 	)
 })

@@ -1,12 +1,17 @@
+import logging
 from django.contrib.auth import get_user_model
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.response import Response
 
 from home.api.v1.serializers import setup_profile_serializers
+from home.clients.dwolla_api import DwollaClient
+from home.functions import create_dwolla_customer_consumer, create_dwolla_customer_merchant
 from home.helpers import AuthenticatedAPIView
 from users.models import Merchant
 
 User = get_user_model()
+logger = logging.getLogger('django')
 
 
 class SetupConsumerProfileAPIView(AuthenticatedAPIView, UpdateAPIView):
@@ -31,6 +36,18 @@ class SetupConsumerProfileDetailAPIView(AuthenticatedAPIView, UpdateAPIView):
     def get_object(self):
         return self.request.user
 
+    def update(self, request, *args, **kwargs):
+        super(SetupConsumerProfileDetailAPIView, self).update(request, *args, **kwargs)
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+
+        if not self.request.user.consumer.dwolla_id:
+            # if dwolla_id is not set yet
+            create_dwolla_customer_consumer(instance)
+
+        return Response(serializer.initial_data)
+
 
 class SetupMerchantProfileAPIView(AuthenticatedAPIView, CreateAPIView):
     """
@@ -54,6 +71,18 @@ class SetupMerchantProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIV
     def get_object(self):
         return self.request.user.merchant
 
+    def update(self, request, *args, **kwargs):
+        super(SetupMerchantProfileDetailAPIView, self).update(request, *args, **kwargs)
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+
+        if not self.request.user.merchant.dwolla_id:
+            # if dwolla_id is not set yet
+            create_dwolla_customer_merchant(instance)
+
+        return Response(serializer.initial_data)
+
 
 class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
     """
@@ -66,6 +95,21 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
+    def update(self, request, *args, **kwargs):
+        super(ConsumerMyProfileAPIView, self).update(request, *args, **kwargs)
+
+        instance = self.get_object()
+        request.data.pop('consumer_profile')
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if not self.request.user.consumer.dwolla_id:
+            # if dwolla_id is not set yet
+            create_dwolla_customer_consumer(instance)
+
+        return Response(serializer.data)
+
 
 class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
     """
@@ -77,3 +121,16 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
 
     def get_object(self):
         return self.request.user.merchant
+
+    def update(self, request, *args, **kwargs):
+        super(MerchantMyProfileDetailAPIView, self).update(request, *args, **kwargs)
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        if not self.request.user.merchant.dwolla_id:
+            # if dwolla_id is not set yet
+            create_dwolla_customer_merchant(instance)
+
+        return Response(serializer.data)

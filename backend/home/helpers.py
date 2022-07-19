@@ -1,5 +1,8 @@
 import logging
 import random
+import io
+import base64
+from email.mime.image import MIMEImage
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -93,3 +96,30 @@ def get_user_by_uidb64(uidb64):
     except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist, ValidationError):
         user = None
     return user
+
+
+def send_qr_code_email(user, qr_code_image):
+    try:
+        from_email, to = settings.DEFAULT_FROM_EMAIL, [user.email]
+        subject = "QR Code"
+        body_html = """
+        <html>
+            <body>
+                <h5>Your QR Code</h5><br/>
+                <img src="cid:qr_code.png" />
+                <br/>
+            </body>
+        </html>
+        """
+        msg = EmailMultiAlternatives(subject, body_html, from_email, to)
+        msg.mixed_subtype = 'related'
+        msg.attach_alternative(body_html, "text/html")
+
+        img = MIMEImage(qr_code_image.open('r').read())
+        img.add_header('Content-ID', '<{name}>'.format(name='qr_code.png'))
+        img.add_header('Content-Disposition', 'inline', filename='qr_code.png')
+        msg.attach(img)
+        msg.send()
+
+    except Exception as e:
+        LOGGER.exception('QR Code sending failed: {}'.format(e))

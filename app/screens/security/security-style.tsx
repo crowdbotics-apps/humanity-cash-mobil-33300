@@ -16,6 +16,7 @@ export default StyleSheet.create({
     marginLeft: 10,
     marginTop: 10,
     flexDirection: 'row',
+    alignItems: 'center'
   },
   STEP_TITLE: {
     fontSize: 32,

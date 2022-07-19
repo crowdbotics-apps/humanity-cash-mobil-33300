@@ -1,17 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { TextInput, View, TouchableOpacity, Image } from 'react-native';
-import {
-  Text,
-  Button,
-  Screen,
-  Checkbox
-} from '../../components';
+import { View, TouchableOpacity, Image } from 'react-native';
+import { Text, Screen } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
-import Entypo from "react-native-vector-icons/Entypo"
-import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from './drawer-style';
-import { COLOR, TYPOGRAPHY } from '../../theme';
 import { useNavigation } from "@react-navigation/native"
 import { IMAGES } from "../../theme"
 import { useStores } from "../../models"
@@ -26,7 +18,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
   return (
     <Screen
       showHeader
-      preset="fixed"
+      preset="scroll"
       statusBar={'dark-content'}
       unsafe={true}
       headerStyle={styles.HEADER}
@@ -34,14 +26,13 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
       <View style={styles.ROOT}>
         <View style={styles.HEADER}>
           <TouchableOpacity onPress={() => props.navigation.closeDrawer()} style={styles.BACK_BUTON_CONTAINER}>
-            <Icon name={"close"} size={23} color={COLOR.PALETTE.blue} />
-            <Text style={styles.BACK_BUTON_LABEL}>{` Menu`}</Text>
+            <Icon name={"close"} size={23} color={loginStore.getAccountColor} />
+            <Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
           </TouchableOpacity>
-
-
           {ChangeAccountOpen
             ? [
               <TouchableOpacity
+                key={'consumer_profile'}
                 style={styles.USER_CONTAINER_CHANGE}
                 onPress={() => [
                   loginStore.setSelectedAccount('consumer'),
@@ -59,11 +50,12 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
                   <Text style={styles.USER_NAME}>{loginStore.ProfileData.first_name + ' ' + loginStore.ProfileData.last_name}</Text>
                   <View>
-                    <Text style={styles.SWITCH_ACCOUNT_LABEL}>Switch account</Text>
+                    <Text style={[styles.SWITCH_ACCOUNT_LABEL, { color: loginStore.getAccountColor }]}>Switch account</Text>
                   </View>
                 </View>
               </TouchableOpacity>,
               <TouchableOpacity
+                key={'merchant_profile'}
                 style={styles.USER_CONTAINER_CHANGE}
                 onPress={() => [
                   loginStore.setSelectedAccount('merchant'),
@@ -87,57 +79,54 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
               </TouchableOpacity>
             ]
             : loginStore.getSelectedAccount === 'consumer'
-             ? <View style={styles.USER_CONTAINER}>
-              <View style={styles.USER_IMAGE_CONTAINER}>
-                <Image
-                  resizeMode="cover"
-                  source={{ uri: loginStore.ProfileData.profile_picture }}
-                  style={styles.USER_IMAGE}
-                />
+              ? <View style={styles.USER_CONTAINER}>
+                <View style={styles.USER_IMAGE_CONTAINER}>
+                  <Image
+                    resizeMode="cover"
+                    source={{ uri: loginStore.ProfileData.profile_picture }}
+                    style={styles.USER_IMAGE}
+                  />
+                </View>
+                <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
+                  <Text style={styles.USER_NAME_BLACK}>{loginStore.ProfileData.first_name + ' ' + loginStore.ProfileData.last_name}</Text>
+                  <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
+                    <Text style={[styles.SWITCH_ACCOUNT_LABEL_BLUE, { color: loginStore.getAccountColor }]}>Switch account</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
-                <Text style={styles.USER_NAME_BLACK}>{loginStore.ProfileData.first_name + ' ' + loginStore.ProfileData.last_name}</Text>
-                <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
-                  <Text style={styles.SWITCH_ACCOUNT_LABEL_BLUE}>Switch account</Text>
-                </TouchableOpacity>
+              : <View style={styles.USER_CONTAINER}>
+                <View style={styles.USER_IMAGE_CONTAINER}>
+                  <Image
+                    resizeMode="cover"
+                    source={{ uri: loginStore.ProfileDataBusiness.profile_picture_merchant }}
+                    style={styles.USER_IMAGE}
+                  />
+                </View>
+                <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
+                  <Text style={styles.USER_NAME_BLACK}>{loginStore.ProfileDataBusiness.business_name}</Text>
+                  <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
+                    <Text style={[styles.SWITCH_ACCOUNT_LABEL_BLUE, { color: loginStore.getAccountColor }]}>Switch account</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-             : <View style={styles.USER_CONTAINER}>
-             <View style={styles.USER_IMAGE_CONTAINER}>
-               <Image
-                 resizeMode="cover"
-                 source={{ uri: loginStore.ProfileDataBusiness.profile_picture_merchant }}
-                 style={styles.USER_IMAGE}
-               />
-             </View>
-             <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
-               <Text style={styles.USER_NAME_BLACK}>{loginStore.ProfileDataBusiness.business_name}</Text>
-               <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
-                 <Text style={styles.SWITCH_ACCOUNT_LABEL_BLUE}>Switch account</Text>
-               </TouchableOpacity>
-             </View>
-           </View>
           }
+          <Text style={styles.TOTAL_CURRENCY}>C$ 0</Text>
 
-          {console.log(' result ===>>> ', JSON.stringify(loginStore.ProfileData, null, 2))}
-
-          <Text style={styles.TOTAL_CURRENCY}>C$ 100.00</Text>
-
-          <TouchableOpacity onPress={() => props.navigation.navigate("return", {})} style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("qr", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.scanToPay}
               style={styles.MENU_ITEM_ICON}
             />
-            <Text style={styles.MENU_ITEM_LABEL}>Scan to pay</Text>
+            <Text style={styles.MENU_ITEM_LABEL}>Receive payment / Scan to pay</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("return", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.receive_payment}
               style={styles.MENU_ITEM_ICON}
             />
-            <Text style={styles.MENU_ITEM_LABEL}>Receive payment</Text>
+            <Text style={styles.MENU_ITEM_LABEL}>My Transactions</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => props.navigation.navigate("loadWallet", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
@@ -159,7 +148,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
           {/* LINE */}
           <View style={styles.LINE} />
 
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("whereSpend", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.where_to_spend}

@@ -35,6 +35,11 @@ export class Api extends ApiBase {
     return this.simple_post("/dj-rest-auth/login/", data)
   }
 
+  // FACEBOOK LOGIN
+  async loginFacebook(accessToken: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/social/fb-login/", { accessToken: accessToken })
+  }
+
   // SETUP
   async setupConsumer(data: any): Promise<Types.SimplePostResult> {
     return this.multipart_form_data_patch(apiv1 + "/set-up-profile/consumer/", data, ["consumer_profile"])
@@ -56,29 +61,44 @@ export class Api extends ApiBase {
   async getProfileConsumer(): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/my-profile/consumer/")
   }
+
   async getProfileMerchant(): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/my-profile/merchant/")
   }
+
   async updateProfileConsumer(data: any): Promise<Types.SimplePostResult> {
     return this.multipart_form_data_patch(apiv1 + "/my-profile/consumer/", data, ["consumer_profile"])
   }
+
   async updateProfileMerchant(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
+    return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
   }
 
+  // SECURITY
+  async updateSecurity(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_patch(apiv1 + "/security/change-password/", data)
+  }
 
   // BASE
   async getCities(data?: any): Promise<Types.SimpleGetResult> {
     let url = apiv1 + "/base/cities/"
     if (data && data.value) url += `?search=${data.value}`
-    console.log(' url => ', url, data)
     return this.simple_get(url)
   }
 
   async getStates(data?: any): Promise<Types.SimpleGetResult> {
     let url = apiv1 + "/base/states/"
     if (data && data.value) url += `?search=${data.value}`
-    console.log(' url => ', url, data)
     return this.simple_get(url)
   }
+
+  // DWOLLA
+  async getDwollaToken(data?: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/dwolla/create-iav-token/", data)
+  }
+
+  async getFundingSources(data?: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/dwolla/my-funding-sources/", data)
+  }
+
 }

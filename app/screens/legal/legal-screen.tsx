@@ -13,6 +13,7 @@ import Entypo from "react-native-vector-icons/Entypo"
 export const LegalScreen = observer(function LegalScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
+	const { loginStore } = rootStore
 
   const [ShowTerms, setShowTerms] = useState(false)
   const [ShowPolicy, setShowPolicy] = useState(false)
@@ -27,10 +28,10 @@ export const LegalScreen = observer(function LegalScreen() {
     >
       <KeyboardAvoidingView
         enabled
-        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        // behavior={Platform.OS === 'ios' ? 'padding' : null}
         style={styles.ROOT}
       >
-        <ScrollView bounces={false}>
+        <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
           <View style={styles.ROOT_CONTAINER}>
             <View style={styles.CONTAINER}>
 
@@ -40,7 +41,7 @@ export const LegalScreen = observer(function LegalScreen() {
 
               </TouchableOpacity>
 
-              <Text style={styles.STEP_TITLE}>Legal</Text>
+              <Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Legal</Text>
               <View style={styles.LINE} />
 
               {!ShowTerms ? (

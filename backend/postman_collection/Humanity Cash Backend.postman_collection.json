@@ -10,6 +10,122 @@
 			"name": "Login/SignUp",
 			"item": [
 				{
+					"name": "Social Login",
+					"item": [
+						{
+							"name": "Facebook Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/social/fb-login/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"social",
+										"fb-login",
+										""
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Login",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"email\": \"hassankarimbittar@gmail.com\",\n    \"password\": \"admin123admin123\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/dj-rest-auth/login/",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"dj-rest-auth",
+												"login",
+												""
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 15 Apr 2022 22:41:43 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "WSGIServer/0.2 CPython/3.8.13"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Vary",
+											"value": "Accept, Cookie"
+										},
+										{
+											"key": "Allow",
+											"value": "POST, OPTIONS"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "DENY"
+										},
+										{
+											"key": "Content-Length",
+											"value": "668"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "csrftoken=lRWJ3OSo46jBQhfU4uBwF1Hfuduaff8BBhGzcQxrNXXobdyeanWH4BWlqcgZo8Q9; expires=Fri, 14 Apr 2023 22:41:43 GMT; Max-Age=31449600; Path=/; SameSite=Lax"
+										},
+										{
+											"key": "Set-Cookie",
+											"value": "sessionid=asyjbs0nw36fd9otxgg29msljtde348a; expires=Fri, 29 Apr 2022 22:41:43 GMT; HttpOnly; Max-Age=1209600; Path=/; SameSite=Lax"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjUwMTQ4OTAzLCJpYXQiOjE2NTAwNjI1MDMsImp0aSI6Ijg2NzhjZTNmMGJkMTRhYzRiMTRkMzBjMTgxZDkzODE3IiwidXNlcl9pZCI6MjB9.vUd9492JoNQrVtp68somUxZt2QW0WE4pg2na_ZxPY0Y\",\n    \"refresh_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY1MDE0ODkwMywiaWF0IjoxNjUwMDYyNTAzLCJqdGkiOiJjMzg2OGQ3NjJiZjc0MTQwYjU3NDkzZmUyYmY3NGFhNiIsInVzZXJfaWQiOjIwfQ.RC39TUulPkNGuzSzyWA0KGKxfRrdXsb5ZBv2NdkwDr0\",\n    \"user\": {\n        \"id\": 20,\n        \"verified_email\": false,\n        \"first_name\": \"\",\n        \"last_name\": \"\",\n        \"email\": \"hassankarimbittar@gmail.com\",\n        \"username\": \"hassankarimbittar@gmail.com\",\n        \"password_set\": true\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
 					"name": "Sign up",
 					"event": [
 						{
@@ -628,6 +744,46 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "75 Set up Merchant Profile Detail with location",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type_of_business\": \"LLC\",\n    \"registered_business_name\": \"New business name 55\",\n    \"industry\": \"Shopping\",\n    \"employer_identification_number\": \"22222\",\n    \"social_security_number\": \"999999\",\n    \"city\": 1988,\n    \"state\": 28,\n    \"address_1\": \"Addr1\",\n    \"address_2\": \"Addr2\",\n    \"zip_code\": \"12345\",\n    \"location\": {\n        \"latitude\": 40.72883607809067,\n        \"longitude\": -74.06573657503567\n    },\n    \"phone_number\": \"+1-212-456-7890\",\n    \"owner_first_name\": \"Owner name 55\",\n    \"owner_last_name\": \"Owner name 55\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/set-up-profile/merchant-detail/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"set-up-profile",
+										"merchant-detail",
+										""
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
@@ -895,7 +1051,78 @@
 									"formdata": [
 										{
 											"key": "business_name",
-											"value": "OKI Company",
+											"value": "Test55business",
+											"type": "text"
+										},
+										{
+											"key": "business_story",
+											"value": "Story...1",
+											"type": "text"
+										},
+										{
+											"key": "profile_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/80x80.png"
+										},
+										{
+											"key": "background_picture",
+											"type": "file",
+											"src": "/home/daniel/Imágenes/1000x1000.gif"
+										},
+										{
+											"key": "address_1",
+											"value": "Street 12",
+											"type": "text"
+										},
+										{
+											"key": "website",
+											"value": "www.google.com",
+											"type": "text"
+										},
+										{
+											"key": "industry",
+											"value": "Lodging",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/v1/my-profile/merchant/",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"my-profile",
+										"merchant",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "109 My profile Merchant Update with location",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "business_name",
+											"value": "55 Company",
 											"type": "text"
 										},
 										{
@@ -916,6 +1143,11 @@
 										{
 											"key": "address_1",
 											"value": "Street 1",
+											"type": "text"
+										},
+										{
+											"key": "location",
+											"value": "{\"latitude\": 40.584042942129535, \"longitude\": -73.97103851772455}",
 											"type": "text"
 										}
 									]
@@ -955,14 +1187,20 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "consumer_profile.profile_picture",
+											"key": "consumer_profile",
 											"type": "file",
 											"src": "/home/daniel/Imágenes/80x80.png"
 										},
 										{
 											"key": "username",
-											"value": "el_user2",
+											"value": "new_test53",
 											"type": "text"
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
 										}
 									]
 								},
@@ -1276,6 +1514,359 @@
 								"admin",
 								"users",
 								"26",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dwolla Sandbox (For Test)",
+			"item": [
+				{
+					"name": "Application Access Token",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "7h1D9Gc7VKo6qj28qHgT3ISZMHNIeiprTeDxEBzYFQJWmWZMDB",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "Tt0xroefBqEYFQdBcv2t7dllN7l11mvLfsuXjpof9Q63GS9TtF",
+									"type": "string"
+								},
+								{
+									"key": "showPassword",
+									"value": false,
+									"type": "boolean"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://api-sandbox.dwolla.com/token",
+							"protocol": "https",
+							"host": [
+								"api-sandbox",
+								"dwolla",
+								"com"
+							],
+							"path": [
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve a customer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{appToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "{{acceptHeader}}"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{appToken}}",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "https://api-sandbox.dwolla.com/customers/c034ac66-aa05-4887-93ad-1caf511fcd03",
+							"protocol": "https",
+							"host": [
+								"api-sandbox",
+								"dwolla",
+								"com"
+							],
+							"path": [
+								"customers",
+								"c034ac66-aa05-4887-93ad-1caf511fcd03"
+							]
+						},
+						"description": "Retrieve a Customer belonging to the authorized Dwolla Master Account.\n\n### Request parameters\n\nParameter | Data Type | Parameter Type | Required | Description\n---------|----------|----------|---------|---------|\nid | string | path | yes | Customer unique identifier."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dwolla",
+			"item": [
+				{
+					"name": "Dwolla IAV Token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_type\": \"merchant\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/dwolla/create-iav-token/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dwolla",
+								"create-iav-token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dwolla Customer Funding Sources",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_type\": \"merchant\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/dwolla/customers/44/funding-sources/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dwolla",
+								"customers",
+								"44",
+								"funding-sources",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dwolla My Funding Sources",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_type\": \"consumer\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/dwolla/my-funding-sources/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"dwolla",
+								"my-funding-sources",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Where to spend",
+			"item": [
+				{
+					"name": "49 Where to spend",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"industry\": \"Shopping\",\n    \"latitude\": 40.58562497727944, \n    \"longitude\": -73.96510767916448,\n    \"distance\": 2 \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/where-to-spend/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"where-to-spend",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "50 Business Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/business-details/4/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"business-details",
+								"4",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "QR code",
+			"item": [
+				{
+					"name": "Send QR code",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "qr_code_image",
+									"type": "file",
+									"src": "/home/daniel/Imágenes/site-logo.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/my-qr-code-send/",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"my-qr-code-send",
 								""
 							]
 						}
