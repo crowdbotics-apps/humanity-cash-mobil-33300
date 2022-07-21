@@ -28,7 +28,7 @@ type ButtonProps = {
 export function Button(props: ButtonProps) {
   const navigation = useNavigation()
 
-  const BottomMenu = () => <View style={styles.ICONS_CONTAINER}>
+  const BottomMenu = () => <View key={"key-for-array"} style={styles.ICONS_CONTAINER}>
     <TouchableOpacity onPress={() => navigation.navigate("home", {})}>
       <Image
         source={IMAGES.menu_home_inactive}

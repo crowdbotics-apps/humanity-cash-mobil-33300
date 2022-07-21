@@ -157,7 +157,7 @@ export const SignupScreen = observer(function SignupScreen() {
             resetData()
           })
         } else if (result.kind === "bad-data") {
-          notifyMessage(result.errors.password)
+          notifyMessage(result.errors.password.shift())
         } else {
           loginStore.reset()
           notifyMessage(null)
