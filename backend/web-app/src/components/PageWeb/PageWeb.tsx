@@ -20,7 +20,7 @@ export const PageWeb: React.FC<PageProps> = React.forwardRef((props, ref) => {
   };
 
   return (
-    <div className={'d-flex flex-column'}>
+    <div >
       {props.loading === true &&<div className={"d-flex flex-column justify-content-center align-items-center position-absolute loader"}>
         <Lottie
           options={loaderAnimationOptions}
@@ -31,7 +31,7 @@ export const PageWeb: React.FC<PageProps> = React.forwardRef((props, ref) => {
       </div>}
       {props.header && <HeaderWeb header_title={props.header_title} left_action={props.left_button_header_action}/>}
       {/*<CustomTitle title={props.title}/>*/}
-      <div className={'container position-relative'}>
+      <div>
         {props.children}
       </div>
     </div>

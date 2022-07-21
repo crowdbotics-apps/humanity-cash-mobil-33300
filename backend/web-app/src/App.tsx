@@ -1,22 +1,22 @@
-import React, {useEffect, useState} from 'react';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.css';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter,
   Routes,
   Route,
 } from "react-router-dom";
-import {NotFound, SynthesisExplorer, Login, Splash, Dashboard} from "./pages";
-import {title_pag} from "./helpers";
-import {ROUTES} from "./constants";
-import {HTML5Backend} from "react-dnd-html5-backend";
-import {TouchBackend} from 'react-dnd-touch-backend'
-import {DndProvider} from "react-dnd";
-import {ToastContainer} from "react-toastify";
+import { NotFound, SynthesisExplorer, Login, Splash, Dashboard } from "./pages";
+import AchTransactions from './pages/AchTransactions'
+import AchTransactionsDetail from './pages/AchTransactions/Details'
+import { title_pag } from "./helpers";
+import { ROUTES } from "./constants";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { TouchBackend } from 'react-dnd-touch-backend'
+import { DndProvider } from "react-dnd";
+import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {RootStore, setupRootStore} from "./models";
-import {RootStoreProvider} from "./models/root-store/root-store-context";
-
+import { RootStore, setupRootStore } from "./models";
+import { RootStoreProvider } from "./models/root-store/root-store-context";
+import TheContainer from "./containers"
 
 function App() {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
@@ -42,7 +42,7 @@ function App() {
 
   const route = (path: string, title: string, component: any, exact = true) => {
     (title_pag as any)[path as any] = title
-    return <Route path={path} element={component}/>
+    return <Route path={path} element={component} />
   }
 
 
@@ -55,15 +55,26 @@ function App() {
     <RootStoreProvider value={rootStore}>
       <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
         <BrowserRouter>
-          <Routes>
-            {route(ROUTES.SPLASH, "", <Splash/>)}
-            {route(ROUTES.LOGIN, "Login", <Login/>)}
-            {route(ROUTES.DASHBOARD, "Dashboard", <Dashboard/>)}
-            {route(ROUTES.SYNTHESIS_EXPLORER(":id"), "Synthesis explorer", <SynthesisExplorer/>)}
-            {route('*', "", <NotFound/>)}
-          </Routes>
+          {false ?
+            //Rutas Publicas
+            <Routes>
+              {route(ROUTES.SPLASH, "", <Splash />)}
+              {route(ROUTES.LOGIN, "Login", <Login />)}
+            </Routes>
+            :
+            //Rutas privadas
+            <TheContainer>
+              <Routes>
+                {route(ROUTES.DASHBOARD, "Dashboard", <Dashboard />)}
+                {route(ROUTES.AchTransactions, "AchTransactions", <AchTransactions />)}
+                {route(ROUTES.TRANSACTIONS(":id"), "AchTransactions view", <AchTransactionsDetail />)}
+                {route(ROUTES.SYNTHESIS_EXPLORER(":id"), "Synthesis explorer", <SynthesisExplorer />)}
+                {route('*', "", <NotFound />)}
+              </Routes>
+            </TheContainer>
+          }
         </BrowserRouter>
-        <ToastContainer/>
+        <ToastContainer />
       </DndProvider>
     </RootStoreProvider>
   );

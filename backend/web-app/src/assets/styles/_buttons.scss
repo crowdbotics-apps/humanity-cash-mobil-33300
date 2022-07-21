@@ -1,0 +1,67 @@
+//boton primario
+.btn-primary {
+    border-radius: 49px;
+    color: white;
+
+    &:hover {
+        color: white;
+    }
+}
+
+.btn-secondary {
+    border-radius: 49px;
+    border-color: #589ac1;
+    color: #589ac1;
+
+    &:hover {
+        border-color: #589ac1;
+        color: #589ac1;
+    }
+
+}
+
+//boton primario grande
+.button-larg {
+    width: 100%;
+    height: 55px;
+    max-width: 335px;
+}
+
+//funcion de los border del bottom para no repetir
+@mixin border-bottom-eyes {
+    border-left: 1px solid white;
+    border-top: 1px solid #d59b76;
+    border-radius: 0px 14px 14px 0px;
+    border-bottom: 1px solid #d59b76;
+    border-right: 1px solid #d59b76;
+    background: #FFFFFF;
+}
+
+
+//boton de ver contraseña
+.eyes-buttons {
+    @include border-bottom-eyes;
+
+    &:hover {
+        color: red;
+        background-color: none;
+        background: none;
+        @include border-bottom-eyes;
+    }
+}
+
+//search button
+.search-buttons {
+    border-right: 1px solid #F4F4F2;
+    border-top: 1px solid #F4F4F2;
+    border-radius: 6px 0px 0px 6px;
+    border-bottom: 1px solid #F4F4F2;
+    border-left: 1px solid #F4F4F2;
+    background: #F4F4F2;
+}
+
+
+.btn-filter{
+    width: 55px;
+    padding: 10px;
+}
