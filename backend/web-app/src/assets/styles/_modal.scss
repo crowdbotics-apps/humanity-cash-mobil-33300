@@ -1,0 +1,33 @@
+.title-modal {
+    height: 32px;
+    width: 286px;
+    left: 368px;
+    top: 363px;
+    color: #3B88B6;
+    font-family: $typography;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.modal-header {
+    border-bottom: 0px solid #dee2e6;
+}
+
+.modal-footer {
+    border-top: 0px solid #dee2e6;
+}
+
+.modal-content {
+    border-radius: 20px;
+}
+
+.modal-button {
+    padding-inline-end: 53px;
+    padding-inline-start: 53px;
+}
+
+.modal-content-alert {
+    width: 18%;
+    left: 41%;
+    text-align: center;
+}

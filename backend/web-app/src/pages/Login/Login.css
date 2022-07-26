@@ -74,12 +74,6 @@
     border: none;
 }
 
-.logo {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    height: 150px;
-}
 
 .main-container {
     justify-content: center;
@@ -132,8 +126,6 @@
     text-align: right;
     vertical-align: top;
     font-size: 16px;
-    font-family: Gotham;
-    line-height: 16%;
     text-decoration: underline;
     color: #d59b76;
     margin-top: 25px;
