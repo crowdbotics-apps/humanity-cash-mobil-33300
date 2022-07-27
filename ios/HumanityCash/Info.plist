@@ -35,7 +35,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>This App need access to your camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This App need access to your photo library</string>
+	<string>This app requires access to the photo library</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This App need access to your microphone</string>
 	<key>NSAppTransportSecurity</key>
@@ -49,10 +49,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app requires access to the photo library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
