@@ -59,7 +59,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app requires access to user location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>This app requires access to user location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This App need access to your microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
