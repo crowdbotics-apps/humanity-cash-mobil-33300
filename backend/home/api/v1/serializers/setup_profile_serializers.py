@@ -98,7 +98,10 @@ class ConsumerMyProfileSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super(ConsumerMyProfileSerializer, self).to_representation(instance)
-        ret['consumer_profile'] = self.context['request'].build_absolute_uri(instance.consumer.profile_picture.url)
+        if instance.consumer.profile_picture:
+            ret['consumer_profile'] = self.context['request'].build_absolute_uri(instance.consumer.profile_picture.url)
+        else:
+            ret['consumer_profile'] = None
         return ret
 
     def update(self, instance, validated_data):

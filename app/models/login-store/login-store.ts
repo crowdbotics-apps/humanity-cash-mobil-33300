@@ -23,6 +23,7 @@ export const LoginStoreModel = types
     business_name: types.maybeNull(types.string),
     type_of_business: types.maybeNull(types.string),
     business_story: types.maybeNull(types.string),
+    random_profile_picture_index: types.maybeNull(types.number),
     profile_picture: types.maybeNull(types.string),
     profile_picture_merchant: types.maybeNull(types.string),
     background_picture: types.maybeNull(types.string),
@@ -125,6 +126,9 @@ export const LoginStoreModel = types
         phone_number: self.phone_number,
         allow_touch_id: self.allow_touch_id
       }
+    },
+    get getRandomProfilePictureIndex() {
+      return self.random_profile_picture_index
     }
   }))
   .actions(self => ({
@@ -152,9 +156,12 @@ export const LoginStoreModel = types
       self.verified_email = user.verified_email
       self.allow_touch_id = user.allow_touch_id
     },
+    setRandomProfilePictureIndex(index) {
+      self.random_profile_picture_index = index
+    },
     setConsumerUser(user) {
-      self.id = user.consumer_profile.id
-      self.profile_picture = user.consumer_profile.profile_picture?.split('?')?.[0]
+      self.id = user.id
+      self.profile_picture = user.consumer_profile
       self.username = user.username
       self.first_name = user.first_name
       self.last_name = user.last_name
