@@ -107,6 +107,7 @@ export const SignupScreen = observer(function SignupScreen() {
         })
         setStep("verify_email")
       } else if (result.kind === "bad-data") {
+        console.log(' result => ', result)
         notifyMessage("Please correct the errors and try again")
         setEmailError(true)
         setEmailErrorMessage(result.errors.email[0])

@@ -66,7 +66,7 @@ export const LoginStoreModel = types
       return self.selected_account
     },
     get getAccountColor() {
-      return self.account_base_color
+      return self.account_base_color || COLOR.PALETTE.blue
     },
     get getBillingData() {
       return {
