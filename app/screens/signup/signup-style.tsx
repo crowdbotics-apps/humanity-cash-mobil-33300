@@ -44,6 +44,7 @@ export default StyleSheet.create({
     marginTop: 20
   },
   CODE_CONFIRMATION_INPUT: {
+    color: COLOR.PALETTE.strongGreen,
     fontSize: 25,
     textAlign: 'center',
     width: 45,
@@ -124,6 +125,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     height: 55,
     width: METRICS.screenWidth * 0.80,
+    color: `${COLOR.PALETTE.pureblack}66`
   },
   PASS_REQUIREMENTS: {
     color: COLOR.PALETTE.strongGreen,
@@ -138,7 +140,7 @@ export default StyleSheet.create({
   POLICY_CLOSE_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: COLOR.PALETTE.lightGreen,
+    backgroundColor: COLOR.PALETTE.background,
     flexDirection: 'row',
     height: 80,
     justifyContent: 'space-between',
@@ -164,7 +166,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth,
   },
   STEP_SUB_TITLE: {
-    color: COLOR.PALETTE.black,
+    color: COLOR.PALETTE.pureblack,
     fontSize: 16,
     marginLeft: 10,
     width: METRICS.screenWidth * 0.90,
@@ -205,7 +207,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
   },
   TERMS_TITLE: {
-    color: COLOR.PALETTE.strongGreen,
+    color: COLOR.PALETTE.pureblack,
     fontSize: 16,
     marginLeft: 15
   },

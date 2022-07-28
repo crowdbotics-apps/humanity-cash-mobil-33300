@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { observer } from 'mobx-react-lite';
 import { View, TouchableOpacity, Image } from 'react-native';
 import { Text, Screen } from '../../components';
@@ -14,6 +14,13 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
   const { loginStore } = rootStore
 
   const [ChangeAccountOpen, setChangeAccountOpen] = useState(false)
+  const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
+
+  useEffect( () => {
+    if (!loginStore.getRandomProfilePictureIndex) {
+      loginStore.setRandomProfilePictureIndex(Math.round(Math.random() * 3))
+    }
+  }, [])
 
   return (
     <Screen
@@ -43,7 +50,8 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 <View style={styles.USER_IMAGE_CONTAINER}>
                   <Image
                     resizeMode="cover"
-                    source={{ uri: loginStore.ProfileData.profile_picture }}
+                    source={loginStore.ProfileData.profile_picture? { uri: loginStore.ProfileData.profile_picture } :
+                      randomImages[loginStore.getRandomProfilePictureIndex]}
                     style={styles.USER_IMAGE}
                   />
                 </View>
@@ -66,7 +74,8 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 <View style={styles.USER_IMAGE_CONTAINER}>
                   <Image
                     resizeMode="cover"
-                    source={{ uri: loginStore.ProfileDataBusiness.profile_picture_merchant }}
+                    source={loginStore.ProfileDataBusiness.profile_picture_merchant? { uri: loginStore.ProfileDataBusiness.profile_picture_merchant } :
+                      randomImages[4 - loginStore.getRandomProfilePictureIndex]}
                     style={styles.USER_IMAGE}
                   />
                 </View>
@@ -83,7 +92,8 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 <View style={styles.USER_IMAGE_CONTAINER}>
                   <Image
                     resizeMode="cover"
-                    source={{ uri: loginStore.ProfileData.profile_picture }}
+                    source={loginStore.ProfileData.profile_picture? { uri: loginStore.ProfileData.profile_picture } :
+                      randomImages[loginStore.getRandomProfilePictureIndex]}
                     style={styles.USER_IMAGE}
                   />
                 </View>
@@ -98,7 +108,8 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 <View style={styles.USER_IMAGE_CONTAINER}>
                   <Image
                     resizeMode="cover"
-                    source={{ uri: loginStore.ProfileDataBusiness.profile_picture_merchant }}
+                    source={loginStore.ProfileDataBusiness.profile_picture_merchant? { uri: loginStore.ProfileDataBusiness.profile_picture_merchant } :
+                      randomImages[4 - loginStore.getRandomProfilePictureIndex]}
                     style={styles.USER_IMAGE}
                   />
                 </View>

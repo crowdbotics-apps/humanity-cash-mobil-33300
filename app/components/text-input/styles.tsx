@@ -21,7 +21,7 @@ export default StyleSheet.create({
         borderRadius: 5,
         height: 55,
         width: METRICS.screenWidth * 0.95,
-        backgroundColor: `${COLOR.PALETTE.green}25`,
+        backgroundColor: COLOR.PALETTE.whiteTextInput,
         alignSelf: 'center',
         marginTop: 10,
         flexDirection: 'row',
@@ -32,7 +32,8 @@ export default StyleSheet.create({
         borderRadius: 5,
         height: 55,
         width: METRICS.screenWidth * 0.95,
-        backgroundColor: `${COLOR.PALETTE.green}25`,
+        // backgroundColor: `${COLOR.PALETTE.green}25`,
+        backgroundColor: COLOR.PALETTE.whiteTextInput,
         alignSelf: 'center',
         marginTop: 10,
         borderColor: COLOR.PALETTE.pink,
@@ -42,8 +43,9 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     INPUT: {
+        color: COLOR.PALETTE.pureblack,
         height: 55,
         width: METRICS.screenWidth * 0.90,
-        alignSelf: 'center',
+        alignSelf: 'center'
     },
 })

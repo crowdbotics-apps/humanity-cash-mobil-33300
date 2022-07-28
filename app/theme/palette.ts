@@ -1,5 +1,6 @@
 export const PALETTE = {
-  black: "#0D0E21",
+  black: "#2E2E2E",
+  pureblack: "#000000",
   blackShadow: "rgba(0,0,0,0.35)",
 
   offWhite: "#f5f5f5",
@@ -28,6 +29,7 @@ export const PALETTE = {
   gray_light: "#D9D9D9",
   white: "#ffffff",
   whiteBackground: "#E5E5E5",
+  whiteTextInput: "#EFEFEF",
   success: "#FCCB4E",
 
   primary: "#58AEBF",
@@ -42,7 +44,7 @@ export const PALETTE = {
   yellow: "#F7BE00",
   darkYellow: "#D2A824",
   lightGreen: "#D1D5BE",
-  green: "#8B9555",
+  green: "#8D955D",
   strongGreen: "#395344",
   pink: "#DF9BB9",
   orange: "#D59B76",
