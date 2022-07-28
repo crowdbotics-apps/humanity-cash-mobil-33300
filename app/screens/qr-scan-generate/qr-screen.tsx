@@ -62,6 +62,7 @@ export const QRScreen = observer(function QRScreen() {
       </TouchableOpacity>
       <Button
         buttonStyle={{
+          // backgroundColor: 'red'
           backgroundColor: loginStore.getAccountColor,
         }}
         onPress={() => setShowQR(true)}
