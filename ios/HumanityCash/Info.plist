@@ -20,8 +20,23 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb487091709883156</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FacebookAppID</key>
+	<string>487091709883156</string>
+	<key>FacebookClientToken</key>
+	<string>a96260dd6e34b4603f7f6760a886b8c8</string>
+	<key>FacebookDisplayName</key>
+	<string>HumanityCash</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSFaceIDUsageDescription</key>
@@ -82,20 +97,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>fb487091709883156</string>
-			</array>
-		</dict>
-	</array>
-	<key>FacebookAppID</key>
-	<string>487091709883156</string>
-	<key>FacebookClientToken</key>
-	<string>a96260dd6e34b4603f7f6760a886b8c8</string>
-	<key>FacebookDisplayName</key>
-	<string>HumanityCash</string>
 </dict>
 </plist>

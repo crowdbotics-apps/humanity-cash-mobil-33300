@@ -158,7 +158,7 @@ export const SignupScreen = observer(function SignupScreen() {
             resetData()
           })
         } else if (result.kind === "bad-data") {
-          notifyMessage(result.errors.password)
+          notifyMessage(result.errors.password.shift())
         } else {
           loginStore.reset()
           notifyMessage(null)
@@ -413,6 +413,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           value={Pass}
           secureTextEntry={HidePass}
           placeholder={"*********"}
+          placeholderTextColor="#00000066"
         />
         <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
           <Ionicons name="eye" color={"#39534440"} size={20} />
@@ -564,22 +565,20 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 />
                 <Text style={styles.AGREE_LABEL}>
                   {
-                    "By checking this box, you agree to our partner Humanity Cash's"
+                    "By checking this box, you agree to our partner Humanity Cash's "
                   }
                   <Text
                     style={styles.AGREE_LABEL_LINK}
                     onPress={() => setStep("legal")}
                   >
-                    {" "}
-                    {" Terms & Conditions "}
+                    {"Terms & Conditions"}
                   </Text>
-                  and
+                  {" "}and{" "}
                   <Text
                     style={styles.AGREE_LABEL_LINK}
                     onPress={() => setStep("legal")}
                   >
-                    {" "}
-                    {" Privacy Policy"}
+                    {"Privacy Policy"}
                   </Text>
                 </Text>
               </View>

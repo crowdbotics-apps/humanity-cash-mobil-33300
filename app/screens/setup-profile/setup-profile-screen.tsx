@@ -65,7 +65,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [ShowThankyouModal, setShowThankyouModal] = useState(false)
 
 	const [ProfileType, setProfileType] = useState('personal')
-	const [RandonPic, setRandonPic] = useState(null)
+	const [RandonPic, setRandonPic] = useState(Math.round(Math.random() * 3))
 
 	// personal
 	const [Username, setUsername] = useState('')
@@ -349,7 +349,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			>
 				{!imageSource?.uri
 					? <Image
-						source={RandonPic}
+						source={randomImages[RandonPic]}
 						style={styles.IMAGE_BOX}
 						resizeMode='contain'
 					/>
@@ -416,7 +416,11 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					style={styles.BACK_IMAGE_CONTAINER}
 				>
 					{!BackBusinessImageSource?.uri
-						? <FontAwesome name={"camera"} size={23} color={'#39534440'} style={{ marginTop: 15, marginRight: 15 }} />
+						? <Image
+							source={randomImages[4 - RandonPic]}
+							style={styles.IMAGE_BOX}
+							resizeMode='contain'
+						/>
 						: <Image
 							source={{ uri: BackBusinessImageSource.uri }
 							}
@@ -430,7 +434,11 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 						style={styles.IMAGE_CONTAINER}
 					>
 						{!BusinessImageSource?.uri
-							? <FontAwesome name={"camera"} size={23} color={'#39534440'} />
+							? <Image
+								source={randomImages[4 - RandonPic]}
+								style={styles.IMAGE_BOX}
+								resizeMode='contain'
+							/>
 							: <Image
 								source={{ uri: BusinessImageSource.uri }
 								}
@@ -828,6 +836,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	}
 
 	useEffect(() => {
+		loginStore.setRandomProfilePictureIndex(RandonPic)
+
 		const data = loginStore.getSetupData
 		if (data?.Username) {
 			setUsername(data.Username)
@@ -857,7 +867,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		if (data?.State) setState(data.State)
 		if (data?.PostalCode) setPostalCode(data.PostalCode)
 		if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
-		setRandonPic(randomImages[Math.round(Math.random() * 3)])
 
 		fetchCity()
 		fetchState()
