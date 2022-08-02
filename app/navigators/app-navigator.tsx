@@ -33,6 +33,8 @@ import { LegalScreen } from "../screens/legal/legal-screen";
 import { SecurityScreen } from "../screens/security/security-screen";
 import { HelpContactScreen } from "../screens/help-contact/help-contact-screen";
 import { WhereSpendScreen } from "../screens/where-spend/where-spend-screen";
+import { CashierTransactionScreen } from "../screens/cashier-transaction/cashier-transaction-screen";
+import { MakeReportScreen } from "../screens/make-report/make-report-screen";
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -64,6 +66,8 @@ export type NavigatorParamList = {
   helpContact: any
   whereSpend: any
   qr: any
+  cashierTransaction: any
+  makeReport: any
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -100,6 +104,8 @@ const AppStackDrawer = () => {
       <Drawer.Screen name="legal" component={LegalScreen} />
       <Drawer.Screen name="whereSpend" component={WhereSpendScreen} />
       <Drawer.Screen name="qr" component={QRScreen} />
+      <Drawer.Screen name="makeReport" component={MakeReportScreen} />
+      <Drawer.Screen name="cashierTransaction" component={CashierTransactionScreen} />
       {/* <Drawer.Screen name="drawer" component={DrawerScreen} /> */}
 
     </Drawer.Navigator>

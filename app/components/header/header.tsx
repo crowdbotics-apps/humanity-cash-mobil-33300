@@ -32,7 +32,7 @@ const ROOT: ViewStyle = {
   paddingHorizontal: 8,
   alignItems: "center",
   paddingTop: 4,
-  paddingBottom: 6,
+  paddingBottom: 20,
   justifyContent: "flex-start",
   backgroundColor: COLOR.PALETTE.white
 }

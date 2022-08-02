@@ -15,7 +15,10 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin'
-import { AppleButton, appleAuth } from '@invertase/react-native-apple-authentication'
+import { 
+  AppleButton, 
+  appleAuth
+} from '@invertase/react-native-apple-authentication'
 
 import { AccessToken, LoginManager } from 'react-native-fbsdk-next'
 
@@ -89,6 +92,8 @@ export const LoginScreen = observer(function LoginScreen() {
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
       requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    }).then((response: any) =>{
+      console.log(' response => ', response)
     });
 
     // get current authentication state for user
@@ -123,6 +128,12 @@ export const LoginScreen = observer(function LoginScreen() {
       });
   }
 
+  useEffect(() => {
+    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+    return appleAuth.onCredentialRevoked(async () => {
+      console.warn('If this function executes, User Credentials have been Revoked');
+    });
+  }, []); 
 
   return (
     <Screen

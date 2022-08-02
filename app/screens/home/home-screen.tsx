@@ -217,7 +217,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity style={styles.CASHIER_BUTTON_BIG}>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_BIG} onPress={() => navigation.navigate("qr", {})}>
 					<Image
 						resizeMode="contain"
 						source={IMAGES.currentDollarIconCashier}
@@ -225,7 +225,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					/>
 					<Text style={styles.CASHIER_BUTTON_LABEL}>Receive payment</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => navigation.navigate("cashierTransaction", {})}>
 					<Image
 						resizeMode="contain"
 						source={IMAGES.transactions_cashier}
@@ -233,7 +233,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					/>
 					<Text style={styles.CASHIER_BUTTON_LABEL}>Transactions</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => navigation.navigate("qr", {})}>
 					<Image
 						resizeMode="contain"
 						source={IMAGES.return_cashier}
@@ -241,7 +241,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					/>
 					<Text style={styles.CASHIER_BUTTON_LABEL}>Make a return</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL}>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => navigation.navigate("makeReport", {})}>
 					<Image
 						resizeMode="contain"
 						source={IMAGES.report_cashier}
