@@ -57,7 +57,7 @@ export const QRScreen = observer(function QRScreen() {
       </View>
     </View>
     <View>
-      <TouchableOpacity onPress={() => setModalVisibility(true)} style={styles.NEED_HELP_CONTAINER}>
+      <TouchableOpacity style={styles.NEED_HELP_CONTAINER} onPress={() => setShowQR(true)}>
         <Text style={styles.NEED_HELP_LINK}>Let the payer choose the amount</Text>
       </TouchableOpacity>
       <Button

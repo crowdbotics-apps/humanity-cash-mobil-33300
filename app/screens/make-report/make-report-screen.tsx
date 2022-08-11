@@ -25,7 +25,7 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 				? <View style={styles.LOADING_RETURN}>
 					{TransactionFinished
 						? [
-							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>{`Congratulations! You 
+							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Congratulations! You 
 have topped up 
 C$ ${Amount}`}
 							</Text>,
@@ -48,7 +48,7 @@ C$ ${Amount}`}
 							/>
 						]
 						: [
-							<Text key={'pending_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>Pending...</Text>,
+							<Text key={'pending_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Pending...</Text>,
 							<Text key={'pending_sub_title'} style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>,
 							<ActivityIndicator key={'pending_ind'} style={styles.ACTIVITY} size="large" color={'black'} />
 						]
@@ -76,10 +76,10 @@ C$ ${Amount}`}
 					</View>
 					<View style={styles.MODAL_CONTAINER}>
 						<View style={styles.MODAL_CONTENT}>
-							<Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Please confirm your transaction.</Text>
-							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will load up B$ ${Amount} to your wallet.`}</Text>
+							<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Please confirm your transaction.</Text>
+							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will load up C$ ${Amount} to your wallet.`}</Text>
 							<TouchableOpacity
-								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor}]}
+								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
 								onPress={() => {
 									setTransactionConfirm(true)
 									setTimeout(function () {
@@ -135,8 +135,8 @@ C$ ${Amount}`}
 						<Button
 							buttonStyle={
 								Amount === 'Today'
-									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
-									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
 							buttonLabelStyle={{ color: Amount === 'Today' ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => setAmount('Today')}
@@ -145,8 +145,8 @@ C$ ${Amount}`}
 						<Button
 							buttonStyle={
 								Amount === 'Week'
-									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
-									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
 							buttonLabelStyle={{ color: Amount === 'Week' ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => setAmount('Week')}
@@ -155,8 +155,8 @@ C$ ${Amount}`}
 						<Button
 							buttonStyle={
 								Amount === 'Month'
-									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
-									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
 							buttonLabelStyle={Amount === 'Month' ? { color: COLOR.PALETTE.white } : { color: loginStore.getAccountColor }}
 							onPress={() => setAmount('Month')}
@@ -165,40 +165,54 @@ C$ ${Amount}`}
 					</View>
 
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
-						<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
+						<Text style={styles.INPUT_LABEL_STYLE}>START DATE</Text>
+						<Text style={styles.INPUT_LABEL_STYLE}>END DATE</Text>
 					</View>
-					<View style={[styles.INPUT_STYLE_CONTAINER]}>
-						<TextInput
-							style={styles.INPUT_STYLE}
-							keyboardType='numeric'
-							onChangeText={t => {
-								if (t) t = t.split(' ')[1]
-								else t = ''
-								setAmount(t)
-							}}
-							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
-							placeholder={`Amount`}
-						/>
-					</View>
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-						<Text style={styles.COSTS_LABEL}>Total costs</Text>
-						<Text style={styles.COSTS_LABEL}>{`$ ${Amount}`}</Text>
+						<View style={[styles.INPUT_STYLE_CONTAINER]}>
+							<TextInput
+								style={styles.INPUT_STYLE}
+								keyboardType='numeric'
+								onChangeText={t => {
+									if (t) t = t.split(' ')[1]
+									else t = ''
+									setAmount(t)
+								}}
+								value={''}
+								placeholder={`MM/DD/YY`}
+							/>
+						</View>
+						<View style={[styles.INPUT_STYLE_CONTAINER]}>
+							<TextInput
+								style={styles.INPUT_STYLE}
+								keyboardType='numeric'
+								onChangeText={t => {
+									if (t) t = t.split(' ')[1]
+									else t = ''
+									setAmount(t)
+								}}
+								value={''}
+								placeholder={`MM/DD/YY`}
+							/>
+						</View>
 					</View>
+					<Text style={styles.LINE} />
+
+
+					
 
 				</View>
 				{ConfirmModal()}
 			</KeyboardAvoidingView>
-				<Button
-					buttonStyle={{
-						backgroundColor: loginStore.getAccountColor,
-						bottom: 5,
-						position: 'absolute'
-					}}
-					onPress={() => setShowModal(true)}
-					buttonLabel={'Load up'}
-				/>
+			<Button
+				buttonStyle={{
+					backgroundColor: loginStore.getAccountColor,
+					bottom: 5,
+					position: 'absolute'
+				}}
+				onPress={() => setShowModal(true)}
+				buttonLabel={'Send report'}
+			/>
 		</Screen>
 	)
 })

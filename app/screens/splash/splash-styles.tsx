@@ -2,41 +2,43 @@ import {StyleSheet} from "react-native"
 import { COLOR, METRICS} from "../../theme";
 
 export default StyleSheet.create({
-  ROOT: {
-    flex: 1,
-    backgroundColor: COLOR.PALETTE.background,
-    justifyContent: 'space-between'
+  BG_STYLE: {
+    bottom: METRICS.screenHeight / 4,
+    position: "absolute",
+    width: METRICS.screenWidth,
   },
   CONTAINER: {},
-  BG_STYLE: {
-    width: METRICS.screenWidth,
-    bottom: 350,
-    position: "absolute",
-  },
   LOGO_STYLE: {
     alignSelf:'center',
-    width: METRICS.screenWidth,
-    bottom: 350,
+    bottom: METRICS.screenHeight / 2.2,
     position: "absolute",
-  },
-  WATERMARK_STYLE: {
-    width: 100,
-    height: 40,
-  },
-  POWERED_CONTAINER_ABSOLUTE: {
-    right: 30,
     width: METRICS.screenWidth,
-    alignItems: 'flex-end',
-    position: 'absolute',
-    bottom: 250,
   },
   POWERED_CONTAINER: {
+    alignItems: 'flex-end',
+    bottom: 40,
     right: 30,
     width: METRICS.screenWidth,
+    
+  },
+  POWERED_CONTAINER_ABSOLUTE: {
     alignItems: 'flex-end',
+    bottom: 250,
+    position: 'absolute',
+    right: 30,
+    width: METRICS.screenWidth,
   },
   POWERED_LABEL: {
     color: COLOR.PALETTE.blue,
-    fontSize: 18
+    fontSize: 20
+  },
+  ROOT: {
+    backgroundColor: COLOR.PALETTE.background,
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  WATERMARK_STYLE: {
+    height: 70,
+    width: 180,
   },
 })

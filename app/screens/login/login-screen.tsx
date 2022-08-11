@@ -35,6 +35,9 @@ export const LoginScreen = observer(function LoginScreen() {
   const [Loading, setLoading] = useState(false)
 
   const login = () => {
+    loginStore.setSelectedAccount('consumer')
+            navigation.navigate("home", {})
+            loginStore.setApiToken('123')
     setLoading(true)
     loginStore.environment.api
       .login({ email: Username, password: Pass })
@@ -59,6 +62,7 @@ export const LoginScreen = observer(function LoginScreen() {
   }
 
   const postSocialLogin = (result: any) => {
+    console.log(' postSocialLogin => ', JSON.stringify(result, null, 2))
     setLoading(false)
     if (result.kind === "ok") {
       runInAction(() => {
@@ -128,12 +132,12 @@ export const LoginScreen = observer(function LoginScreen() {
       });
   }
 
-  useEffect(() => {
-    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
-    return appleAuth.onCredentialRevoked(async () => {
-      console.warn('If this function executes, User Credentials have been Revoked');
-    });
-  }, []); 
+  // useEffect(() => {
+  //   // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+  //   return appleAuth.onCredentialRevoked(async () => {
+  //     console.warn('If this function executes, User Credentials have been Revoked');
+  //   });
+  // }, []); 
 
   return (
     <Screen

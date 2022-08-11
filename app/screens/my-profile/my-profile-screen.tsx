@@ -118,7 +118,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						if (t === '@rafa') setUsernameError(true)
 						else setUsernameError(false)
 					}}
-					value={Username.charAt(0) == '@' ? Username : '@' + Username}
+					value={Username?.charAt(0) == '@' ? Username : '@' + (Username || '')}
 					placeholder={'@username'}
 				/>
 			</View>

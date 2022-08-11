@@ -9,7 +9,7 @@ import {
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
-import styles from './setup-profile-style';
+import styles from './signup-profile-style';
 import { useNavigation } from "@react-navigation/native"
 import { launchImageLibrary } from 'react-native-image-picker';
 import { IMAGES, METRICS } from "../../theme"
@@ -28,7 +28,7 @@ const profileTypes = [
 		first_step: 'pic_username'
 	},
 	{
-		label: 'Business and personal',
+		label: 'Business',
 		value: 'business_personal',
 		first_step: 'pic_bname'
 	},
@@ -52,7 +52,7 @@ const industryTypes = [
 	'Services',
 ]
 
-export const SetupProfileScreen = observer(function SetupProfileScreen() {
+export const SignupProfileScreen = observer(function SignupProfileScreen(props: any) {
 	const rootStore = useStores()
 	const navigation = useNavigation()
 	const { loginStore } = rootStore
@@ -64,7 +64,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false)
 	const [ShowThankyouModal, setShowThankyouModal] = useState(false)
 
-	const [ProfileType, setProfileType] = useState('personal')
+	const [ProfileType, setProfileType] = useState({})
+	
 	const [RandonPic, setRandonPic] = useState(Math.round(Math.random() * 3))
 
 	// personal
@@ -327,14 +328,17 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	}
 	const renderSelectBusinessType = () => (
 		<View style={styles.STEP_CONTAINER}>
-			<Text style={styles.STEP_TITLE}>Hi</Text>
+			<Text style={styles.STEP_TITLE}>{ProfileType.label} account</Text>
 			<View style={styles.LINE} />
-			<Text style={styles.STEP_SUB_TITLE}>Select the profile you’d like to create. If you’re a business owner, you can automatically set up a personal profile. You can have one account login with two profiles.</Text>
-			{profileTypes.map((t, key) => (
+			<Text style={styles.SIGNUP_PROFILE_SUB_TITLE}>You do not have a business account linked. If you do have a business that accepts BerkShares you can sign up and link your business!</Text>
+			{/* {profileTypes.map((t, key) => (
 				<TouchableOpacity key={key + '_ptype'} style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(t.value), setStep(t.first_step)]}>
 					<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{t.label}</Text>
 				</TouchableOpacity>
-			))}
+			))} */}
+			{/* <TouchableOpacity style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(ProfileType.value), setStep(ProfileType.first_step)]}>
+					<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{ProfileType.label}</Text>
+				</TouchableOpacity> */}
 		</View>
 	)
 	const renderPicUsername = () => (
@@ -751,11 +755,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	const backButtonHandler = () => {
 		switch (Step) {
 			case 'profile_type':
-				if (loginStore.isLoggedIn) {
-					navigation.navigate("home", {})
-				} else {
-					navigation.navigate("login", {})
-				}
+				navigation.navigate("home", {})
 				break;
 			case 'pic_username':
 				setStep('profile_type')
@@ -808,6 +808,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		// city and state picker || map
 		loginStore.setSetupData(setupData)
 		switch (Step) {
+			case 'profile_type':
+				setStep(ProfileType.first_step)
+				break;
 			case 'pic_username':
 				setupConsumer()
 				// setStep('name')
@@ -839,6 +842,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		loginStore.setRandomProfilePictureIndex(RandonPic)
 
 		const data = loginStore.getSetupData
+
+		console.log(' useEffect ===>>>> ',  JSON.stringify(props, null, 2) ,JSON.stringify(data, null, 2))
+		setProfileType(props?.params?.profile_type || profileTypes[1])
 		if (data?.Username) {
 			setUsername(data.Username)
 			setButtonDisabled(false)
@@ -892,9 +898,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 									<Icon name={"arrow-back"} size={23} color={'black'} />
 									<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
 								</TouchableOpacity>
-								<TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
+								{/* <TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
 									<Text style={styles.BACK_BUTON_LABEL}>{`Log out`}</Text>
-								</TouchableOpacity>
+								</TouchableOpacity> */}
 							</View>
 							{renderStep()}
 						</View>
@@ -903,15 +909,20 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					{thankyouModal()}
 				</ScrollView>
 			</KeyboardAvoidingView>
-			{Step !== 'profile_type' &&
+			{/* {Step !== 'profile_type' && */}
 				<Button
 					disabled={ButtonDisabled || Loading}
 					onPress={() => nextButtonHandler()}
 					loading={Loading}
-					buttonLabel={Step === 'business_exec' ? 'Confirm' : 'Next'}
+					buttonLabel={Step === 'business_exec' 
+						? 'Confirm' 
+						: Step === 'profile_type'
+						? 'Sign up your business'
+						: 'Next'
+					}
 					buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
 				/>
-			}
+			{/* } */}
 		</Screen>
 	)
 })

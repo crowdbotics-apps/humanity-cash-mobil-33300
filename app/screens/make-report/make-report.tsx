@@ -166,13 +166,14 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
     justifyContent: 'space-between',
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: 0,
   },
   INPUT_AMOUNT_STYLE_CONTAINER: {
     flexDirection: 'row',
     width: METRICS.screenWidth * 0.95,
     alignSelf: 'center',
     marginTop: 20,
+    marginBottom: 20
   },
   INPUT_LABEL_STYLE: {
     fontSize: 10,
@@ -202,7 +203,7 @@ export default StyleSheet.create({
   INPUT_STYLE_CONTAINER: {
     borderRadius: 3,
     height: 55,
-    width: METRICS.screenWidth * 0.95,
+    width: METRICS.screenWidth * 0.45,
     backgroundColor: `${COLOR.PALETTE.green}25`,
     alignSelf: 'center',
     marginTop: 10,
@@ -212,7 +213,7 @@ export default StyleSheet.create({
   },
   INPUT_STYLE: {
     height: 55,
-    width: METRICS.screenWidth * 0.90,
+    width: METRICS.screenWidth * 0.40,
     alignSelf: 'center',
   },
   SEARCH_INPUT_CONTAINER: {

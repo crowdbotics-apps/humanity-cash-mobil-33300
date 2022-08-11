@@ -4,10 +4,10 @@ import { TouchableOpacity, Image, View } from "react-native"
 import { Screen, Text, Button } from "../../components"
 
 import styles from "./splash-styles"
-import { IMAGES } from "../../theme"
+import { IMAGES , COLOR, METRICS } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
-import { COLOR, METRICS } from "../../theme";
+
 // import OneSignal from 'react-native-onesignal';
 
 export const SplashScreen = observer(function SplashScreen() {
@@ -24,7 +24,7 @@ export const SplashScreen = observer(function SplashScreen() {
   }
 
   useEffect(() => {
-    let step = loginStore.getStep
+    const step = loginStore.getStep
     setupDatosIniciales()
     setTimeout(function () {
       if (step !== '' && step !== null) {
@@ -37,7 +37,7 @@ export const SplashScreen = observer(function SplashScreen() {
 
   const LoadingSetp = () => (
     <View style={styles.ROOT}>
-      <Image source={IMAGES.bgWaves} style={styles.BG_STYLE} />
+      <Image resizeMode="contain" source={IMAGES.bgWaves} style={styles.BG_STYLE} />
       <View />
       <Image
         resizeMode="contain"

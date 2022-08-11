@@ -19,6 +19,7 @@ import React from "react";
 import { SplashScreen } from "../screens";
 import { SignupScreen } from "../screens/signup/signup-screen";
 import { SetupProfileScreen } from "../screens/setup-profile/setup-profile-screen";
+import { SignupProfileScreen } from "../screens/signup-profile/signup-profile-screen";
 import { LoginScreen } from "../screens/login/login-screen";
 import { LinkBankScreen } from "../screens/link-bank/link-bank-screen";
 import { HomeScreen } from "../screens/home/home-screen";
@@ -35,6 +36,7 @@ import { HelpContactScreen } from "../screens/help-contact/help-contact-screen";
 import { WhereSpendScreen } from "../screens/where-spend/where-spend-screen";
 import { CashierTransactionScreen } from "../screens/cashier-transaction/cashier-transaction-screen";
 import { MakeReportScreen } from "../screens/make-report/make-report-screen";
+import { MyTransactionsScreen } from "../screens/my-transactions/my-transactions-screen";
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -68,6 +70,8 @@ export type NavigatorParamList = {
   qr: any
   cashierTransaction: any
   makeReport: any
+  signupProfile: any
+  myTransactions: any
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -87,10 +91,10 @@ const AppStackDrawer = () => {
       initialRouteName="splash"
       drawerContent={(props) => <DrawerScreen {...props} />}
     >
-      <Drawer.Screen  name="splash" component={SplashScreen} />
+      <Drawer.Screen name="splash" component={SplashScreen} />
       <Drawer.Screen name="signup" component={SignupScreen} />
       <Drawer.Screen name="setupProfile" component={SetupProfileScreen} />
-
+      <Drawer.Screen name="signupProfile" component={SignupProfileScreen} />
       <Drawer.Screen name="login" component={LoginScreen} />
       <Drawer.Screen name="home" component={HomeScreen} />
       <Drawer.Screen name="return" component={ReturnScreen} />
@@ -106,6 +110,7 @@ const AppStackDrawer = () => {
       <Drawer.Screen name="qr" component={QRScreen} />
       <Drawer.Screen name="makeReport" component={MakeReportScreen} />
       <Drawer.Screen name="cashierTransaction" component={CashierTransactionScreen} />
+      <Drawer.Screen name="myTransactions" component={MyTransactionsScreen} />
       {/* <Drawer.Screen name="drawer" component={DrawerScreen} /> */}
 
     </Drawer.Navigator>

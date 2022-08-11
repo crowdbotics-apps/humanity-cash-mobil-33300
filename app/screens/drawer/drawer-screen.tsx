@@ -8,6 +8,19 @@ import { useNavigation } from "@react-navigation/native"
 import { IMAGES } from "../../theme"
 import { useStores } from "../../models"
 
+const profileTypes = [
+	{
+		label: 'Personal',
+		value: 'personal',
+		first_step: 'pic_username'
+	},
+	{
+		label: 'Business',
+		value: 'business_personal',
+		first_step: 'pic_bname'
+	},
+]
+
 export const DrawerScreen = observer(function DrawerScreen(props) {
   const navigation = useNavigation()
   const rootStore = useStores()
@@ -131,7 +144,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             />
             <Text style={styles.MENU_ITEM_LABEL}>Receive payment / Scan to pay</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => props.navigation.navigate("return", {})} style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity onPress={() => props.navigation.navigate("myTransactions", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.receive_payment}
@@ -175,7 +188,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             />
             <Text style={styles.MENU_ITEM_LABEL}>Community Chest</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER} onPress={() => props.navigation.navigate("setupProfile", {})}>
+          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER} onPress={() => props.navigation.navigate("signupProfile", { profile_type: profileTypes[1] })}>
             <Image
               resizeMode="contain"
               source={IMAGES.sign_up_your_business}

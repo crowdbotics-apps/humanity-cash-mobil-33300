@@ -355,7 +355,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
         // onPress={() => {}}
         buttonLabel={''}
         hideButton
-        showBottonMenu={!ShowMap}
+        showBottonMenu={false}
         accountType={loginStore.getSelectedAccount}
       />
     </Screen>

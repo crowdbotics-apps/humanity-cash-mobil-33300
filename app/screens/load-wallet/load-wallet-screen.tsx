@@ -44,7 +44,7 @@ C$ ${Amount}`}
 									setAmount(''),
 									navigation.navigate("home", {})
 								]}
-								buttonLabel={'Explore BerkShares'}
+								buttonLabel={'Explore your community'}
 							/>
 						]
 						: [
@@ -77,7 +77,7 @@ C$ ${Amount}`}
 					<View style={styles.MODAL_CONTAINER}>
 						<View style={styles.MODAL_CONTENT}>
 							<Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Please confirm your transaction.</Text>
-							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will load up B$ ${Amount} to your wallet.`}</Text>
+							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will load up C$ ${Amount} to your wallet.`}</Text>
 							<TouchableOpacity
 								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor}]}
 								onPress={() => {
@@ -174,9 +174,8 @@ C$ ${Amount}`}
 							style={styles.INPUT_STYLE}
 							keyboardType='numeric'
 							onChangeText={t => {
-								if (t) t = t.split(' ')[1]
-								else t = ''
-								setAmount(t)
+								const temp = t.replace('C', '').replace('$', '').replace(' ', '')
+								setAmount(temp.replace(",", "."))
 							}}
 							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
 							placeholder={`Amount`}
