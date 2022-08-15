@@ -2,151 +2,148 @@ import { Animated, StyleSheet } from 'react-native';
 import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
-    CONTAINER: {},
-    BUTTON: {
-        width: METRICS.screenWidth * 0.95,
+    BACK_BUTON_LABEL: {
+        color: COLOR.PALETTE.white,
+        fontSize: 16
+    },
+    BOTTON_MENU: {
+        alignSelf: 'flex-end',
+        backgroundColor: 'transparent',
+        bottom: -1,
+        height: METRICS.screenWidth / 4,
+        position: 'absolute',
+        width: METRICS.screenWidth,
+    },
+    BOTTON_MENU_ICON_ADDRESS: {
         height: 55,
-        backgroundColor: COLOR.PALETTE.green,
-        flexDirection: 'row',
+        width: 50,
+    },
+    BOTTON_MENU_ICON_HOME: {
+        height: 50,
+        width: 50,
+    },
+    BOTTON_MENU_ICON_SPEND: {
+        height: 55,
+        width: 60,
+    },
+    BOTTON_MENU_ICON_WALLET: {
+        height: 50,
+        width: 60,
+    },
+    BUTTON: {
         alignItems: 'center',
-        justifyContent: 'center',
         alignSelf: 'center',
+        backgroundColor: COLOR.PALETTE.green,
         borderRadius: 27.5,
-        marginBottom: 30
+        flexDirection: 'row',
+        height: 55,
+        justifyContent: 'center',
+        marginBottom: 30,
+        width: METRICS.screenWidth * 0.95
     },
     BUTTON_DISABLED: {
-        width: METRICS.screenWidth * 0.95,
-        height: 55,
-        backgroundColor: `${COLOR.PALETTE.green}40`,
-        justifyContent: 'center',
         alignSelf: 'center',
+        backgroundColor: `${COLOR.PALETTE.green}40`,
         borderRadius: 27.5,
-        marginBottom: 30
+        height: 55,
+        justifyContent: 'center',
+        marginBottom: 30,
+        width: METRICS.screenWidth * 0.95
     },
     BUTTON_LABEL: {
-        fontSize: 16,
         color: COLOR.PALETTE.white,
+        fontSize: 16,
         textAlign: 'center',
         textAlignVertical: 'center',
     },
-    BOTTON_MENU: {
-        position: 'absolute',
-        bottom: -1,
-        height: METRICS.screenWidth / 4,
-        width: METRICS.screenWidth,
-        backgroundColor: 'transparent',
-        alignSelf: 'flex-end',
-    },
-    ICONS_CONTAINER: {
-        position: 'absolute',
-        bottom: 24,
-        height: 50,
-        width: METRICS.screenWidth * 0.9,
-        alignSelf: 'center',
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    QR_BUTTON: {
-        width: 66,
-        height: 66,
-        borderRadius: 33,
-        backgroundColor: COLOR.PALETTE.blue,
-        bottom: (METRICS.screenWidth / 4) - 35,
-        elevation: 10,
-        shadowColor: 'black',
-        shadowOffset: { width: -2, height: 4 },
-        shadowOpacity: 0.2,
-        justifyContent: 'center',
-
-        alignItems: 'center'
-    },
-    QR_BUTTON_MERCHANT: {
-        width: 66,
-        height: 66,
-        borderRadius: 33,
-        backgroundColor: COLOR.PALETTE.green,
-        bottom: (METRICS.screenWidth / 4) - 35,
-        elevation: 10,
-        shadowColor: 'black',
-        shadowOffset: { width: -2, height: 4 },
-        shadowOpacity: 0.2,
-        justifyContent: 'center',
-
-        alignItems: 'center'
-    },
-    BOTTON_MENU_ICON_HOME: {
-        width: 50,
-        height: 50,
-    },
-    BOTTON_MENU_ICON_WALLET: {
-        width: 60,
-        height: 50,
-    },
-    BOTTON_MENU_ICON_SPEND: {
-        width: 60,
-        height: 55,
-    },
-    BOTTON_MENU_ICON_ADDRESS: {
-        width: 50,
-        height: 55,
-    },
-    ROOT_MODAL: {
-        flex: 1,
-        // alignItems: 'center',
-    },
     CLOSE_MODAL_BUTTON: {
-        flexDirection: 'row',
-        alignSelf: 'flex-start',
-        justifyContent: 'center',
         alignItems: 'center',
+        alignSelf: 'flex-start',
+        flexDirection: 'row',
+        justifyContent: 'center',
         marginLeft: 15,
         marginTop: 20,
     },
-    BACK_BUTON_LABEL: {
-        fontSize: 16,
-        color: COLOR.PALETTE.white
+    CONTAINER: {},
+    ICONS_CONTAINER: {
+        alignSelf: 'center',
+        bottom: 24,
+        flexDirection: 'row',
+        height: 50,
+        justifyContent: 'space-between',
+        position: 'absolute',
+        width: METRICS.screenWidth * 0.9
     },
-    SWITCH_CONTAINER: {
+    INPUT_LABEL_STYLE: {
+        color: COLOR.PALETTE.black,
+        fontSize: 10,
+      },
+    INPUT_LABEL_STYLE_CONTAINER: {
+        alignSelf: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20,
+        width: METRICS.screenWidth * 0.95,
+      },
+    INPUT_STYLE: {
+        alignSelf: 'center',
+        height: 55,
+        width: METRICS.screenWidth * 0.90,
+      },
+    INPUT_STYLE_CONTAINER: {
+        alignItems: 'center',
+        alignSelf: 'center',
+        backgroundColor: `${COLOR.PALETTE.green}25`,
+        borderRadius: 3,
+        flexDirection: 'row',
+        height: 55,
+        justifyContent: 'center',
+        marginTop: 10,
+        width: METRICS.screenWidth * 0.95
+      },
+    NEED_HELP_CONTAINER: {
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginBottom: 20,
+        width: METRICS.screenWidth * 0.80
+      },
+      NEED_HELP_LINK: {
+        color: COLOR.PALETTE.darkYellow,
+        fontSize: 16,
+        textAlign: 'center',
+        textDecorationLine: 'underline'
+      },
+      QR_BUTTON: {
+        alignItems: 'center',
+        backgroundColor: COLOR.PALETTE.blue,
+        borderRadius: 33,
+        bottom: (METRICS.screenWidth / 4) - 35,
+        elevation: 10,
+        height: 66,
+        justifyContent: 'center',
+        shadowColor: COLOR.PALETTE.black,
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        width: 66
+    },
+      QR_BUTTON_MERCHANT: {
+        alignItems: 'center',
+        backgroundColor: COLOR.PALETTE.green,
+        borderRadius: 33,
+        bottom: (METRICS.screenWidth / 4) - 35,
+        elevation: 10,
+        height: 66,
+        justifyContent: 'center',
+        shadowColor: COLOR.PALETTE.black,
+        shadowOffset: { width: -2, height: 4 },
+        shadowOpacity: 0.2,
+        width: 66
+    },
+      ROOT_MODAL: {
+        flex: 1,
+    },
+      SWITCH_CONTAINER: {
         alignSelf: 'center',
         marginTop: 30
     },
-    INPUT_LABEL_STYLE_CONTAINER: {
-        flexDirection: 'row',
-        width: METRICS.screenWidth * 0.95,
-        justifyContent: 'space-between',
-        alignSelf: 'center',
-        marginTop: 20,
-      },
-      INPUT_LABEL_STYLE: {
-        fontSize: 10,
-        color: COLOR.PALETTE.black,
-      },
-      INPUT_STYLE_CONTAINER: {
-        borderRadius: 3,
-        height: 55,
-        width: METRICS.screenWidth * 0.95,
-        backgroundColor: `${COLOR.PALETTE.green}25`,
-        alignSelf: 'center',
-        marginTop: 10,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-      },
-      INPUT_STYLE: {
-        height: 55,
-        width: METRICS.screenWidth * 0.90,
-        alignSelf: 'center',
-      },
-      NEED_HELP_CONTAINER: {
-        width: METRICS.screenWidth * 0.80,
-        alignItems: 'center',
-        alignSelf: 'center',
-        marginBottom: 20
-      },
-      NEED_HELP_LINK: {
-        fontSize: 16,
-        color: COLOR.PALETTE.darkYellow,
-        textDecorationLine: 'underline',
-        textAlign: 'center'
-      },
 })

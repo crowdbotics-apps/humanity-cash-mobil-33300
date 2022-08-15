@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { TextInput, View, TouchableOpacity, Image, Modal, TouchableWithoutFeedback, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
+import {
+	TextInput,
+	View,
+	TouchableOpacity,
+	Image,
+	Modal,
+	TouchableWithoutFeedback,
+	Platform,
+	KeyboardAvoidingView,
+	ScrollView
+} from 'react-native';
 import {
 	Text,
 	Button,
@@ -476,6 +486,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					onChangeText={t => setBusinessStory(t)}
 					value={BusinessStory}
 					multiline
+					scrollEnabled={false}
 					numberOfLines={4}
 					placeholder={'Business name'}
 				/>

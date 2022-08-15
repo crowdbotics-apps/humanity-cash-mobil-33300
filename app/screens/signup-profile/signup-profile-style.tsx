@@ -125,7 +125,6 @@ export default StyleSheet.create({
   },
   CONTAINER: {},
   FULL_SCREEN: {
-    backgroundColor: 'red',
     height: METRICS.screenHeight
   },
   HEADER_ACTIONS: {
@@ -290,8 +289,8 @@ export default StyleSheet.create({
   ROOT_CONTAINER: {
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
-    height: METRICS.screenHeight,
-    justifyContent: 'space-between',
+    // height: METRICS.screenHeight,
+    // justifyContent: 'space-between',
   },
   ROOT_MODAL: {
     alignItems: 'center',
@@ -300,11 +299,10 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   SELECTS_CONTAINER: {
-    // backgroundColor: 'red'
+    alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: METRICS.screenWidth * 0.95,
-    alignSelf: 'center',
   },
   SELECT_ICON: {
     alignItems: 'center',
@@ -375,9 +373,10 @@ export default StyleSheet.create({
   SUBMIT_BUTTON: {
     // width: METRICS.screenWidth * 0.95,
     // height: 55,
-    bottom: 5,
-    position: 'absolute',
     backgroundColor: COLOR.PALETTE.green,
+    bottom: 5,
+    marginTop: 10,
+    // position: 'absolute',
     // justifyContent: 'center',
     // alignSelf: 'center',
     // borderRadius: 27.5,

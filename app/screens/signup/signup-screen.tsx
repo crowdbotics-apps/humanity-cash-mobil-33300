@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextInput, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from "react-native"
+import { TextInput, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from "react-native"
 import { Text, Screen, Button, TextInputComponent } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
@@ -12,6 +12,7 @@ import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import { COLOR } from '../../theme';
 import { CheckBox } from 'react-native-elements'
+import TouchID from 'react-native-touch-id'
 
 const steps = [
   "email",
@@ -79,6 +80,27 @@ export const SignupScreen = observer(function SignupScreen() {
         break
     }
     return render
+  }
+  const optionalConfigObject = {
+    title: 'Authentication Required', // Android
+    imageColor: '#e00606', // Android
+    imageErrorColor: '#ff0000', // Android
+    sensorDescription: 'Touch sensor', // Android
+    sensorErrorDescription: 'Failed', // Android
+    cancelText: 'Cancel', // Android
+    fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+    unifiedErrors: false, // use unified error messages (default false)
+    passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
+  };
+
+  const pressHandler = () => {
+    TouchID.authenticate('to demo this react-native component', optionalConfigObject)
+      .then(success => {
+        Alert.alert('Authenticated Successfully');
+      })
+      .catch(error => {
+        Alert.alert('Authentication Failed');
+      });
   }
 
   const validateEmail = (email, agree) => {
@@ -495,7 +517,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         } else {
           setPassword()
           setMatchPassword(true)
-          // setStep('touch_id')
+          pressHandler()
+          setStep('touch_id')
         }
         break;
       case "touch_id":
@@ -522,11 +545,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   return (
     <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>
       {/* <View style={styles.ROOT}> */}
-      <KeyboardAvoidingView
-        enabled
-        // behavior={Platform.OS === 'ios' ? 'padding' : null}
-        style={styles.ROOT}
-      >
+      <View style={styles.ROOT}>
         <ScrollView>
           <View style={styles.STEP_CONTAINER}>
             <TouchableOpacity
@@ -537,21 +556,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
               <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
             </TouchableOpacity>
             {renderStep()}
-          {/* </View> */}
-          {/* <View style={styles.CONTAINER}>/ */}
-            {/* {Step === "verify_email" && (
-              <View style={styles.NEED_HELP_CONTAINER}>
-                <Text
-                  onPress={() => setStep("help")}
-                  style={styles.NEED_HELP_LINK}
-                >
-                  Need help?
-                </Text>
-              </View>
-            )} */}
-          
           </View>
-          {/* </View> */}
         </ScrollView>
       {Step === "email" && (
               <View style={styles.AGREE_CONTAINER}>
@@ -601,7 +606,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                 loading={Loading}
               />
             )}
-      </KeyboardAvoidingView>
+      </View>
     </Screen>
   )
 })

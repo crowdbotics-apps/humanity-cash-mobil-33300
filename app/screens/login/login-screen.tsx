@@ -15,8 +15,8 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin'
-import { 
-  AppleButton, 
+import {
+  AppleButton,
   appleAuth
 } from '@invertase/react-native-apple-authentication'
 
@@ -36,8 +36,8 @@ export const LoginScreen = observer(function LoginScreen() {
 
   const login = () => {
     loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home", {})
-            loginStore.setApiToken('123')
+    navigation.navigate("home", {})
+    loginStore.setApiToken('123')
     setLoading(true)
     loginStore.environment.api
       .login({ email: Username, password: Pass })
@@ -96,7 +96,7 @@ export const LoginScreen = observer(function LoginScreen() {
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
       requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-    }).then((response: any) =>{
+    }).then((response: any) => {
       console.log(' response => ', response)
     });
 
@@ -247,7 +247,6 @@ export const LoginScreen = observer(function LoginScreen() {
 </View> */}
       <Button
         buttonStyle={{
-          // bottom: 5,
           backgroundColor: Loading ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green
         }}
         onPress={() => login()}

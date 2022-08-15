@@ -48,7 +48,14 @@ export function ModalSelector(props: ModalSelectortProps) {
                 statusBarTranslucent
             >
                 <View style={[styles.MODAL_BODY, { height: "90%" }]}>
-                    <Image source={IMAGES.logoFull} style={styles.FP_LOGO_MODAL} resizeMode='contain' />
+                    <View style={styles.HEADER_CONTAINER} >
+                    <View style={styles.CLOSE_MODAL_BUTTON} />
+                        <Image source={IMAGES.logoFull} style={styles.FP_LOGO_MODAL} resizeMode='contain' />
+                        <TouchableOpacity onPress={() => props.setVisible(false)} style={styles.CLOSE_MODAL_BUTTON}>
+					<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
+					<Icon name={"close"} size={20} color={COLOR.PALETTE.black} />
+				</TouchableOpacity>
+                    </View>
                     <View style={styles.FIRST_TITLE_MODAL}>
                         <Text>{props.title}</Text>
                     </View>
@@ -112,34 +119,6 @@ export function ModalSelector(props: ModalSelectortProps) {
                             )
                         })}
                     </ScrollView>
-                    {/* <View style={[styles.CANCEL_CONFIRM_BUTTON_CONTAINER, { flexDirection: "column", marginBottom: 20 }]}>
-                        {closeOnClick === false && <Button
-                            text={"SELECT"}
-                            style={{ marginTop: 15 }}
-                            disabled={SelectedValue === null}
-                            preset={SelectedValue === null ? "disabled" : "primary"}
-                            onPress={() => {
-                                props.setVisible(false)
-                                props.action(SelectedValue)
-                            }}
-                        />}
-                        <Button
-                            text={"CLEAR"}
-                            style={{ marginTop: 15 }}
-                            preset={"secondary"}
-                            onPress={() => {
-                                setSelectedValue(null)
-                            }}
-                        />
-                        <Button
-                            text={"CLOSE"}
-                            style={{ marginTop: 15 }}
-                            preset={"secondary"}
-                            onPress={() => {
-                                props.setVisible(false)
-                            }}
-                        />
-                    </View> */}
                 </View>
             </Modal>
         </>

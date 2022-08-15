@@ -33,8 +33,17 @@ export const QRScreen = observer(function QRScreen() {
 
   useEffect(() => {
     // TODO: redirect on acc connect if necessary
-    console.log(' ===>>> entre aca ', JSON.stringify(loginStore.getBillingData, null, 2))
+    console.log(' ===>>> entre aca ', JSON.stringify(loginStore.getBillingData, null, 2)) // TODO: send to add account if false
   })
+
+  const formatValue = value => {
+    const strFormat = parseFloat(value).toFixed(2);
+    const [firstPart, secondPart] = strFormat.split(".");
+    return (
+        firstPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+            (secondPart ? "." + secondPart : "")
+    );
+};
 
   const inputQR = () => <View style={{ flex: 1, justifyContent: 'space-between' }}>
     <View>
@@ -43,15 +52,16 @@ export const QRScreen = observer(function QRScreen() {
         <Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
       </View>
       <View style={[styles.INPUT_STYLE_CONTAINER]}>
+      <Text style={styles.INPUT_LABEL_STYLE}> C$</Text>
         <TextInput
           style={styles.INPUT_STYLE}
           keyboardType='numeric'
           onChangeText={t => {
-            if (t) t = t.split(' ')[1]
-            else t = ''
+            t.replace(",", ".")
             setAmount(t)
           }}
-          value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
+          // value={`C$ ` + Amount}
+          value={Amount}
           placeholder={`Amount`}
         />
       </View>
@@ -126,7 +136,7 @@ export const QRScreen = observer(function QRScreen() {
           </View>
         </View>
         {ScanQR
-          ? <QRCodeScanner onRead={e => console.warn(' ===>>>>> ', e)} />
+          ? <QRCodeScanner onRead={e => console.warn(' ===>>>>> ', e)} /> // TODO: action when read
           : inputQR()
         }
         {viewQR()}

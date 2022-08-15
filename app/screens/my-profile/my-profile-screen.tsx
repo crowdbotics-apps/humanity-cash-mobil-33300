@@ -205,6 +205,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					onChangeText={t => setBusinessStory(t)}
 					value={BusinessStory}
 					multiline
+					scrollEnabled={false}
 					numberOfLines={4}
 					placeholder={'Business name'}
 				/>

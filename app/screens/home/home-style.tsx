@@ -2,140 +2,6 @@ import { Animated, StyleSheet } from 'react-native';
 import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
-  ROOT: {
-    flex: 1,
-    backgroundColor: COLOR.PALETTE.white,
-    justifyContent: 'space-between'
-  },
-  ROOT_CONTAINER: {
-    flex: 1,
-    backgroundColor: COLOR.PALETTE.white,
-    justifyContent: 'space-between',
-    minHeight: METRICS.screenHeight,
-  },
-  NEED_HELP_LINK: {
-    fontSize: 16,
-    color: COLOR.PALETTE.darkYellow,
-    textAlign: 'center'
-  }, 
-  NEED_HELP_CONTAINER: {
-    width: METRICS.screenWidth * 0.80,
-    alignItems: 'center',
-    alignSelf: 'center',
-    marginBottom: 100
-  },
-  BACK_BUTON_LABEL: {
-    fontSize: 16,
-    color: COLOR.PALETTE.blue
-  },
-  BACK_BUTON_CONTAINER: {
-    flexDirection: 'row',
-    width: 80,
-    height: 30,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginVertical: 10
-  },
-  CLOSE_MODAL_BUTTON: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginRight: 30
-  },
-  STEP_CONTAINER: {
-    width: METRICS.screenWidth
-  },
-  HEADER: {
-    marginLeft: 10,
-    marginTop: 10,
-    flexDirection: 'row',
-  },
-  STEP_TITLE: {
-    fontSize: 32,
-    color: COLOR.PALETTE.green,
-    marginLeft: 10
-  },
-  ROOT_MODAL: {
-    flex: 1,
-    backgroundColor: COLOR.PALETTE.background,
-    alignItems: 'center',
-    justifyContent: 'space-around'
-  },
-  MODAL_CONTAINER: {
-    backgroundColor: '#F8FAF6',
-    width: METRICS.screenWidth * 0.80,
-    height: 330,
-    alignItems: 'center',
-    borderRadius: 10,
-  },
-  MODAL_CONTENT: {
-    width: METRICS.screenWidth * 0.70,
-    height: 330,
-    justifyContent: 'space-evenly'
-  },
-  STEP_TITLE_BLACK: {
-    fontSize: 32,
-    color: COLOR.PALETTE.black,
-    marginLeft: 10,
-    width: METRICS.screenWidth * 0.7,
-  },
-  STEP_SUB_TITLE_MODAL: {
-    fontSize: 16,
-    color: COLOR.PALETTE.black,
-    marginLeft: 10,
-    width: METRICS.screenWidth * 0.7,
-  },
-  MODAL_BUTTON: {
-    width: METRICS.screenWidth * 0.70,
-    height: 55,
-    backgroundColor: COLOR.PALETTE.green,
-    justifyContent: 'center',
-    alignSelf: 'center',
-    borderRadius: 27.5,
-    marginBottom: 20
-  },
-  SUBMIT_BUTTON_LABEL: {
-    fontSize: 16,
-    color: COLOR.PALETTE.white,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-  },
-  CASHIER_BUTTON_SMALL: {
-    marginTop: 10,
-    flexDirection: 'row',
-    backgroundColor: COLOR.PALETTE.lightGray,
-    width: METRICS.screenWidth * 0.9,
-    height: 55,
-    alignSelf: 'center',
-    alignItems:"center"
-  },
-  CASHIER_BUTTON_BIG: {
-    marginTop: 80,
-    backgroundColor: COLOR.PALETTE.lightGray,
-    width: METRICS.screenWidth * 0.9,
-    height: 155,
-    alignSelf: 'center',
-    alignItems:"center",
-    justifyContent: 'center'
-  },
-  CASHIER_BUTTON_ICON: {
-    width: 20,
-    height: 20,
-    marginHorizontal: 20
-  },
-  CASHIER_BUTTON_ICON_BIG: {
-    width: 70,
-    height: 70,
-    marginVertical: 10
-  },
-  CASHIER_BUTTON_LABEL: {
-    fontSize: 16,
-    color: COLOR.PALETTE.black,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-  },
   AGREE_CONTAINER: {
     alignSelf: 'center',
     flexDirection: 'row',
@@ -143,92 +9,226 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   AGREE_LABEL: {
-    width: METRICS.screenWidth * 0.6,
-    fontSize: 16,
     color: COLOR.PALETTE.black,
+    fontSize: 16,
+    width: METRICS.screenWidth * 0.6,
   },
   AGREE_LABEL_LINK: {
-    fontSize: 16,
     color: COLOR.PALETTE.blue,
+    fontSize: 16,
     textDecorationLine: 'underline'
-  },
-  LOGO_STYLE: {
-    width: 130,
-    height: 60,
-    alignSelf: 'center',
-  },
-  LINE: {
-    width: METRICS.screenWidth * 0.95,
-    backgroundColor: COLOR.PALETTE.strongGreen,
-    height: 1,
-    alignSelf: 'center',
-    marginVertical: 10
-  },
+  }, 
   AMOUNT: {
     color: COLOR.PALETTE.blue,
     fontSize: 24,
     fontWeight: 'bold',
   },
-  AMOUNT_ICON: {
-    width: 30,
-    height: 30,
-    marginRight: 5
-  },
   AMOUNT_CONTAINER: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginLeft: 10
+  },
+  AMOUNT_ICON: {
+    height: 30,
+    marginRight: 5,
+    width: 30
+  },
+  BACK_BUTON_CONTAINER: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 30,
+    justifyContent: 'flex-start',
+    marginLeft: 10,
+    marginVertical: 10,
+    width: 80
+  },
+  BACK_BUTON_LABEL: {
+    color: COLOR.PALETTE.blue,
+    fontSize: 16
+  },
+  CASHIER_BUTTON_BIG: {
+    alignItems:"center",
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.lightGray,
+    height: 155,
+    justifyContent: 'center',
+    marginTop: 80,
+    width: METRICS.screenWidth * 0.9
+  },
+  CASHIER_BUTTON_ICON: {
+    height: 20,
+    marginHorizontal: 20,
+    width: 20
+  },
+  CASHIER_BUTTON_ICON_BIG: {
+    height: 70,
+    marginVertical: 10,
+    width: 70
+  },
+  CASHIER_BUTTON_LABEL: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
+  CASHIER_BUTTON_SMALL: {
+    alignItems:"center",
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.lightGray,
+    flexDirection: 'row',
+    height: 55,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.9
+  },
+  CLOSE_MODAL_BUTTON: {
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    marginRight: 30
+  },
+  HEADER: {
     flexDirection: 'row',
     marginLeft: 10,
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    marginTop: 10,
+  },
+  LINE: {
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.strongGreen,
+    height: 1,
+    marginVertical: 10,
+    width: METRICS.screenWidth * 0.95
+  },
+  LOAD_WALLET_CONTAINER: {
+    backgroundColor: COLOR.PALETTE.mustard,
+    borderRadius: 20,
+    height: 25,
+    justifyContent: 'center',
+    marginRight: 10,
+    width: 120
   },
   LOAD_WALLET_LABEL: {
     color: COLOR.PALETTE.white,
     fontSize: 16,
     textAlign: 'center'
   },
-  LOAD_WALLET_CONTAINER: {
-    backgroundColor: COLOR.PALETTE.mustard,
-    width: 120,
-    height: 25,
-    borderRadius: 20,
-    marginRight: 10,
-    justifyContent: 'center'
+  LOGO_STYLE: {
+    alignSelf: 'center',
+    height: 60,
+    width: 130,
+  },
+  MODAL_BUTTON: {
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.green,
+    borderRadius: 27.5,
+    height: 55,
+    justifyContent: 'center',
+    marginBottom: 20,
+    width: METRICS.screenWidth * 0.70
+  },
+  MODAL_CONTAINER: {
+    alignItems: 'center',
+    backgroundColor: '#F8FAF6',
+    borderRadius: 10,
+    height: 330,
+    width: METRICS.screenWidth * 0.80,
+  },
+  MODAL_CONTENT: {
+    height: 330,
+    justifyContent: 'space-evenly',
+    width: METRICS.screenWidth * 0.70
+  },
+  NEED_HELP_CONTAINER: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 100,
+    width: METRICS.screenWidth * 0.80
+  },
+  NEED_HELP_LINK: {
+    color: COLOR.PALETTE.darkYellow,
+    fontSize: 16,
+    textAlign: 'center'
+  },
+  NEWS_BODY: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.80,
   },
   NEWS_CONTAINER: {
-    width: METRICS.screenWidth * 0.95,
-    backgroundColor: COLOR.PALETTE.lightGray,
     alignItems: 'center',
-    height: 500,
     alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.lightGray,
+    borderRadius: 3,
+    height: 500,
     justifyContent: 'space-around',
     marginTop: 15,
-    borderRadius: 3
+    width: METRICS.screenWidth * 0.95
   },
   NEWS_HEADER_CONTAINER: {
     flexDirection: 'row',
-    width: METRICS.screenWidth * 0.80,
     justifyContent: 'space-between',
-    marginTop: 10
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.80
+  },
+  NEWS_IMAGE: {
+    flex: 1,
+    height: null,
+    width: METRICS.screenWidth * 0.80,
   },
   NEWS_TAG: {
-    fontSize: 10,
-    color: COLOR.PALETTE.gray
+    color: COLOR.PALETTE.gray,
+    fontSize: 10
   },
   NEWS_TITLE: {
-    fontSize: 18,
     color: COLOR.PALETTE.black,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: 15,
     width: METRICS.screenWidth * 0.80,
   },
-  NEWS_BODY: {
-    fontSize: 16,
-    color: COLOR.PALETTE.black,
-    marginTop: 10,
-    width: METRICS.screenWidth * 0.80,
-  },
-  NEWS_IMAGE: {
-    width: METRICS.screenWidth * 0.80,
+  ROOT: {
+    backgroundColor: COLOR.PALETTE.white,
     flex: 1,
-    height: null,
+    justifyContent: 'space-between'
+  },
+  ROOT_CONTAINER: {
+    backgroundColor: COLOR.PALETTE.white,
+    flex: 1,
+    justifyContent: 'space-between',
+    minHeight: METRICS.screenHeight,
+  },
+  ROOT_MODAL: {
+    alignItems: 'center',
+    backgroundColor: COLOR.PALETTE.background,
+    flex: 1,
+    justifyContent: 'space-around'
+  },
+  STEP_CONTAINER: {
+    width: METRICS.screenWidth
+  },
+  STEP_SUB_TITLE_MODAL: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16,
+    marginLeft: 10,
+    width: METRICS.screenWidth * 0.7,
+  },
+  STEP_TITLE: {
+    color: COLOR.PALETTE.green,
+    fontSize: 32,
+    marginLeft: 10
+  },
+  STEP_TITLE_BLACK: {
+    color: COLOR.PALETTE.black,
+    fontSize: 32,
+    marginLeft: 10,
+    width: METRICS.screenWidth * 0.7,
+  },
+  SUBMIT_BUTTON_LABEL: {
+    color: COLOR.PALETTE.white,
+    fontSize: 16,
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
 })

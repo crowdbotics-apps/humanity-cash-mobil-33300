@@ -16,7 +16,7 @@ import { IMAGES, METRICS } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
 import { notifyMessage } from "../../utils/helpers"
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 // const steps_user = ['pic_username', 'name']
 // const steps_business = ['pic_bname', 'business_type', 'business_exec', 'business_data', 'business_addresss']
@@ -65,7 +65,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	const [ShowThankyouModal, setShowThankyouModal] = useState(false)
 
 	const [ProfileType, setProfileType] = useState({})
-	
+
 	const [RandonPic, setRandonPic] = useState(Math.round(Math.random() * 3))
 
 	// personal
@@ -132,16 +132,16 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	}
 
 	const fetchCity = (data?: string) => {
-		loginStore.environment.api.getCities({ value: data})
+		loginStore.environment.api.getCities({ value: data })
 			.then((result: any) => {
-				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name})))
+				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
 			})
 	}
 	const fetchState = (data?: string) => {
-		loginStore.environment.api.getStates({ value: data})
-		.then((result: any) => {
-			setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
-		})
+		loginStore.environment.api.getStates({ value: data })
+			.then((result: any) => {
+				setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+			})
 	}
 
 	const setupConsumer = () => {
@@ -159,7 +159,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		loginStore.environment.api.setupConsumer({
 			username: Username,
 			consumer_profile: pic
-		}).then((result:any) => {
+		}).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setStep("name")
@@ -172,9 +172,9 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				}
 				notifyMessage(msg)
 			} else if (result.kind === "unauthorized") {
-					loginStore.reset()
-					navigation.navigate("login", {})
-				} else {
+				loginStore.reset()
+				navigation.navigate("login", {})
+			} else {
 				notifyMessage(null)
 			}
 		})
@@ -185,7 +185,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		loginStore.environment.api.setupConsumerDetail({
 			first_name: Name,
 			last_name: LastName
-		}).then((result:any) => {
+		}).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setShowThankyouModal(true)
@@ -194,9 +194,9 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				const msg = `${key}: ${result?.errors?.[key][0]}`
 				notifyMessage(msg)
 			} else if (result.kind === "unauthorized") {
-					loginStore.reset()
-					navigation.navigate("login", {})
-				} else {
+				loginStore.reset()
+				navigation.navigate("login", {})
+			} else {
 				notifyMessage(null)
 			}
 		})
@@ -226,7 +226,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			background_picture: backPic,
 			business_story: BusinessStory
 		})
-			.then((result:any) => {
+			.then((result: any) => {
 				setLoading(false)
 				setStep('business_type')
 				if (result.kind === "ok") {
@@ -247,7 +247,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	const setupMerchantDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
-			.then((result:any) => {
+			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
 					setStep('business_exec')
@@ -279,7 +279,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			zip_code: PostalCode,
 			phone_number: PhoneNumber
 		})
-			.then((result:any) => {
+			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
 					setShowThankyouModal(true)
@@ -481,6 +481,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					value={BusinessStory}
 					multiline
 					numberOfLines={4}
+					scrollEnabled={false}
 					placeholder={'Business name'}
 				/>
 			</View>
@@ -641,7 +642,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
 					<TouchableOpacity
-						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, justifyContent: 'flex-end' }]}
 						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
 					>
 						<ModalSelector
@@ -666,7 +667,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						{ width: METRICS.screenWidth * 0.25 }
 					]}>
 						<TouchableOpacity
-							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
+							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2, justifyContent: 'flex-end' }]}
 							onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
 						>
 							<ModalSelector
@@ -695,6 +696,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPostalCode(t)}
 					value={PostalCode}
+					placeholderTextColor='gray'
 					placeholder={'xxxxxxxxx'}
 				/>
 			</View>
@@ -812,17 +814,18 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				setStep(ProfileType.first_step)
 				break;
 			case 'pic_username':
-				setupConsumer()
-				// setStep('name')
+				// setupConsumer() // TODO: uncomment 
 				break;
 			case 'name':
-				setupConsumerDetail()
+				// setupConsumerDetail() // TODO: uncomment
 				break;
 			case 'pic_bname':
-				setupMerchant()
+				setStep('business_type') // TODO: remove
+				// setupMerchant() // TODO: uncomment
 				break;
 			case 'business_type':
-				setupMerchantDetail()
+				// setupMerchantDetail() // TODO: uncomment
+				setStep('business_exec') // TODO: remove
 				break;
 			case 'business_exec':
 				setStep('business_data')
@@ -831,8 +834,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				setStep('business_addresss')
 				break;
 			case 'business_addresss':
-				setupMerchantDetailComplete()
-
+				// setupMerchantDetailComplete() // TODO: uncomment
 				break;
 
 		}
@@ -843,7 +845,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 		const data = loginStore.getSetupData
 
-		console.log(' useEffect ===>>>> ',  JSON.stringify(props, null, 2) ,JSON.stringify(data, null, 2))
+		console.log(' useEffect ===>>>> ', JSON.stringify(props, null, 2), JSON.stringify(data, null, 2))
 		setProfileType(props?.params?.profile_type || profileTypes[1])
 		if (data?.Username) {
 			setUsername(data.Username)
@@ -881,48 +883,41 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	return (
 		<Screen
 			showHeader
-			preset="fixed"
+			preset="scroll"
 			statusBar={'dark-content'}
 			unsafe={true}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
-				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-					<View style={styles.ROOT_CONTAINER}>
-						<View style={styles.CONTAINER}>
-							<View style={styles.HEADER_ACTIONS}>
-								<TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
-									<Icon name={"arrow-back"} size={23} color={'black'} />
-									<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-								</TouchableOpacity>
-								{/* <TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
-									<Text style={styles.BACK_BUTON_LABEL}>{`Log out`}</Text>
-								</TouchableOpacity> */}
-							</View>
-							{renderStep()}
-						</View>
+			<View style={styles.ROOT_CONTAINER}>
+				<View style={styles.CONTAINER}>
+					<View style={styles.HEADER_ACTIONS}>
+						<TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
+							<Icon name={"arrow-back"} size={23} color={'black'} />
+							<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
+							<Text style={styles.BACK_BUTON_LABEL}>{`Log out`}</Text>
+						</TouchableOpacity>
 					</View>
-					{confirmLogoutModal()}
-					{thankyouModal()}
-				</ScrollView>
-			</KeyboardAvoidingView>
-			{/* {Step !== 'profile_type' && */}
-				<Button
-					disabled={ButtonDisabled || Loading}
-					onPress={() => nextButtonHandler()}
-					loading={Loading}
-					buttonLabel={Step === 'business_exec' 
-						? 'Confirm' 
-						: Step === 'profile_type'
+					{renderStep()}
+				</View>
+			</View>
+			
+			{confirmLogoutModal()}
+			{thankyouModal()}
+			<Button
+				disabled={ButtonDisabled || Loading}
+				onPress={() => nextButtonHandler()}
+				loading={Loading}
+				buttonLabel={Step === 'business_exec'
+					? 'Confirm'
+					: Step === 'profile_type'
 						? 'Sign up your business'
 						: 'Next'
-					}
-					buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
-				/>
-			{/* } */}
+				}
+				buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
+			/>
 		</Screen>
 	)
+
+
 })

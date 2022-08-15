@@ -124,10 +124,6 @@ export default StyleSheet.create({
     width: 50
   },
   CONTAINER: {},
-  FULL_SCREEN: {
-    backgroundColor: 'red',
-    height: METRICS.screenHeight
-  },
   HEADER_ACTIONS: {
     flexDirection: 'row',
     justifyContent: 'space-between'
@@ -300,11 +296,10 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   SELECTS_CONTAINER: {
-    // backgroundColor: 'red'
+    alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: METRICS.screenWidth * 0.95,
-    alignSelf: 'center',
   },
   SELECT_ICON: {
     alignItems: 'center',
@@ -365,26 +360,14 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.7,
   },
   SUBMIT_BUTTON: {
-    // width: METRICS.screenWidth * 0.95,
-    // height: 55,
-    bottom: 5,
-    position: 'absolute',
     backgroundColor: COLOR.PALETTE.green,
-    // justifyContent: 'center',
-    // alignSelf: 'center',
-    // borderRadius: 27.5,
-    // marginBottom: 30
+    bottom: 5,
+    marginTop: 15,
   },
   SUBMIT_BUTTON_DISABLED: {
-    // width: METRICS.screenWidth * 0.95,
-    // height: 55,
-    bottom: 5,
-    position: 'absolute',
     backgroundColor: `${COLOR.PALETTE.green}40`,
-    // justifyContent: 'center',
-    // alignSelf: 'center',
-    // borderRadius: 27.5,
-    // marginBottom: 30
+    bottom: 5,
+    marginTop: 15,
   },
   SUBMIT_BUTTON_LABEL: {
     color: COLOR.PALETTE.white,
