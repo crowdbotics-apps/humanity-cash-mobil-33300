@@ -227,7 +227,7 @@ export default StyleSheet.create({
   },
   MODAL_CONTENT: {
     alignItems: 'center',
-    backgroundColor: '#F8FAF6',
+    backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 10,
     elevation: 5,
     height: 230,

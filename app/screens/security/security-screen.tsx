@@ -93,7 +93,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
                 <Text style={styles.ALLOW_LABEL}>Allow touch ID</Text>
                 <Switch
                   trackColor={{ false: "#39534480", true: "#4CD964" }}
-                  thumbColor={allowTouchId ? "#F8FAF6" : "#F8FAF6"}
+                  thumbColor={allowTouchId ? COLOR.PALETTE.lighterGreen : COLOR.PALETTE.lighterGreen}
                   ios_backgroundColor="#3e3e3e"
                   onValueChange={toggleSwitch}
                   value={allowTouchId}

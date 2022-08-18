@@ -160,7 +160,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             />
             <Text style={styles.MENU_ITEM_LABEL}>Load Wallet</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.MENU_ITEM_CONTAINER}>
+          <TouchableOpacity  onPress={() => props.navigation.navigate("cashOut", {})} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
               source={IMAGES.cash_out}

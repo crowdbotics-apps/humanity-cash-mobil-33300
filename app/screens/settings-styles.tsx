@@ -83,19 +83,18 @@ export default StyleSheet.create({
     width: 150,
   },
   FEEDBACK_SELECTOR_CONTAINER: {
+    alignItems: 'center',
     backgroundColor: COLOR.PALETTE.background,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 5,
     borderColor: COLOR.PALETTE.gray,
+    borderLeftWidth:0,
     borderRadius: 0,
     borderRightWidth:0,
-    borderLeftWidth:0,
     borderTopWidth:0,
     borderWidth: 1.3,
-    alignItems: 'center',
-    // marginTop: 15
-    marginTop: 0
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 0,
+    padding: 5
   },
   FEEDBACK_SELECTOR_TEXT_CONTAINER: {
     alignItems: 'center',
@@ -111,7 +110,7 @@ export default StyleSheet.create({
   },
   FINPLAN_NAME: {
     color: COLOR.PALETTE.black,
-    fontFamily: TYPOGRAPHY.primaryBold,
+    fontFamily: TYPOGRAPHY.primary,
     fontSize: 16,
     width: 200
   },
@@ -131,7 +130,7 @@ export default StyleSheet.create({
   },
   HEADER_SECTION_LIST_TEXT: {
     color: COLOR.PALETTE.gray2,
-    fontFamily: TYPOGRAPHY.primaryBlack,
+    fontFamily: TYPOGRAPHY.primary,
     marginLeft: 20
   },
   IMAGE: {
@@ -210,7 +209,7 @@ export default StyleSheet.create({
   },
   SECTION_LIST_ITEM_BUTTON_TEXT: {
     color: COLOR.PALETTE.primary,
-    fontFamily: TYPOGRAPHY.primaryBold
+    fontFamily: TYPOGRAPHY.primary
   },
   SECTION_LIST_ITEM_IMAGE: {
     borderRadius: 16,
@@ -237,7 +236,7 @@ export default StyleSheet.create({
     maxWidth: 250
   },
   SEPARATOR: {
-    backgroundColor: '#EEEDED',
+    backgroundColor: COLOR.PALETTE.red,
     height: 1,
     marginVertical: 7
   },
@@ -247,7 +246,7 @@ export default StyleSheet.create({
   },
   SUBTITLE_PRIMARY: {
     color: COLOR.PALETTE.primary,
-    fontFamily: TYPOGRAPHY.primaryBold,
+    fontFamily: TYPOGRAPHY.primary,
     fontSize: 12
   },
   TITLE: {
@@ -287,20 +286,20 @@ export default StyleSheet.create({
   },
   cellRoot: {
     alignItems: 'center',
-    borderBottomColor: '#ccc',
+    borderBottomColor: COLOR.PALETTE.red,
     borderBottomWidth: 2,
     height: 40,
     justifyContent: 'center',
     width: 30
   },
   cellText: {
-    color: '#000',
+    color: COLOR.PALETTE.pureblack,
     fontSize: 34,
     textAlign: 'center',
   },
   codeFieldRoot: {
     backgroundColor: COLOR.PALETTE.white,
-    borderColor: '#E9E9E9',
+    borderColor: COLOR.PALETTE.red,
     borderRadius: 90,
     borderWidth: 1,
     elevation: 1,
@@ -316,7 +315,7 @@ export default StyleSheet.create({
     width: 230
   },
   focusCell: {
-    borderBottomColor: '#000000',
+    borderBottomColor: COLOR.PALETTE.pureblack,
     borderBottomWidth: 2
   }
 })

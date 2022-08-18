@@ -23,7 +23,7 @@ export default StyleSheet.create({
   },
   AMOUNT: {
     alignSelf: 'flex-end',
-    color: '#3D88B6',
+    color: COLOR.PALETTE.activeBlue,
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
@@ -31,7 +31,7 @@ export default StyleSheet.create({
   },
   AMOUNT_LABEL: {
     alignSelf: 'flex-end',
-    color: '#3D88B6',
+    color: COLOR.PALETTE.activeBlue,
     fontSize: 10,
     fontWeight: 'bold',
     marginLeft: 10,
@@ -168,7 +168,7 @@ export default StyleSheet.create({
   },
   MODAL_CONTAINER: {
     alignItems: 'center',
-    backgroundColor: '#F8FAF6',
+    backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 20,
     height: 350,
     justifyContent: 'space-around',
@@ -186,7 +186,7 @@ export default StyleSheet.create({
     marginVertical: 10
   },
   RETURN_AMOUNT: {
-    color: '#3B88B6',
+    color: COLOR.PALETTE.activeBlue,
     fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 30,

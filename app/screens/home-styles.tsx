@@ -2,116 +2,18 @@ import { StyleSheet } from 'react-native';
 import { COLOR, TYPOGRAPHY } from '../theme';
 
 export default StyleSheet.create({
-  ROOT: {
-    backgroundColor: COLOR.PALETTE.white
-  },
   BLUR_STYLES: {
-    position: 'absolute',
-    top: 0,
+    bottom: 0,
     left: 0,
-    bottom: 0,
-    right: 0,
-    zIndex: 9999
-  },
-  MODAL_BODY: {
-    height: '80%',
-    width: '100%',
-    backgroundColor: COLOR.PALETTE.white,
-    padding: 20,
-    paddingBottom: 0,
     position: 'absolute',
-    bottom: 0,
-    elevation: 5,
-    borderTopStartRadius: 50,
-    borderTopEndRadius: 50,
-    shadowColor: COLOR.PALETTE.black,
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2
-  },
-  LOGO_MODAL: {
-    width: 34,
-    height: 35,
-    alignSelf: 'center',
-  },
-  FIRST_TITLE_MODAL: {
-    flexDirection: 'row',
-    marginTop: 10,
-    alignSelf: 'center',
-  },
-  COLOR_PRIMARY: {
-    color: COLOR.PALETTE.primary
-  },
-  FORM_CONTAINER: {
-    marginTop: 20,
-    flex: 1
-  },
-  FORGOT_PASSWORD_LINK: {
-    color: COLOR.PALETTE.primary,
-    marginTop: 10,
-    fontSize: 14
-  },
-  FORGOT_PASSWORD_TEXT: {
-    fontSize: 12,
-    marginTop: 15,
-    marginBottom: 20
-  },
-  codeFieldRoot: {
-    marginTop: 20,
-    width: 230,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    borderWidth: 1,
-    borderRadius: 90,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderColor: '#E9E9E9',
-    shadowColor: COLOR.PALETTE.black,
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 2,
-    elevation: 1,
-    backgroundColor: COLOR.PALETTE.white
-  },
-  cellRoot: {
-    width: 30,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 2
-  },
-  cellText: {
-    color: '#000',
-    fontSize: 34,
-    textAlign: 'center',
-  },
-  focusCell: {
-    borderBottomColor: '#000000',
-    borderBottomWidth: 2
-  },
-  SOCIAL_BUTTON_TEXT: {
-    color: COLOR.PALETTE.primary,
-    marginTop: 15,
-    fontSize: 14
-  },
-  CANCEL_CONFIRM_BUTTON_CONTAINER: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 'auto',
-    marginBottom: 50
-  },
-  CODE_INPUT_TEXT: {
-    alignSelf: 'center',
-    fontFamily: 'Montserrat-Regular',
-    fontSize: 14,
-    marginTop: 40,
-    textAlign: 'center',
+    right: 0,
+    top: 0,
+    zIndex: 9999
   },
   BUTTONS_CONTAINER: {
     flexDirection: 'row',
-    marginTop: 20,
-    marginHorizontal: 15
+    marginHorizontal: 15,
+    marginTop: 20
   },
   BUTTON_OVERWRITE: {
     minHeight: 32,
@@ -121,82 +23,180 @@ export default StyleSheet.create({
   BUTTON_OVERWRITE_TEXT: {
     fontSize: 12
   },
-  SEPARATOR: {
-    height: 1,
-    backgroundColor: '#EEEDED',
-    marginVertical: 7
-  },
-  SUBTITLE_PRIMARY: {
-    fontSize: 14,
-    color: COLOR.PALETTE.black,
-    fontFamily: TYPOGRAPHY.primaryBold,
-    marginRight: 'auto',
+  CANCEL_CONFIRM_BUTTON_CONTAINER: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 50,
+    marginTop: 'auto'
   },
   CARD_CONTAINER: {
-    margin: 15,
+    backgroundColor: COLOR.PALETTE.white,
     borderRadius: 10,
-    shadowOffset: { width: 1, height: 1 },
-    shadowColor: COLOR.PALETTE.black,
-    shadowOpacity: 0.3,
     elevation: 3,
+    margin: 15,
     padding: 10,
-    backgroundColor: COLOR.PALETTE.white
+    shadowColor: COLOR.PALETTE.black,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.3
   },
-  FINPLAN_IMAGE_CONTAINER: {
-    width: 60,
-    height: 60,
-    borderRadius: 30
+  CODE_INPUT_TEXT: {
+    alignSelf: 'center',
+    fontFamily: 'Montserrat-Regular',
+    fontSize: 14,
+    marginTop: 40,
+    textAlign: 'center',
+  },
+  COLOR_PRIMARY: {
+    color: COLOR.PALETTE.primary
   },
   FINPLAN_CONTENT_CONTAINER: {
-    width: 60,
-    height: 60,
+    alignItems: 'center',
     backgroundColor: COLOR.PALETTE.primary,
     borderRadius: 30,
     borderWidth: 1,
-    alignItems: 'center',
+    height: 60,
     justifyContent: 'center',
+    width: 60,
   },
-  IMAGE_CONTENT_CONTAINER: {
-    width: 50,
-    height: 50,
-    backgroundColor: COLOR.PALETTE.white,
-    borderRadius: 25,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: COLOR.PALETTE.lightGrey
-  },
-  IMAGE_CONTAINER_C: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: COLOR.PALETTE.white,
-    alignItems: 'center',
-    justifyContent: 'center',
+  FINPLAN_IMAGE_CONTAINER: {
+    borderRadius: 30,
+    height: 60,
+    width: 60
   },
   FINPLAN_NAME: {
-    fontSize: 16,
     color: COLOR.PALETTE.black,
-    fontFamily: TYPOGRAPHY.primaryBold,
+    fontFamily: TYPOGRAPHY.primary,
+    fontSize: 16,
     width: 200
   },
   FINPLAN_SUBTITLE: {
-    fontSize: 14,
     color: COLOR.PALETTE.black,
-    width: 200,
-    marginVertical: 6
+    fontSize: 14,
+    marginVertical: 6,
+    width: 200
   },
-  TRANSACTION_IMAGE_CONTAINER: {
-    width: 50,
+  FIRST_TITLE_MODAL: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    marginTop: 10,
+  },
+  FORGOT_PASSWORD_LINK: {
+    color: COLOR.PALETTE.primary,
+    fontSize: 14,
+    marginTop: 10
+  },
+  FORGOT_PASSWORD_TEXT: {
+    fontSize: 12,
+    marginBottom: 20,
+    marginTop: 15
+  },
+  FORM_CONTAINER: {
+    flex: 1,
+    marginTop: 20
+  },
+  IMAGE_CONTAINER_C: {
+    alignItems: 'center',
+    backgroundColor: COLOR.PALETTE.white,
+    borderRadius: 24,
+    height: 48,
+    justifyContent: 'center',
+    width: 48,
+  },
+  IMAGE_CONTENT_CONTAINER: {
+    alignItems: 'center',
+    backgroundColor: COLOR.PALETTE.white,
+    borderColor: COLOR.PALETTE.lightGrey,
+    borderRadius: 25,
+    borderWidth: 1,
     height: 50,
-    borderRadius: 25
+    justifyContent: 'center',
+    width: 50
+  },
+  LOGO_MODAL: {
+    alignSelf: 'center',
+    height: 35,
+    width: 34,
+  },
+  MODAL_BODY: {
+    backgroundColor: COLOR.PALETTE.white,
+    borderTopEndRadius: 50,
+    borderTopStartRadius: 50,
+    bottom: 0,
+    elevation: 5,
+    height: '80%',
+    padding: 20,
+    paddingBottom: 0,
+    position: 'absolute',
+    shadowColor: COLOR.PALETTE.black,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    width: '100%'
+  },
+  ROOT: {
+    backgroundColor: COLOR.PALETTE.white
+  },
+  SEPARATOR: {
+    backgroundColor: COLOR.PALETTE.red,
+    height: 1,
+    marginVertical: 7
+  },
+  SOCIAL_BUTTON_TEXT: {
+    color: COLOR.PALETTE.primary,
+    fontSize: 14,
+    marginTop: 15
+  },
+  SUBTITLE_PRIMARY: {
+    color: COLOR.PALETTE.black,
+    fontFamily: TYPOGRAPHY.primary,
+    fontSize: 14,
+    marginRight: 'auto',
   },
   TRANSACTION_CONTENT_CONTAINER: {
-    width: 50,
-    height: 50,
+    alignItems: 'center',
     backgroundColor: COLOR.PALETTE.primary,
     borderRadius: 25,
+    height: 50,
+    justifyContent: 'center',
+    width: 50
+  },
+  TRANSACTION_IMAGE_CONTAINER: {
+    borderRadius: 25,
+    height: 50,
+    width: 50
+  },
+  cellRoot: {
     alignItems: 'center',
-    justifyContent: 'center'
+    borderBottomColor: COLOR.PALETTE.red,
+    borderBottomWidth: 2,
+    height: 40,
+    justifyContent: 'center',
+    width: 30
+  },
+  cellText: {
+    color: COLOR.PALETTE.pureblack,
+    fontSize: 34,
+    textAlign: 'center',
+  },
+  codeFieldRoot: {
+    backgroundColor: COLOR.PALETTE.white,
+    borderColor: COLOR.PALETTE.red,
+    borderRadius: 90,
+    borderWidth: 1,
+    elevation: 1,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    shadowColor: COLOR.PALETTE.black,
+    shadowOffset: { width: 1, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    width: 230
+  },
+  focusCell: {
+    borderBottomColor: COLOR.PALETTE.pureblack,
+    borderBottomWidth: 2
   },
 })

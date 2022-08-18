@@ -814,18 +814,16 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				setStep(ProfileType.first_step)
 				break;
 			case 'pic_username':
-				// setupConsumer() // TODO: uncomment 
+				setupConsumer() 
 				break;
 			case 'name':
-				// setupConsumerDetail() // TODO: uncomment
+				setupConsumerDetail() 
 				break;
 			case 'pic_bname':
-				setStep('business_type') // TODO: remove
-				// setupMerchant() // TODO: uncomment
+				setupMerchant() 
 				break;
 			case 'business_type':
-				// setupMerchantDetail() // TODO: uncomment
-				setStep('business_exec') // TODO: remove
+				setupMerchantDetail() 
 				break;
 			case 'business_exec':
 				setStep('business_data')
@@ -834,7 +832,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				setStep('business_addresss')
 				break;
 			case 'business_addresss':
-				// setupMerchantDetailComplete() // TODO: uncomment
+				setupMerchantDetailComplete() 
 				break;
 
 		}

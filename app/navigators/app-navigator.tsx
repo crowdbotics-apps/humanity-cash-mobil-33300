@@ -37,6 +37,7 @@ import { WhereSpendScreen } from "../screens/where-spend/where-spend-screen";
 import { CashierTransactionScreen } from "../screens/cashier-transaction/cashier-transaction-screen";
 import { MakeReportScreen } from "../screens/make-report/make-report-screen";
 import { MyTransactionsScreen } from "../screens/my-transactions/my-transactions-screen";
+import { CashOutScreen } from "../screens/cash-out/cash-out-screen" 
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -72,6 +73,7 @@ export type NavigatorParamList = {
   makeReport: any
   signupProfile: any
   myTransactions: any
+  cashOut: any
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -88,7 +90,8 @@ const AppStackDrawer = () => {
           width: METRICS.screenWidth * 0.9,
         },
       }}
-      initialRouteName="splash"
+      // initialRouteName="splash"
+      initialRouteName="myTransactions" // TODO: remove
       drawerContent={(props) => <DrawerScreen {...props} />}
     >
       <Drawer.Screen name="splash" component={SplashScreen} />
@@ -111,6 +114,7 @@ const AppStackDrawer = () => {
       <Drawer.Screen name="makeReport" component={MakeReportScreen} />
       <Drawer.Screen name="cashierTransaction" component={CashierTransactionScreen} />
       <Drawer.Screen name="myTransactions" component={MyTransactionsScreen} />
+      <Drawer.Screen name="cashOut" component={CashOutScreen} />
       {/* <Drawer.Screen name="drawer" component={DrawerScreen} /> */}
 
     </Drawer.Navigator>

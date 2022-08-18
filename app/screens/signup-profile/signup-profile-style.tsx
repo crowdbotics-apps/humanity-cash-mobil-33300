@@ -230,7 +230,7 @@ export default StyleSheet.create({
   },
   MODAL_CONTENT: {
     alignItems: 'center',
-    backgroundColor: '#F8FAF6',
+    backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 10,
     elevation: 5,
     height: 230,
@@ -385,9 +385,9 @@ export default StyleSheet.create({
   SUBMIT_BUTTON_DISABLED: {
     // width: METRICS.screenWidth * 0.95,
     // height: 55,
+    backgroundColor: `${COLOR.PALETTE.green}40`,
     bottom: 5,
     position: 'absolute',
-    backgroundColor: `${COLOR.PALETTE.green}40`,
     // justifyContent: 'center',
     // alignSelf: 'center',
     // borderRadius: 27.5,

@@ -8,7 +8,7 @@ export default StyleSheet.create({
     },
     BOTTON_MENU: {
         alignSelf: 'flex-end',
-        backgroundColor: 'transparent',
+        backgroundColor: COLOR.PALETTE.transparent,
         bottom: -1,
         height: METRICS.screenWidth / 4,
         position: 'absolute',

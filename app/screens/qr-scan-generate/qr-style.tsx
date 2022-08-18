@@ -16,7 +16,7 @@ export default StyleSheet.create({
 		fontSize: 16
 	},
 	BUTTON_STYLE: { 
-    backgroundColor: 'transparent', 
+    backgroundColor: COLOR.PALETTE.transparent, 
     borderColor: COLOR.PALETTE.green, 
     borderWidth: 1,
   },
@@ -99,12 +99,12 @@ export default StyleSheet.create({
   },
 	MODAL_CONTAINER: {
     alignItems: 'center',
-    backgroundColor: '#F8FAF6',
+    backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 20,
     elevation: 2,
     height: 380,
     justifyContent: 'space-between',
-    shadowColor: 'black',
+    shadowColor: COLOR.PALETTE.black,
     shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
@@ -175,18 +175,13 @@ export default StyleSheet.create({
     height: 60,
     width: 60
   },
-
   USER_IMAGE_CONTAINER: {
     alignItems: 'center',
-    backgroundColor: '#F8FAF6',
+    backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 35,
     bottom: 35,
     height: 70,
     justifyContent: 'center',
     width: 70
   },
-
-
-
-
 })

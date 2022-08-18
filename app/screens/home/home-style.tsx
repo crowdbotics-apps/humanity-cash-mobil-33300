@@ -129,7 +129,7 @@ export default StyleSheet.create({
   },
   MODAL_CONTAINER: {
     alignItems: 'center',
-    backgroundColor: '#F8FAF6',
+    backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 10,
     height: 330,
     width: METRICS.screenWidth * 0.80,
