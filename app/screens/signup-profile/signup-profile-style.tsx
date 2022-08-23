@@ -169,9 +169,21 @@ export default StyleSheet.create({
     marginTop: -45,
     width: 90
   },
+  INPUT_LABEL_BOTTON_STYLE_CONTAINER: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+    width: METRICS.screenWidth * 0.95
+  },
   INPUT_LABEL_ERROR: {
     color: COLOR.PALETTE.pink,
     fontSize: 10,
+  },
+  INPUT_LABEL_LINK_STYLE: {
+    color: COLOR.PALETTE.orange,
+    fontSize: 10,
+    fontStyle: 'italic',
   },
   INPUT_LABEL_STYLE: {
     color: COLOR.PALETTE.black,
@@ -219,6 +231,17 @@ export default StyleSheet.create({
     height: 1,
     marginVertical: 10,
     width: METRICS.screenWidth * 0.95
+  },
+  MAP: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'flex-end',
+    width: METRICS.screenWidth,
+  },
+  MAPS_CONTAINER: {
+    backgroundColor: COLOR.PALETTE.white,
+    flex: 1,
+    marginTop: 50,
   },
   MODAL_BUTTON: {
     alignSelf: 'center',
@@ -289,8 +312,6 @@ export default StyleSheet.create({
   ROOT_CONTAINER: {
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
-    // height: METRICS.screenHeight,
-    // justifyContent: 'space-between',
   },
   ROOT_MODAL: {
     alignItems: 'center',

@@ -16,10 +16,9 @@ import { IMAGES, METRICS } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
 import { notifyMessage } from "../../utils/helpers"
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import MapView, { Marker } from 'react-native-maps'
+import Geolocation from '@react-native-community/geolocation';
 
-// const steps_user = ['pic_username', 'name']
-// const steps_business = ['pic_bname', 'business_type', 'business_exec', 'business_data', 'business_addresss']
 const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
 const profileTypes = [
 	{
@@ -68,6 +67,19 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 
 	const [RandonPic, setRandonPic] = useState(Math.round(Math.random() * 3))
 
+	// map
+	const [ShowMapInputModal, setShowMapInputModal] = useState(false)
+	const [MapInputAddress, setMapInputAddress] = useState(1)
+	const [MapLocation, setMapLocation] = useState({ lat: null, lng: null })
+	const [Region, setRegion] = useState({
+		latitude: 37.78825,
+		longitude: -122.4324,
+		latitudeDelta: 0.015,
+		longitudeDelta: 0.0121,
+	})
+	const [Latitud, setLatitud] = useState(null)
+	const [Longitud, setLongitud] = useState(null)
+
 	// personal
 	const [Username, setUsername] = useState('')
 	const [imageSource, setImageSource] = React.useState<any>(null);
@@ -89,7 +101,9 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	const [BusinessRegName, setBusinessRegName] = React.useState('');
 	const [BusinessIndustryType, setBusinessIndustryType] = React.useState('');
 	const [SelectIndustryOpen, setSelectIndustryOpen] = useState(false)
-
+	const [FacebookLink, setFacebookLink] = React.useState('');
+	const [InstagramLink, setInstagramLink] = React.useState('');
+	const [TwitterLink, setTwitterLink] = React.useState('');
 
 	const [IndentifierType, setIndentifierType] = useState('')
 	const [EmployerId, setEmployerId] = React.useState('');
@@ -105,6 +119,8 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	const [SelectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
+
+
 
 	function selectImage(type: string) {
 		const options: any = {
@@ -508,7 +524,39 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				))}
 			</View>
 
-
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>INSTAGRAM LINK</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setInstagramLink(t)}
+					value={InstagramLink}
+					placeholder={'Instagram Link'}
+				/>
+			</View>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>FACEBOOK LINK</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setFacebookLink(t)}
+					value={FacebookLink}
+					placeholder={'Facebook Link'}
+				/>
+			</View>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>TWITTER LINK</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setTwitterLink(t)}
+					value={TwitterLink}
+					placeholder={'Twitter Link'}
+				/>
+			</View>
 		</View>
 	)
 	const renderbusinessExec = () => (
@@ -624,6 +672,11 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					placeholder={'Street number, street name'}
 				/>
 			</View>
+			<TouchableOpacity onPress={() => [setShowMapInputModal(true), setMapInputAddress(1)]} style={styles.INPUT_LABEL_BOTTON_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_LINK_STYLE}>SET ON MAP</Text>
+			</TouchableOpacity>
+
+
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 2</Text>
 			</View>
@@ -635,6 +688,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					placeholder={'Street number, street name'}
 				/>
 			</View>
+			<TouchableOpacity onPress={() => [setShowMapInputModal(true), setMapInputAddress(2)]} style={styles.INPUT_LABEL_BOTTON_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_LINK_STYLE}>SET ON MAP</Text>
+			</TouchableOpacity>
 
 			<View style={styles.SELECTS_CONTAINER}>
 				<View style={styles.CONTAINER}>
@@ -719,6 +775,56 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		</View>
 	)
 
+	const mapInputModal = () => (
+		<Modal visible={ShowMapInputModal}>
+			<View style={styles.MAPS_CONTAINER}>
+				{MapInputAddress === 1
+					? <View style={styles.INPUT_STYLE_CONTAINER}>
+						<TextInput
+							style={styles.INPUT_STYLE}
+							onChangeText={t => setAddress1(t)}
+							value={Address1}
+							placeholder={'Street number, street name'}
+						/>
+					</View>
+					: <View style={styles.INPUT_STYLE_CONTAINER}>
+						<TextInput
+							style={styles.INPUT_STYLE}
+							onChangeText={t => setAddress2(t)}
+							value={Address2}
+							placeholder={'Street number, street name'}
+						/>
+					</View>
+				}
+				<Button
+					onPress={() => setShowMapInputModal(false)}
+					buttonLabel={'Confirm Address'}
+					buttonStyle={[styles.SUBMIT_BUTTON, { marginTop: 20 }]}
+				/>
+				<MapView
+					// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+					style={styles.MAP}
+					showsUserLocation
+					loadingEnabled
+					zoomEnabled
+					zoomControlEnabled
+					initialRegion={Region}
+				>
+						<Marker 
+						draggable
+						onDragEnd={e => {
+							setLatitud(e?.nativeEvent?.coordinate?.latitude)
+							setLongitud(e?.nativeEvent?.coordinate?.longitude)
+							MapInputAddress === 1
+								? setAddress1(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)
+								:setAddress2(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)
+						}}
+						coordinate={{ latitude: Latitud, longitude: Longitud }}
+						/>
+				</MapView>
+			</View>
+		</Modal>
+	)
 	const confirmLogoutModal = () => (
 		<Modal visible={ShowConfirmLogoutModal} transparent>
 			<TouchableWithoutFeedback onPress={() => setShowConfirmLogoutModal(false)}>
@@ -814,16 +920,18 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				setStep(ProfileType.first_step)
 				break;
 			case 'pic_username':
-				setupConsumer() 
+				setupConsumer()
 				break;
 			case 'name':
-				setupConsumerDetail() 
+				setupConsumerDetail()
 				break;
 			case 'pic_bname':
-				setupMerchant() 
+				// setupMerchant() // TODO: uncomment 
+				setStep('business_type') // TODO: comment
 				break;
 			case 'business_type':
-				setupMerchantDetail() 
+				// setupMerchantDetail() // TODO: uncomment 
+				setStep('business_exec') // TODO: comment
 				break;
 			case 'business_exec':
 				setStep('business_data')
@@ -832,7 +940,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				setStep('business_addresss')
 				break;
 			case 'business_addresss':
-				setupMerchantDetailComplete() 
+				setupMerchantDetailComplete()
 				break;
 
 		}
@@ -840,6 +948,22 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 	useEffect(() => {
 		loginStore.setRandomProfilePictureIndex(RandonPic)
+
+		Geolocation.getCurrentPosition(
+			({ coords: { latitude, longitude } }) => {
+				const location = {
+					latitude,
+					longitude,
+					latitudeDelta: 0.1,
+					longitudeDelta: 0.09,
+				}
+				setRegion(location)
+				setLatitud(location.latitude)
+				setLongitud(location.longitude)
+			},
+			console.warn,
+			{ enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
+		)
 
 		const data = loginStore.getSetupData
 
@@ -878,6 +1002,24 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		fetchState()
 	}, [])
 
+	// useEffect(() => {
+	// 	Geolocation.getCurrentPosition(
+	// 		({ coords: { latitude, longitude } }) => {
+	// 			const location = {
+	// 				latitude,
+	// 				longitude,
+	// 				latitudeDelta: 0.1,
+	// 				longitudeDelta: 0.09,
+	// 			}
+	// 			setRegion(location)
+	// 			setLatitud(location.latitude)
+	// 			setLongitud(location.longitude)
+	// 		},
+	// 		console.warn,
+	// 		{ enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
+	// 	)
+	// })
+
 	return (
 		<Screen
 			showHeader
@@ -899,7 +1041,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					{renderStep()}
 				</View>
 			</View>
-			
+			{mapInputModal()}
 			{confirmLogoutModal()}
 			{thankyouModal()}
 			<Button
@@ -916,6 +1058,4 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			/>
 		</Screen>
 	)
-
-
 })

@@ -91,7 +91,7 @@ const AppStackDrawer = () => {
         },
       }}
       // initialRouteName="splash"
-      initialRouteName="myTransactions" // TODO: remove
+      initialRouteName="whereSpend" // TODO: remove
       drawerContent={(props) => <DrawerScreen {...props} />}
     >
       <Drawer.Screen name="splash" component={SplashScreen} />

@@ -111,7 +111,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },
   INPUT_STYLE: {
@@ -317,6 +317,50 @@ export default StyleSheet.create({
     height: 55,
     justifyContent: 'center',
     width: METRICS.screenWidth * 0.70
+  },
+  SELECT_ICON: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 55,
+    justifyContent: 'space-between',
+    width: METRICS.screenWidth * 0.95,
+  },
+  SELECT_INPUT_STYLE_CONTAINER: {
+    alignSelf: 'center',
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    borderRadius: 3,
+    height: 55,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.95,
+  },
+  SELECT_INPUT_STYLE_CONTAINER_OPEN: {
+    alignSelf: 'center',
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    borderColor: COLOR.PALETTE.orange,
+    borderRadius: 3,
+    borderWidth: 0.8,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.95,
+  },
+  SELECT_LABEL: {
+    color: COLOR.PALETTE.BLACK,
+    fontSize: 16,
+    marginLeft: 20
+  },
+  SMALL_INPUT_STYLE: {
+    alignSelf: 'center',
+    height: 55,
+    width: METRICS.screenWidth * 0.40,
+  },
+  SMALL_INPUT_STYLE_CONTAINER: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    borderRadius: 3,
+    flexDirection: 'row',
+    height: 55,
+    justifyContent: 'center',
+    width: METRICS.screenWidth * 0.45
   },
   STEP_CONTAINER: {},
   STEP_SUB_TITLE: {
