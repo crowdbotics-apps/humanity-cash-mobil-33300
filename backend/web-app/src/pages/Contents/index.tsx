@@ -4,8 +4,15 @@ import {Col, Row} from "react-bootstrap";
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin from "@fullcalendar/interaction" // needed for dayClick
-import './Content.css';
+
 import moment from 'moment'
+import '../../assets/fakescroll/fakescroll.css'
+import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
+import './Content.css';
+import {ContentEventCard} from "./components";
+import {event_list} from "./data";
+
+
 
 
 
@@ -52,25 +59,34 @@ const ContentsPage: React.FC = observer(() => {
       </>
     )
   }
+  const onFakeScrollChange = (scrollRatio:any)=>{
+    // console.log("scroll ratio", scrollRatio)
+  }
 
 
   return (
     <Row className={'main-row'}>
 
-      <Col className={'col-9'}>
+      <Col className={'col-9 calendar-content'}>
 
-        <div id='layout' >
           <div className={'calendar-left-column'}>
             <FullCalendar
+
               headerToolbar={{
+
                 // start: 'title', // will normally be on the left. if RTL, will be on the right
                 end:'',
                 center: 'title',
-                start: 'prev, title,next' // will normally be on the right. if RTL, will be on the left
+                // start: 'prev, title,next' // will normally be on the right. if RTL, will be on the left
               }}
-              height={"750px"}
               eventColor={"transparent"}
               eventContent={renderEventContent}
+
+              dayHeaderFormat={{
+                weekday:'long'
+              }}
+
+
               plugins={[ dayGridPlugin ]}
               eventClick={(arg)=>{
                 handleDateClick(arg)
@@ -84,12 +100,25 @@ const ContentsPage: React.FC = observer(() => {
               selectable={true}
             />
           </div>
-        </div>
       </Col>
 
-      <Col className={'col-3'}>
+      <Col className={'col-3 '} style={{zIndex:0, marginLeft:-20}}>
         <div className={'calendar-right-column'}>
             <p className={'text-blue all-in-month-title'}>All in April 2022</p>
+          <div  className={'calendar-right-events'} id={"right-column-events"}>
+            {/*<h1>test</h1>*/}
+          </div>
+
+          <FakeScroll className="scroll-container" track={false} onChange={onFakeScrollChange}>
+            <hr />
+
+            <ContentEventCard event={event_list[0].events[0]}/>
+            <ContentEventCard event={event_list[0].events[1]}/>
+
+
+          </FakeScroll>
+
+
         </div>
       </Col>
     </Row>

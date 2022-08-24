@@ -1,0 +1,35 @@
+
+.event-card{
+ border-radius: 10px;
+    margin-top: 50px;
+}
+
+.event-card-title{
+    margin:10px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.event-card-description{
+    font-size: 14px;
+    margin: 10px;
+}
+.event-card-img{
+    width: 100%;
+    border-radius: 10px;
+}
+
+.event-card-footer{
+    margin: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    color:var(--dark)
+}
+
+.event-card-footer-icon{
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+}
+
+

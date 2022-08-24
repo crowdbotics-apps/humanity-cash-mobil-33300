@@ -136,8 +136,22 @@ const ConfirmIcons = () => (
     </svg>
 )
 
+const ClockIcon = ()=>(
+ <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.6673 8.16667C14.6673 11.8467 11.6807 14.8333 8.00065 14.8333C4.32065 14.8333 1.33398 11.8467 1.33398 8.16667C1.33398 4.48667 4.32065 1.5 8.00065 1.5C11.6807 1.5 14.6673 4.48667 14.6673 8.16667Z" stroke="#3B88B6" stroke-width="1.04167" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10.4739 10.2866L8.40724 9.05331C8.04724 8.83998 7.75391 8.32664 7.75391 7.90664V5.17331" stroke="#3B88B6" stroke-width="1.04167" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+)
 
+const LocationIcon = ()=>(
+  <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.99992 9.11996C9.14867 9.11996 10.0799 8.18871 10.0799 7.03996C10.0799 5.89121 9.14867 4.95996 7.99992 4.95996C6.85117 4.95996 5.91992 5.89121 5.91992 7.03996C5.91992 8.18871 6.85117 9.11996 7.99992 9.11996Z" stroke="#3B88B6" stroke-width="1.04167"/>
+    <path d="M2.41379 5.82662C3.72712 0.0532891 12.2805 0.0599559 13.5871 5.83329C14.3538 9.21996 12.2471 12.0866 10.4005 13.86C9.06046 15.1533 6.94046 15.1533 5.59379 13.86C3.75379 12.0866 1.64712 9.21329 2.41379 5.82662Z" stroke="#3B88B6" stroke-width="1.04167"/>
+  </svg>
+)
 export {
+   ClockIcon,
+  LocationIcon,
     ShapeIcon,
     NoteIcon,
     DocumentIcon,

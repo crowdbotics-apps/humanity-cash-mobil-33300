@@ -1,9 +1,19 @@
-@import "../../colors.css";
+@import "../../theme.css";
+
+/* CALENDAR */
+
+th.fc-col-header-cell.fc-day {
+    border: 0px solid transparent !important;
+}
+
 .fc .fc-daygrid-day-frame {
     position: absolute;
 }
 .fc-daygrid-day-top{
     height: 40px;
+}
+.fc-scroller{
+    overflow: unset !important;
 }
 
 .fc-daygrid-day-events{
@@ -74,26 +84,43 @@
     font-size: 20px;
     margin: 10px;
 }
+.fc-col-header-cell-cushion {
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--gray);
+    font-size:15px;
+}
+
+/* END CALENDAR */
+.calendar-content{
+    background: var(--background);
+    padding-left: 0px;
+
+}
 .calendar-left-column{
     background: var(--white);
+    border: 1px solid var(--orange);
+    padding:20px;
+    border-radius: 10px;
+    z-index: 1 !important;
 }
 
 .calendar-right-column{
     background: var(--background);
-    height: 100%;
-    width: 100%;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
-    margin-left: -20px;
+    /*margin-left: -30px;*/
     padding-left: 25px;
-    padding-top:25px
-}
-.main-row{
-    margin-bottom: 50px;
+    padding-top:25px;
 }
 
-.text-blue{
-    color: var(--blue)
+.fc-theme-standard .fc-scrollgrid {
+    border: 1px solid #ddd;
+    border: 0px;
+}
+
+.main-row{
+    margin-bottom: 50px;
 }
 
 .all-in-month-title{
@@ -102,3 +129,38 @@
     font-size: 18px;
     line-height: 17px;
 }
+
+/* scrollbar */
+
+.fakeScroll {
+    overflow: visible !important;
+}
+
+.scroll-container {
+    position: relative;
+    margin-right: 1em;
+    height: 50vh;
+
+    box-sizing: border-box;
+}
+
+.fakeScroll__track {
+    background: none;
+    z-index: 1;
+    padding: 0 1px;
+    border: 1px dotted silver;
+    transition: 0.1s;
+}
+
+.fakeScroll__bar {
+    background: var(--blue);
+}
+
+.fakeScroll__bar:hover {
+    background: var(--blue);
+}
+
+.fakeScroll--grabbed .fakeScroll__bar {
+    background: var(--blue);
+}
+

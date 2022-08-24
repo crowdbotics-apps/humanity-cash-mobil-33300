@@ -1,0 +1,17 @@
+@import "colors.css";
+
+.text-green{
+    color: var(--green);
+}
+
+.text-blue{
+    color: var(--blue)
+}
+
+.border-green{
+    border:1px solid var(--green)
+}
+
+.border-blue{
+    border: 1px solid  var(--blue);
+}
