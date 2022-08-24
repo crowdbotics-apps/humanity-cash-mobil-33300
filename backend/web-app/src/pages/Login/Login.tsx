@@ -21,6 +21,7 @@ import { Eyes } from '../../components/icons'
 export const Login: React.FC = observer(() => {
     const navigate = useNavigate();
     const rootStore = useStores()
+    const [ShowPassword, setShowPassword] = useState(false)
 
     const [Loading, setLoading] = useState<boolean>(false)
 
@@ -59,152 +60,160 @@ export const Login: React.FC = observer(() => {
 
     const FormContent: React.FC<Props> = ({ children }) => (
 
-        <Container>
-            <Row className="justify-content-md-center">
-                <Col xs md="6" className='background-paper'>
-                    <Col xs md="12">
-                        {children}
-                    </Col>
-                </Col>
-            </Row >
-        </Container>
+      <Container>
+          <Row className="justify-content-md-center">
+              <Col xs md="6" className='background-paper'>
+                  <Col xs md="12">
+                      {children}
+                  </Col>
+              </Col>
+          </Row >
+      </Container>
     )
 
 
     const LoginContent = () => (
-        <FormContent>
-            <Form>
-                <Form.Group >
-                    <h2 className='title-start-form-primary '>Log In</h2>
-                </Form.Group>
-                <Form.Group >
-                    <h4 className='title-start-form-secondary mb-3'>Welcome back</h4>
-                </Form.Group>
-                <Form.Group className="mb-3" >
-                    <Form.Label className='form-label'>EMAIL ADDRESS OR USER NAME</Form.Label>
-                    <Form.Control className='input-large' name="username" onChange={e => setEmail(e.target.value)} />
-                </Form.Group>
-                <Form.Group className="mb-3" >
-                    <Form.Label className='form-label'>CONFIRM PASSWORD</Form.Label>
-                    <InputGroup className="mb-3">
-                        <Form.Control
-                            type="password" name="password" className='input-large' onChange={e => setPassword(e.target.value)}
-                        />
-                        <Button variant="outline-secondary" id="button-addon2" className='eyes-buttons'>
-                            <Eyes />
-                        </Button>
-                    </InputGroup>
+      <FormContent>
+          <Form>
+              <Form.Group >
+                  <h2 className='title-start-form-primary '>Log In</h2>
+              </Form.Group>
+              <Form.Group >
+                  <h4 className='title-start-form-secondary mb-3'>Welcome back</h4>
+              </Form.Group>
+              <Form.Group className="mb-3" >
+                  <Form.Label className='form-label'>EMAIL ADDRESS OR USER NAME</Form.Label>
+                  <Form.Control className='input-large' name="username" onChange={e => setEmail(e.target.value)} />
+              </Form.Group>
+              <Form.Group className="mb-3" >
+                  <Form.Label className='form-label'>CONFIRM PASSWORD</Form.Label>
 
-                    {/*
+
+                  <InputGroup className="mb-3">
+                      <Form.Control
+                        type={ShowPassword?"text":"password"} name="password" className='input-large'
+                        onChange={event => ()=>{
+                            console.log("show password", event)
+                        }}
+                        // onChange={e => setPassword(e.target.value)}
+                      />
+                      <Button variant="outline-secondary" id="button-addon2" onClick={event => {
+                          setShowPassword(prevState => !prevState)
+                      }} className='eyes-buttons'>
+                          <Eyes />
+                      </Button>
+                  </InputGroup>
+
+                  {/*
                                     < /> */}
-                </Form.Group>
-                <Form.Group className="mb-3" >
-                    <div className="forgot-password">
-                        <a href="#" onClick={() => setContent('forgot')} className='link-primary'>Forgot password?</a>
-                    </div>
+              </Form.Group>
+              <Form.Group className="mb-3" >
+                  <div className="forgot-password">
+                      <a href="#" onClick={() => setContent('forgot')} className='link-primary'>Forgot password?</a>
+                  </div>
 
-                    {/*  */}
-                </Form.Group>
-                <Form.Group
-                    className="mb-3 text-center"
-                    onClick={() => handleSubmit()}
-                >
+                  {/*  */}
+              </Form.Group>
+              <Form.Group
+                className="mb-3 text-center"
+                onClick={() => handleSubmit()}
+              >
 
-                    {Loading && <><Spinner animation="border" variant="light" size="sm" /><span
-                        className={"ms-1"}> Loading...</span></>}
-                    {!Loading &&
+                  {Loading && <><Spinner animation="border" variant="light" size="sm" /><span
+                    className={"ms-1"}> Loading...</span></>}
+                  {!Loading &&
 
-                        <Button variant="primary" className='button-larg' >Log in</Button>
-                    }
+                  <Button variant="primary" className='button-larg' >Log in</Button>
+                  }
 
-                </Form.Group>
-            </Form>
-        </FormContent>
+              </Form.Group>
+          </Form>
+      </FormContent>
 
     )
 
     const ForgotContent = () => (
-        <FormContent>
-            <Form>
-                <Form.Group >
-                    <h2 className='title-start-form-primary '>Forgot password</h2>
-                </Form.Group >
-                <Form.Group >
-                    <h4 className='title-start-form-secondary mb-3'>Input email to recive a password reset link</h4>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label className='form-label'>EMAIL ADDRESS</Form.Label>
-                    <Form.Control className='input-large' type="text" name="username" onChange={e => setEmail(e.target.value)} />
-                </Form.Group>
-                <Form.Group
-                    className="mb-3 text-center"
-                    onClick={() => setContent('reset')}
-                >
-                    {Loading && <><Spinner animation="border" variant="light" size="sm" /><span
-                        className={"ms-1"}> Loading...</span></>}
-                    {!Loading && <Button variant="primary" className='button-larg' >Reset</Button>}
+      <FormContent>
+          <Form>
+              <Form.Group >
+                  <h2 className='title-start-form-primary '>Forgot password</h2>
+              </Form.Group >
+              <Form.Group >
+                  <h4 className='title-start-form-secondary mb-3'>Input email to recive a password reset link</h4>
+              </Form.Group>
+              <Form.Group className="mb-3">
+                  <Form.Label className='form-label'>EMAIL ADDRESS</Form.Label>
+                  <Form.Control className='input-large' type="text" name="username" onChange={e => setEmail(e.target.value)} />
+              </Form.Group>
+              <Form.Group
+                className="mb-3 text-center"
+                onClick={() => setContent('reset')}
+              >
+                  {Loading && <><Spinner animation="border" variant="light" size="sm" /><span
+                    className={"ms-1"}> Loading...</span></>}
+                  {!Loading && <Button variant="primary" className='button-larg' >Reset</Button>}
 
-                </Form.Group>
-            </Form>
-        </FormContent>
+              </Form.Group>
+          </Form>
+      </FormContent>
     )
 
     const ResetContent = () => (
-        <FormContent>
-            <Form>
-                <Form.Group >
-                    <h2 className='title-start-form-primary '>Reset password</h2>
-                </Form.Group>
-                <Form.Group >
-                    <h4 className='title-start-form-secondary mb-3'>Create new password</h4>
-                </Form.Group>
-                <Form.Group className="mb-3" >
-                    <Form.Label className='form-label'>NEW PASSWORD</Form.Label>
-                    <Form.Control className='input-large' type="password" name="password" onChange={e => setPassword(e.target.value)} />
-                </Form.Group>
-                <Form.Group className="mb-3" >
-                    <Form.Label className='form-label'>CONFIRM NEW PASSWORD</Form.Label>
-                    <Form.Control className='input-large' type="password" name="password" onChange={e => setPassword(e.target.value)} />
+      <FormContent>
+          <Form>
+              <Form.Group >
+                  <h2 className='title-start-form-primary '>Reset password</h2>
+              </Form.Group>
+              <Form.Group >
+                  <h4 className='title-start-form-secondary mb-3'>Create new password</h4>
+              </Form.Group>
+              <Form.Group className="mb-3" >
+                  <Form.Label className='form-label'>NEW PASSWORD</Form.Label>
+                  <Form.Control className='input-large' type="password" name="password" onChange={e => setPassword(e.target.value)} />
+              </Form.Group>
+              <Form.Group className="mb-3" >
+                  <Form.Label className='form-label'>CONFIRM NEW PASSWORD</Form.Label>
+                  <Form.Control className='input-large' type="password" name="password" onChange={e => setPassword(e.target.value)} />
 
 
-                </Form.Group>
-                <Form.Group className="mt-5 mb-3">
-                    <Container>
-                        <Row>
-                            <Col> <Button variant="secondary" className='button-larg' >Back</Button></Col>
-                            <Col>  {Loading && <><Spinner animation="border" variant="light" size="sm" /><span
-                                className={"ms-1"}> Loading...</span></>}
-                                {!Loading && <Button variant="primary" className='button-larg' >Reset</Button>}
-                            </Col>
-                        </Row>
-                    </Container>
-                </Form.Group>
+              </Form.Group>
+              <Form.Group className="mt-5 mb-3">
+                  <Container>
+                      <Row>
+                          <Col> <Button variant="secondary" className='button-larg' >Back</Button></Col>
+                          <Col>  {Loading && <><Spinner animation="border" variant="light" size="sm" /><span
+                            className={"ms-1"}> Loading...</span></>}
+                              {!Loading && <Button variant="primary" className='button-larg' >Reset</Button>}
+                          </Col>
+                      </Row>
+                  </Container>
+              </Form.Group>
 
-            </Form>
-        </FormContent>
+          </Form>
+      </FormContent>
     )
 
 
     return (
-        <PageWeb header={false} >
-            <div >
-                <div >
-                    <div>
-                        <img src={logo} alt={"logo"} className={"logo img-fluid"} />
-                    </div>
+      <PageWeb header={false} >
+          <div >
+              <div >
+                  <div>
+                      <img src={logo} alt={"logo"} className={"logo img-fluid"} />
+                  </div>
 
-                    <div >
-                        <div>
-                            <div >
-                                {Content === 'login' && LoginContent()}
-                                {Content === 'forgot' && ForgotContent()}
-                                {Content === 'reset' && ResetContent()}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </PageWeb>
+                  <div >
+                      <div>
+                          <div >
+                              {Content === 'login' && LoginContent()}
+                              {Content === 'forgot' && ForgotContent()}
+                              {Content === 'reset' && ResetContent()}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </PageWeb>
     );
 });
 

@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { RootStore, setupRootStore } from "./models";
 import { RootStoreProvider } from "./models/root-store/root-store-context";
 import TheContainer from "./containers"
+import ContentsPage from "./pages/Contents";
 
 function App() {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
@@ -42,6 +43,7 @@ function App() {
 
   const route = (path: string, title: string, component: any, exact = true) => {
     (title_pag as any)[path as any] = title
+
     return <Route path={path} element={component} />
   }
 
@@ -67,6 +69,7 @@ function App() {
               <Routes>
                 {route(ROUTES.DASHBOARD, "Dashboard", <Dashboard />)}
                 {route(ROUTES.AchTransactions, "AchTransactions", <AchTransactions />)}
+                {route(ROUTES.CONTENTS, "contents", <ContentsPage />)}
                 {route(ROUTES.TRANSACTIONS(":id"), "AchTransactions view", <AchTransactionsDetail />)}
                 {route(ROUTES.SYNTHESIS_EXPLORER(":id"), "Synthesis explorer", <SynthesisExplorer />)}
                 {route('*', "", <NotFound />)}

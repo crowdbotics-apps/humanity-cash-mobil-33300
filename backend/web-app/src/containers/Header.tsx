@@ -10,6 +10,7 @@ const Header = () => {
     useEffect(() => {
         if (location) {
             let path = location.pathname
+            console.log("path jb", path)
             path = path.slice(1)
             setPathLocation(path)
         }

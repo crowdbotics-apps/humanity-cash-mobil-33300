@@ -62,7 +62,7 @@ export const Sidebar: React.FC<PropsSide> = ({ sideBarStatus, sideBarActions }) 
         },
         {
             path: "/content",
-            name: "Content",
+            name: "Calendar - Events",
             icons: <DocumentIcon />,
             style: 'pt-3'
         },
