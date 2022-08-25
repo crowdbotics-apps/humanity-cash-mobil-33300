@@ -149,9 +149,34 @@ const LocationIcon = ()=>(
     <path d="M2.41379 5.82662C3.72712 0.0532891 12.2805 0.0599559 13.5871 5.83329C14.3538 9.21996 12.2471 12.0866 10.4005 13.86C9.06046 15.1533 6.94046 15.1533 5.59379 13.86C3.75379 12.0866 1.64712 9.21329 2.41379 5.82662Z" stroke="#3B88B6" stroke-width="1.04167"/>
   </svg>
 )
+
+const StoriesIcon = ()=>(
+  <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M55 41.8499V11.6749C55 8.67486 52.55 6.44986 49.575 6.69986H49.425C44.175 7.14986 36.2 9.82486 31.75 12.6249L31.325 12.8999C30.6 13.3499 29.4 13.3499 28.675 12.8999L28.05 12.5249C23.6 9.74986 15.65 7.09986 10.4 6.67486C7.425 6.42486 5 8.67486 5 11.6499V41.8499C5 44.2499 6.95 46.4999 9.35 46.7999L10.075 46.8999C15.5 47.6249 23.875 50.3749 28.675 52.9999L28.775 53.0499C29.45 53.4249 30.525 53.4249 31.175 53.0499C35.975 50.3999 44.375 47.6249 49.825 46.8999L50.65 46.7999C53.05 46.4999 55 44.2499 55 41.8499Z" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M30 13.725V51.225" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19.375 21.225H13.75" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21.25 28.725H13.75" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+)
+
+const CalendarIcon = ()=>(
+  <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 5V12.5" stroke="#3B88B6" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 5V12.5" stroke="#3B88B6" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8.75 22.725H51.25" stroke="#3B88B6" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M52.5 21.25V42.5C52.5 50 48.75 55 40 55H20C11.25 55 7.5 50 7.5 42.5V21.25C7.5 13.75 11.25 8.75 20 8.75H40C48.75 8.75 52.5 13.75 52.5 21.25Z" stroke="#3B88B6" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M29.9882 34.25H30.0107" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20.7363 34.25H20.7587" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20.7363 41.75H20.7587" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+)
 export {
    ClockIcon,
+  CalendarIcon,
   LocationIcon,
+  StoriesIcon,
     ShapeIcon,
     NoteIcon,
     DocumentIcon,

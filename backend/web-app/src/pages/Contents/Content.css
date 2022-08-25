@@ -248,3 +248,37 @@ td[role=presentation], th[role=presentation],  th[role=columnheader]{
     background: var(--blue);
 }
 
+/* modal */
+.create-modal-title{
+    font-size: 24px;
+    color: var(--blue);
+}
+.create-modal-subtitle{
+    color: var(--gray);
+    font-size: 18px;
+}
+
+.col-modal-create{
+    border:1px solid var(--blue);
+    border-radius: 20px;
+    height: 200px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.col-modal-create:hover{
+    border:3px solid var(--blue);
+    color: var(--blue-dark) !important;
+}
+
+.col-modal-left{
+    margin-left: 30px;
+}
+.col-modal-right{
+    margin-right: 30px;
+}
+
+

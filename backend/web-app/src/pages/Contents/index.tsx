@@ -4,6 +4,7 @@ import {Button, Col, Row} from "react-bootstrap";
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'
+import Modal from 'react-bootstrap/Modal';
 
 import moment from 'moment'
 import '../../assets/fakescroll/fakescroll.css'
@@ -12,6 +13,7 @@ import './Content.css';
 import {ContentEventCard, HourLine} from "./components";
 import {event_list} from "./data";
 import AdminPanelContainer from "../../containers";
+import {CalendarIcon, StoriesIcon} from "../../components/icons";
 
 
 const ContentsPage: React.FC = observer(() => {
@@ -23,6 +25,10 @@ const ContentsPage: React.FC = observer(() => {
   const [calendarApi, setCalendarApi] = useState(null)
   const [CalendarEvents, setCalendarEvents] = useState([])
   const [RightEvents, setRightEvents] = useState<any[]>([])
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect( () => {
     // @ts-ignore
@@ -110,7 +116,7 @@ const ContentsPage: React.FC = observer(() => {
           <div  style={{marginLeft:15, fontSize:15}}  className={'text-gray'}>STORIES </div>
         </Col>
         <Col className={'col-4'}>
-          <Button variant="primary" size="lg" className={'create-btn'}>
+          <Button variant="primary" size="lg" className={'create-btn'}  onClick={handleShow}>
             Create
           </Button>
         </Col>
@@ -206,6 +212,50 @@ const ContentsPage: React.FC = observer(() => {
           </div>
         </Col>
       </Row>
+
+      <Modal
+        size="lg"
+        show={show}
+        centered
+        onHide={() => setShow(false)}
+        aria-labelledby="calendar-modal-sizes-title"
+      >
+        <Modal.Header closeButton style={{paddingTop:30, paddingLeft:50, paddingRight:50}}>
+          <Modal.Title>
+            <div className={'create-modal-title'}>
+              Create
+            </div>
+            <div className={'create-modal-subtitle text-gray'}>
+              Lorem ipsum dolor sit amet
+            </div>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body >
+          <Row>
+            <Col className={'col-6'}>
+              <div className={'col-modal-create col-modal-left'}>
+                  <div>
+                    <StoriesIcon />
+                  </div>
+                <div  className={'text-blue'} style={{fontSize:34, marginLeft:10, fontWeight:500}}>
+                  Story
+                </div>
+              </div>
+            </Col>
+            <Col className={'col-6'}>
+              <div className={'col-modal-create col-modal-right'}>
+                <div>
+                  <CalendarIcon />
+                </div>
+                <div  className={'text-blue'} style={{fontSize:34, marginLeft:10, fontWeight:500}}>
+                  Event
+                </div>
+              </div>
+            </Col>
+
+          </Row>
+        </Modal.Body>
+      </Modal>
     </AdminPanelContainer>
 
   )
