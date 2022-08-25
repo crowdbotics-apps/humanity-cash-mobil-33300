@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Sidebar } from './Sidebar'
 import { TheNav } from './Nav'
 import Header from './Header'
@@ -9,11 +9,15 @@ import Col from 'react-bootstrap/Col';
 
 type Props = {
     children: React.ReactNode;
+    title:string
 };
 
 
-const TheContainer: React.FC<Props> = ({ children }) => {
-
+const AdminPanelContainer: React.FC<Props> = ({ children, title }) => {
+    useEffect(() => {
+       // @ts-ignore
+        console.log("useffect", children.props)
+    },[])
 
     const [sideBarAction, setSideBarAction] = useState(false);
 
@@ -32,7 +36,7 @@ const TheContainer: React.FC<Props> = ({ children }) => {
                         <Col><div className='line-primary'></div></Col>
                         {/* header */}
                         <Col>
-                            <Header />
+                            <Header title={title} />
                         </Col>
                         {/* main */}
                         <Col>{children}</Col>
@@ -45,4 +49,4 @@ const TheContainer: React.FC<Props> = ({ children }) => {
     );
 }
 
-export default TheContainer;
+export default AdminPanelContainer;

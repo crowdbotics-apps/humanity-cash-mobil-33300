@@ -4,6 +4,7 @@ import './Dashboard.css';
 import { Tab, Tabs, Col } from "react-bootstrap";
 import SimpleTable from '../../components/Table'
 import { dataCompleted } from './constants'
+import AdminPanelContainer from "../../containers";
 
 
 export const Dashboard: React.FC = observer(() => {
@@ -16,7 +17,7 @@ export const Dashboard: React.FC = observer(() => {
 
 
     return (
-
+    <AdminPanelContainer title={'Dashboard'} >
         <Col>
             <div id='layout'>
                 <div id='main' className={`main${LeftOpen ? '' : '-closed'}`}>
@@ -33,6 +34,7 @@ export const Dashboard: React.FC = observer(() => {
                 </div>
             </div>
         </Col>
+    </AdminPanelContainer>
     );
 });
 
