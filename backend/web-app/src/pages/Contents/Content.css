@@ -82,6 +82,9 @@ th.fc-col-header-cell.fc-day {
     width: 14px;
     border-radius: 10px;
 }
+.dot::after{
+    background: white;
+}
 .my-event-overlapped {
     margin-top: 20px;
 }
@@ -161,7 +164,7 @@ th.fc-col-header-cell.fc-day {
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     /*margin-left: -30px;*/
-    padding-left: 25px;
+    padding-left: 0px;
     padding-top:25px;
     height: 100%;
 }
@@ -181,6 +184,7 @@ th.fc-col-header-cell.fc-day {
     font-weight: 500;
     font-size: 18px;
     line-height: 17px;
+    margin-left: 20px;
 }
 
 /* scrollbar */

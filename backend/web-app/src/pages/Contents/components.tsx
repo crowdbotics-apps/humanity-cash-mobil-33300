@@ -9,6 +9,20 @@ type ContentEventCardProps = {
   event: ContentEvent
 }
 
+export  const HourLine = (data: { hour:string })=>{
+  return (
+    <div className={'hour-line'}>
+      <div className={'hour-line-left'} />
+      <div className={'text-gray hour-line-middle'}>
+        {data.hour}
+      </div>
+      <div className={'hour-line-right'} />
+      <div/>
+    </div>
+
+  )
+}
+
 export const ContentEventCard: React.FC<ContentEventCardProps> = observer((props:ContentEventCardProps) => {
   const {event} = props
   const color = (event.eventType === 'story'?'green':'blue')
@@ -27,7 +41,7 @@ export const ContentEventCard: React.FC<ContentEventCardProps> = observer((props
             <ClockIcon />
           </div>
           <div style={{marginLeft:10, width:100}}>
-            {event.date}
+            {event.dateFullName}
           </div>
         </div>
         <div style={{width:'30%', display:"flex", flexDirection:'row'}}>

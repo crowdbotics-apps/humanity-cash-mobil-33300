@@ -9,7 +9,7 @@ import moment from 'moment'
 import '../../assets/fakescroll/fakescroll.css'
 import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
 import './Content.css';
-import {ContentEventCard} from "./components";
+import {ContentEventCard, HourLine} from "./components";
 import {event_list} from "./data";
 
 
@@ -54,12 +54,7 @@ const ContentsPage: React.FC = observer(() => {
   },[])
   const handleDateClick = (arg:any) => { // bind with an arrow function
     console.log("handledateclick", arg)
-    // alert(arg.dateStr)
-    // @ts-ignore
-    calendarApi.next()
 
-    // @ts-ignore
-    setTitle(calendarApi.currentDataManager.data.viewTitle)
 
 
   }
@@ -128,11 +123,9 @@ const ContentsPage: React.FC = observer(() => {
           <div  style={{marginLeft:35}} className={'dot my-event-overlapped-event'} />
           <div  style={{marginLeft:15, fontSize:15}}  className={'text-gray'}>STORIES </div>
         </Col>
-
         <Col className={'col-4'}>
-
           <Button variant="primary" size="lg" className={'create-btn'}>
-           Create
+            Create
           </Button>
         </Col>
 
@@ -141,21 +134,28 @@ const ContentsPage: React.FC = observer(() => {
     )
   }
 
+
+
   const renderDayContent = (value:any)=>{
     console.log("renderDaycontent", value)
     return (
       <div>
-        {value.title}
-        <div>
+        <div className={'text-gray'} style={{fontSize:12, marginLeft:20}}>{value.title}</div>
+
+        <div style={{marginBottom:20}}>
           {value.events.map((data:any)=>{
-            return  <ContentEventCard event={data}/>
+            return (<div>
+              <HourLine hour={data.hour} />
+              <ContentEventCard event={data}/>
+              <HourLine hour={data.hour} />
+            </div>)
           })}
         </div>
       </div>
     )
-     // {value.events.map( (data:any)=>{
-     //  return <ContentEventCard event={data}/>
-     //  })}
+    // {value.events.map( (data:any)=>{
+    //  return <ContentEventCard event={data}/>
+    //  })}
   }
 
 
@@ -196,27 +196,13 @@ const ContentsPage: React.FC = observer(() => {
         </div>
       </Col>
 
-      <Col className={'col-3 '} style={{zIndex:0, marginLeft:-20}}>
+      <Col className={'col-3 '} style={{zIndex:0, marginLeft:-24}}>
         <div className={'calendar-right-column'} >
           <p className={'text-blue all-in-month-title'}>All in {Title}</p>
-          <div  className={'calendar-right-events'} id={"right-column-events"}>
-            {/*<h1>test</h1>*/}
-          </div>
-
           <FakeScroll className="scroll-container" track={false} onChange={onFakeScrollChange}>
-            <hr />
             {RightEvents.map(value => {
               return renderDayContent(value)
             })}
-
-            {/*<ContentEventCard event={event_list[0].events[0]}/>*/}
-            {/*<ContentEventCard event={event_list[0].events[1]}/>*/}
-
-            {/*<ContentEventCard event={event_list[0].events[0]}/>*/}
-            {/*<ContentEventCard event={event_list[0].events[1]}/>*/}
-
-            {/*<ContentEventCard event={event_list[0].events[0]}/>*/}
-            {/*<ContentEventCard event={event_list[0].events[1]}/>*/}
           </FakeScroll>
 
 
