@@ -107,7 +107,20 @@
     width: 14px;
     border-radius: 10px;
 }
-.dot::after{
+
+div.fc-daygrid-day-events > div.fc-daygrid-event-harness > a {
+    -moz-box-shadow: none;
+    -goog-ms-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background-color: transparent;
+}
+div.fc-daygrid-day-events > div.fc-daygrid-event-harness > a:after{
+    background-color: transparent;
+}
+
+
+.fc-event-main:after, .fc-event-main:visited, .fc-event-main:focus, .fc-event-main:hover{
     background: white;
 }
 .my-event-overlapped {
