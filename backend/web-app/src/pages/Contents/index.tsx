@@ -3,7 +3,7 @@ import {observer} from "mobx-react-lite";
 import {Button, Col, Row} from "react-bootstrap";
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
-import interactionPlugin from "@fullcalendar/interaction" // needed for dayClick
+import interactionPlugin from '@fullcalendar/interaction'
 
 import moment from 'moment'
 import '../../assets/fakescroll/fakescroll.css'
@@ -128,8 +128,6 @@ const ContentsPage: React.FC = observer(() => {
             Create
           </Button>
         </Col>
-
-
       </div>
     )
   }
@@ -141,7 +139,6 @@ const ContentsPage: React.FC = observer(() => {
     return (
       <div>
         <div className={'text-gray'} style={{fontSize:12, marginLeft:20}}>{value.title}</div>
-
         <div style={{marginBottom:20}}>
           {value.events.map((data:any)=>{
             return (<div>
@@ -153,12 +150,11 @@ const ContentsPage: React.FC = observer(() => {
         </div>
       </div>
     )
-    // {value.events.map( (data:any)=>{
-    //  return <ContentEventCard event={data}/>
-    //  })}
   }
 
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     <Row className={'main-row'}>
 
@@ -183,15 +179,19 @@ const ContentsPage: React.FC = observer(() => {
             dayHeaderFormat={{
               weekday:'long'
             }}
+            selectable={true}
 
+            dateClick={(arg:any)=>{
+              console.log("select", arg)
+            }}
 
-            plugins={[ dayGridPlugin ]}
+            //@ts-ignore
+            plugins={[  dayGridPlugin, interactionPlugin ]}
             eventClick={(arg)=>{
               handleDateClick(arg)
             }}
             events={CalendarEvents}
             initialView="dayGridMonth"
-            selectable={true}
           />
         </div>
       </Col>

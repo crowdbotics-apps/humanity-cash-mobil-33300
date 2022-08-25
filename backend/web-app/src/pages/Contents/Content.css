@@ -51,11 +51,6 @@
     flex-direction: row;
 }
 
-
-th.fc-col-header-cell.fc-day {
-    border: 0px solid transparent !important;
-}
-
 .fc .fc-daygrid-day-frame {
     position: absolute;
 }
@@ -127,8 +122,11 @@ th.fc-col-header-cell.fc-day {
     height: 50px;
 }
 
-.fc-theme-standard td, .fc-theme-standard th {
+td[role=gridcell]{
     border: 1px solid var(--orange);
+}
+td[role=presentation], th[role=presentation],  th[role=columnheader]{
+    border: none;
 }
 
 .fc-daygrid-day-number{

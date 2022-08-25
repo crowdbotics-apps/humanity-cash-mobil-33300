@@ -48,6 +48,7 @@
 .hour-line-middle{
     padding: 10px 20px;
     font-size: 14px;
+    font-weight: 500;
     color:var(--gray)
 }
 .hour-line-right{
