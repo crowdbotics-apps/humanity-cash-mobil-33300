@@ -1,4 +1,34 @@
 @import "../../theme.css";
+/* HEADER ROW */
+.header-row{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+}
+.btn-connect-social{
+    width: 90%;
+    margin-bottom: 10px;
+    background: var(--white);
+    color: var(--blue);
+}
+.btn-connect-social:hover {
+    color:var(--blue-dark);
+    background: white;
+}
+
+.btn-connect-social:visited, .btn-connect-social:focus {
+    color:var(--blue);
+    background: var(--white);
+    border: 1px solid var(--blue);
+}
+
+.create-btn:visited, .create-btn:focus {
+    color:var(--white);
+    background: var(--blue);
+    border: 0px solid var(--blue);
+}
+
 /* CALENDAR HEADER */
 .calendar-header{
     display: flex;

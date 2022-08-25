@@ -9,11 +9,13 @@ import Col from 'react-bootstrap/Col';
 
 type Props = {
     children: React.ReactNode;
-    title:string
+    title:string;
+    header?: React.ReactNode;
+
 };
 
 
-const AdminPanelContainer: React.FC<Props> = ({ children, title }) => {
+const AdminPanelContainer: React.FC<Props> = ({ children, title, header }) => {
     useEffect(() => {
        // @ts-ignore
         console.log("useffect", children.props)
@@ -36,7 +38,10 @@ const AdminPanelContainer: React.FC<Props> = ({ children, title }) => {
                         <Col><div className='line-primary'></div></Col>
                         {/* header */}
                         <Col>
-                            <Header title={title} />
+                            {header !== null && (header)||(
+                              <Header title={title} />
+                            )}
+
                         </Col>
                         {/* main */}
                         <Col>{children}</Col>

@@ -84,7 +84,7 @@ const ContentsPage: React.FC = observer(() => {
     // @ts-ignore
     setTitle(calendarApi.currentDataManager.data.viewTitle)
   }
-  const Header = ()=>{
+  const CalendarHeader = ()=>{
     return (
       <div className={'calendar-header'}>
         <Col className={'col-4'}>
@@ -118,6 +118,24 @@ const ContentsPage: React.FC = observer(() => {
     )
   }
 
+  const PageHeader = ()=>{
+    return (<header>
+      <Row className={'header-row'}>
+        <Col className={'col-9'}>
+          <h4 className='title-h4'>Calendar - Events</h4>
+        </Col>
+        <Col className={'col-3'}>
+          <Button variant="primary" className={'btn-connect-social'}
+                  size={'lg'} style={{borderRadius:50}}> Connect Social Media </Button>{' '}
+
+          {/*<Button variant="outline-primary" size="lg" className={'create-btn'}>*/}
+          {/*  Create*/}
+          {/*</Button>*/}
+        </Col>
+      </Row>
+    </header>)
+  }
+
   const renderDayContent = (value:any)=>{
     return (
       <div>
@@ -139,11 +157,11 @@ const ContentsPage: React.FC = observer(() => {
   // @ts-ignore
   // @ts-ignore
   return (
-    <AdminPanelContainer title={"Calendar - Events"}>
+    <AdminPanelContainer title={"Calendar - Events"} header={<PageHeader />}>
       <Row className={'main-row'}>
         <Col className={'col-9 calendar-content'}>
           <div className={'calendar-left-column'}>
-            <Header/>
+            <CalendarHeader/>
             <FullCalendar
               ref={CalendarEl}
               headerToolbar={{
