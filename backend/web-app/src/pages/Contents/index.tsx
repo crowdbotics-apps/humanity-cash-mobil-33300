@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from "react";
+import React, {Fragment, useEffect, useRef, useState} from "react";
 import {observer} from "mobx-react-lite";
 import {Col, Row} from "react-bootstrap";
 import FullCalendar from '@fullcalendar/react' // must go before plugins
@@ -23,28 +23,37 @@ const ContentsPage: React.FC = observer(() => {
 
   const [LeftOpen, setLeftOpen] = useState<any>(true);
   const [RightOpen, setRightOpen] = useState<any>(true);
+  const { innerWidth: width, innerHeight: height } = window;
+  const [CalendarHeight, setCalendarHeight] = useState(height * 0.68)
+  const CalendarEl = useRef(null);
+  const [Title, setTitle] = useState('')
+  const [calendarApi, setCalendarApi] = useState(null)
+  useEffect( () => {
+    // @ts-ignore
+    let api = CalendarEl.current.getApi()
+    setCalendarApi(api)
+    setTitle(api.currentDataManager.data.viewTitle)
 
+  },[])
   const handleDateClick = (arg:any) => { // bind with an arrow function
     console.log("handledateclick", arg)
-    alert(arg.dateStr)
+    // alert(arg.dateStr)
+    // @ts-ignore
+    calendarApi.next()
+
+    // @ts-ignore
+    setTitle(calendarApi.currentDataManager.data.viewTitle)
+
+
   }
 
 
-
   const renderEventContent = (eventInfo:any) => {
-    console.log("eveninfo", eventInfo)
-    console.log("evennt", eventInfo.event._def.extendedProps.eventType)
     const eventType =  eventInfo.event._def.extendedProps.eventType
     const eventHour =  eventInfo.event._def.extendedProps.hour
     const isOverlaping =  eventInfo.event._def.extendedProps.isOverlaping
 
-    const Overlapping = (event:any)=>{
-      return (
-        <div className={'my-event-overlapped my-event-overlapped-'+eventType}>
-
-        </div>
-      )
-    }
+    const Overlapping = (event:any)=> (<div className={'my-event-overlapped my-event-overlapped-'+eventType} />)
 
     return (
       <>
@@ -63,48 +72,85 @@ const ContentsPage: React.FC = observer(() => {
     // console.log("scroll ratio", scrollRatio)
   }
 
+  const next = ()=>{
+    // @ts-ignore
+    calendarApi.next()
+    // @ts-ignore
+    setTitle(calendarApi.currentDataManager.data.viewTitle)
+  }
+
+  const previous = ()=>{
+
+    // @ts-ignore
+    calendarApi.prev()
+    // @ts-ignore
+    setTitle(calendarApi.currentDataManager.data.viewTitle)
+  }
+  const Header = ()=>{
+    return (
+      <div className={'calendar-header'}>
+        <button type="button"
+                title="Previous month"
+                aria-pressed="true"
+                onClick={previous}
+                className="fc-button">
+          <span className="fc-icon fc-icon-chevron-left" /></button>
+        <span className="fc-toolbar-title" >{Title}</span>
+        <button type="button"
+                title="Next month"
+                aria-pressed="true"
+                onClick={next}
+                className="fc-button">
+          <span className="fc-icon fc-icon-chevron-right"/></button>
+      </div>
+    )
+  }
+
 
   return (
     <Row className={'main-row'}>
 
       <Col className={'col-9 calendar-content'}>
 
-          <div className={'calendar-left-column'}>
-            <FullCalendar
+        <div className={'calendar-left-column'}>
+          <Header/>
 
-              headerToolbar={{
+          <FullCalendar
+            ref={CalendarEl}
+            headerToolbar={{
 
-                // start: 'title', // will normally be on the left. if RTL, will be on the right
-                end:'',
-                center: 'title',
-                // start: 'prev, title,next' // will normally be on the right. if RTL, will be on the left
-              }}
-              eventColor={"transparent"}
-              eventContent={renderEventContent}
+              // start: 'title', // will normally be on the left. if RTL, will be on the right
+              end:'',
+              start:'',
+              center: '',
+              // start: 'prev, title,next' // will normally be on the right. if RTL, will be on the left
+            }}
+            eventColor={"transparent"}
+            eventContent={renderEventContent}
+            height={CalendarHeight}
+            dayHeaderFormat={{
+              weekday:'long'
+            }}
 
-              dayHeaderFormat={{
-                weekday:'long'
-              }}
 
-
-              plugins={[ dayGridPlugin ]}
-              eventClick={(arg)=>{
-                handleDateClick(arg)
-              }}
-              events={[
-                { title: 'event 1', date: '2022-08-01', hour:'10:30AM' , eventType:'event', isOverlaping:false},
-                { title: 'event 2', date: '2022-08-02', hour:'10:30AM', eventType:'event' , isOverlaping:true},
-                { title: 'event 4', date: '2022-08-02', hour:'10:30AM', eventType:'story', isOverlaping:true},
-              ]}
-              initialView="dayGridMonth"
-              selectable={true}
-            />
-          </div>
+            plugins={[ dayGridPlugin ]}
+            eventClick={(arg)=>{
+              handleDateClick(arg)
+            }}
+            events={[
+              { title: 'event 1', date: '2022-08-01', hour:'10:30AM' , eventType:'event', isOverlaping:false},
+              { title: 'event 2', date: '2022-08-02', hour:'10:30AM', eventType:'event' , isOverlaping:true},
+              { title: 'event 4', date: '2022-08-02', hour:'10:30AM', eventType:'story', isOverlaping:true},
+            ]}
+            initialView="dayGridMonth"
+            selectable={true}
+          />
+        </div>
       </Col>
 
       <Col className={'col-3 '} style={{zIndex:0, marginLeft:-20}}>
-        <div className={'calendar-right-column'}>
-            <p className={'text-blue all-in-month-title'}>All in April 2022</p>
+        <div className={'calendar-right-column'} style={{height:CalendarHeight}}>
+          <p className={'text-blue all-in-month-title'}>All in April 2022</p>
           <div  className={'calendar-right-events'} id={"right-column-events"}>
             {/*<h1>test</h1>*/}
           </div>
@@ -115,7 +161,11 @@ const ContentsPage: React.FC = observer(() => {
             <ContentEventCard event={event_list[0].events[0]}/>
             <ContentEventCard event={event_list[0].events[1]}/>
 
+            <ContentEventCard event={event_list[0].events[0]}/>
+            <ContentEventCard event={event_list[0].events[1]}/>
 
+            <ContentEventCard event={event_list[0].events[0]}/>
+            <ContentEventCard event={event_list[0].events[1]}/>
           </FakeScroll>
 
 
