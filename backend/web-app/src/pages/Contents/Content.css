@@ -119,7 +119,6 @@ div.fc-daygrid-day-events > div.fc-daygrid-event-harness > a:after{
     background-color: transparent;
 }
 
-
 .fc-event-main:after, .fc-event-main:visited, .fc-event-main:focus, .fc-event-main:hover{
     background: white;
 }
