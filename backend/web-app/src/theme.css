@@ -8,6 +8,10 @@
     color: var(--blue)
 }
 
+.text-gray{
+    color: var(--gray)
+}
+
 .border-green{
     border:1px solid var(--green)
 }

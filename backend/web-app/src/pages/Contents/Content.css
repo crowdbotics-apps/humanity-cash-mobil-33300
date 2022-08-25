@@ -7,6 +7,7 @@
     align-content: center;
 }
 
+
 .fc-toolbar-title{
     margin-left: 15px;
     margin-right: 15px;
@@ -33,9 +34,18 @@
     background: var(--background);
 }
 
+.create-btn{
+    background: var(--blue);
+    width: 100%;
+}
+
 
 
 /* CALENDAR */
+
+.fc-day-other{
+    background: var(--light-grey);
+}
 .fc-toolbar-chunk{
     display: flex;
     flex-direction: row;
@@ -67,12 +77,13 @@ th.fc-col-header-cell.fc-day {
     height: 30px;
     padding-left: 10px;
 }
-.my-event-overlapped {
+.dot{
     height: 14px;
     width: 14px;
     border-radius: 10px;
+}
+.my-event-overlapped {
     margin-top: 20px;
-
 }
 
 .my-event-overlapped-story{
@@ -152,6 +163,7 @@ th.fc-col-header-cell.fc-day {
     /*margin-left: -30px;*/
     padding-left: 25px;
     padding-top:25px;
+    height: 100%;
 }
 
 .fc-theme-standard .fc-scrollgrid {
@@ -179,7 +191,7 @@ th.fc-col-header-cell.fc-day {
 
 .scroll-container {
     position: relative;
-    margin-right: 1em;
+    margin-right: 2em;
     height: 68vh;
     box-sizing: border-box;
 }
