@@ -30,3 +30,8 @@
     color: var(--white);
 }
 
+.form-control{
+    border: 1px solid var(--headings);
+    border-radius:14px;
+    /*height: 40px;*/
+}

@@ -10,14 +10,14 @@ import moment from 'moment'
 import '../../assets/fakescroll/fakescroll.css'
 import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
 import './Content.css';
-import {AddEventForm, ContentEventCard, FormExample, HourLine} from "./components";
+import {ContentEventCard, HourLine} from "./components";
 import {event_list} from "./data";
 import AdminPanelContainer from "../../containers";
 import {CalendarIcon, StoriesIcon} from "../../components/icons";
+import {AddEventForm, AddStoryForm} from "./forms";
 
 
 const ContentsPage: React.FC = observer(() => {
-  const name  = "NAMEEE"
   const { innerWidth: width, innerHeight: height } = window;
   const [CalendarHeight, setCalendarHeight] = useState(height * 0.68)
   const CalendarEl = useRef(null);
@@ -27,6 +27,7 @@ const ContentsPage: React.FC = observer(() => {
   const [RightEvents, setRightEvents] = useState<any[]>([])
   const [show, setShow] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
+  const [showStoryModal, setShowStoryModal] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -233,7 +234,11 @@ const ContentsPage: React.FC = observer(() => {
         <Modal.Body >
           <Row>
             <Col className={'col-6'}>
-              <div className={'col-modal-create col-modal-left'} >
+              <div className={'col-modal-create col-modal-left'}
+                   onClick={event => {
+                     setShow(false)
+                     setShowStoryModal(true)
+                   }}>
                   <div>
                     <StoriesIcon />
                   </div>
@@ -244,11 +249,11 @@ const ContentsPage: React.FC = observer(() => {
             </Col>
             <Col className={'col-6'}>
               <div className={'col-modal-create col-modal-right'}
-
                    onClick={event => {
                      setShow(false)
                      setShowEventModal(true)
-                   }}>
+                   }}
+              >
                 <div>
                   <CalendarIcon />
                 </div>
@@ -282,6 +287,30 @@ const ContentsPage: React.FC = observer(() => {
         <Modal.Body >
           <Row>
            <AddEventForm/>
+          </Row>
+        </Modal.Body>
+      </Modal>
+
+
+      <Modal
+        size="lg"
+        show={showStoryModal}
+        centered
+        onHide={() => setShowStoryModal(false)}
+      >
+        <Modal.Header closeButton style={{paddingTop:30, paddingLeft:50, paddingRight:50}}>
+          <Modal.Title>
+            <div className={'create-modal-title'}>
+              Add New Story
+            </div>
+            <div className={'create-modal-subtitle text-gray'}>
+              Lorem ipsum dolor sit amet
+            </div>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body >
+          <Row>
+            <AddStoryForm/>
           </Row>
         </Modal.Body>
       </Modal>
