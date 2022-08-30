@@ -19,7 +19,7 @@ import {AddEventForm, AddStoryForm} from "./forms";
 
 const ContentsPage: React.FC = observer(() => {
   const { innerWidth: width, innerHeight: height } = window;
-  const [CalendarHeight, setCalendarHeight] = useState(height * 0.68)
+  const [CalendarHeight, setCalendarHeight] = useState(height * 0.7)
   const CalendarEl = useRef(null);
   const [Title, setTitle] = useState('')
   const [calendarApi, setCalendarApi] = useState(null)
@@ -41,7 +41,6 @@ const ContentsPage: React.FC = observer(() => {
     let eventList:any[]=[]
     for(const data of event_list){
       for (const event of data.events){
-        console.log("event", event)
         eventList.push(event)
       }
     }
@@ -65,10 +64,10 @@ const ContentsPage: React.FC = observer(() => {
       <>
         {isOverlaping && (
           <Overlapping event={eventInfo.event} />
-        )||(
+        ) || (
           <div className={'my-event my-event-'+eventType} >
-            <p className={'my-event-title'}>{eventInfo.event.title}</p>
-            <p className={'my-event-subtitle'}>{eventHour}</p>
+            <h5 className={'my-event-title'}>{eventInfo.event.title}</h5>
+            <h5 className={'my-event-subtitle'}>{eventHour}</h5>
           </div>
         )}
       </>
@@ -86,7 +85,6 @@ const ContentsPage: React.FC = observer(() => {
   }
 
   const previous = ()=>{
-
     // @ts-ignore
     calendarApi.prev()
     // @ts-ignore
@@ -109,7 +107,6 @@ const ContentsPage: React.FC = observer(() => {
                   onClick={next}
                   className="fc-button">
             <span className="fc-icon fc-icon-chevron-right"/></button>
-
         </Col>
         <Col className={'col-4 calendar-header'}>
           <div className={'dot my-event-overlapped-story'} />
@@ -118,7 +115,7 @@ const ContentsPage: React.FC = observer(() => {
           <div  style={{marginLeft:15, fontSize:15}}  className={'text-gray'}>STORIES </div>
         </Col>
         <Col className={'col-4'}>
-          <Button variant="primary" size="lg" className={'create-btn'}  onClick={handleShow}>
+          <Button variant="primary"  className={'create-btn'}  onClick={handleShow}>
             Create
           </Button>
         </Col>
@@ -128,19 +125,11 @@ const ContentsPage: React.FC = observer(() => {
 
   const PageHeader = ()=>{
     return (<header>
-      <Row className={'header-row'}>
-        <Col className={'col-9'}>
-          <h4 className='title-h4'>Calendar - Events</h4>
-        </Col>
-        <Col className={'col-3'}>
-          <Button variant="primary" className={'btn-connect-social'}
-                  size={'lg'} style={{borderRadius:50}}> Connect Social Media </Button>{' '}
-
-          {/*<Button variant="outline-primary" size="lg" className={'create-btn'}>*/}
-          {/*  Create*/}
-          {/*</Button>*/}
-        </Col>
-      </Row>
+      <div className={'header-row'}>
+          <h4 className='title-h4 pt-3 mb-0  pb-3'>Calendar - Events</h4>
+          <Button variant="primary" className={'btn-connect-social me-4'}
+                   style={{borderRadius:50}}> Connect Social Media </Button>{' '}
+      </div>
     </header>)
   }
 
@@ -204,13 +193,11 @@ const ContentsPage: React.FC = observer(() => {
         <Col className={'col-3 '} style={{zIndex:0, marginLeft:-24}}>
           <div className={'calendar-right-column'} >
             <p className={'text-blue all-in-month-title'}>All in {Title}</p>
-            <FakeScroll className="scroll-container" track={false} onChange={onFakeScrollChange}>
+            <FakeScroll className="scroll-container"   track={false} onChange={onFakeScrollChange}>
               {RightEvents.map(value => {
                 return renderDayContent(value)
               })}
             </FakeScroll>
-
-
           </div>
         </Col>
       </Row>

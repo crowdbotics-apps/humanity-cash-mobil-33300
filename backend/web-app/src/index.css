@@ -410,4 +410,7 @@ min-height: 200px;
   animation: flickerAnimation 1s linear;
 }
 
+.search-button-group{
+  width: 100%;
+}
 

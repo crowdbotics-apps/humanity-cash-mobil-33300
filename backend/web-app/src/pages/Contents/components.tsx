@@ -50,7 +50,6 @@ export const ContentEventCard: React.FC<ContentEventCardProps> = observer((props
           </div>
         </div>
         <div style={{width:'30%', display:"flex", flexDirection:'row'}}>
-
         <div className={'event-card-footer-icon'}>
             <LocationIcon />
           </div>
