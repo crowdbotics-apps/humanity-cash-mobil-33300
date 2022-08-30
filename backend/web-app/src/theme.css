@@ -19,3 +19,14 @@
 .border-blue{
     border: 1px solid  var(--blue);
 }
+
+.btn-outline-primary:hover {
+    color: var(--blue-dark);
+    background-color: white;
+    border-color: var(--blue-dark);
+}
+
+.btn-primary:hover, .btn-primary:active {
+    color: var(--white);
+}
+

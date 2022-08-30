@@ -55,3 +55,12 @@
     flex: 1;
     border-bottom: 1px solid var(--orange);
 }
+
+
+.btn-rounded{
+    border-radius: 49px;
+}
+
+.btn-save{
+    width: 200px;
+}

@@ -10,7 +10,7 @@ import moment from 'moment'
 import '../../assets/fakescroll/fakescroll.css'
 import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
 import './Content.css';
-import {ContentEventCard, FormExample, HourLine} from "./components";
+import {AddEventForm, ContentEventCard, FormExample, HourLine} from "./components";
 import {event_list} from "./data";
 import AdminPanelContainer from "../../containers";
 import {CalendarIcon, StoriesIcon} from "../../components/icons";
@@ -281,7 +281,7 @@ const ContentsPage: React.FC = observer(() => {
         </Modal.Header>
         <Modal.Body >
           <Row>
-           <FormExample/>
+           <AddEventForm/>
           </Row>
         </Modal.Body>
       </Modal>
