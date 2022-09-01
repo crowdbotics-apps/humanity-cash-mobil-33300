@@ -28,10 +28,10 @@ export const AddEventForm = (props:AddEventFormProps)=> {
   const [dataUri, setDataUri] = useState(event?event.url:"")
   const formik = useFormik({
     initialValues: {
-      startDate: event?event.startDate: "",
-      endDate: moment().date().toString(),
-      startTime:  event?event.startTime: "",
-      endTime: event?event.endTime: "",
+      startDate: event?event.startTime.split(" ").length > 0 && event.startTime.split(" ")[0]: "",
+      endDate:  event?event.endTime.split(" ")[0]: "",
+      startTime:  event?event.startTime.split(" ")[1]: "",
+      endTime: event?event.endTime.split(" ")[1]: "",
       location: event?event.location:"",
       description: event?event.description:""
     },

@@ -7,8 +7,8 @@ export const event_list = [
       {
         hour: '7 AM',
         img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR01s-Q5BArIfe33QD6EJdKT_DcT_5Iv9cFzIQdBeuhnSrxrNSF_ssES_E4UaK3S9r73Sk&usqp=CAU',
-        title: 'lorem ipsum',
-        description: 'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint ...',
+        title: 'Story title',
+        description: 'Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint  Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint ',
         dateFullName: 'Friday, 08:24 AM April 1, 2022',
         date: '2022-09-01',
         location: 'Address, Country',
@@ -40,8 +40,8 @@ export const event_list = [
         date: '2022-09-02',
         location:'Address, Country',
         eventType:'event',
-        startTime:moment(),
-        endTime:moment(),
+        startTime:'2022-09-02 10:10',
+        endTime:'2022-09-02 11:10',
         startDate:moment().date(),
         endDate:moment().date(),
         isOverlapping:true

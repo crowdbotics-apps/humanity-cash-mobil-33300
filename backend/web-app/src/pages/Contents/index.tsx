@@ -30,6 +30,7 @@ const ContentsPage: React.FC = observer(() => {
   const [showStoryModal, setShowStoryModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const  [Details, setDetails] = useState<any[]>([])
+  const  [DetailsTitle, setDetailsTitle] = useState<string>("")
   const [CurrentStory, setCurrentStory] = useState(null)
   const [CurrentEvent, setCurrentEvent] = useState(null)
 
@@ -53,8 +54,15 @@ const ContentsPage: React.FC = observer(() => {
     setCalendarEvents(eventList)
 
   },[])
+
   const handleDateClick = (arg:any) => { // bind with an arrow function
-    console.log("handledateclick", arg)
+    console.log("handledateclick", arg.event.extendedProps)
+    if("Friday, 08:24 AM April 1, 2022"===arg.event.extendedProps.dateFullName){
+      setDetails(event_list[1].events)
+    }else{
+      setDetails(event_list[0].events)
+    }
+    setShowDetailModal(true)
   }
 
 
@@ -95,7 +103,7 @@ const ContentsPage: React.FC = observer(() => {
 
   const editEvent = (event:any)=>{
     setCurrentEvent(event)
-    setShowDetailModal(false)
+    // setShowDetailModal(false)
     if(event.eventType ==="story"){
       setShowStoryModal(true)
     }else{
@@ -163,6 +171,8 @@ const ContentsPage: React.FC = observer(() => {
   const renderDayContent = (value:any)=>{
     return (
       <div onClick={()=>{
+        setDetails(value.events)
+        setDetailsTitle(value.title)
         setShowDetailModal(true)
         console.log(value)
       }}>
@@ -346,13 +356,13 @@ const ContentsPage: React.FC = observer(() => {
               Details
             </div>
             <div className={'create-modal-subtitle text-gray'}>
-              Lorem ipsum dolor sit amet
+              {DetailsTitle}
             </div>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body >
           <div>
-            {event_list[1].events.map((value:any) => {
+            {Details.map((value:any) => {
               return <ContentEventDetail edit={(event:any)=>editEvent(event)}  event={value}/>
             })}
 
