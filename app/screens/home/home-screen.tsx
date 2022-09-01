@@ -209,11 +209,11 @@ export const HomeScreen = observer(function HomeScreen() {
 		</ScrollView>
 	)
 
-	const MerchantView = () => (
+	const CashierView = () => (
 		<View style={styles.ROOT_CONTAINER}>
 			<View style={styles.STEP_CONTAINER}>
 				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-					<Icon name={"menu"} size={23} color={COLOR.PALETTE.green} />
+					<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
 					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 				</TouchableOpacity>
 
@@ -272,8 +272,8 @@ export const HomeScreen = observer(function HomeScreen() {
 				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
-				{loginStore.getSelectedAccount === 'merchant'
-					? MerchantView()
+				{loginStore.getSelectedAccount === 'cashier'
+					? CashierView()
 					: [
 						ConsumerView(),
 						<Button

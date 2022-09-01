@@ -2,101 +2,98 @@ import { Animated, StyleSheet } from 'react-native';
 import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
-	ROOT: {
-		flex: 1,
-		backgroundColor: COLOR.PALETTE.background,
-		justifyContent: 'space-between'
-	},
-  HEADER: {
-		backgroundColor: COLOR.PALETTE.background,
-	},
-	BACK_BUTON_LABEL: {
-		fontSize: 16,
-		color: COLOR.PALETTE.blue
-	},
 	BACK_BUTON_CONTAINER: {
+    alignItems: 'center',
     flexDirection: 'row',
-    width: 80,
     height: 30,
     justifyContent: 'flex-start',
-    alignItems: 'center',
     marginLeft: 10,
-    marginVertical: 10
-  },
-  USER_CONTAINER: {
-    flexDirection: 'row',
-    width: METRICS.screenWidth * 0.9,
-    height: 80,
-  },
-  USER_CONTAINER_CHANGE: {
-    flexDirection: 'row',
-    width: METRICS.screenWidth * 0.9,
-    height: 80,
-    backgroundColor: COLOR.PALETTE.mustard,
-  },
-  USER_IMAGE_CONTAINER: {
-    justifyContent: 'center',
-    alignItems: 'center',
     marginVertical: 10,
-    marginHorizontal: 20
+    width: 80
   },
-  USER_IMAGE: {
-    width: 60,
-    height: 60,
-    borderRadius: 30
+  BACK_BUTON_LABEL: {
+		color: COLOR.PALETTE.blue,
+		fontSize: 16
+	},
+	HEADER: {},
+	LINE: {
+    backgroundColor: '#2E2E2E40',
+    height: 2,
+    marginVertical: 10,
+    width: METRICS.screenWidth * 0.9
+  },
+  MENU_ITEM_CONTAINER: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 40
+  },
+  MENU_ITEM_ICON: {
+    height: 20 ,
+    marginLeft: 15  ,
+    marginRight: 15,
+    width: 20
+  },
+  MENU_ITEM_LABEL: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16
+  },
+  ROOT: {
+		flex: 1,
+		justifyContent: 'space-between'
+	},
+  SIGN_OUT: {
+    color: COLOR.PALETTE.mustard,
+    fontSize: 16,
+  },
+  SIGN_OUT_CONTAINER: {
+    height: 100,
+    justifyContent: 'center'
   },
   SWITCH_ACCOUNT_CONTAINER: {
     justifyContent: 'center'
   },
-  USER_NAME: {
-    fontSize: 16,
-    color: COLOR.PALETTE.white
-  },
-  USER_NAME_BLACK: {
-    fontSize: 16,
-    color: COLOR.PALETTE.black
-  },
   SWITCH_ACCOUNT_LABEL: {
-    fontSize: 16,
-    color: COLOR.PALETTE.black
+    color: COLOR.PALETTE.black,
+    fontSize: 16
   },
   SWITCH_ACCOUNT_LABEL_BLUE: {
-    fontSize: 16,
-    color: COLOR.PALETTE.blue
+    color: COLOR.PALETTE.black,
+    fontSize: 16
   },
   TOTAL_CURRENCY: {
-    marginLeft: 15,
+    color: COLOR.PALETTE.black,
     fontSize: 32,
-    marginVertical: 20,
-    color: COLOR.PALETTE.black
+    marginLeft: 15,
+    marginVertical: 20
   },
-  MENU_ITEM_CONTAINER: {
+  USER_CONTAINER: {
     flexDirection: 'row',
-    height: 40,
-    alignItems: 'center'
-  },
-  MENU_ITEM_LABEL: {
-    fontSize: 16,
-    color: COLOR.PALETTE.black
-  },
-  LINE: {
+    height: 80,
     width: METRICS.screenWidth * 0.9,
-    height: 2,
-    backgroundColor: '#2E2E2E40',
+  },
+  USER_CONTAINER_CHANGE: {
+    backgroundColor: COLOR.PALETTE.mustard,
+    flexDirection: 'row',
+    height: 80,
+    width: METRICS.screenWidth * 0.9,
+  },
+  USER_IMAGE: {
+    borderRadius: 30,
+    height: 60,
+    width: 60
+  },
+  USER_IMAGE_CONTAINER: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 20,
     marginVertical: 10
   },
-  SIGN_OUT_CONTAINER: {
-    justifyContent: 'center',
-    height: 100
+  USER_NAME: {
+    color: COLOR.PALETTE.white,
+    fontSize: 16
   },
-  SIGN_OUT: {
-    fontSize: 16,
-    color: COLOR.PALETTE.mustard,
-  },
-  MENU_ITEM_ICON: {
-    width: 20 ,
-    height: 20  ,
-    marginLeft: 15,
-    marginRight: 15
+  USER_NAME_BLACK: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16
   }
 })

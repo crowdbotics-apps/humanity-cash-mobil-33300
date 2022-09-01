@@ -35,9 +35,9 @@ export const LoginScreen = observer(function LoginScreen() {
   const [Loading, setLoading] = useState(false)
 
   const login = () => {
-    loginStore.setSelectedAccount('consumer')
-    navigation.navigate("home", {})
-    loginStore.setApiToken('123')
+    // loginStore.setSelectedAccount('consumer') // remove
+    // navigation.navigate("home", {}) // remove
+    // loginStore.setApiToken('123') // remove
     setLoading(true)
     loginStore.environment.api
       .login({ email: Username, password: Pass })

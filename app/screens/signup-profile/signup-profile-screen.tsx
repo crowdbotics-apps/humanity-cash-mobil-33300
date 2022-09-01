@@ -926,12 +926,12 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				setupConsumerDetail()
 				break;
 			case 'pic_bname':
-				// setupMerchant() // TODO: uncomment 
-				setStep('business_type') // TODO: comment
+				setupMerchant() // TODO: uncomment 
+				// setStep('business_type') // TODO: comment
 				break;
 			case 'business_type':
-				// setupMerchantDetail() // TODO: uncomment 
-				setStep('business_exec') // TODO: comment
+				setupMerchantDetail() // TODO: uncomment 
+				// setStep('business_exec') // TODO: comment
 				break;
 			case 'business_exec':
 				setStep('business_data')

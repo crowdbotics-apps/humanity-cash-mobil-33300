@@ -51,7 +51,7 @@ export function Button(props: ButtonProps) {
         style={styles.BOTTON_MENU_ICON_SPEND}
       />
     </TouchableOpacity>
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate("contact", {})}>
       <Image
         source={IMAGES.menu_address_inactive}
         style={styles.BOTTON_MENU_ICON_ADDRESS}
