@@ -77,6 +77,18 @@ const ContentsPage: React.FC = observer(() => {
     // console.log("scroll ratio", scrollRatio)
   }
 
+  const saveStory = (data:any)=>{
+    console.log("saveStory", data)
+    setShowStoryModal(false)
+  }
+
+  const saveEvent = (data:any)=>{
+    console.log("saveStory", data)
+    setShowEventModal(false)
+  }
+
+
+
   const next = ()=>{
     // @ts-ignore
     calendarApi.next()
@@ -273,7 +285,7 @@ const ContentsPage: React.FC = observer(() => {
         </Modal.Header>
         <Modal.Body >
           <Row>
-           <AddEventForm/>
+           <AddEventForm save={(data:any)=>saveEvent(data)}/>
           </Row>
         </Modal.Body>
       </Modal>
@@ -297,7 +309,7 @@ const ContentsPage: React.FC = observer(() => {
         </Modal.Header>
         <Modal.Body >
           <Row>
-            <AddStoryForm/>
+            <AddStoryForm save={(data:any)=>saveStory(data)}/>
           </Row>
         </Modal.Body>
       </Modal>

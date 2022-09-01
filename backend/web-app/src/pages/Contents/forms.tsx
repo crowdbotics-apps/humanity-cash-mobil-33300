@@ -5,10 +5,24 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import * as _ from 'lodash'
 import {AttachmentIcon} from "../../components/icons";
 
-export const AddEventForm = ()=> {
+type AddEventFormProps = {
+  save(data:any): any
+}
+
+
+const fileToDataUri = (file:any) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.onload = (event:any) => {
+    resolve(event.target.result)
+  };
+  reader.readAsDataURL(file);
+})
+
+export const AddEventForm = (props:AddEventFormProps)=> {
   const [validated, setValidated] = useState(false);
   const fileInputRef = useRef<any>(null)
   const [fileName, setFileName] = useState(null)
+  const [dataUri, setDataUri] = useState('')
   const formik = useFormik({
     initialValues: {
       startDate: "",
@@ -32,16 +46,35 @@ export const AddEventForm = ()=> {
     }),
     onSubmit: values => {
       alert(JSON.stringify(values, null, 2));
+
+      let data = {...values, ...{url:dataUri}}
+
+      console.log("DATA", data)
+      props.save(data)
+
+
       // setFormState(values);
     }
   });
 
-
   const onFilechange = ( e:any ) => {
     /*Selected files data can be collected here.*/
     console.log( e.target.files );
+
     if(e.target.files.length > 0){
-      setFileName(e.target.files[0].name)
+
+      let file = e.target.files[0] || null
+      if(!file) {
+        setDataUri('');
+        return;
+      }
+      setFileName(file.name)
+
+      fileToDataUri(file)
+        .then((dataUri:any) => {
+          setDataUri(dataUri)
+        })
+
     }else{
       setFileName(null)
     }
@@ -155,24 +188,26 @@ export const AddEventForm = ()=> {
             {formik.errors.description}
           </Form.Control.Feedback>
         </Form.Group>
+        <Form.Group as={Col} md="12" className={'mt-4'}>
+          <Form.Label>ATTACHMENT: {fileName}</Form.Label>
+        </Form.Group>
       </Row>
-      <div className={'mt-5 d-flex flex-row'}>
+
+      <div className={'mt-1 d-flex flex-row'}>
         <div className={'md-6 d-flex flex-column  justify-content-center align-items-start'}>
           <input accept="image/png, image/jpeg"  type="file" id="upload"
                  onChange={onFilechange}
                  hidden ref={fileInputRef}/>
           <div>
-            <Button  variant="outline-primary" type="button" className={'btn-rounded'}
+            <Button  variant="outline-primary" type="button"
+                     className={'btn-rounded btn-attachment'}
                      onClick={()=>{
                        fileInputRef.current.click()
                      }}
             >  <AttachmentIcon/> Add Attachment</Button>
-            {fileName && (
-              <h6 className={'text-dark mt-3'}>{fileName}</h6>
-            )}
           </div>
-
         </div>
+        <div style={{flex:1}}/>
         <div className={'md-6 d-flex flex-column  justify-content-center'}>
           <Button  type="submit" className={'btn-save'} >Save</Button>
         </div>
@@ -184,18 +219,35 @@ export const AddEventForm = ()=> {
 
 
 
+type AddStoryFormProps = {
+  save(data:any): any
+}
 
 
-export const AddStoryForm = ()=> {
+export const AddStoryForm = (props:AddStoryFormProps)=> {
   const [validated, setValidated] = useState(false);
   const fileInputRef = useRef<any>(null)
   const [fileName, setFileName] = useState(null)
+  const [dataUri, setDataUri] = useState('')
 
   const onFilechange = ( e:any ) => {
     /*Selected files data can be collected here.*/
     console.log( e.target.files );
+
     if(e.target.files.length > 0){
-      setFileName(e.target.files[0].name)
+
+      let file = e.target.files[0] || null
+      if(!file) {
+        setDataUri('');
+        return;
+      }
+      setFileName(file.name)
+
+      fileToDataUri(file)
+        .then((dataUri:any) => {
+          setDataUri(dataUri)
+        })
+
     }else{
       setFileName(null)
     }
@@ -214,14 +266,19 @@ export const AddStoryForm = ()=> {
         .required("This field is required")
     }),
     onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
+      // alert(JSON.stringify(values, null, 2));
+      let data = {...values, ...{url:dataUri}}
+
+      console.log("DATA", data)
+      props.save(data)
+
       // setFormState(values);
     }
   });
 
   const handleSubmitFormik = (event:any)=>{
     formik.handleSubmit(event)
-    setValidated(_.isEmpty(formik.errors));
+    // setValidated(_.isEmpty(formik.errors));
   }
 
   return (
@@ -273,29 +330,33 @@ export const AddStoryForm = ()=> {
             {formik.errors.description}
           </Form.Control.Feedback>
         </Form.Group>
+        <Form.Group as={Col} md="12" className={'mt-4'}>
+          <Form.Label>ATTACHMENT: {fileName}</Form.Label>
+        </Form.Group>
       </Row>
 
-      <div className={'mt-5 d-flex flex-row'}>
+
+      <div className={'mt-1 d-flex flex-row'}>
         <div className={'md-6 d-flex flex-column  justify-content-center align-items-start'}>
           <input accept="image/png, image/jpeg"  type="file" id="upload"
                  onChange={onFilechange}
                  hidden ref={fileInputRef}/>
           <div>
-            <Button  variant="outline-primary" type="button" className={'btn-rounded'}
+            <Button  variant="outline-primary" type="button"
+                     className={'btn-rounded btn-attachment'}
                      onClick={()=>{
                        fileInputRef.current.click()
                      }}
             >  <AttachmentIcon/> Add Attachment</Button>
-            {fileName && (
-              <h6 className={'text-dark mt-3'}>{fileName}</h6>
-            )}
           </div>
-
         </div>
+        <div style={{flex:1}}/>
         <div className={'md-6 d-flex flex-column  justify-content-center'}>
           <Button  type="submit" className={'btn-save'} >Save</Button>
         </div>
       </div>
+
+
     </Form>
   );
 }
