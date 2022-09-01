@@ -10,7 +10,7 @@ import moment from 'moment'
 import '../../assets/fakescroll/fakescroll.css'
 import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
 import './Content.css';
-import {ContentEventCard, HourLine} from "./components";
+import {ContentEventCard, ContentEventDetail, HourLine} from "./components";
 import {event_list} from "./data";
 import AdminPanelContainer from "../../containers";
 import {CalendarIcon, StoriesIcon} from "../../components/icons";
@@ -28,6 +28,10 @@ const ContentsPage: React.FC = observer(() => {
   const [show, setShow] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showStoryModal, setShowStoryModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const  [Details, setDetails] = useState<any[]>([])
+  const [CurrentStory, setCurrentStory] = useState(null)
+  const [CurrentEvent, setCurrentEvent] = useState(null)
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -84,9 +88,20 @@ const ContentsPage: React.FC = observer(() => {
 
   const saveEvent = (data:any)=>{
     console.log("saveStory", data)
+
     setShowEventModal(false)
   }
 
+
+  const editEvent = (event:any)=>{
+    setCurrentEvent(event)
+    setShowDetailModal(false)
+    if(event.eventType ==="story"){
+      setShowStoryModal(true)
+    }else{
+      setShowEventModal(true)
+    }
+  }
 
 
   const next = ()=>{
@@ -147,7 +162,10 @@ const ContentsPage: React.FC = observer(() => {
 
   const renderDayContent = (value:any)=>{
     return (
-      <div>
+      <div onClick={()=>{
+        setShowDetailModal(true)
+        console.log(value)
+      }}>
         <div className={'text-gray'} style={{fontSize:12, marginLeft:20}}>{value.title}</div>
         <div style={{marginBottom:20}}>
           {value.events.map((data:any)=>{
@@ -285,7 +303,7 @@ const ContentsPage: React.FC = observer(() => {
         </Modal.Header>
         <Modal.Body >
           <Row>
-           <AddEventForm save={(data:any)=>saveEvent(data)}/>
+           <AddEventForm event={CurrentEvent} save={(data:any)=>saveEvent(data)}/>
           </Row>
         </Modal.Body>
       </Modal>
@@ -309,8 +327,36 @@ const ContentsPage: React.FC = observer(() => {
         </Modal.Header>
         <Modal.Body >
           <Row>
-            <AddStoryForm save={(data:any)=>saveStory(data)}/>
+            <AddStoryForm event={CurrentEvent} save={(data:any)=>saveStory(data)}/>
           </Row>
+        </Modal.Body>
+      </Modal>
+
+
+
+      <Modal
+        size="lg"
+        show={showDetailModal}
+        centered
+        onHide={() => setShowDetailModal(false)}
+      >
+        <Modal.Header closeButton style={{paddingTop:30, paddingLeft:50, paddingRight:50}}>
+          <Modal.Title>
+            <div className={'create-modal-title'}>
+              Details
+            </div>
+            <div className={'create-modal-subtitle text-gray'}>
+              Lorem ipsum dolor sit amet
+            </div>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body >
+          <div>
+            {event_list[1].events.map((value:any) => {
+              return <ContentEventDetail edit={(event:any)=>editEvent(event)}  event={value}/>
+            })}
+
+          </div>
         </Modal.Body>
       </Modal>
     </AdminPanelContainer>

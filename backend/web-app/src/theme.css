@@ -16,6 +16,11 @@
     border:1px solid var(--green)
 }
 
+.border-orange{
+    border:1px solid var(--headings)
+}
+
+
 .border-blue{
     border: 1px solid  var(--blue);
 }

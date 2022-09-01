@@ -15,6 +15,7 @@
 .event-card-description{
     font-size: 14px;
     margin: 10px;
+
 }
 .event-card-img{
     width: 100%;
@@ -67,4 +68,51 @@
 
 .btn-attachment{
     width: 300px;
+}
+
+
+.detail-event-card{
+    border-radius: 14px;
+    margin-left:10px;
+    margin-right:10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+
+}
+.detail-event-card-left{
+    border-right:1px solid var(--headings);
+    width: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 20px;
+}
+.detail-event-card-right{
+    /*padding: 15px;*/
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+
+}
+.detail-event-card-img-container{
+    width: 200px !important;
+    /*background-color: red;*/
+    align-content: center;
+    align-items: center;
+    display: flex;
+}
+.detail-event-card-img{
+    width: 200px;
+    object-fit: cover;
+    height: 100%;
+    /*border-radius: 10px;*/
+}
+.action-buttons{
+    display: flex;
+    flex-direction: row;
+
+}
+.action-icon-container{
+    margin:4px;
 }

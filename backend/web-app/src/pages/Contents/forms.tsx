@@ -4,9 +4,10 @@ import * as Yup from "yup";
 import {Button, Col, Form, Row} from "react-bootstrap";
 import * as _ from 'lodash'
 import {AttachmentIcon} from "../../components/icons";
-
+import moment from 'moment'
 type AddEventFormProps = {
   save(data:any): any
+  event?:any
 }
 
 
@@ -19,18 +20,20 @@ const fileToDataUri = (file:any) => new Promise((resolve, reject) => {
 })
 
 export const AddEventForm = (props:AddEventFormProps)=> {
+  const {event} = props
+  console.log("EVENT", event)
   const [validated, setValidated] = useState(false);
   const fileInputRef = useRef<any>(null)
   const [fileName, setFileName] = useState(null)
-  const [dataUri, setDataUri] = useState('')
+  const [dataUri, setDataUri] = useState(event?event.url:"")
   const formik = useFormik({
     initialValues: {
-      startDate: "",
-      endDate: "",
-      startTime: "",
-      endTime: "",
-      location: "",
-      description: ""
+      startDate: event?event.startDate: "",
+      endDate: moment().date().toString(),
+      startTime:  event?event.startTime: "",
+      endTime: event?event.endTime: "",
+      location: event?event.location:"",
+      description: event?event.description:""
     },
     validationSchema: Yup.object({
       startDate: Yup.string()
@@ -45,13 +48,11 @@ export const AddEventForm = (props:AddEventFormProps)=> {
         .required("This field is required")
     }),
     onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
 
       let data = {...values, ...{url:dataUri}}
 
       console.log("DATA", data)
       props.save(data)
-
 
       // setFormState(values);
     }
@@ -221,10 +222,12 @@ export const AddEventForm = (props:AddEventFormProps)=> {
 
 type AddStoryFormProps = {
   save(data:any): any
+  event?:any
 }
 
 
 export const AddStoryForm = (props:AddStoryFormProps)=> {
+  const {event} = props
   const [validated, setValidated] = useState(false);
   const fileInputRef = useRef<any>(null)
   const [fileName, setFileName] = useState(null)
@@ -242,12 +245,10 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
         return;
       }
       setFileName(file.name)
-
       fileToDataUri(file)
         .then((dataUri:any) => {
           setDataUri(dataUri)
         })
-
     }else{
       setFileName(null)
     }
@@ -255,9 +256,9 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
 
   const formik = useFormik({
     initialValues: {
-      title: "",
-      link: "",
-      description: ""
+      title: event?event.title:"",
+      link: event?event.link:"",
+      description: event?event.description:""
     },
     validationSchema: Yup.object({
       title: Yup.string()
@@ -355,8 +356,6 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
           <Button  type="submit" className={'btn-save'} >Save</Button>
         </div>
       </div>
-
-
     </Form>
   );
 }
