@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite";
 import SimpleTable from '../../components/Table'
 import {Tab, Tabs} from "react-bootstrap";
 import {dataCompleted} from './constants';
+import AdminPanelContainer from "../../containers";
 
 
 
@@ -11,9 +12,10 @@ const AchTransactions: React.FC = observer(() => {
     const [LeftOpen, setLeftOpen] = useState<any>(true);
     //const [RightOpen, setRightOpen] = useState<any>(true);
 
-   
+
 
     return (
+      <AdminPanelContainer title={'transactions'} >
         <div id='layout'>
             <div id='main' className={`main${LeftOpen ? '' : '-closed'}`}>
                 <div className='content'>
@@ -28,6 +30,7 @@ const AchTransactions: React.FC = observer(() => {
                 </div>
             </div>
         </div>
+      </AdminPanelContainer>
     )
 })
 

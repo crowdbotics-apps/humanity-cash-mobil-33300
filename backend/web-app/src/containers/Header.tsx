@@ -1,27 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from "react-router-dom";
 
-const Header = () => {
+type Props = {
+    title:string
+}
+const Header: React.FC<Props>  =  ({ title }) => {
 
     const location = useLocation();
-    const [pathLocation, setPathLocation] = useState<string>('');
-
-
-    useEffect(() => {
-        if (location) {
-            let path = location.pathname
-            path = path.slice(1)
-            setPathLocation(path)
-        }
-    }, [location])
-
-    // if (true) return <></>
-
-
 
     return (
         <header>
-            <h4 className='title-h4'>{pathLocation}</h4>
+            <h4 className='title-h4'>{title} </h4>
         </header>
     )
 

@@ -16,7 +16,8 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { RootStore, setupRootStore } from "./models";
 import { RootStoreProvider } from "./models/root-store/root-store-context";
-import TheContainer from "./containers"
+import AdminPanelContainer from "./containers"
+import ContentsPage from "./pages/Contents";
 
 function App() {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
@@ -42,6 +43,7 @@ function App() {
 
   const route = (path: string, title: string, component: any, exact = true) => {
     (title_pag as any)[path as any] = title
+
     return <Route path={path} element={component} />
   }
 
@@ -63,15 +65,18 @@ function App() {
             </Routes>
             :
             //Rutas privadas
-            <TheContainer>
-              <Routes>
-                {route(ROUTES.DASHBOARD, "Dashboard", <Dashboard />)}
-                {route(ROUTES.AchTransactions, "AchTransactions", <AchTransactions />)}
-                {route(ROUTES.TRANSACTIONS(":id"), "AchTransactions view", <AchTransactionsDetail />)}
-                {route(ROUTES.SYNTHESIS_EXPLORER(":id"), "Synthesis explorer", <SynthesisExplorer />)}
-                {route('*', "", <NotFound />)}
-              </Routes>
-            </TheContainer>
+            <>            <Routes>
+              <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
+              <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+              <Route path={ROUTES.AchTransactions} element={<AchTransactions />} />
+              <Route path={ROUTES.TRANSACTIONS(":id")} element={<AchTransactionsDetail />} />
+              <Route path={ROUTES.SYNTHESIS_EXPLORER(":id")} element={<SynthesisExplorer />} />
+              <Route path={'*'} element={<NotFound />} />
+
+            </Routes>
+
+            </>
+
           }
         </BrowserRouter>
         <ToastContainer />

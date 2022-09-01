@@ -91,7 +91,7 @@ const ShapeIcon = () => (
 )
 
 
-const ShearchIcon = () => (
+const SearchIcon = () => (
     <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M6.57963 12.9448C7.99994 12.9448 9.32613 12.4903 10.4042 11.7328L14.4598 15.7223C14.648 15.9074 14.8961 16 15.1528 16C15.709 16 16.1111 15.5792 16.1111 15.0405C16.1111 14.788 16.0255 14.5523 15.8373 14.3672L11.8074 10.3945C12.6545 9.30037 13.1593 7.94529 13.1593 6.47238C13.1593 2.91215 10.1989 0 6.57963 0C2.95185 0 0 2.91215 0 6.47238C0 10.0326 2.95185 12.9448 6.57963 12.9448ZM6.57963 11.5476C3.74757 11.5476 1.42031 9.24987 1.42031 6.47238C1.42031 3.6949 3.74757 1.39716 6.57963 1.39716C9.40314 1.39716 11.7389 3.6949 11.7389 6.47238C11.7389 9.24987 9.40314 11.5476 6.57963 11.5476Z" fill="black" />
     </svg>
@@ -136,12 +136,104 @@ const ConfirmIcons = () => (
     </svg>
 )
 
+const ClockIcon = ()=>(
+ <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.6673 8.16667C14.6673 11.8467 11.6807 14.8333 8.00065 14.8333C4.32065 14.8333 1.33398 11.8467 1.33398 8.16667C1.33398 4.48667 4.32065 1.5 8.00065 1.5C11.6807 1.5 14.6673 4.48667 14.6673 8.16667Z" stroke="#3B88B6" stroke-width="1.04167" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10.4739 10.2866L8.40724 9.05331C8.04724 8.83998 7.75391 8.32664 7.75391 7.90664V5.17331" stroke="#3B88B6" stroke-width="1.04167" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+)
+
+const LocationIcon = ()=>(
+  <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M7.99992 9.11996C9.14867 9.11996 10.0799 8.18871 10.0799 7.03996C10.0799 5.89121 9.14867 4.95996 7.99992 4.95996C6.85117 4.95996 5.91992 5.89121 5.91992 7.03996C5.91992 8.18871 6.85117 9.11996 7.99992 9.11996Z" stroke="#3B88B6" stroke-width="1.04167"/>
+    <path d="M2.41379 5.82662C3.72712 0.0532891 12.2805 0.0599559 13.5871 5.83329C14.3538 9.21996 12.2471 12.0866 10.4005 13.86C9.06046 15.1533 6.94046 15.1533 5.59379 13.86C3.75379 12.0866 1.64712 9.21329 2.41379 5.82662Z" stroke="#3B88B6" stroke-width="1.04167"/>
+  </svg>
+)
+
+const StoriesIcon = ()=>(
+  <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M55 41.8499V11.6749C55 8.67486 52.55 6.44986 49.575 6.69986H49.425C44.175 7.14986 36.2 9.82486 31.75 12.6249L31.325 12.8999C30.6 13.3499 29.4 13.3499 28.675 12.8999L28.05 12.5249C23.6 9.74986 15.65 7.09986 10.4 6.67486C7.425 6.42486 5 8.67486 5 11.6499V41.8499C5 44.2499 6.95 46.4999 9.35 46.7999L10.075 46.8999C15.5 47.6249 23.875 50.3749 28.675 52.9999L28.775 53.0499C29.45 53.4249 30.525 53.4249 31.175 53.0499C35.975 50.3999 44.375 47.6249 49.825 46.8999L50.65 46.7999C53.05 46.4999 55 44.2499 55 41.8499Z" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M30 13.725V51.225" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19.375 21.225H13.75" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21.25 28.725H13.75" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+)
+
+const CalendarIcon = ()=>(
+  <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 5V12.5" stroke="#3B88B6" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M40 5V12.5" stroke="#3B88B6" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8.75 22.725H51.25" stroke="#3B88B6" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M52.5 21.25V42.5C52.5 50 48.75 55 40 55H20C11.25 55 7.5 50 7.5 42.5V21.25C7.5 13.75 11.25 8.75 20 8.75H40C48.75 8.75 52.5 13.75 52.5 21.25Z" stroke="#3B88B6" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M29.9882 34.25H30.0107" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20.7363 34.25H20.7587" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20.7363 41.75H20.7587" stroke="#3B88B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+)
+
+const CalendarIconBlue = ()=>(
+  <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="51" height="51" rx="14" fill="#A9DFFF"/>
+    <path d="M22 15V18" stroke="#3B88B6" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M30 15V18" stroke="#3B88B6" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M17.5 22.09H34.5" stroke="#3B88B6" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M35 21.5V30C35 33 33.5 35 30 35H22C18.5 35 17 33 17 30V21.5C17 18.5 18.5 16.5 22 16.5H30C33.5 16.5 35 18.5 35 21.5Z" stroke="#3B88B6" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25.9945 26.7H26.0035" stroke="#3B88B6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22.2953 26.7H22.3043" stroke="#3B88B6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22.2953 29.7H22.3043" stroke="#3B88B6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+)
+
+const StoryIconGreen = ()=>(
+  <svg width="51" height="51" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="51" height="51" rx="14" fill="#D1DB94"/>
+    <path d="M35 30.7399V18.6699C35 17.4699 34.02 16.5799 32.83 16.6799H32.77C30.67 16.8599 27.48 17.9299 25.7 19.0499L25.53 19.1599C25.24 19.3399 24.76 19.3399 24.47 19.1599L24.22 19.0099C22.44 17.8999 19.26 16.8399 17.16 16.6699C15.97 16.5699 15 17.4699 15 18.6599V30.7399C15 31.6999 15.78 32.5999 16.74 32.7199L17.03 32.7599C19.2 33.0499 22.55 34.1499 24.47 35.1999L24.51 35.2199C24.78 35.3699 25.21 35.3699 25.47 35.2199C27.39 34.1599 30.75 33.0499 32.93 32.7599L33.26 32.7199C34.22 32.5999 35 31.6999 35 30.7399Z" stroke="#8D955D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 19.49V34.49" stroke="#8D955D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20.75 22.49H18.5" stroke="#8D955D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21.5 25.49H18.5" stroke="#8D955D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+)
+
+const AttachmentIcon = ()=>(
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.6328 14.5219L14.5818 10.9802C15.1059 9.02413 13.9451 7.01356 11.9891 6.48944C10.033 5.96532 8.02248 7.12612 7.49836 9.08216L5.12585 17.9365C4.60173 19.8925 5.76253 21.9031 7.71857 22.4272C8.6168 22.6679 9.52652 22.5533 10.2985 22.1695C10.7723 21.934 11.1942 21.5971 11.5298 21.1788M11.0401 10.0312L10.0911 13.5729C9.56696 15.5289 10.7278 17.5395 12.6838 18.0636C14.6398 18.5877 16.6504 17.4269 17.1745 15.4709L19.547 6.61658C20.0712 4.66054 18.9104 2.64997 16.9543 2.12585C16.0561 1.88517 15.1464 1.99979 14.3744 2.38356C13.9006 2.61907 13.4787 2.95595 13.1431 3.37429" stroke="#3B88B6" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+)
+
+const CloseActionIcon = ()=>(
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.19 0H5.81C2.17 0 0 2.17 0 5.81V14.18C0 17.83 2.17 20 5.81 20H14.18C17.82 20 19.99 17.83 19.99 14.19V5.81C20 2.17 17.83 0 14.19 0ZM13.36 12.3C13.65 12.59 13.65 13.07 13.36 13.36C13.21 13.51 13.02 13.58 12.83 13.58C12.64 13.58 12.45 13.51 12.3 13.36L10 11.06L7.7 13.36C7.55 13.51 7.36 13.58 7.17 13.58C6.98 13.58 6.79 13.51 6.64 13.36C6.35 13.07 6.35 12.59 6.64 12.3L8.94 10L6.64 7.7C6.35 7.41 6.35 6.93 6.64 6.64C6.93 6.35 7.41 6.35 7.7 6.64L10 8.94L12.3 6.64C12.59 6.35 13.07 6.35 13.36 6.64C13.65 6.93 13.65 7.41 13.36 7.7L11.06 10L13.36 12.3Z" fill="#DF9BB8"/>
+  </svg>
+)
+const DoneActionIcon = ()=>(
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.19 0H5.81C2.17 0 0 2.17 0 5.81V14.18C0 17.83 2.17 20 5.81 20H14.18C17.82 20 19.99 17.83 19.99 14.19V5.81C20 2.17 17.83 0 14.19 0ZM14.78 7.7L9.11 13.37C8.97 13.51 8.78 13.59 8.58 13.59C8.38 13.59 8.19 13.51 8.05 13.37L5.22 10.54C4.93 10.25 4.93 9.77 5.22 9.48C5.51 9.19 5.99 9.19 6.28 9.48L8.58 11.78L13.72 6.64C14.01 6.35 14.49 6.35 14.78 6.64C15.07 6.93 15.07 7.4 14.78 7.7Z" fill="#8D955D"/>
+  </svg>
+)
+
+const EditActionIcon = ()=>(
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.19 0H5.81C2.17 0 0 2.17 0 5.81V14.18C0 17.83 2.17 20 5.81 20H14.18C17.82 20 19.99 17.83 19.99 14.19V5.81C20 2.17 17.83 0 14.19 0ZM8.95 15.51C8.66 15.8 8.11 16.08 7.71 16.14L5.25 16.49C5.16 16.5 5.07 16.51 4.98 16.51C4.57 16.51 4.19 16.37 3.92 16.1C3.59 15.77 3.45 15.29 3.53 14.76L3.88 12.3C3.94 11.89 4.21 11.35 4.51 11.06L8.97 6.6C9.05 6.81 9.13 7.02 9.24 7.26C9.34 7.47 9.45 7.69 9.57 7.89C9.67 8.06 9.78 8.22 9.87 8.34C9.98 8.51 10.11 8.67 10.19 8.76C10.24 8.83 10.28 8.88 10.3 8.9C10.55 9.2 10.84 9.48 11.09 9.69C11.16 9.76 11.2 9.8 11.22 9.81C11.37 9.93 11.52 10.05 11.65 10.14C11.81 10.26 11.97 10.37 12.14 10.46C12.34 10.58 12.56 10.69 12.78 10.8C13.01 10.9 13.22 10.99 13.43 11.06L8.95 15.51ZM15.37 9.09L14.45 10.02C14.39 10.08 14.31 10.11 14.23 10.11C14.2 10.11 14.16 10.11 14.14 10.1C12.11 9.52 10.49 7.9 9.91 5.87C9.88 5.76 9.91 5.64 9.99 5.57L10.92 4.64C12.44 3.12 13.89 3.15 15.38 4.64C16.14 5.4 16.51 6.13 16.51 6.89C16.5 7.61 16.13 8.33 15.37 9.09Z" fill="#3B88B6"/>
+  </svg>
+)
 
 export {
+  EditActionIcon,
+  DoneActionIcon,
+  CloseActionIcon,
+  AttachmentIcon,
+   ClockIcon,
+  CalendarIconBlue,
+  StoryIconGreen,
+  CalendarIcon,
+  LocationIcon,
+  StoriesIcon,
     ShapeIcon,
     NoteIcon,
     DocumentIcon,
-    ShearchIcon,
+    SearchIcon,
     LogoutIcon,
     WalletIcon,
     SubtAdminIcon,
