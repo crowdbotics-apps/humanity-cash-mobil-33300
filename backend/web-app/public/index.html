@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:style="http://www.w3.org/1999/xlink">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/fav.png" />
+    <link rel="icon" href="%PUBLIC_URL%/fonts.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
@@ -15,7 +16,7 @@
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link href="http://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
+<!--    <link href="http://fonts.cdnfonts.com/css/gotham" rel="stylesheet">-->
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -26,6 +27,117 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Humanity Cash</title>
+
+    <style >
+      @font-face {
+        font-family: 'Gotham';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Gotham'), url('fonts/GothamBook.woff') format('woff');
+      }
+      @font-face {
+        font-family: 'Gotham';
+        font-style: italic;
+        font-weight: 400;
+        src: local('Gotham'), url('fonts/Gotham-BookItalic.otf') format('otf');
+      }
+      @font-face {
+        font-family: 'Gotham';
+        font-style: normal;
+        font-weight: 300;
+        src: local('Gotham'), url('fonts/GothamLight.ttf') format('ttf');
+      }
+      @font-face {
+        font-family: 'Gotham';
+        font-style: italic;
+        font-weight: 300;
+        src: local('Gotham'), url('fonts/GothamLightItalic.ttf') format('ttf');
+      }
+      @font-face {
+        font-family: 'Gotham';
+        font-style: normal;
+        font-weight: 500;
+        src: local('Gotham'), url('fonts/GothamMedium.ttf') format('ttf');
+      }
+      @font-face {
+        font-family: 'Gotham';
+        font-style: normal;
+        font-weight: 500;
+        src: local('Gotham'), url('fonts/GothamMedium_1.ttf') format('ttf');
+      }
+      @font-face {
+        font-family: 'Gotham';
+        font-style: italic;
+        font-weight: 500;
+        src: local('Gotham'), url('fonts/GothamMediumItalic.ttf') format('ttf');
+      }
+      @font-face {
+        font-family: 'Gotham';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Gotham'), url('fonts/GothamBold.ttf') format('ttf');
+      }
+      @font-face {
+        font-family: 'Gotham';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Gotham'), url('fonts/Gotham-Bold.otf') format('otf');
+      }
+      @font-face {
+        font-family: 'Gotham';
+        font-style: italic;
+        font-weight: 700;
+        src: local('Gotham'), url('fonts/GothamBoldItalic.ttf') format('ttf');
+      }
+      @font-face {
+        font-family: 'Gotham Black';
+        font-style: normal;
+        font-weight: 500;
+        src: local('Gotham Black'), url('fonts/Gotham-Black.otf') format('otf');
+      }
+      @font-face {
+        font-family: 'Gotham Light';
+        font-style: normal;
+        font-weight: 500;
+        src: local('Gotham Light'), url('fonts/Gotham-Light.otf') format('otf');
+      }
+      @font-face {
+        font-family: 'Gotham Thin';
+        font-style: normal;
+        font-weight: 500;
+        src: local('Gotham Thin'), url('fonts/Gotham-Thin.otf') format('otf');
+      }
+      @font-face {
+        font-family: 'Gotham XLight';
+        font-style: normal;
+        font-weight: 500;
+        src: local('Gotham XLight'), url('fonts/Gotham-XLight.otf') format('otf');
+      }
+      @font-face {
+        font-family: 'Gotham Book';
+        font-style: italic;
+        font-weight: 500;
+        src: local('Gotham Book'), url('fonts/Gotham-BookItalic.otf') format('otf');
+      }
+      @font-face {
+        font-family: 'Gotham Thin';
+        font-style: italic;
+        font-weight: 500;
+        src: local('Gotham Thin'), url('fonts/Gotham-ThinItalic.otf') format('otf');
+      }
+      @font-face {
+        font-family: 'Gotham Ultra';
+        font-style: italic;
+        font-weight: 500;
+        src: local('Gotham Ultra'), url('fonts/Gotham-UltraItalic.otf') format('otf');
+      }
+      @font-face {
+        font-family: 'Gotham XLight';
+        font-style: italic;
+        font-weight: 500;
+        src: local('Gotham XLight'), url('fonts/Gotham-XLightItalic.otf') format('otf');
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

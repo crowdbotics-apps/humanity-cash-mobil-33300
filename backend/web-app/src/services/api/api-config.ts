@@ -21,14 +21,8 @@ export interface ApiConfig {
  * The default configuration for the app.
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
-  // url: 'http://0.0.0.0:8000',
-  // base_url: 'http://0.0.0.0:8000',
-
-  url: "https://humanity-cash-mobil-33300.botics.co",
-  base_url: 'https://humanity-cash-mobil-33300.botics.co',
-
-
-
+  url: process.env.REACT_APP_API_URL!,
+  base_url:  process.env.REACT_APP_API_BASE_URL!,
   timeout: 50000,
   isDebug: false,
 }
