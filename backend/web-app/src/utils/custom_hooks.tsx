@@ -5,3 +5,7 @@ export const useApi = ()=>{
   return rootStore.environment.api
 }
 
+export const useUserStore = ()=>{
+  const  rootStore = useStores()
+  return rootStore.userStore
+}

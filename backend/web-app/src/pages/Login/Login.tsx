@@ -44,8 +44,6 @@ export const Login: React.FC = observer(() => {
     }
 
 
-
-
     return (
       <PageWeb header={false}  >
           <div style={{marginTop:50, marginBottom:20}}>

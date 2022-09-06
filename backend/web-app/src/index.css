@@ -413,4 +413,6 @@ min-height: 200px;
 .search-button-group{
   width: 100%;
 }
-
+.logout-buttons{
+  cursor: pointer;
+}

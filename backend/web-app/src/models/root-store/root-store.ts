@@ -1,5 +1,6 @@
 import {Instance, SnapshotOut, types} from "mobx-state-tree"
 import {withEnvironment} from ".."
+import {UserStoreModel} from "../user-store/user-store";
 
 /**
  * A RootStore model.
@@ -7,7 +8,9 @@ import {withEnvironment} from ".."
 // @ts-ignore
 export const RootStoreModel = types.model("RootStore")
   .extend(withEnvironment)
-  .props({})
+  .props({
+    userStore: types.optional(UserStoreModel, {}),
+  })
   .views(self => ({ }))
   .actions(self => ({}))
 

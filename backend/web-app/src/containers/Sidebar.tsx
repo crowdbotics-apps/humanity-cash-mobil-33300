@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import {NavLink, useNavigate} from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import {
     ShapeIcon,
@@ -16,6 +16,8 @@ import {
 } from '../components/icons'
 import logo_admin from '../assets/images/logo_admin.png';
 import logo_mini from '../assets/images/logo-mini.png';
+import {useUserStore} from "../utils";
+import {ROUTES} from "../constants";
 type PropsSide = {
     sideBarStatus: boolean;
     sideBarActions: any;
@@ -25,6 +27,8 @@ type PropsSide = {
 export const Sidebar: React.FC<PropsSide> = ({ sideBarStatus, sideBarActions }) => {
 
     const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate()
+    const userStore = useUserStore()
 
     const toggle = () => setIsOpen(true);
     const toggle2 = () => setIsOpen(false);
@@ -79,10 +83,15 @@ export const Sidebar: React.FC<PropsSide> = ({ sideBarStatus, sideBarActions }) 
             style: 'pt-3'
         },
         {
-            path: "/logout",
+            // path: "/logout",
+            path:null,
             name: "Sign out ",
             icons: <LogoutIcon />,
-            style: 'logount-buttons'
+            style: 'logout-buttons',
+            onClick:()=>{
+                userStore.reset()
+                navigate(ROUTES.LOGIN, {replace: true})
+            }
         }
 
     ]
@@ -97,12 +106,24 @@ export const Sidebar: React.FC<PropsSide> = ({ sideBarStatus, sideBarActions }) 
             <div className="bars" onClick={() => sideBarActions(false)}>
                 <div><CloseIcons/></div>
             </div>
-            {menuItem.map((item, index) => (
-                <NavLink to={item.path} key={index} className={`link ${item.style}`}  >
-                    <div className='icon-nav'>{item.icons}</div>
-                    <div className={`link_text ${isOpen ? '' : 'open-sidebar'}`}>{item.name}</div>
-                </NavLink>
-            ))}
+            {menuItem.map((item:any, index) => {
+                let content = null
+                if(item.path !== null){
+                    content = (
+                      <NavLink to={item.path} key={index} className={`link ${item.style}`}  >
+                        <div className='icon-nav'>{item.icons}</div>
+                        <div className={`link_text ${isOpen ? '' : 'open-sidebar'}`}>{item.name}</div>
+                    </NavLink>)
+                }else{
+                    content = (
+                      <div key={index} className={`link ${item.style}`} style={{cursor:"pointer"}} onClick={item.onClick}  >
+                          <div className='icon-nav'>{item.icons}</div>
+                          <div className={`link_text ${isOpen ? '' : 'open-sidebar'}`}>{item.name}</div>
+                      </div>
+                    )
+                }
+              return content
+            })}
         </div>
     );
 }

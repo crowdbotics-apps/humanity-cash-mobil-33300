@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -9,10 +9,12 @@ import InputGroup from "react-bootstrap/InputGroup";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Eyes} from "../../components/icons";
-import {useApi} from "../../utils";
+import {useApi, useUserStore} from "../../utils";
 import {genericApiError} from "../../helpers";
 import {toast} from "react-toastify";
 import {getErrorMessages} from "../../utils/functions";
+import {useNavigate} from "react-router-dom";
+import {ROUTES} from "../../constants";
 
 
 export const FormContent: React.FC<{ children: React.ReactNode}> = ({ children}) => (
@@ -163,7 +165,9 @@ export const LoginForm = ()=> {
   const [Loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const [PasswordType, setPasswordType] = useState("password")
+  const navigate = useNavigate()
   const api = useApi()
+  const userStore = useUserStore()
 
   const formik = useFormik({
     initialValues: {
@@ -182,7 +186,9 @@ export const LoginForm = ()=> {
 
       api.login(data).then((result: any) => {
         if (result.kind === "ok") {
-          console.log(' LOGIN SUCESS')
+          console.log(result)
+            userStore.setUser(result.response.user)
+            navigate(ROUTES.DASHBOARD, {replace:true})
         } else {
           console.log(' ===>>>> ', result)
           toast.error(getErrorMessages(result.errors), {
@@ -197,6 +203,13 @@ export const LoginForm = ()=> {
       // setFormState(values);
     }
   });
+
+  useEffect(() => {
+    console.log("userStore", userStore.access_token)
+    if(userStore.isLoggedIn){
+      navigate(ROUTES.DASHBOARD,{replace:true})
+    }
+  }, [])
 
   const handleSubmitFormik = (event:any)=>{
     formik.handleSubmit(event)
@@ -242,7 +255,7 @@ export const LoginForm = ()=> {
             />
             <Button type={"button"} variant="outline-secondary" onClick={event => {
               setPasswordType((value) => value === "password"?"text":"password")
-            }} className='eyes-buttons'>
+            }} className={'eyes-buttons '+ (formik.errors.password?'eyes-buttons-invalid':'')}>
               <Eyes />
             </Button>
           </InputGroup>

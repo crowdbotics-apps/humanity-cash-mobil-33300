@@ -79,7 +79,7 @@ type PropsNav = {
 
 export const TheNav: React.FC<PropsNav> = ({ sideBarActions }) => {
     let location = useLocation();
-    console.log(location, 'location')
+    // console.log(location, 'location')
     return (
 
       <Navbar bg="light" expand="lg" className='mt-2 mb-0'>
