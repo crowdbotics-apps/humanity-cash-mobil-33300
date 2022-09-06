@@ -5,7 +5,8 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  Navigate
+  Navigate,
+  Outlet
 } from "react-router-dom";
 import { NotFound, SynthesisExplorer, Login, Splash, Dashboard } from "./pages";
 import AchTransactions from './pages/AchTransactions'
@@ -25,30 +26,13 @@ import {rest} from "lodash";
 
 
 // @ts-ignore
-const ProtectedRoute = ({ user, children }) => {
-  if (!user) {
+const ProtectedRoute = ({ isAllowed }:{isAllowed:boolean}) => {
+  if (!isAllowed) {
     return <Navigate to="/start-form" replace />;
   }
-  return children;
+  return <Outlet />;
 };
 
-
-const privateRoute= ({path, isLoggedIn, children}:{
-  path: string
-  isLoggedIn: boolean
-  children: React.ReactNode
-} )=>{
-  return (
-    <Route
-      path={path}
-      element={
-        <ProtectedRoute user={isLoggedIn}>
-          {children}
-        </ProtectedRoute>
-      }
-    />
-  )
-}
 
 function App() {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
@@ -56,7 +40,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
-    console.log("ENVIROMENT", process.env)
     window.addEventListener('resize', handleWindowSizeChange);
     return () => {
       window.removeEventListener('resize', handleWindowSizeChange);
@@ -69,7 +52,6 @@ function App() {
     (async () => {
       setupRootStore().then((rootStore)=>{
         setRootStore(rootStore)
-        console.log("rootStore.userStore", rootStore.userStore.access_token)
         setIsLoggedIn(rootStore.userStore.isLoggedIn)
       })
     })()
@@ -99,26 +81,14 @@ function App() {
             {route(ROUTES.SPLASH, "", <Splash />)}
 
             <Route path={ROUTES.LOGIN} element={<Login />} />
-            {privateRoute({
-              path: ROUTES.DASHBOARD,
-              children: <Dashboard/>,
-              isLoggedIn:isLoggedIn
-            })}
-            {privateRoute({
-              path: ROUTES.CONTENTS,
-              children: <ContentsPage/>,
-              isLoggedIn:isLoggedIn
-            })}
-            {privateRoute({
-              path: ROUTES.AchTransactions,
-              children: <AchTransactions/>,
-              isLoggedIn:isLoggedIn
-            })}
-            {privateRoute({
-              path:ROUTES.TRANSACTIONS(":id"),
-              children: <AchTransactionsDetail/>,
-              isLoggedIn:isLoggedIn
-            })}
+
+            <Route element={<ProtectedRoute isAllowed={rootStore && rootStore.userStore.isLoggedIn} />} >
+                  <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
+                  <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+                  <Route path={ROUTES.TRANSACTIONS} element={<AchTransactions />} />
+                  <Route path={ROUTES.TRANSACTIONS_DETAIL(":id")} element={<AchTransactionsDetail />} />
+            </Route>
+
             <Route path={ROUTES.SYNTHESIS_EXPLORER(":id")} element={<SynthesisExplorer />} />
             <Route path={'*'} element={<NotFound />} />
           </Routes>

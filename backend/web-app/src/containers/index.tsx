@@ -16,10 +16,7 @@ type Props = {
 
 
 const AdminPanelContainer: React.FC<Props> = ({ children, title, header }) => {
-    useEffect(() => {
-       // @ts-ignore
-        console.log("useffect", children.props)
-    },[])
+
 
     const [sideBarAction, setSideBarAction] = useState(false);
 

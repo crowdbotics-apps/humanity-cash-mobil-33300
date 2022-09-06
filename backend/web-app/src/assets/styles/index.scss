@@ -20,13 +20,16 @@ $typography: Gotham;
 @import "./paginate";
 @import "./tableBadge";
 @import "./modal";
+@import "fonts.css";
+
 body {
     background: #F7F5F0;
 }
 
 .form-label {
     color: #666666;
-    font-weight: 600;
+    font-weight: 700;
+    font-family: Gotham;
 }
 
 .input-large {

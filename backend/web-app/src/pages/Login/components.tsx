@@ -186,7 +186,6 @@ export const LoginForm = ()=> {
 
       api.login(data).then((result: any) => {
         if (result.kind === "ok") {
-          console.log(result)
             userStore.setUser(result.response.user)
             navigate(ROUTES.DASHBOARD, {replace:true})
         } else {
@@ -205,7 +204,6 @@ export const LoginForm = ()=> {
   });
 
   useEffect(() => {
-    console.log("userStore", userStore.access_token)
     if(userStore.isLoggedIn){
       navigate(ROUTES.DASHBOARD,{replace:true})
     }
