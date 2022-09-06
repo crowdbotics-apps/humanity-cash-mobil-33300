@@ -1,48 +1,26 @@
 import React, {useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {PageWeb} from "../../components";
-import {useNavigate} from "react-router-dom";
 import logo from '../../assets/images/logo.png';
-import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import {useApi} from "../../utils";
-import {FormContent, LoginForm} from "./components";
-import {useFormik} from "formik";
-import * as Yup from "yup";
+import {ForgotPasswordForm, FormContent, LoginForm, ResetForm} from "./components";
 import "./Login.css"
-import {AddStoryForm} from "../Contents/forms";
+import {FORM_CONTENT} from "./constants";
 
 
-export const Login: React.FC = observer(() => {
-    const [Validated, setValidated] = useState<boolean>(false)
+export const LoginPage: React.FC = observer(() => {
+    const [content, setContent] = useState(FORM_CONTENT.Login)
 
-    const formik = useFormik({
-        initialValues: {
-            title:"",
-            password:"",
-        },
-        validationSchema: Yup.object({
-            title: Yup.string()
-              .required("This field is required"),
-            password: Yup.string()
-              .required("This field is required"),
-        }),
-        onSubmit: values => {
-
-            console.log("DATA", values)
-            // setFormState(values);
-            // setFormState(values);
+   const updateContent = (newContent:FORM_CONTENT)=>{
+      setContent(newContent)
+   }
+    const Content = ()=>{
+        if(content === FORM_CONTENT.Login){
+            return <LoginForm updateContent={updateContent} />
+        }else if(content === FORM_CONTENT.ForgotPassword){
+           return <ForgotPasswordForm updateContent={updateContent} />
         }
-    });
-
-
-    const handleSubmitFormik = (event:any)=>{
-        formik.handleSubmit(event)
-        console.log(formik.errors)
+        return <ResetForm updateContent={updateContent} />
     }
-
 
     return (
       <PageWeb header={false}  >
@@ -51,10 +29,9 @@ export const Login: React.FC = observer(() => {
           </div>
           <FormContent>
               <div>
-                  <LoginForm />
+                  <Content />
               </div>
           </FormContent>
-
       </PageWeb>
     )
 })

@@ -8,7 +8,7 @@ import {
   Navigate,
   Outlet
 } from "react-router-dom";
-import { NotFound, SynthesisExplorer, Login, Splash, Dashboard } from "./pages";
+import { NotFound, SynthesisExplorer, LoginPage, ResetPasswordPage, Splash, Dashboard } from "./pages";
 import AchTransactions from './pages/AchTransactions'
 import AchTransactionsDetail from './pages/AchTransactions/Details'
 import { title_pag } from "./helpers";
@@ -80,13 +80,14 @@ function App() {
           <Routes>
             {route(ROUTES.SPLASH, "", <Splash />)}
 
-            <Route path={ROUTES.LOGIN} element={<Login />} />
-
+            <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+            <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
             <Route element={<ProtectedRoute isAllowed={rootStore && rootStore.userStore.isLoggedIn} />} >
                   <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
                   <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                   <Route path={ROUTES.TRANSACTIONS} element={<AchTransactions />} />
                   <Route path={ROUTES.TRANSACTIONS_DETAIL(":id")} element={<AchTransactionsDetail />} />
+
             </Route>
 
             <Route path={ROUTES.SYNTHESIS_EXPLORER(":id")} element={<SynthesisExplorer />} />

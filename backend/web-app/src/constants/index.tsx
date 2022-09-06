@@ -8,4 +8,5 @@ export const ROUTES = {
   CONTENTS: '/content',
   SYNTHESIS_EXPLORER: (params: any) => `/synthesis-explorer/${params}` ,
   TRANSACTIONS_DETAIL: (params: any) => `/transactions/${params}` ,
+  RESET_PASSWORD: `/users/reset/:uidb64/:token`
 }
