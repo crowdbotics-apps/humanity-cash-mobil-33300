@@ -178,7 +178,7 @@ export const LoginForm = ()=> {
     }),
     onSubmit: values => {
       // alert(JSON.stringify(values, null, 2));
-      let data = {...values}
+      let data = {username:values.email, email:values.email, password:values.password}
 
       api.login(data).then((result: any) => {
         if (result.kind === "ok") {

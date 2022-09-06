@@ -1,5 +1,6 @@
 import random
 
+from dj_rest_auth.serializers import LoginSerializer
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.utils import timezone
@@ -9,7 +10,7 @@ from allauth.utils import email_address_exists
 from allauth.account.adapter import get_adapter
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
+from rest_framework.exceptions import ValidationError
 from home.api.v1.serializers.setup_profile_serializers import ConsumerProfileDetailSerializer, \
     MerchantMyProfileSerializer
 from home.helpers import send_verification_email, setup_verification_code, send_verification_phone
@@ -115,3 +116,16 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "refresh": str(refresh),
             "access": str(refresh.access_token),
         }
+
+class LoginSerializer(LoginSerializer):
+    email = serializers.CharField(required=False, allow_blank=True)
+
+    def _validate_username_email(self, username, email, password):
+        if not username and not email:
+            msg = _('Must include either "username" or "email" and "password".')
+            raise ValidationError(msg)
+        if User.objects.filter(email=email).exists():
+            user = self.authenticate(email=email, password=password)
+        else:
+            user = self.authenticate(username=username, password=password)
+        return user
