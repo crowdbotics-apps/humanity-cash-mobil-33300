@@ -90,7 +90,7 @@ THIRD_PARTY_APPS = [
     'phonenumber_field',
     'django_filters',
     'cities_light',
-    'corsheaders'
+    'corsheaders',
 ]
 # MODULES_APPS = get_modules()
 

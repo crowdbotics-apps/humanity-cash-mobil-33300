@@ -5,6 +5,7 @@ import {Button, Col, Form, Row} from "react-bootstrap";
 import * as _ from 'lodash'
 import {AttachmentIcon} from "../../components/icons";
 import moment from 'moment'
+import {EVENT_TYPE} from "./models";
 type AddEventFormProps = {
   save(data:any): any
   event?:any
@@ -52,7 +53,7 @@ export const AddEventForm = (props:AddEventFormProps)=> {
       let data = {...values, ...{url:dataUri}}
 
       console.log("DATA", data)
-      props.save(data)
+      // props.save(data)
 
       // setFormState(values);
     }
@@ -112,7 +113,7 @@ export const AddEventForm = (props:AddEventFormProps)=> {
             lang={"us-US"}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            isInvalid={!!formik.errors.startDate}
+            isInvalid={!!formik.errors.startDate && !!formik.touched.startDate}
             value={formik.values.startDate}
           />
           <Form.Control.Feedback type="invalid">
@@ -126,11 +127,11 @@ export const AddEventForm = (props:AddEventFormProps)=> {
             type="date"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            isInvalid={!!formik.errors.startDate}
+            isInvalid={!!formik.errors.endDate && !!formik.touched.endDate}
             value={formik.values.endDate}
           />
           <Form.Control.Feedback type="invalid">
-            {formik.errors.startDate}
+            {formik.errors.endDate}
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group as={Col} md="6" className={'mt-4'}>
@@ -141,7 +142,7 @@ export const AddEventForm = (props:AddEventFormProps)=> {
             lang={"us-US"}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            isInvalid={!!formik.errors.startTime}
+            isInvalid={!!formik.errors.startTime && !!formik.touched.startTime}
             value={formik.values.startTime}
           />
           <Form.Control.Feedback type="invalid">
@@ -155,7 +156,7 @@ export const AddEventForm = (props:AddEventFormProps)=> {
             type="time"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            isInvalid={!!formik.errors.endTime}
+            isInvalid={!!formik.errors.endTime && !!formik.touched.endTime}
             value={formik.values.endTime}
           />
 
@@ -182,7 +183,7 @@ export const AddEventForm = (props:AddEventFormProps)=> {
             as="textarea"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            isInvalid={!!formik.errors.description}
+            isInvalid={!!formik.errors.description  && !!formik.touched.description }
             value={formik.values.description}
           />
           <Form.Control.Feedback type="invalid">
@@ -238,7 +239,6 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
     console.log( e.target.files );
 
     if(e.target.files.length > 0){
-
       let file = e.target.files[0] || null
       if(!file) {
         setDataUri('');
@@ -268,7 +268,9 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
     }),
     onSubmit: values => {
       // alert(JSON.stringify(values, null, 2));
-      let data = {...values, ...{url:dataUri}}
+      let data:any = {...values, ...{img:dataUri}}
+      data['date'] = moment().format();
+      data['eventType'] = EVENT_TYPE.Story
 
       console.log("DATA", data)
       props.save(data)
@@ -295,7 +297,7 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
             lang={"us-US"}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            isInvalid={!!formik.errors.title}
+            isInvalid={!!formik.errors.title  && !!formik.touched.title}
             value={formik.values.title}
           />
           <Form.Control.Feedback type="invalid">
@@ -324,7 +326,7 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
             as="textarea"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            isInvalid={!!formik.errors.description}
+            isInvalid={!!formik.errors.description  && !!formik.touched.description}
             value={formik.values.description}
           />
           <Form.Control.Feedback type="invalid">

@@ -7,7 +7,9 @@
 .text-blue{
     color: var(--blue)
 }
-
+.text-pink{
+    color: var(--pink)
+}
 .text-gray{
     color: var(--gray)
 }

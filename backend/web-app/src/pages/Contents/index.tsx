@@ -10,12 +10,21 @@ import moment from 'moment'
 import '../../assets/fakescroll/fakescroll.css'
 import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
 import './Content.css';
-import {ContentEventCard, ContentEventDetail, HourLine} from "./components";
+import {ContentEventCard, ContentEventDetail, getTitleFormat, HourLine} from "./components";
 import {event_list} from "./data";
 import AdminPanelContainer from "../../containers";
 import {CalendarIcon, StoriesIcon} from "../../components/icons";
 import {AddEventForm, AddStoryForm} from "./forms";
+import {ContentEvent, EVENT_TYPE} from "./models";
+import {useApi} from "../../utils";
+import {ROUTES} from "../../constants";
+import {toast} from "react-toastify";
+import {getErrorMessages} from "../../utils/functions";
+import {genericApiError} from "../../helpers";
 
+const getHourFormatted = (date:string)=>{
+  return moment(date).format('HH a').toUpperCase()
+}
 
 const ContentsPage: React.FC = observer(() => {
   const { innerWidth: width, innerHeight: height } = window;
@@ -23,7 +32,7 @@ const ContentsPage: React.FC = observer(() => {
   const CalendarEl = useRef(null);
   const [Title, setTitle] = useState('')
   const [calendarApi, setCalendarApi] = useState(null)
-  const [CalendarEvents, setCalendarEvents] = useState([])
+  const [CalendarEvents, setCalendarEvents] = useState<any>([])
   const [RightEvents, setRightEvents] = useState<any[]>([])
   const [show, setShow] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
@@ -31,9 +40,8 @@ const ContentsPage: React.FC = observer(() => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const  [Details, setDetails] = useState<any[]>([])
   const  [DetailsTitle, setDetailsTitle] = useState<string>("")
-  const [CurrentStory, setCurrentStory] = useState(null)
-  const [CurrentEvent, setCurrentEvent] = useState(null)
-
+  const [CurrentEvent, setCurrentEvent] = useState<ContentEvent| null>(null)
+  const api = useApi()
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -56,14 +64,82 @@ const ContentsPage: React.FC = observer(() => {
   },[])
 
   const handleDateClick = (arg:any) => { // bind with an arrow function
-    console.log("handledateclick", arg.event.extendedProps)
-    if("Friday, 08:24 AM April 1, 2022"===arg.event.extendedProps.dateFullName){
-      setDetails(event_list[1].events)
-    }else{
-      setDetails(event_list[0].events)
-    }
+    setDetails(event_list[0].events)
     setShowDetailModal(true)
   }
+
+
+
+  const groupEvents = (eventList:any[])=>{
+     let data = {}
+      let calendarEvents = []
+      for (const event of eventList){
+        let newEvent = {
+          title: event.title,
+          description: event.description,
+          id: event.id,
+          link: event.link,
+          location: event.location,
+          date: event.start_date,
+          img: event.image,
+          eventType: event.event_type,
+          startTime: event.start_date,
+          endTime: event.end_date,
+          startDate: event.start_date,
+          endDate: event.end_date
+        }
+        let aux_date = moment(event.start_date).format('YYYY-MM-DD')
+        console.log("aux_date", aux_date)
+        if(Object.keys(data).indexOf(aux_date) === -1){
+          // @ts-ignore
+          data[aux_date] = {title:event.start_date, events:[newEvent] }
+        }else{
+          // @ts-ignore
+          data[aux_date].events.push(newEvent)
+        }
+      }
+      let rightEvents = []
+      for(let k of Object.keys(data) ){
+        // @ts-ignore
+        if(data[k].events.length > 1){
+          // @ts-ignore
+          for(let event of data[k].events){
+            event.isOverlapping = true
+            calendarEvents.push(event)
+          }
+        }else{
+          // @ts-ignore
+          data[k].events[0].isOverlapping = false
+          // @ts-ignore
+          calendarEvents.push( data[k].events[0])
+        }
+        // @ts-ignore
+        rightEvents.push(data[k])
+
+      }
+
+      setRightEvents(rightEvents)
+
+      setCalendarEvents(calendarEvents)
+
+      console.log("setCalendarEvents", calendarEvents)
+  }
+  const getEvents = ()=>{
+    api.getEvents({}).then((response: any) => {
+      if (response.kind === "ok") {
+        console.log(" api.getEvents", response.data.results)
+        groupEvents(response.data.results)
+      } else {
+
+      }
+    }).catch((error: any) => {
+      genericApiError()
+    })
+  }
+
+  useEffect(() => {
+    getEvents()
+  }, [])
 
 
   const renderEventContent = (eventInfo:any) => {
@@ -90,13 +166,51 @@ const ContentsPage: React.FC = observer(() => {
   }
 
   const saveStory = (data:any)=>{
-    console.log("saveStory", data)
-    setShowStoryModal(false)
+    let event = {
+      title: data.title,
+      description: data.description,
+      event_type: data.eventType,
+      start_date: data.date,
+      image: null
+    }
+    api.createEvent(event).then((result: any) => {
+      console.log(" api.createEvent", result)
+      if (result.kind === "ok") {
+        toast.success("Story created successfuly.", {
+          position: toast.POSITION.TOP_CENTER
+        });
+        setShowStoryModal(false)
+      } else {
+        toast.error(getErrorMessages(result.errors), {
+          position: toast.POSITION.TOP_CENTER
+        });
+      }
+    }).catch((error: any) => {
+      genericApiError()
+    })
+
+    // console.log("saveStory", data)
+    // if (!data.id){
+    //   data.id =  moment()
+    // }
+    // const days = []
+    // for (let day of RightEvents){
+    //     let aux = moment(data.date).format('YYYY-MM-DD')
+    //   console.log(aux, day.title)
+    //     if(day.title === aux ){
+    //        day.events.push(data)
+    //     }
+    //     days.push(day)
+    // }
+    // // @ts-ignore
+    // // events.push(data)
+    // console.log("NEW EVENTS", days)
+    // setRightEvents(days)
+    // setShowStoryModal(false)
   }
 
   const saveEvent = (data:any)=>{
-    console.log("saveStory", data)
-
+    console.log("saveEvent", data)
     setShowEventModal(false)
   }
 
@@ -104,11 +218,17 @@ const ContentsPage: React.FC = observer(() => {
   const editEvent = (event:any)=>{
     setCurrentEvent(event)
     // setShowDetailModal(false)
-    if(event.eventType ==="story"){
+    if(event.eventType === EVENT_TYPE.Story){
       setShowStoryModal(true)
     }else{
       setShowEventModal(true)
     }
+  }
+
+  const deleteEvent = (event:any)=>{
+    setCurrentEvent(event)
+    // setShowDetailModal(false)
+
   }
 
 
@@ -168,22 +288,24 @@ const ContentsPage: React.FC = observer(() => {
     </header>)
   }
 
-  const renderDayContent = (value:any)=>{
+  const renderDayContent = (value:any, index:number)=>{
     return (
-      <div onClick={()=>{
+      <div
+        key={'day-content-'+index}
+        onClick={()=>{
         setDetails(value.events)
-        setDetailsTitle(value.title)
+        setDetailsTitle(getTitleFormat(value.title))
         setShowDetailModal(true)
         console.log(value)
       }}>
-        <div className={'text-gray'} style={{fontSize:12, marginLeft:20}}>{value.title}</div>
+        <div className={'text-gray'} style={{fontSize:12, marginLeft:20}}>{getTitleFormat(value.title)}</div>
         <div style={{marginBottom:20}}>
-          {value.events.map((data:any)=>{
+          {value.events.map((data:any, index:number)=>{
             return (
-              <div>
-                <HourLine hour={data.hour} />
+              <div key={index}>
+                <HourLine hour={getHourFormatted(data.date)} />
                 <ContentEventCard event={data}/>
-                <HourLine hour={data.hour} />
+                <HourLine  hour={getHourFormatted(data.date)} />
               </div>)
           })}
         </div>
@@ -234,8 +356,8 @@ const ContentsPage: React.FC = observer(() => {
           <div className={'calendar-right-column'} >
             <p className={'text-blue all-in-month-title'}>All in {Title}</p>
             <FakeScroll className="scroll-container"   track={false} onChange={onFakeScrollChange}>
-              {RightEvents.map(value => {
-                return renderDayContent(value)
+              {RightEvents.map((value, index) => {
+                return renderDayContent(value, index)
               })}
             </FakeScroll>
           </div>
@@ -304,7 +426,7 @@ const ContentsPage: React.FC = observer(() => {
         <Modal.Header closeButton style={{paddingTop:30, paddingLeft:50, paddingRight:50}}>
           <Modal.Title>
             <div className={'create-modal-title'}>
-              Add New Event
+              {CurrentEvent && CurrentEvent.id !== null ? 'Edit Event': 'Add New Event'}
             </div>
             <div className={'create-modal-subtitle text-gray'}>
               Lorem ipsum dolor sit amet
@@ -362,8 +484,8 @@ const ContentsPage: React.FC = observer(() => {
         </Modal.Header>
         <Modal.Body >
           <div>
-            {Details.map((value:any) => {
-              return <ContentEventDetail edit={(event:any)=>editEvent(event)}  event={value}/>
+            {Details.map((value:any, index:number) => {
+              return <ContentEventDetail delete={deleteEvent} key={"detail-"+index} edit={editEvent}  event={value}/>
             })}
 
           </div>

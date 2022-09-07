@@ -60,11 +60,9 @@ export const ResetForm = ({updateContent}:FormTypeProps) => {
       api.resetPassword(data).then((result: any) => {
         setLoading(false)
         if (result.kind === "ok") {
-          console.log(result.response.detail)
           toast.success(result.response.detail, {
             position: toast.POSITION.TOP_CENTER
           });
-          console.log(result)
           // navigate(ROUTES.DASHBOARD, {replace:true})
         } else {
           toast.error(getErrorMessages(result.errors), {
@@ -274,17 +272,18 @@ export const LoginForm = ({updateContent}:FormTypeProps)=> {
       let data = {username:values.email, email:values.email, password:values.password}
 
       api.login(data).then((result: any) => {
+        console.log(result)
         if (result.kind === "ok") {
           userStore.setUser(result.response.user)
+          toast.success('Welcome', {
+            position: toast.POSITION.TOP_CENTER
+          });
           navigate(ROUTES.DASHBOARD, {replace:true})
         } else {
-          console.log(' ===>>>> ', result)
           toast.error(getErrorMessages(result.errors), {
             position: toast.POSITION.TOP_CENTER
           });
-
-          window.location.reload();
-
+          // window.location.reload();
         }
       }).catch((error: any) => {
         setLoading(false)

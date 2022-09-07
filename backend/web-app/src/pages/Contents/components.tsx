@@ -1,22 +1,27 @@
-import React, {useState} from "react";
+import React from "react";
 import {observer} from "mobx-react-lite";
 import '../../theme.css'
 import './components.css'
-import {ContentEvent} from "./models";
+import {ContentEvent, EVENT_TYPE} from "./models";
 import {
   AttachmentIcon,
   CalendarIconBlue,
   ClockIcon,
-  CloseActionIcon, DoneActionIcon, EditActionIcon,
+  CloseActionIcon,
+  DoneActionIcon,
+  EditActionIcon,
   LocationIcon,
   StoryIconGreen
 } from '../../components/icons'
-import {Button, Col, Form, InputGroup, Row} from "react-bootstrap";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import Modal from "react-bootstrap/Modal";
-import {AddEventForm} from "./forms";
+import moment from 'moment'
 
+const getDateTimeFullName = (date:string)=>{
+  return  moment(date).format('dddd, h:mm a  MMMM, YYYY')
+}
+
+export const getTitleFormat = (date:string)=>{
+  return moment(date).format('MMMM D, dddd')
+}
 type ContentEventCardProps = {
   event: ContentEvent
 }
@@ -24,6 +29,7 @@ type ContentEventCardProps = {
 type ContentEventCardDetailProps = {
   event: ContentEvent
   edit(event:any):any
+  delete(event:any):any
 }
 
 
@@ -56,22 +62,24 @@ export const ContentEventCard: React.FC<ContentEventCardProps> = observer((props
       <p className={'event-card-description '}>{event.description}</p>
 
       <div style={{display:'flex', flexDirection:'row'}} className={'event-card-footer'}>
-        <div style={{width:'70%', display:"flex", flexDirection:'row'}}>
+        <div style={{width:'50%', display:"flex", flexDirection:'row', justifyContent:"center",alignItems:"center"}}>
           <div className={'event-card-footer-icon'}>
             <ClockIcon />
           </div>
-          <div style={{marginLeft:10, width:100}}>
-            {event.dateFullName}
+          <div style={{marginLeft:10, width:"100%"}}>
+            {getDateTimeFullName(event.date)}
           </div>
         </div>
-        <div style={{width:'30%', display:"flex", flexDirection:'row'}}>
-        <div className={'event-card-footer-icon'}>
-            <LocationIcon />
+        {event.location && (
+          <div style={{width:'50%', display:"flex", flexDirection:'row', justifyContent:"center", alignItems:"center"}}>
+            <div className={'event-card-footer-icon'}>
+              <LocationIcon />
+            </div>
+            <div>
+              {event.location}
+            </div>
           </div>
-          <div>
-            {event.location}
-          </div>
-        </div>
+        )}
       </div>
 
     </div>
@@ -97,25 +105,34 @@ export const ContentEventDetail: React.FC<ContentEventCardDetailProps> = observe
       </div>
       <div className={' detail-event-card-right'}>
         {event.img && (
-        <div className={'detail-event-card-img-container'}>
+          <div className={'detail-event-card-img-container'}>
             <img src={event.img} className={'detail-event-card-img'} />
-        </div>
+          </div>
         )}
 
-        <div style={{padding:"15px"}}>
+        <div style={{padding:"15px", width:"100%"}}>
           <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
             <p className={'event-card-title '}>{event.title}</p>
             <div className={'action-buttons'}>
-              <div className={'action-icon-container'} >
+              <div className={'action-icon-container action-icon-container-pink'}  onClick={()=>{
+                props.delete(event)
+              }}>
                 <CloseActionIcon />
+                <div className={'action-icon-container-child text-pink'}>Delete</div>
               </div>
-              <div className={'action-icon-container'}>
-                <DoneActionIcon/>
-              </div>
-              <div className={'action-icon-container'} onClick={()=>{
-                  props.edit(event)
+              {event.eventType === EVENT_TYPE.Event && (
+                <div className={'action-icon-container'}>
+                  <DoneActionIcon/>
+                  <div className={'action-icon-container-child text-green'}>Done</div>
+                </div>
+              )}
+
+              <div className={'action-icon-container  action-icon-container-blue '} onClick={()=>{
+                props.edit(event)
               }}>
                 <EditActionIcon/>
+                <div className={'action-icon-container-child text-blue'}>Edit</div>
+
               </div>
 
             </div>
@@ -128,7 +145,7 @@ export const ContentEventDetail: React.FC<ContentEventCardDetailProps> = observe
                   <ClockIcon />
                 </div>
                 <div style={{marginLeft:10}}>
-                  {event.dateFullName}
+                  {getDateTimeFullName(event.date)}
                 </div>
               </div>
               <div style={{width:'30%', display:"flex", flexDirection:'row', alignItems:"center"}}>
@@ -145,7 +162,7 @@ export const ContentEventDetail: React.FC<ContentEventCardDetailProps> = observe
           {event.link && (
             <div style={{display:'flex', flexDirection:'row', alignItems:"center"}} className={'event-card-footer'}>
               <AttachmentIcon />
-              <a href={event.link} style={{fontSize:14, marginLeft:10}}>{event.link}</a>
+              <a target={"_blank"} href={event.link} style={{fontSize:14, marginLeft:10}}>{event.link}</a>
             </div>
           )}
         </div>

@@ -15,7 +15,7 @@
 .event-card-description{
     font-size: 14px;
     margin: 10px;
-
+    overflow: hidden;
 }
 .event-card-img{
     width: 100%;
@@ -112,8 +112,59 @@
 .action-buttons{
     display: flex;
     flex-direction: row;
+}
+
+.action-icon-container{
+    margin:6px;
 
 }
-.action-icon-container{
-    margin:4px;
+.action-icon-container-pink{
+    margin-left: -50px;
+}
+.action-icon-container-child{
+    display: none;
+}
+.action-icon-container:hover{
+    width: 90px;
+    /*position: absolute;*/
+    /*margin-right: 20px;*/
+    z-index: 100;
+    background-color: white;
+    height: 50px;
+    border-radius: 10px;
+
+    padding:5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    align-items: flex-end;
+    position: fixed;
+    margin-right: 100px;
+    margin-left: -100px;
+}
+
+.action-icon-container:hover .action-buttons{
+    width: 200px;
+}
+.action-icon-container-blue:hover{
+    border: 1px solid var(--blue);
+}
+
+.action-icon-container-green:hover{
+    border: 1px solid var(--green);
+}
+.action-icon-container-pink:hover{
+    border: 1px solid var(--pink);
+}
+
+.action-icon-container:hover .action-icon-container-child{
+    display: block;
+    width: 100%;
+    padding-left: 10px;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.action-icon-container-blue:hover ~ .action-icon-container-pink{
+    display: none;
 }

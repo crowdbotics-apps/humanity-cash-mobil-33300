@@ -91,6 +91,7 @@ export const Sidebar: React.FC<PropsSide> = ({ sideBarStatus, sideBarActions }) 
             onClick:()=>{
                 userStore.reset()
                 navigate(ROUTES.LOGIN, {replace: true})
+                // window.location.reload()
             }
         }
 
