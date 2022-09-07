@@ -33,6 +33,10 @@ export class Api extends ApiBase {
         return this.simple_get(API_VERSION_PREFIX+"/event/", data)
     }
 
+    async deleteEvent(id: number): Promise<Types.GenericResponse> {
+        return this.simple_delete(API_VERSION_PREFIX+`/event/${id}/`)
+    }
+
     async getProblemResult(reactant: string, reagent: number): Promise<Types.SimpleGetResult> {
         return this.simple_get(`/GenerateProduct.py?PathwayWeb=Yes&reactant=${reactant}&product=*&reagent_id=${reagent}`)
     }

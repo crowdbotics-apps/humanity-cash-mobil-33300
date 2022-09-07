@@ -32,8 +32,6 @@ type ContentEventCardDetailProps = {
   delete(event:any):any
 }
 
-
-
 export  const HourLine = (data: { hour:string })=>{
   return (
     <div className={'hour-line'}>
@@ -115,7 +113,7 @@ export const ContentEventDetail: React.FC<ContentEventCardDetailProps> = observe
             <p className={'event-card-title '}>{event.title}</p>
             <div className={'action-buttons'}>
               <div className={'action-icon-container action-icon-container-pink'}  onClick={()=>{
-                props.delete(event)
+                props.delete(event.id)
               }}>
                 <CloseActionIcon />
                 <div className={'action-icon-container-child text-pink'}>Delete</div>

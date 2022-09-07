@@ -35,33 +35,66 @@ const ContentsPage: React.FC = observer(() => {
   const [CalendarEvents, setCalendarEvents] = useState<any>([])
   const [RightEvents, setRightEvents] = useState<any[]>([])
   const [show, setShow] = useState(false);
+  const [Loading, setLoading] = useState(true);
   const [showEventModal, setShowEventModal] = useState(false);
   const [showStoryModal, setShowStoryModal] = useState(false);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const  [Details, setDetails] = useState<any[]>([])
   const  [DetailsTitle, setDetailsTitle] = useState<string>("")
   const [CurrentEvent, setCurrentEvent] = useState<ContentEvent| null>(null)
+  const [DateRange, setDateRange] = useState<{start:Date, end:Date}|null>(null)
   const api = useApi()
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  useEffect( () => {
+  const myFunction = function(e:any) {
+   let selectedDay = e.target.querySelector('.fc-daygrid-day-number').firstChild
+    console.log(CalendarEl.current)
+      // CalendarEl.fullCalendar( 'next' )
+
+
+
+  };
+  useEffect(() => {
+
+    const elements = document.querySelectorAll('.fc-daygrid-day:not(.fc-day-other)')
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].addEventListener('click', myFunction, false);
+    }
+    return () => {
+      for (var i = 0; i < elements.length; i++) {
+        elements[i].removeEventListener("click", myFunction);
+      }
+    }
+
+
+
+  }, []);
+
+  const initCalendar = ()=>{
     // @ts-ignore
     let api = CalendarEl.current.getApi()
     setCalendarApi(api)
     setTitle(api.currentDataManager.data.viewTitle)
     setRightEvents(event_list)
-    let eventList:any[]=[]
-    for(const data of event_list){
-      for (const event of data.events){
-        eventList.push(event)
-      }
-    }
-    console.log(eventList)
+
+  }
+
+
+  useEffect( () => {
     // @ts-ignore
-    setCalendarEvents(eventList)
+    initCalendar()
+
+    getEvents()
 
   },[])
+
+  useEffect(() => {
+    if(DateRange){
+      getEvents()
+
+    }
+  }, [DateRange])
 
   const handleDateClick = (arg:any) => { // bind with an arrow function
     setDetails(event_list[0].events)
@@ -98,6 +131,7 @@ const ContentsPage: React.FC = observer(() => {
           data[aux_date].events.push(newEvent)
         }
       }
+
       let rightEvents = []
       for(let k of Object.keys(data) ){
         // @ts-ignore
@@ -117,19 +151,52 @@ const ContentsPage: React.FC = observer(() => {
         rightEvents.push(data[k])
 
       }
-
       setRightEvents(rightEvents)
-
       setCalendarEvents(calendarEvents)
-
       console.log("setCalendarEvents", calendarEvents)
+      setLoading(false)
   }
   const getEvents = ()=>{
-    api.getEvents({}).then((response: any) => {
+
+    setLoading(true)
+    let dateRange:any = {}
+    if (DateRange === null ){
+      dateRange['start'] = moment().startOf('month').format()
+      dateRange['end'] = moment().endOf('month').format()
+
+    }else{
+      dateRange['start'] = moment(DateRange.start).startOf('day').format()
+      dateRange['end'] = moment(DateRange.end).endOf('day').format()
+    }
+
+    api.getEvents(dateRange).then((response: any) => {
       if (response.kind === "ok") {
-        console.log(" api.getEvents", response.data.results)
         groupEvents(response.data.results)
+      }
+    }).catch((error: any) => {
+      genericApiError()
+    })
+  }
+
+
+  const deleteEvent = (id: number)=>{
+
+    setLoading(true)
+    api.deleteEvent(id).then((response: any) => {
+      if (response.kind === "not-found") {
+        console.log("error deleting event", response)
+        toast.error("Object not found", {
+          position: toast.POSITION.TOP_CENTER
+        });
       } else {
+
+        setLoading(false)
+        getEvents()
+        toast.success('Deleted successfully', {
+          position: toast.POSITION.TOP_CENTER
+        });
+        setDetails(Details.filter(value => value.id !== id))
+        setShowStoryModal(false)
 
       }
     }).catch((error: any) => {
@@ -137,14 +204,13 @@ const ContentsPage: React.FC = observer(() => {
     })
   }
 
-  useEffect(() => {
-    getEvents()
-  }, [])
+
 
 
   const renderEventContent = (eventInfo:any) => {
     const eventType =  eventInfo.event._def.extendedProps.eventType
-    const eventHour =  eventInfo.event._def.extendedProps.hour
+    const eventHour =  moment(eventInfo.event._def.extendedProps.startDate).format("hh:mm A")
+
     const isOverlaping =  eventInfo.event._def.extendedProps.isOverlapping
 
     const Overlapping = (event:any)=> (<div className={'dot my-event-overlapped my-event-overlapped-'+eventType} />)
@@ -154,7 +220,7 @@ const ContentsPage: React.FC = observer(() => {
           <Overlapping event={eventInfo.event} />
         ) || (
           <div className={'my-event my-event-'+eventType} >
-            <h5 className={'my-event-title'}>{eventInfo.event.title}</h5>
+            <h5 className={'my-event-title'}>{eventInfo.event.title.slice(0,12) }</h5>
             <h5 className={'my-event-subtitle'}>{eventHour}</h5>
           </div>
         )}
@@ -179,6 +245,7 @@ const ContentsPage: React.FC = observer(() => {
         toast.success("Story created successfuly.", {
           position: toast.POSITION.TOP_CENTER
         });
+        getEvents()
         setShowStoryModal(false)
       } else {
         toast.error(getErrorMessages(result.errors), {
@@ -189,24 +256,6 @@ const ContentsPage: React.FC = observer(() => {
       genericApiError()
     })
 
-    // console.log("saveStory", data)
-    // if (!data.id){
-    //   data.id =  moment()
-    // }
-    // const days = []
-    // for (let day of RightEvents){
-    //     let aux = moment(data.date).format('YYYY-MM-DD')
-    //   console.log(aux, day.title)
-    //     if(day.title === aux ){
-    //        day.events.push(data)
-    //     }
-    //     days.push(day)
-    // }
-    // // @ts-ignore
-    // // events.push(data)
-    // console.log("NEW EVENTS", days)
-    // setRightEvents(days)
-    // setShowStoryModal(false)
   }
 
   const saveEvent = (data:any)=>{
@@ -225,23 +274,26 @@ const ContentsPage: React.FC = observer(() => {
     }
   }
 
-  const deleteEvent = (event:any)=>{
-    setCurrentEvent(event)
-    // setShowDetailModal(false)
-
-  }
 
 
   const next = ()=>{
-    // @ts-ignore
-    calendarApi.next()
-    // @ts-ignore
-    setTitle(calendarApi.currentDataManager.data.viewTitle)
+     setCalendarEvents([])
+      // @ts-ignore
+      calendarApi.next()
+      // @ts-ignore
+    let current = calendarApi.currentDataManager.data.dateProfile.currentRange
+    setDateRange(current)
+      // @ts-ignore
+      setTitle(calendarApi.currentDataManager.data.viewTitle)
   }
 
   const previous = ()=>{
+    setCalendarEvents([])
     // @ts-ignore
     calendarApi.prev()
+    // @ts-ignore
+    let current = calendarApi.currentDataManager.data.dateProfile.currentRange
+    setDateRange(current)
     // @ts-ignore
     setTitle(calendarApi.currentDataManager.data.viewTitle)
   }
@@ -323,6 +375,7 @@ const ContentsPage: React.FC = observer(() => {
             <CalendarHeader/>
             <FullCalendar
               ref={CalendarEl}
+
               headerToolbar={{
                 // start: 'title', // will normally be on the left. if RTL, will be on the right
                 end:'',
@@ -337,6 +390,7 @@ const ContentsPage: React.FC = observer(() => {
                 weekday:'long'
               }}
               selectable={true}
+
 
               dateClick={(arg:any)=>{
                 console.log("select", arg)
