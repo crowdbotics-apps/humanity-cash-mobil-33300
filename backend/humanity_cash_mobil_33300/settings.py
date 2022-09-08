@@ -325,7 +325,6 @@ CITIES_LIGHT_DATA_DIR = '/opt/webapp/cities'
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['US']
 
 if not DEBUG:
-    pass
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
 
