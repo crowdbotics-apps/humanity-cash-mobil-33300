@@ -121,6 +121,9 @@
 .action-icon-container-pink{
     margin-left: -50px;
 }
+.action-icon-container-green{
+    margin-left: 0px;
+}
 .action-icon-container-child{
     display: none;
 }
@@ -132,7 +135,6 @@
     background-color: white;
     height: 50px;
     border-radius: 10px;
-
     padding:5px;
     display: flex;
     flex-direction: column;
@@ -156,6 +158,9 @@
 .action-icon-container-pink:hover{
     border: 1px solid var(--pink);
 }
+.action-icon-container-green:hover{
+    border: 1px solid var(--green);
+}
 
 .action-icon-container:hover .action-icon-container-child{
     display: block;
@@ -166,5 +171,8 @@
 }
 
 .action-icon-container-blue:hover ~ .action-icon-container-pink{
+    display: none;
+}
+.action-icon-container-blue:hover ~ .action-icon-container-green{
     display: none;
 }

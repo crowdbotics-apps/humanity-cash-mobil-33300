@@ -58,42 +58,7 @@ const ContentsPage: React.FC = observer(() => {
   const [CurrentEvent, setCurrentEvent] = useState<ContentEvent| null>(null)
   const [DateRange, setDateRange] = useState<{start:string, end:string}|null>(getDateRange())
   const api = useApi()
-  const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const myFunction = (e:any)=> {
-    return
-     let target = e.target
-      let selectedDay:number = 0
-      console.log(target.className)
-      while("fc-daygrid-day".indexOf(target.className) > -1){
-        target = target.parentElement
-        console.log(target.className)
-      }
-    selectedDay = parseInt(target.querySelector('.fc-daygrid-day-number').firstChild.textContent)
-
-    console.log("CalendarEvents", AllEvents)
-     for(let o of CalendarEvents){
-       let event_day = parseInt(moment(o.date).format('D'))
-       console.log(selectedDay, event_day, selectedDay === event_day)
-     }
-      // const a = RightEvents.filter(value=> moment(value.title).format('M')===selectedDay)
-      // console.log(a, selectedDay)
-
-  };
-
-  const selectDayListeners = ()=>{
-    const elements = document.querySelectorAll('.fc-daygrid-day:not(.fc-day-other)')
-
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].addEventListener('click', myFunction, false);
-    }
-    return () => {
-      for (var i = 0; i < elements.length; i++) {
-        elements[i].removeEventListener("click", myFunction);
-      }
-    }
-  }
 
   const initCalendar = ()=>{
     // @ts-ignore
@@ -188,7 +153,6 @@ const ContentsPage: React.FC = observer(() => {
 
       console.log("setCalendarEvents", allEvents)
       setLoading(false)
-    selectDayListeners()
   }
   const getEvents = ()=>{
 
@@ -297,9 +261,11 @@ const ContentsPage: React.FC = observer(() => {
   }
 
   const saveStory = (data:any)=>{
+    setCurrentEvent(null)
     let event = {
       id: data.id,
       title: data.title,
+      link: data.link,
       description: data.description,
       event_type: data.eventType,
       start_date: data.date,
@@ -315,6 +281,24 @@ const ContentsPage: React.FC = observer(() => {
 
   const saveEvent = (data:any)=>{
     console.log("saveEvent", data)
+    setCurrentEvent(null)
+    let event = {
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      event_type: data.eventType,
+      start_date: data.startDate,
+      location: data.location,
+      end_date: data.endDate,
+      image: null,
+      link:data.link
+    }
+    console.log(data)
+    if(data.id){
+      patchEvent(event)
+    }else{
+      createEvent(event)
+    }
     setShowEventModal(false)
   }
 
@@ -557,7 +541,10 @@ const ContentsPage: React.FC = observer(() => {
         size="lg"
         show={showStoryModal}
         centered
-        onHide={() => setShowStoryModal(false)}
+        onHide={() => {
+          setCurrentEvent(null)
+          setShowStoryModal(false)
+        }}
       >
         <Modal.Header closeButton style={{paddingTop:30, paddingLeft:50, paddingRight:50}}>
           <Modal.Title>

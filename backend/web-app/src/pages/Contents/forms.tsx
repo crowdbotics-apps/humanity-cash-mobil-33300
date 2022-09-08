@@ -22,19 +22,19 @@ const fileToDataUri = (file:any) => new Promise((resolve, reject) => {
 
 export const AddEventForm = (props:AddEventFormProps)=> {
   const {event} = props
-  console.log("EVENT", event)
   const [validated, setValidated] = useState(false);
   const fileInputRef = useRef<any>(null)
   const [fileName, setFileName] = useState(null)
   const [dataUri, setDataUri] = useState(event?event.url:"")
   const formik = useFormik({
     initialValues: {
-      startDate: event?event.startTime.split(" ").length > 0 && event.startTime.split(" ")[0]: "",
-      endDate:  event?event.endTime.split(" ")[0]: "",
-      startTime:  event?event.startTime.split(" ")[1]: "",
-      endTime: event?event.endTime.split(" ")[1]: "",
+      startDate: event?moment(event.startDate).format("YYYY-MM-DD"): "",
+      endDate:  event?moment(event.endDate).format("YYYY-MM-DD"): "",
+      startTime:  event?moment(event.startTime).format("hh:mm"): "",
+      endTime: event?moment(event.startTime).format("hh:mm"): "",
       location: event?event.location:"",
-      description: event?event.description:""
+      description: event?event.description:"",
+      title: event?event.title:""
     },
     validationSchema: Yup.object({
       startDate: Yup.string()
@@ -46,16 +46,21 @@ export const AddEventForm = (props:AddEventFormProps)=> {
       endTime: Yup.string()
         .required("Please select a end time"),
       description: Yup.string()
+        .required("This field is required"),
+      title: Yup.string()
         .required("This field is required")
     }),
     onSubmit: values => {
 
-      let data = {...values, ...{url:dataUri}}
+      let data:any = {...values, ...{img:dataUri}}
 
-      console.log("DATA", data)
-      // props.save(data)
+      data['eventType'] = EVENT_TYPE.Event
+      data['startDate'] = moment(`${data.startDate} ${data.startTime}`).format()
+      data['endDate'] = moment(`${data.endDate} ${data.endTime}`).format()
+      data['date'] = data.startDate
 
-      // setFormState(values);
+      data = {...event, ...data}
+      props.save(data)
     }
   });
 
@@ -87,15 +92,7 @@ export const AddEventForm = (props:AddEventFormProps)=> {
     console.log(formik.errors)
 
   }
-  const handleSubmit = (event:any) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    console.log(form)
-    setValidated(true);
-  };
+
 
   return (
     <Form noValidate className={'ps-5 pe-5 pb-5'} validated={validated}
@@ -173,6 +170,17 @@ export const AddEventForm = (props:AddEventFormProps)=> {
             onBlur={formik.handleBlur}
             isInvalid={!!formik.errors.location}
             value={formik.values.location}
+          />
+        </Form.Group>
+        <Form.Group as={Col} md="12" className={'mt-4'}>
+          <Form.Label>EVENT NAME</Form.Label>
+          <Form.Control
+            name="title"
+            type="text"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            isInvalid={!!formik.errors.title}
+            value={formik.values.title}
           />
         </Form.Group>
         <Form.Group as={Col} md="12" className={'mt-4'}>
@@ -267,7 +275,6 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
         .required("This field is required")
     }),
     onSubmit: values => {
-      // alert(JSON.stringify(values, null, 2));
       let data:any = {...values, ...{img:dataUri}}
       if(!event){
         data['eventType'] = EVENT_TYPE.Story
@@ -275,8 +282,6 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
       }
       data = {...event, ...data}
       props.save(data)
-
-      // setFormState(values);
     }
   });
 

@@ -119,7 +119,7 @@ export const ContentEventDetail: React.FC<ContentEventCardDetailProps> = observe
                 <div className={'action-icon-container-child text-pink'}>Delete</div>
               </div>
               {event.eventType === EVENT_TYPE.Event && (
-                <div className={'action-icon-container'}>
+                <div className={'action-icon-container action-icon-container-green'}>
                   <DoneActionIcon/>
                   <div className={'action-icon-container-child text-green'}>Done</div>
                 </div>
@@ -146,14 +146,17 @@ export const ContentEventDetail: React.FC<ContentEventCardDetailProps> = observe
                   {getDateTimeFullName(event.date)}
                 </div>
               </div>
-              <div style={{width:'30%', display:"flex", flexDirection:'row', alignItems:"center"}}>
-                <div className={'event-card-footer-icon'}>
-                  <LocationIcon />
+              {event.location && (
+                <div style={{width:'30%', display:"flex", flexDirection:'row', alignItems:"center"}}>
+                  <div className={'event-card-footer-icon'}>
+                    <LocationIcon />
+                  </div>
+                  <div>
+                    {event.location}
+                  </div>
                 </div>
-                <div>
-                  {event.location}
-                </div>
-              </div>
+              )}
+
             </div>
           )}
 
