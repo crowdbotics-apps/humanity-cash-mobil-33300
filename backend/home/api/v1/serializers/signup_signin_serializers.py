@@ -45,12 +45,14 @@ class SignupSerializer(serializers.ModelSerializer):
             username=validated_data.get('email')
         )
         user.save()
-        code = setup_verification_code(user)
-        send_verification_email(user, code)
 
         phone_number = validated_data.get('phone_number')
         if phone_number:
             send_verification_phone(user, code, phone_number)
+
+
+        code = setup_verification_code(user)
+        send_verification_email(user, code)
 
         return user
 
