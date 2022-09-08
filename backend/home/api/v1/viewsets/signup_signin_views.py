@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 
 from home.api.v1.serializers.signup_signin_serializers import UserDetailSerializer
-from home.helpers import AuthenticatedAPIView, send_verification_email, setup_verification_code
+from home.helpers import AuthenticatedAPIView, send_verification_email, setup_verification_code, send_verification_phone
 import home.api.v1.serializers.signup_signin_serializers as signup_signin_serializers
 
 User = get_user_model()

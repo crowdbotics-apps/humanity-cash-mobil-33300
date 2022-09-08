@@ -1,7 +1,7 @@
 app_identifier("com.crowdbotics.humanity-cash-mobil-33300") # The bundle identifier of your app
-apple_id("") # Your Apple email address
+apple_id("clemente.rafael@crowdbotics.com") # Your Apple email address
 
-itc_team_id("") # App Store Connect Team ID
+itc_team_id("6YKR59QXKM") # App Store Connect Team ID
 team_id("6YKR59QXKM") # Developer Portal Team ID
 
 # For more information about the Appfile, see:
