@@ -26,6 +26,19 @@ const getHourFormatted = (date:string)=>{
   return moment(date).format('HH a').toUpperCase()
 }
 
+const getDateRange = (dateRange?:{start:string, end:string}|null)=>{
+  if(dateRange === null || dateRange === undefined){
+    return {
+      start:moment().startOf('month').format(),
+      end: moment().endOf('month').format()
+    }
+  }
+  return {
+    start:moment(dateRange.start).add(1, 'days').startOf('month').format(),
+    end: moment(dateRange.end).endOf('month').format()
+  }
+}
+
 const ContentsPage: React.FC = observer(() => {
   const { innerWidth: width, innerHeight: height } = window;
   const [CalendarHeight, setCalendarHeight] = useState(height * 0.7)
@@ -34,6 +47,7 @@ const ContentsPage: React.FC = observer(() => {
   const [calendarApi, setCalendarApi] = useState(null)
   const [CalendarEvents, setCalendarEvents] = useState<any>([])
   const [RightEvents, setRightEvents] = useState<any[]>([])
+  const [AllEvents, setAllEvents] = useState<any[]>([])
   const [show, setShow] = useState(false);
   const [Loading, setLoading] = useState(true);
   const [showEventModal, setShowEventModal] = useState(false);
@@ -42,22 +56,35 @@ const ContentsPage: React.FC = observer(() => {
   const  [Details, setDetails] = useState<any[]>([])
   const  [DetailsTitle, setDetailsTitle] = useState<string>("")
   const [CurrentEvent, setCurrentEvent] = useState<ContentEvent| null>(null)
-  const [DateRange, setDateRange] = useState<{start:Date, end:Date}|null>(null)
+  const [DateRange, setDateRange] = useState<{start:string, end:string}|null>(getDateRange())
   const api = useApi()
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const myFunction = function(e:any) {
-   let selectedDay = e.target.querySelector('.fc-daygrid-day-number').firstChild
-    console.log(CalendarEl.current)
-      // CalendarEl.fullCalendar( 'next' )
+  const myFunction = (e:any)=> {
+    return
+     let target = e.target
+      let selectedDay:number = 0
+      console.log(target.className)
+      while("fc-daygrid-day".indexOf(target.className) > -1){
+        target = target.parentElement
+        console.log(target.className)
+      }
+    selectedDay = parseInt(target.querySelector('.fc-daygrid-day-number').firstChild.textContent)
 
-
+    console.log("CalendarEvents", AllEvents)
+     for(let o of CalendarEvents){
+       let event_day = parseInt(moment(o.date).format('D'))
+       console.log(selectedDay, event_day, selectedDay === event_day)
+     }
+      // const a = RightEvents.filter(value=> moment(value.title).format('M')===selectedDay)
+      // console.log(a, selectedDay)
 
   };
-  useEffect(() => {
 
+  const selectDayListeners = ()=>{
     const elements = document.querySelectorAll('.fc-daygrid-day:not(.fc-day-other)')
+
     for (var i = 0; i < elements.length; i++) {
       elements[i].addEventListener('click', myFunction, false);
     }
@@ -66,10 +93,7 @@ const ContentsPage: React.FC = observer(() => {
         elements[i].removeEventListener("click", myFunction);
       }
     }
-
-
-
-  }, []);
+  }
 
   const initCalendar = ()=>{
     // @ts-ignore
@@ -85,19 +109,24 @@ const ContentsPage: React.FC = observer(() => {
     // @ts-ignore
     initCalendar()
 
-    getEvents()
+    // getEvents()
 
   },[])
 
   useEffect(() => {
-    if(DateRange){
-      getEvents()
 
-    }
+    getEvents()
+
   }, [DateRange])
+
+
 
   const handleDateClick = (arg:any) => { // bind with an arrow function
     setDetails(event_list[0].events)
+    let target = arg.el.closest(".fc-daygrid-day")
+    let selectedDay:string = ''
+    selectedDay = target.querySelector('.fc-daygrid-day-number').firstChild.textContent
+    setDetails(CalendarEvents.filter((value:any)=> moment(value.date).format('D') === selectedDay))
     setShowDetailModal(true)
   }
 
@@ -105,6 +134,7 @@ const ContentsPage: React.FC = observer(() => {
 
   const groupEvents = (eventList:any[])=>{
      let data = {}
+    let allEvents = []
       let calendarEvents = []
       for (const event of eventList){
         let newEvent = {
@@ -121,6 +151,7 @@ const ContentsPage: React.FC = observer(() => {
           startDate: event.start_date,
           endDate: event.end_date
         }
+        allEvents.push(newEvent)
         let aux_date = moment(event.start_date).format('YYYY-MM-DD')
         console.log("aux_date", aux_date)
         if(Object.keys(data).indexOf(aux_date) === -1){
@@ -151,25 +182,19 @@ const ContentsPage: React.FC = observer(() => {
         rightEvents.push(data[k])
 
       }
-      setRightEvents(rightEvents)
+    setAllEvents(allEvents)
+    setRightEvents(rightEvents)
       setCalendarEvents(calendarEvents)
-      console.log("setCalendarEvents", calendarEvents)
+
+      console.log("setCalendarEvents", allEvents)
       setLoading(false)
+    selectDayListeners()
   }
   const getEvents = ()=>{
 
     setLoading(true)
-    let dateRange:any = {}
-    if (DateRange === null ){
-      dateRange['start'] = moment().startOf('month').format()
-      dateRange['end'] = moment().endOf('month').format()
 
-    }else{
-      dateRange['start'] = moment(DateRange.start).startOf('day').format()
-      dateRange['end'] = moment(DateRange.end).endOf('day').format()
-    }
-
-    api.getEvents(dateRange).then((response: any) => {
+    api.getEvents(getDateRange(DateRange)).then((response: any) => {
       if (response.kind === "ok") {
         groupEvents(response.data.results)
       }
@@ -231,18 +256,32 @@ const ContentsPage: React.FC = observer(() => {
     // console.log("scroll ratio", scrollRatio)
   }
 
-  const saveStory = (data:any)=>{
-    let event = {
-      title: data.title,
-      description: data.description,
-      event_type: data.eventType,
-      start_date: data.date,
-      image: null
-    }
+  const patchEvent = (event:any)=>{
+    api.editEvent(event.id, event).then((result: any) => {
+      console.log(" api.editEvent", result)
+      if (result.kind === "ok") {
+
+        toast.success("Created successfully.", {
+          position: toast.POSITION.TOP_CENTER
+        });
+        setDetails(Details.map(value => value.id === event.id?event:value))
+        getEvents()
+        setShowStoryModal(false)
+      } else {
+        toast.error(getErrorMessages(result.errors), {
+          position: toast.POSITION.TOP_CENTER
+        });
+      }
+    }).catch((error: any) => {
+      genericApiError()
+    })
+  }
+
+  const createEvent = (event:any)=>{
     api.createEvent(event).then((result: any) => {
       console.log(" api.createEvent", result)
       if (result.kind === "ok") {
-        toast.success("Story created successfuly.", {
+        toast.success("Saved successfully.", {
           position: toast.POSITION.TOP_CENTER
         });
         getEvents()
@@ -255,7 +294,23 @@ const ContentsPage: React.FC = observer(() => {
     }).catch((error: any) => {
       genericApiError()
     })
+  }
 
+  const saveStory = (data:any)=>{
+    let event = {
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      event_type: data.eventType,
+      start_date: data.date,
+      image: null
+    }
+    console.log(data)
+    if(data.id){
+      patchEvent(event)
+    }else{
+      createEvent(event)
+    }
   }
 
   const saveEvent = (data:any)=>{
@@ -265,6 +320,7 @@ const ContentsPage: React.FC = observer(() => {
 
 
   const editEvent = (event:any)=>{
+    console.log("edit event", event)
     setCurrentEvent(event)
     // setShowDetailModal(false)
     if(event.eventType === EVENT_TYPE.Story){
@@ -278,6 +334,8 @@ const ContentsPage: React.FC = observer(() => {
 
   const next = ()=>{
      setCalendarEvents([])
+    setRightEvents([])
+    setAllEvents([])
       // @ts-ignore
       calendarApi.next()
       // @ts-ignore
@@ -389,7 +447,7 @@ const ContentsPage: React.FC = observer(() => {
               dayHeaderFormat={{
                 weekday:'long'
               }}
-              selectable={true}
+              selectable={false}
 
 
               dateClick={(arg:any)=>{
@@ -504,7 +562,8 @@ const ContentsPage: React.FC = observer(() => {
         <Modal.Header closeButton style={{paddingTop:30, paddingLeft:50, paddingRight:50}}>
           <Modal.Title>
             <div className={'create-modal-title'}>
-              Add New Story
+              {CurrentEvent?"Edit Story":"Add New Story"}
+
             </div>
             <div className={'create-modal-subtitle text-gray'}>
               Lorem ipsum dolor sit amet

@@ -29,6 +29,10 @@ export class Api extends ApiBase {
         return this.simple_post(API_VERSION_PREFIX+"/event/", data)
     }
 
+    async editEvent(id:number, data: any): Promise<Types.GenericResponse> {
+        return this.simple_patch(API_VERSION_PREFIX+`/event/${id}/`, data)
+    }
+
     async getEvents(data: any): Promise<Types.SimpleGetResult> {
         return this.simple_get(API_VERSION_PREFIX+"/event/", data)
     }

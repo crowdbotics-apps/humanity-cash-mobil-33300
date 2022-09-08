@@ -269,10 +269,11 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
     onSubmit: values => {
       // alert(JSON.stringify(values, null, 2));
       let data:any = {...values, ...{img:dataUri}}
-      data['date'] = moment().format();
-      data['eventType'] = EVENT_TYPE.Story
-
-      console.log("DATA", data)
+      if(!event){
+        data['eventType'] = EVENT_TYPE.Story
+        data['date'] = moment().format();
+      }
+      data = {...event, ...data}
       props.save(data)
 
       // setFormState(values);
