@@ -9,7 +9,7 @@ import Col from 'react-bootstrap/Col';
 
 type Props = {
     children: React.ReactNode;
-    title:string;
+    title?:string;
     navbarTitle?:string;
     header?: React.ReactNode;
 };

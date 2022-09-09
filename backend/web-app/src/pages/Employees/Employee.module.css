@@ -1,0 +1,18 @@
+.deleteBtn{
+    height: 35px;
+    width: 100px;
+    border-radius: 40px;
+    background-color: var(--pink);
+    border-color: var(--pink);
+}
+.deleteBtn:hover, .deleteBtn:active, .deleteBtn:focus{
+    background-color: var(--pink-dark);
+    border-color: var(--pink-dark);
+    box-shadow: unset;
+}
+
+.addBtn{
+    width: 300px;
+    height:45px
+
+}

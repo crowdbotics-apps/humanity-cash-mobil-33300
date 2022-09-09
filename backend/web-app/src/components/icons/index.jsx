@@ -219,7 +219,13 @@ const EditActionIcon = ()=>(
   </svg>
 )
 
+const SuccessCheckIcon = ()=>(
+  <svg width="102" height="102" viewBox="0 0 102 102" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M85 25.5L38.25 72.25L17 51" stroke="#8D955D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+)
 export {
+  SuccessCheckIcon,
   EditActionIcon,
   DoneActionIcon,
   CloseActionIcon,

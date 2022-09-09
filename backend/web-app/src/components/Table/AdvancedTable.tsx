@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {Table} from "react-bootstrap";
 import styles from "./AdvancedTable.module.css";
+import TablePagination from "./TablePagination";
 
 export const ADV_DELETE_FIELD_NAME:string = "deleteCol"
 
@@ -12,9 +13,9 @@ type HeadersProps = {
 const AdvancedTableHeader = ({ headers, deletable }: HeadersProps) => {
   return (
     <thead>
-    <tr className='table-header'>
+    <tr className={styles.tableHeader}>
       {Object.keys(headers).map((k, index) => {
-        return ( <th className={`${styles['tableHead']} adv-table-th`} id={"adv-table-th-"+k} key={index}>{headers[k]}</th>)
+        return ( <th className={`${styles.tableHead} adv-table-th`} id={"adv-table-th-"+k} key={index}>{headers[k]}</th>)
       })}
       {deletable && (<th className={'cell-header-delete'}></th>)}
     </tr>
@@ -37,7 +38,7 @@ const AdvancedTableBody = ({ rows, deletable, onClickRow, hasDetail }: AdvancedT
 
   const renderTR = (row:any, index:number)=>{
     return (
-      <tr className='table-row' key={'table-row-'+index}
+      <tr className={styles.tableRow} key={'table-row-'+index}
           onClick={(row)=>{
             if(hasDetail){
 
@@ -52,15 +53,18 @@ const AdvancedTableBody = ({ rows, deletable, onClickRow, hasDetail }: AdvancedT
   }
 
   const renderTD = (fieldName:string, field:any, index1:number, index2:number)=>{
-    let className = `adv-table-td  adv-table-td-${fieldName}`
+    let className = `${styles.tableData} adv-table-td  adv-table-td-${fieldName} `
     if(fieldName === ADV_DELETE_FIELD_NAME){
       className += ` ${styles.deleteTD}`
+    }
+    if (typeof field === "string"){
+      field = <div className={styles.textTD}>{field}</div>
     }
     return (
       <>
         {fieldName === "id"? null : (
           <td key={`body-td-${index1}-${index2}`} className={className}>
-            {field}
+            {field }
           </td>
         )}
       </>
@@ -90,14 +94,14 @@ const AdvancedTable = ({ rows, paginate, deletable , headerRow}: AdvancedTablePr
         <AdvancedTableHeader headers={headerRow} deletable={deletable}/>
         <AdvancedTableBody rows={rows} deletable={deletable} />
       </Table>
-      {/*<TablePagination*/}
-      {/*  data_paginate={rows}*/}
-      {/*  allPerPage={allPerPage}*/}
-      {/*  currentPage={currentPage}*/}
-      {/*  setCurrentPage={setCurrentPage}*/}
-      {/*  countDataAll={countDataAll}*/}
-      {/*  disabledPaginate={disabledPaginate}*/}
-      {/*/>*/}
+      <TablePagination
+        data_paginate={rows}
+        allPerPage={10}
+        currentPage={1}
+        setCurrentPage={1}
+        countDataAll={100}
+        disabledPaginate={false}
+      />
     </>
   )
 }

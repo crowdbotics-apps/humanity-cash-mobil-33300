@@ -47,6 +47,11 @@ export class Api extends ApiBase {
         return this.simple_get(API_VERSION_PREFIX+"/user/", data)
     }
 
+    async createUser(data: any): Promise<Types.SimplePostResult> {
+        return this.simple_post(API_VERSION_PREFIX+"/user/", data)
+    }
+
+
     async deleteUser(id: number, callback:Function) {
         this.genericDelete(API_VERSION_PREFIX+`/user/${id}/`).then(value => {
             callback()
