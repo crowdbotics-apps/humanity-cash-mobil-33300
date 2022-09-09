@@ -8,13 +8,9 @@ import AdminPanelContainer from "../../containers";
 
 
 export const Dashboard: React.FC = observer(() => {
-    // const navigate = useNavigate();
-    // const rootStore = useStores()
 
     const [LeftOpen, setLeftOpen] = useState<any>(true);
     const [RightOpen, setRightOpen] = useState<any>(true);
-
-
 
     return (
     <AdminPanelContainer title={'Dashboard'} >
@@ -24,7 +20,7 @@ export const Dashboard: React.FC = observer(() => {
                     <div className='content'>
                         <Tabs defaultActiveKey="completed" id="uncontrolled-tab-example" className="mb-3 ">
                             <Tab eventKey="completed" title="COMPLETED" style={{ color: '#808080' }}>
-                                <SimpleTable rows={dataCompleted} />
+                                <SimpleTable rows={dataCompleted} delete_items={false}/>
                             </Tab>
                             <Tab eventKey="pending" title="PENDING" style={{ color: '#808080' }} >
                                 <SimpleTable rows={dataCompleted} />

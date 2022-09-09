@@ -71,7 +71,7 @@ export const Sidebar: React.FC<PropsSide> = ({ sideBarStatus, sideBarActions }) 
             style: 'pt-3'
         },
         {
-            path: "/admin_employees",
+            path: ROUTES.EMPLOYEES,
             name: "Admin employees / Sub - Admins",
             icons: <SubtAdminIcon />,
             style: 'pt-3'

@@ -1,0 +1,13 @@
+.tableHead {
+    font-family: 'Gotham';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 14px;
+    color: #666666;
+    vertical-align: middle;
+}
+
+.deleteTD{
+    text-align: right;
+}

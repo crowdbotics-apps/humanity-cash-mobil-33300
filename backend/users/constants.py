@@ -9,3 +9,16 @@ class Industry(models.TextChoices):
     LODGING = "Lodging", "Lodging"
     SHOPPING = "Shopping", "Shopping"
     SERVICES = "Services", "Services"
+
+
+class UserGroup(models.TextChoices):
+    BANK = 'BANK', 'Bank'
+    PROGRAM_MANAGER = 'MANAGER', 'Program Manager'
+
+
+class UserRole(models.TextChoices):
+    EMPLOYEE = 'EMPLOYEE', 'Employee'
+    SUPERVISOR = 'SUPERVISOR', 'Supervisor'
+    ADMIN = 'ADMIN', 'Admin'
+    SUPER_ADMIN = 'SUPERADMIN', 'Super Admin'
+

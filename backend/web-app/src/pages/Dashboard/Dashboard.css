@@ -277,20 +277,20 @@
     border-top: none;
 }
 
-.table-head {
-    font-family: 'Gotham';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 14px;
-    color: #666666;
-    vertical-align: middle;
-}
+/*.table-head {*/
+/*    font-family: 'Gotham';*/
+/*    font-style: normal;*/
+/*    font-weight: 400;*/
+/*    font-size: 14px;*/
+/*    line-height: 14px;*/
+/*    color: #666666;*/
+/*    vertical-align: middle;*/
+/*}*/
 
 .custom-tabs {
     border-bottom: 2px solid #3B88B6;
 
-    height: 66;
+    height: 66px;
     vertical-align: middle;
 }
 

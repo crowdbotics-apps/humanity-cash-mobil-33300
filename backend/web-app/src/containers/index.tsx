@@ -10,12 +10,12 @@ import Col from 'react-bootstrap/Col';
 type Props = {
     children: React.ReactNode;
     title:string;
+    navbarTitle?:string;
     header?: React.ReactNode;
-
 };
 
 
-const AdminPanelContainer: React.FC<Props> = ({ children, title, header }) => {
+const AdminPanelContainer: React.FC<Props> = ({ children, navbarTitle, title, header }) => {
 
 
     const [sideBarAction, setSideBarAction] = useState(false);
@@ -30,15 +30,14 @@ const AdminPanelContainer: React.FC<Props> = ({ children, title, header }) => {
                 <Col className='content-children'>
                     <Row xs={1}>
                         {/* nabvar */}
-                        <Col><TheNav sideBarActions={setSideBarAction} /></Col>
+                        <Col><TheNav navbarTitle={navbarTitle} sideBarActions={setSideBarAction} /></Col>
                         {/* divider */}
                         <Col><div className='line-primary'></div></Col>
                         {/* header */}
-                        <Col>
+                        <Col className={'mt-3'}>
                             {header !== null && (header)||(
                               <Header title={title} />
                             )}
-
                         </Col>
                         {/* main */}
                         <Col>{children}</Col>

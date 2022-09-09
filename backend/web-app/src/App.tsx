@@ -20,9 +20,8 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { RootStore, setupRootStore } from "./models";
 import { RootStoreProvider } from "./models/root-store/root-store-context";
-import ContentsPage from "./pages/Contents";
-import {useUserStore} from "./utils";
-import {rest} from "lodash";
+import ContentsPage from "./pages/Contents/Contents";
+import EmployeesPage from "./pages/Employees/Employees";
 
 
 // @ts-ignore
@@ -84,6 +83,7 @@ function App() {
             <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
             <Route element={<ProtectedRoute isAllowed={rootStore && rootStore.userStore.isLoggedIn} />} >
                   <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
+                  <Route path={ROUTES.EMPLOYEES} element={<EmployeesPage />} />
                   <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                   <Route path={ROUTES.TRANSACTIONS} element={<AchTransactions />} />
                   <Route path={ROUTES.TRANSACTIONS_DETAIL(":id")} element={<AchTransactionsDetail />} />

@@ -93,11 +93,22 @@ class UserDetailSerializer(serializers.ModelSerializer):
     consumer_data = serializers.SerializerMethodField()
     merchant_data = serializers.SerializerMethodField()
     token = serializers.SerializerMethodField()
+    group_name = serializers.SerializerMethodField()
+    role_name = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'verified_email', 'first_name', 'last_name',  'email', 'username', 'password_set',
-                  'consumer_data', 'merchant_data', 'allow_touch_id', 'token']
+        fields = [
+            'id', 'verified_email', 'first_name', 'last_name', 'name', 'role_name',
+            'email', 'username', 'password_set', 'group', 'role', 'group_name',
+            'consumer_data', 'merchant_data', 'allow_touch_id', 'token'
+            ]
+
+    def get_group_name(self, obj):
+        return obj.get_group_display()
+
+    def get_role_name(self, obj):
+        return obj.get_role_display()
 
     def get_password_set(self, obj):
         return obj.password is not None
@@ -116,6 +127,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "refresh": str(refresh),
             "access": str(refresh.access_token),
         }
+
 
 class LoginSerializer(LoginSerializer):
     email = serializers.CharField(required=False, allow_blank=True)

@@ -14,11 +14,8 @@ class EventViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         start = self.request.GET.get('start', None)
         end = self.request.GET.get('end', None)
-        all_qs = super(EventViewSet, self).get_queryset()
+        qs = super(EventViewSet, self).get_queryset().order_by('start_date')
         if start and end :
-            events = all_qs.filter(start_date__gt=start, start_date__lte=end, event_type=Event.EventType.EVENT)
-            stories = all_qs.filter(start_date__gt=start, start_date__lte=end, event_type=Event.EventType.STORY)
-            all_qs = (events | stories).order_by('start_date')
-
-        return all_qs
+            qs = qs.filter(start_date__gte=start, start_date__lte=end)
+        return qs
 

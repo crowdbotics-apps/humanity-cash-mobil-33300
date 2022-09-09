@@ -27,7 +27,6 @@ const TableHeader = ({ headers, delete_items }: HeadersProps) => {
     }, [headers])
 
 
-
     return (
         <thead>
             <tr className='table-header'>

@@ -74,15 +74,16 @@ import Form from 'react-bootstrap/Form';
 import {Col} from "react-bootstrap";
 type PropsNav = {
     sideBarActions: any;
+    navbarTitle?:string;
 };
 
 
-export const TheNav: React.FC<PropsNav> = ({ sideBarActions }) => {
+export const TheNav: React.FC<PropsNav> = ({ sideBarActions, navbarTitle }) => {
     let location = useLocation();
     // console.log(location, 'location')
     return (
 
-      <Navbar bg="light" expand="lg" className='mt-2 mb-0'>
+      <Navbar bg="light" expand="lg" className='mt-3 mb-2'>
           <div style={{
               display:'flex',
               flexDirection:'row',
@@ -92,7 +93,7 @@ export const TheNav: React.FC<PropsNav> = ({ sideBarActions }) => {
               <div>
                   <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => sideBarActions(true)}/>
               </div>
-              <Navbar.Brand href="#home"> <h4 className="nav-title" >{location.pathname}</h4></Navbar.Brand>
+              <Navbar.Brand href="#home"> <h4 className="nav-title" style={{fontWeight:"400"}} >{navbarTitle??location.pathname}</h4></Navbar.Brand>
                 <div style={{flex:1}}></div>
               <div className="me-auto ">
                   <form className="d-flex justify-content-center align-items-center" role="search">

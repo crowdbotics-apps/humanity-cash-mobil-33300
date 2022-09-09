@@ -66,25 +66,15 @@ const ContentsPage: React.FC = observer(() => {
     setCalendarApi(api)
     setTitle(api.currentDataManager.data.viewTitle)
     setRightEvents(event_list)
-
   }
 
-
   useEffect( () => {
-    // @ts-ignore
     initCalendar()
-
-    // getEvents()
-
   },[])
 
   useEffect(() => {
-
     getEvents()
-
   }, [DateRange])
-
-
 
   const handleDateClick = (arg:any) => { // bind with an arrow function
     setDetails(event_list[0].events)
@@ -95,69 +85,62 @@ const ContentsPage: React.FC = observer(() => {
     setShowDetailModal(true)
   }
 
-
-
   const groupEvents = (eventList:any[])=>{
-     let data = {}
+    let data = {}
     let allEvents = []
-      let calendarEvents = []
-      for (const event of eventList){
-        let newEvent = {
-          title: event.title,
-          description: event.description,
-          id: event.id,
-          link: event.link,
-          location: event.location,
-          date: event.start_date,
-          img: event.image,
-          eventType: event.event_type,
-          startTime: event.start_date,
-          endTime: event.end_date,
-          startDate: event.start_date,
-          endDate: event.end_date
-        }
-        allEvents.push(newEvent)
-        let aux_date = moment(event.start_date).format('YYYY-MM-DD')
-        console.log("aux_date", aux_date)
-        if(Object.keys(data).indexOf(aux_date) === -1){
-          // @ts-ignore
-          data[aux_date] = {title:event.start_date, events:[newEvent] }
-        }else{
-          // @ts-ignore
-          data[aux_date].events.push(newEvent)
-        }
+    let calendarEvents = []
+    for (const event of eventList){
+      let newEvent = {
+        title: event.title,
+        description: event.description,
+        id: event.id,
+        link: event.link,
+        location: event.location,
+        date: event.start_date,
+        img: event.image,
+        eventType: event.event_type,
+        startTime: event.start_date,
+        endTime: event.end_date,
+        startDate: event.start_date,
+        endDate: event.end_date
       }
-
-      let rightEvents = []
-      for(let k of Object.keys(data) ){
+      allEvents.push(newEvent)
+      let aux_date = moment(event.start_date).format('YYYY-MM-DD')
+      if(Object.keys(data).indexOf(aux_date) === -1){
         // @ts-ignore
-        if(data[k].events.length > 1){
-          // @ts-ignore
-          for(let event of data[k].events){
-            event.isOverlapping = true
-            calendarEvents.push(event)
-          }
-        }else{
-          // @ts-ignore
-          data[k].events[0].isOverlapping = false
-          // @ts-ignore
-          calendarEvents.push( data[k].events[0])
-        }
+        data[aux_date] = {title:event.start_date, events:[newEvent] }
+      }else{
         // @ts-ignore
-        rightEvents.push(data[k])
-
+        data[aux_date].events.push(newEvent)
       }
+    }
+
+    let rightEvents = []
+    for(let k of Object.keys(data) ){
+      // @ts-ignore
+      if(data[k].events.length > 1){
+        // @ts-ignore
+        for(let event of data[k].events){
+          event.isOverlapping = true
+          calendarEvents.push(event)
+        }
+      }else{
+        // @ts-ignore
+        data[k].events[0].isOverlapping = false
+        // @ts-ignore
+        calendarEvents.push( data[k].events[0])
+      }
+      // @ts-ignore
+      rightEvents.push(data[k])
+
+    }
     setAllEvents(allEvents)
     setRightEvents(rightEvents)
-      setCalendarEvents(calendarEvents)
-
-      console.log("setCalendarEvents", allEvents)
-      setLoading(false)
+    setCalendarEvents(calendarEvents)
+    setLoading(false)
   }
   const getEvents = ()=>{
-
     setLoading(true)
-
     api.getEvents(getDateRange(DateRange)).then((response: any) => {
       if (response.kind === "ok") {
         groupEvents(response.data.results)
@@ -169,7 +152,6 @@ const ContentsPage: React.FC = observer(() => {
 
 
   const deleteEvent = (id: number)=>{
-
     setLoading(true)
     api.deleteEvent(id).then((response: any) => {
       if (response.kind === "not-found") {
@@ -178,7 +160,6 @@ const ContentsPage: React.FC = observer(() => {
           position: toast.POSITION.TOP_CENTER
         });
       } else {
-
         setLoading(false)
         getEvents()
         toast.success('Deleted successfully', {
@@ -186,7 +167,6 @@ const ContentsPage: React.FC = observer(() => {
         });
         setDetails(Details.filter(value => value.id !== id))
         setShowStoryModal(false)
-
       }
     }).catch((error: any) => {
       genericApiError()
@@ -317,16 +297,16 @@ const ContentsPage: React.FC = observer(() => {
 
 
   const next = ()=>{
-     setCalendarEvents([])
+    setCalendarEvents([])
     setRightEvents([])
     setAllEvents([])
-      // @ts-ignore
-      calendarApi.next()
-      // @ts-ignore
+    // @ts-ignore
+    calendarApi.next()
+    // @ts-ignore
     let current = calendarApi.currentDataManager.data.dateProfile.currentRange
     setDateRange(current)
-      // @ts-ignore
-      setTitle(calendarApi.currentDataManager.data.viewTitle)
+    // @ts-ignore
+    setTitle(calendarApi.currentDataManager.data.viewTitle)
   }
 
   const previous = ()=>{
@@ -375,9 +355,9 @@ const ContentsPage: React.FC = observer(() => {
   const PageHeader = ()=>{
     return (<header>
       <div className={'header-row'}>
-          <h4 className='title-h4 pt-3 mb-0  pb-3'>Calendar - Events</h4>
-          <Button variant="primary" className={'btn-connect-social me-4'}
-                   style={{borderRadius:50}}> Connect Social Media </Button>{' '}
+        <h4 className='title-h4 pt-3 mb-0  pb-3'>Calendar - Events</h4>
+        <Button variant="primary" className={'btn-connect-social me-4'}
+                style={{borderRadius:50}}> Connect Social Media </Button>{' '}
       </div>
     </header>)
   }
@@ -387,11 +367,11 @@ const ContentsPage: React.FC = observer(() => {
       <div
         key={'day-content-'+index}
         onClick={()=>{
-        setDetails(value.events)
-        setDetailsTitle(getTitleFormat(value.title))
-        setShowDetailModal(true)
-        console.log(value)
-      }}>
+          setDetails(value.events)
+          setDetailsTitle(getTitleFormat(value.title))
+          setShowDetailModal(true)
+          console.log(value)
+        }}>
         <div className={'text-gray'} style={{fontSize:12, marginLeft:20}}>{getTitleFormat(value.title)}</div>
         <div style={{marginBottom:20}}>
           {value.events.map((data:any, index:number)=>{
@@ -484,9 +464,9 @@ const ContentsPage: React.FC = observer(() => {
                      setShow(false)
                      setShowStoryModal(true)
                    }}>
-                  <div>
-                    <StoriesIcon />
-                  </div>
+                <div>
+                  <StoriesIcon />
+                </div>
                 <div  className={'text-blue'} style={{fontSize:34, marginLeft:10, fontWeight:500}}>
                   Story
                 </div>
@@ -531,7 +511,7 @@ const ContentsPage: React.FC = observer(() => {
         </Modal.Header>
         <Modal.Body >
           <Row>
-           <AddEventForm event={CurrentEvent} save={(data:any)=>saveEvent(data)}/>
+            <AddEventForm event={CurrentEvent} save={(data:any)=>saveEvent(data)}/>
           </Row>
         </Modal.Body>
       </Modal>
