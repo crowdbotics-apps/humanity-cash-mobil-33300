@@ -12,10 +12,12 @@ type Props = {
     title?:string;
     navbarTitle?:string;
     header?: React.ReactNode;
+    filter?: React.ReactNode;
+    onclickFilter?():void
 };
 
 
-const AdminPanelContainer: React.FC<Props> = ({ children, navbarTitle, title, header }) => {
+const AdminPanelContainer: React.FC<Props> = ({ children,filter, onclickFilter, navbarTitle, title, header }) => {
 
 
     const [sideBarAction, setSideBarAction] = useState(false);
@@ -30,7 +32,7 @@ const AdminPanelContainer: React.FC<Props> = ({ children, navbarTitle, title, he
                 <Col className='content-children'>
                     <Row xs={1}>
                         {/* nabvar */}
-                        <Col><TheNav navbarTitle={navbarTitle} sideBarActions={setSideBarAction} /></Col>
+                        <Col><TheNav filter={filter} onclickFilter={onclickFilter} navbarTitle={navbarTitle} sideBarActions={setSideBarAction} /></Col>
                         {/* divider */}
                         <Col><div className='line-primary'></div></Col>
                         {/* header */}

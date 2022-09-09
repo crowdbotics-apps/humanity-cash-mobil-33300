@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {observer} from "mobx-react-lite";
 import AdminPanelContainer from "../../containers";
-import {Button, Row} from "react-bootstrap";
+import {Button, Col, Form, Overlay, Row} from "react-bootstrap";
 import {useApi} from "../../utils";
 import {genericApiError} from "../../helpers";
 import AdvancedTable, {ADV_DELETE_FIELD_NAME} from "../../components/Table/AdvancedTable";
@@ -13,6 +13,7 @@ import {UserRole} from "../../components/Table/constants";
 import {toast} from "react-toastify";
 import {getErrorMessages} from "../../utils/functions";
 import SuccessModal from "../../components/SuccessModal/SuccessModal";
+import {Filter} from "./Filter";
 
 const TITLE1 = "Admin Portal Access Management"
 const TITLE2 = "Search Results"
@@ -32,6 +33,7 @@ type UserType = {
   name: string
 }
 
+
 const EmployeesPage: React.FC = observer(() => {
   const [Title, setTile] = useState(TITLE1)
   const [NavbarTitle, setNavbarTile] = useState(TITLE3)
@@ -40,6 +42,7 @@ const EmployeesPage: React.FC = observer(() => {
   const [CurrentUser, setCurrentUser] = useState<UserType | null>(null)
   const [ShowModalForm, setShowModalForm] = useState(false)
   const [ShowSuccessModal, setShowSuccessModal] = useState(false)
+  const [ShowFilter, setShowFilter] = useState(false)
 
   const api = useApi()
 
@@ -104,9 +107,9 @@ const EmployeesPage: React.FC = observer(() => {
             groupName: data.group_name,
             roleName: data.role_name
           }
-           // the delete field name should be called deleteCol to the css can be applied
-           row[ADV_DELETE_FIELD_NAME] = renderDeleteBtn(data.id)
-           tableRows.push(row)
+          // the delete field name should be called deleteCol to the css can be applied
+          row[ADV_DELETE_FIELD_NAME] = renderDeleteBtn(data.id)
+          tableRows.push(row)
         }
         setEmployees(tableRows)
       }
@@ -128,12 +131,34 @@ const EmployeesPage: React.FC = observer(() => {
     </header>)
   }
 
+  const onClickFilter = ()=>{
+    setShowFilter(true)
+  }
+
+  const applyFilter = (data:any)=>{
+    setShowFilter(false)
+
+  }
+
+  const cancelFilter = ()=>{
+    setShowFilter(false)
+
+  }
+
+  const clearFilter = ()=>{
+    setShowFilter(false)
+
+  }
 
 
   return (
-    <AdminPanelContainer navbarTitle={NavbarTitle} header={<PageHeader/>}>
+    <AdminPanelContainer
+      onclickFilter={onClickFilter}
+      filter={   <Filter apply={applyFilter} cancel={cancelFilter} clearAll={clearFilter}/>}
+      navbarTitle={NavbarTitle} header={<PageHeader/>}>
       <Row className={'main-row'}>
         <div className='content'>
+
           <AdvancedTable  headerRow={TABLE_HEADER} deletable={true} paginate={false} rows={Employees} />
         </div>
       </Row>

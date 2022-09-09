@@ -1,0 +1,3 @@
+.filterBtn:focus{
+    background: var(--gray)
+}

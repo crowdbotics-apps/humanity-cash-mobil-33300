@@ -1,84 +1,20 @@
-// import React, { useState } from 'react';
-// import { useLocation } from 'react-router-dom';
-// import {
-//     ShapeIcon,
-//     NoteIcon,
-//     DocumentIcon,
-//     ShearchIcon,
-//     LogoutIcon,
-//     WalletIcon,
-//     SubtAdminIcon,
-//     BlockChainIcon,
-//     DashboardIcon,
-//     CarsRemoveIcon,
-//     Eyes,
-//     PaginateLeftIcon,
-//     PaginateRightIcon,
-//     UsersIcons
-// } from '../components/icons'
-
-// import Form from 'react-bootstrap/Form';
-// import InputGroup from 'react-bootstrap/InputGroup';
-// import Button from 'react-bootstrap/Button';
-
-// export const Nav: React.FC = () => {
-//     let location = useLocation();
-//     console.log(location, 'location')
-//     return (
-
-//         <div className="nav-container mt-3 mb-3" >
-//             <nav className="navbar navbar-expand-lg bg-light">
-//                 <div className="collapse navbar-collapse">
-//                     <ul className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" >
-//                         <li className="nav-item">
-//
-//                         </li>
-//                         {/* si quieres agregar mas items */}
-//                         {/* <li className="nav-item">
-//                             <h4 className="nav-title" >{location.pathname}</h4>
-//                         </li> */}
-
-//                     </ul>
-
-//                 </div>
-//             </nav>
-//         </div>
-//     )
-// }
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import {
-    ShapeIcon,
-    NoteIcon,
-    DocumentIcon,
-    SearchIcon,
-    LogoutIcon,
-    WalletIcon,
-    SubtAdminIcon,
-    BlockChainIcon,
-    DashboardIcon,
-    CarsRemoveIcon,
-    Eyes,
-    PaginateLeftIcon,
-    PaginateRightIcon,
-    UsersIcons
-} from '../components/icons'
-import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
+import React from 'react';
+import {useLocation} from 'react-router-dom';
+import {SearchIcon, ShapeIcon} from '../components/icons'
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import Row from 'react-bootstrap/Row';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import {Col} from "react-bootstrap";
+import styles from "./container.module.css"
 type PropsNav = {
     sideBarActions: any;
     navbarTitle?:string;
+    onclickFilter?():void
+    filter?: React.ReactNode;
 };
 
 
-export const TheNav: React.FC<PropsNav> = ({ sideBarActions, navbarTitle }) => {
+export const TheNav: React.FC<PropsNav> = ({ filter, sideBarActions, navbarTitle }) => {
     let location = useLocation();
     // console.log(location, 'location')
     return (
@@ -109,7 +45,11 @@ export const TheNav: React.FC<PropsNav> = ({ sideBarActions, navbarTitle }) => {
                           </InputGroup>
                       </div>
                       <div className='filter-navbar mb-1'>
-                          <button className="btn btn-outline-success btn-filter" style={{ background: '#f7f5f0' }} type="submit"> <ShapeIcon /></button>
+                        {filter?filter:(
+                          <button className="btn btn-outline-success btn-filter"
+                                  type="button"> <ShapeIcon /></button>
+                        )}
+
                       </div>
                   </form>
               </div>

@@ -103,3 +103,27 @@ body {
 body{
     font-family: 'Gotham';
 }
+
+.btn-filter{
+    background: var(--background);
+}
+.btn-filter svg{
+    fill:var(--dark);
+}
+
+.btn-filter:hover , .btn-filter:visited, .btn-filter:focus, .btn-filter:visited{
+    background: var(--blue);
+}
+
+.btn-filter:hover svg, .btn-filter:focus svg, .btn-filter:active svg, .btn-filter:visited svg{
+    fill:var(--white) !important;
+}
+.navbar-filter-checkbox > input:checked{
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+.navbar-filter-divider{
+    height: 1px;
+    border: blue;
+}

@@ -14,5 +14,31 @@
 .addBtn{
     width: 300px;
     height:45px
+}
 
+.filterLabel{
+    font-wize:16px;
+    font-weight:500;
+    color: var(--dark);
+}
+.navbarFilterDivider{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-bottom: var(--blue) 1px solid;
+    height: 1px;
+}
+
+.clearFilters{
+    color:var(--pink);
+    font-size: 16px;
+}
+
+.cancelFilter{
+    color:var(--gray);
+    font-size: 16px;
+}
+
+.applyFilter{
+    color:var(--blue);
+    font-size: 16px;
 }
