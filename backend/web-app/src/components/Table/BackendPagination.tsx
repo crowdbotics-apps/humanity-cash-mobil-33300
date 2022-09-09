@@ -28,7 +28,7 @@ const BackendPagination = ({ data_paginate, currentPage, onClickPage,onNext, onP
 
 
     const pageNumbers = [];
-    for (let i = 1; i <= Math.ceil(data_paginate.length / allPerPage); i++) {
+    for (let i = 1; i <= Math.ceil(countDataAll / allPerPage); i++) {
         pageNumbers.push(i);
     }
 
@@ -43,7 +43,7 @@ const BackendPagination = ({ data_paginate, currentPage, onClickPage,onNext, onP
         <div className='d-flex paginate'>
             <Col className="d-flex  col-paginate container-count-paginate">
                 <h6 className='count-paginate'>
-                    Showing <span>{currentPage}</span> from <span>{countDataAll}</span> data
+                    Showing <span>{allPerPage}</span> from <span>{countDataAll}</span> data
                 </h6>
             </Col>
             <Col className="d-flex justify-content-end" >

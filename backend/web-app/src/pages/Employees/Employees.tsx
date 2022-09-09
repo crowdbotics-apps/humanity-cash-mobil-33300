@@ -53,9 +53,12 @@ const EmployeesPage: React.FC = observer(() => {
   const [Next, setNext] = useState<string|null>(null)
   const api = useApi()
 
+
+
   useEffect(() => {
     getUsers()
-  }, [])
+  }, [CurrentPage])
+
 
   const deleteUser = (id: number)=>{
     setLoading(true)
@@ -106,9 +109,10 @@ const EmployeesPage: React.FC = observer(() => {
   const getUsers = ()=>{
 
     api.getUsers({
-      group_manager:SuperAdminFilter,
+      group_manager:SupportFilter,
       group_bank:BankFilter,
-      role:SupportFilter
+      role:SuperAdminFilter,
+      page:CurrentPage
     }).then((response: any) => {
       if (response.kind === "ok") {
         console.log(response.data)
@@ -160,7 +164,7 @@ const EmployeesPage: React.FC = observer(() => {
     setSupportFilter(data.support)
     setSuperAdminFilter(data.superAdmin)
     setShowFilter(false)
-    getUsers()
+
   }
 
   const cancelFilter = ()=>{
@@ -169,12 +173,15 @@ const EmployeesPage: React.FC = observer(() => {
 
   }
 
+  useEffect(() => {
+    getUsers()
+  }, [BankFilter, SupportFilter, SuperAdminFilter])
+
   const clearFilter = ()=>{
     setBankFilter(false)
     setSupportFilter(false)
     setSuperAdminFilter(false)
     setShowFilter(false)
-    getUsers()
   }
 
   const onClickPage = (page:number)=>{
@@ -184,11 +191,17 @@ const EmployeesPage: React.FC = observer(() => {
 
   const onPreviousPage = ()=>{
     console.log("onPreviousPage page", Previous)
+    if(Previous){
+      setCurrentPage(prevState => prevState-1)
+    }
   }
 
 
   const onNextPage = ()=>{
     console.log("onNextPage page", Next)
+    if(Next){
+      setCurrentPage(prevState => prevState+1)
+    }
   }
 
 

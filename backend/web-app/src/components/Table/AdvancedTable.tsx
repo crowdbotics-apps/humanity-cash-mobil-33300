@@ -96,7 +96,7 @@ type AdvancedTableProps = {
 const AdvancedTable = ({ rows, paginate, onPrevious, onClickPage, onNext, deletable , headerRow, totalItems, currentPage}: AdvancedTableProps) => {
   return (
     <>
-      <Table responsive>
+      <Table responsive className={styles.table}>
         <AdvancedTableHeader headers={headerRow} deletable={deletable}/>
         <AdvancedTableBody rows={rows} deletable={deletable} />
       </Table>
@@ -104,7 +104,7 @@ const AdvancedTable = ({ rows, paginate, onPrevious, onClickPage, onNext, deleta
         onPrevious={onPrevious}
         onNext={onNext}
         data_paginate={rows}
-        allPerPage={10}
+        allPerPage={9}
         currentPage={currentPage}
         onClickPage={onClickPage}
         countDataAll={totalItems}
