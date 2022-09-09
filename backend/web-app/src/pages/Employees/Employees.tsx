@@ -9,7 +9,7 @@ import styles from "./Employee.module.css"
 import Modal from "react-bootstrap/Modal";
 import {AddStoryForm} from "../Contents/forms";
 import {AddUserForm} from "./Forms";
-import {UserRole} from "../../components/Table/constants";
+import {UserGroup, UserRole} from "../../components/Table/constants";
 import {toast} from "react-toastify";
 import {getErrorMessages} from "../../utils/functions";
 import SuccessModal from "../../components/SuccessModal/SuccessModal";
@@ -43,6 +43,9 @@ const EmployeesPage: React.FC = observer(() => {
   const [ShowModalForm, setShowModalForm] = useState(false)
   const [ShowSuccessModal, setShowSuccessModal] = useState(false)
   const [ShowFilter, setShowFilter] = useState(false)
+  const [BankFilter, setBankFilter] = useState(false)
+  const [SuperAdminFilter, setSuperAdminFilter] = useState(false)
+  const [SupportFilter, setSupportFilter] = useState(false)
 
   const api = useApi()
 
@@ -97,7 +100,12 @@ const EmployeesPage: React.FC = observer(() => {
               onClick={()=>deleteUser(id)}>Delete</Button>)
   }
   const getUsers = ()=>{
-    api.getUsers({}).then((response: any) => {
+
+    api.getUsers({
+      group_manager:SuperAdminFilter,
+      group_bank:BankFilter,
+      role:SupportFilter
+    }).then((response: any) => {
       if (response.kind === "ok") {
         const tableRows = []
         for(let data of response.data.results){
@@ -136,25 +144,39 @@ const EmployeesPage: React.FC = observer(() => {
   }
 
   const applyFilter = (data:any)=>{
+    console.log(data)
+    setBankFilter(data.bank)
+    setSupportFilter(data.support)
+    setSuperAdminFilter(data.superAdmin)
     setShowFilter(false)
-
+    getUsers()
   }
 
   const cancelFilter = ()=>{
+
     setShowFilter(false)
 
   }
 
   const clearFilter = ()=>{
+    setBankFilter(false)
+    setSupportFilter(false)
+    setSuperAdminFilter(false)
     setShowFilter(false)
-
+    getUsers()
   }
 
 
   return (
     <AdminPanelContainer
       onclickFilter={onClickFilter}
-      filter={   <Filter apply={applyFilter} cancel={cancelFilter} clearAll={clearFilter}/>}
+      filter={   <Filter
+        bank={BankFilter}
+        support={SupportFilter}
+        superAdmin={SuperAdminFilter}
+        apply={applyFilter}
+        cancel={cancelFilter}
+        clearAll={clearFilter}/>}
       navbarTitle={NavbarTitle} header={<PageHeader/>}>
       <Row className={'main-row'}>
         <div className='content'>

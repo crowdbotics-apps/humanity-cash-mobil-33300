@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Button, Form, Overlay} from "react-bootstrap";
 import styles from "./Employee.module.css";
 import {ShapeIcon} from "../../components/icons";
@@ -7,12 +7,31 @@ type FilterProps = {
   apply(data:any):void
   cancel():void
   clearAll():void
+  bank:boolean
+  support:boolean
+  superAdmin:boolean
 };
 
 
-export const Filter: React.FC<FilterProps> = ({ apply, cancel, clearAll }) => {
+export const Filter: React.FC<FilterProps> = ({ apply, cancel, clearAll, bank, support, superAdmin }) => {
   const [show, setShow] = useState(false);
   const target = useRef(null);
+  const [Bank, setBank] = useState(false)
+  const [Support, setSupport] = useState(false)
+  const [SuperAdmin, setSuperAdmin] = useState(false)
+
+  useEffect(() => {
+    if(bank){
+      setBank(true)
+    }
+    if(support){
+      setSupport(true)
+    }
+    if(superAdmin){
+      setSuperAdmin(true)
+    }
+
+  },[])
 
   return (
     <>
@@ -44,7 +63,11 @@ export const Filter: React.FC<FilterProps> = ({ apply, cancel, clearAll }) => {
                   <Form.Check
                     className={'ms-2 navbar-filter-checkbox'}
                     type={'checkbox'}
+                    checked={SuperAdmin}
                     id={`filter-super-admin-checkbox`}
+                    onChange={(e:any)=>{
+                      setSuperAdmin(e.target.checked)
+                    }}
                   />
                 </div>
                 <div className={'d-flex flex-row ms-4'}>
@@ -52,13 +75,20 @@ export const Filter: React.FC<FilterProps> = ({ apply, cancel, clearAll }) => {
                   <Form.Check
                     className={'ms-2 navbar-filter-checkbox'}
                     type={'checkbox'}
+                    checked={Bank}
                     id={`filter-bank-checkbox`}
+                    onChange={(e:any)=>{
+                      setBank(e.target.checked)
+                    }}
                   />
                 </div>
                 <div className={'d-flex flex-row ms-4'}>
                   <div className={styles.filterLabel} >App Support</div>
-
                   <Form.Check
+                    onChange={(e:any)=>{
+                      setSupport(e.target.checked)
+                    }}
+                    checked={Support}
                     className={'ms-2 navbar-filter-checkbox'}
                     type={'checkbox'}
                     id={`filter-app-support-checkbox`}
@@ -70,6 +100,9 @@ export const Filter: React.FC<FilterProps> = ({ apply, cancel, clearAll }) => {
                 <div className={`${styles.clearFilters} text-left`}
                      onClick={()=>{
                        setShow(false)
+                       setBank(false)
+                       setSupport(false)
+                       setSuperAdmin(false)
                        clearAll()
                      }}
                 >
@@ -87,7 +120,7 @@ export const Filter: React.FC<FilterProps> = ({ apply, cancel, clearAll }) => {
                   <div className={`${styles.applyFilter} text-center ms-3`}
                        onClick={()=>{
                          setShow(false)
-                         apply({})
+                         apply({bank:Bank, support:Support, superAdmin:SuperAdmin})
                        }}
                   >
                     Apply
