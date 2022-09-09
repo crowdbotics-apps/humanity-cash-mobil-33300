@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Table} from "react-bootstrap";
 import styles from "./AdvancedTable.module.css";
 import TablePagination from "./TablePagination";
+import BackendPagination from "./BackendPagination";
 
 export const ADV_DELETE_FIELD_NAME:string = "deleteCol"
 
@@ -82,24 +83,31 @@ const AdvancedTableBody = ({ rows, deletable, onClickRow, hasDetail }: AdvancedT
 type AdvancedTableProps = {
   rows: any[]
   headerRow:any
+  totalItems:number
+  currentPage:number
   paginate?: boolean;
   deletable?: boolean;
+  onPrevious(): void
+  onNext(): void
+  onClickPage(page:number): void
 };
 
 
-const AdvancedTable = ({ rows, paginate, deletable , headerRow}: AdvancedTableProps) => {
+const AdvancedTable = ({ rows, paginate, onPrevious, onClickPage, onNext, deletable , headerRow, totalItems, currentPage}: AdvancedTableProps) => {
   return (
     <>
       <Table responsive>
         <AdvancedTableHeader headers={headerRow} deletable={deletable}/>
         <AdvancedTableBody rows={rows} deletable={deletable} />
       </Table>
-      <TablePagination
+      <BackendPagination
+        onPrevious={onPrevious}
+        onNext={onNext}
         data_paginate={rows}
         allPerPage={10}
-        currentPage={1}
-        setCurrentPage={1}
-        countDataAll={100}
+        currentPage={currentPage}
+        onClickPage={onClickPage}
+        countDataAll={totalItems}
         disabledPaginate={false}
       />
     </>

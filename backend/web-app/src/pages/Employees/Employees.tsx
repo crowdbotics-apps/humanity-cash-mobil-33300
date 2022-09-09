@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {observer} from "mobx-react-lite";
 import AdminPanelContainer from "../../containers";
-import {Button, Col, Form, Overlay, Row} from "react-bootstrap";
+import {Badge, Button, Col, Form, Overlay, Row} from "react-bootstrap";
 import {useApi} from "../../utils";
 import {genericApiError} from "../../helpers";
 import AdvancedTable, {ADV_DELETE_FIELD_NAME} from "../../components/Table/AdvancedTable";
@@ -14,6 +14,7 @@ import {toast} from "react-toastify";
 import {getErrorMessages} from "../../utils/functions";
 import SuccessModal from "../../components/SuccessModal/SuccessModal";
 import {Filter} from "./Filter";
+import {classNames} from "react-select/dist/declarations/src/utils";
 
 const TITLE1 = "Admin Portal Access Management"
 const TITLE2 = "Search Results"
@@ -46,7 +47,10 @@ const EmployeesPage: React.FC = observer(() => {
   const [BankFilter, setBankFilter] = useState(false)
   const [SuperAdminFilter, setSuperAdminFilter] = useState(false)
   const [SupportFilter, setSupportFilter] = useState(false)
-
+  const [TotalItems, setTotalItems] = useState(0)
+  const [CurrentPage, setCurrentPage] = useState(1)
+  const [Previous, setPrevious] = useState<string|null>(null)
+  const [Next, setNext] = useState<string|null>(null)
   const api = useApi()
 
   useEffect(() => {
@@ -107,12 +111,19 @@ const EmployeesPage: React.FC = observer(() => {
       role:SupportFilter
     }).then((response: any) => {
       if (response.kind === "ok") {
+        console.log(response.data)
+        setPrevious(response.data.previous)
+        setNext(response.data.next)
+        setTotalItems(response.data.count)
         const tableRows = []
         for(let data of response.data.results){
+          console.log(UserGroup.BANK.code, data.group)
+          const className = data.group === UserGroup.BANK.code? styles.bankBadge: styles.managerBadge
           let row:any = {
             id: data.id,
             name: data.name,
-            groupName: data.group_name,
+            groupName: (<Badge
+                               className={className}>{data.group_name}</Badge>),
             roleName: data.role_name
           }
           // the delete field name should be called deleteCol to the css can be applied
@@ -166,6 +177,21 @@ const EmployeesPage: React.FC = observer(() => {
     getUsers()
   }
 
+  const onClickPage = (page:number)=>{
+    console.log("onclick page", page)
+    setCurrentPage(page)
+  }
+
+  const onPreviousPage = ()=>{
+    console.log("onPreviousPage page", Previous)
+  }
+
+
+  const onNextPage = ()=>{
+    console.log("onNextPage page", Next)
+  }
+
+
 
   return (
     <AdminPanelContainer
@@ -180,8 +206,13 @@ const EmployeesPage: React.FC = observer(() => {
       navbarTitle={NavbarTitle} header={<PageHeader/>}>
       <Row className={'main-row'}>
         <div className='content'>
-
-          <AdvancedTable  headerRow={TABLE_HEADER} deletable={true} paginate={false} rows={Employees} />
+          <AdvancedTable
+            onClickPage={onClickPage}
+            currentPage={CurrentPage}
+            totalItems={TotalItems} headerRow={TABLE_HEADER}
+            deletable={true} paginate={false} rows={Employees}
+            onNext={onNextPage}
+            onPrevious={onPreviousPage}/>
         </div>
       </Row>
       <Modal
