@@ -107,7 +107,7 @@ export const ResetPasswordPage: React.FC = observer((props) => {
                 <InputGroup >
                   <Form.Control
                     name="password"
-                    className={'input-large'}
+                    className={'input-large input-password'}
                     type={PasswordType}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
@@ -131,7 +131,7 @@ export const ResetPasswordPage: React.FC = observer((props) => {
                 <InputGroup className="">
                   <Form.Control
                     name="passwordConfirm"
-                    className={'input-large'}
+                    className={'input-large input-password' }
                     type={PasswordType2}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}

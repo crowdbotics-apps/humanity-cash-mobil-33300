@@ -5,6 +5,7 @@ from rest_framework.response import Response
 
 from home.api.v1.serializers.signup_signin_serializers import UserDetailSerializer
 from users.constants import UserGroup, UserRole
+from rest_framework import filters
 
 User = get_user_model()
 
@@ -13,6 +14,8 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.filter(is_active=True, is_superuser=False)
     serializer_class = UserDetailSerializer
     permission_classes = []
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['^name']
 
     def get_queryset(self):
         qs = super(UserViewSet, self).get_queryset()
@@ -25,6 +28,8 @@ class UserViewSet(viewsets.ModelViewSet):
             qs = qs.filter(group__in=group_filter)
         if self.request.GET.get('role', '') == 'true':
             qs = qs.filter(role=UserRole.SUPER_ADMIN)
+        if name := self.request.GET.get('name',''):
+            qs = qs.filter(name__istartswith=name)
         return qs
 
 

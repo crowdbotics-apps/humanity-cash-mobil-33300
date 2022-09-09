@@ -64,7 +64,34 @@
 /*    src: local('Gotham'), url('./assets/fonts/GothamBook.woff') format('woff');*/
 /*}*/
 
+.input-password{
+    border-right: none;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
 
 
+    /*margin-right: 100px;*/
 
+}
+.input-password:focus{
+    border-right: none;
+    clip-path: inset(-15px 0px -15px -15px);
+    /*box-shadow: unset;*/
+}
+
+
+.input-password:focus ~ .eyes-buttons{
+    border-top: 1px #9dc4db solid;
+    border-right: 1px #9dc4db solid;
+    border-bottom: 1px #9dc4db solid;
+    box-shadow: 0 0 0 0.25rem rgb(59 136 182 / 25%);
+    clip-path: inset(-15px -15px -15px 0px);
+}
+.input-password.is-invalid:focus ~ .eyes-buttons{
+    border-top: 1px #dc3545 solid;
+    border-right: 1px #dc3545 solid;
+    border-bottom: 1px #dc3545 solid;
+    box-shadow: 0 0 0 0.25rem rgb(220 53 69 / 25%);
+    clip-path: inset(-15px -15px -15px 0px);
+}
 

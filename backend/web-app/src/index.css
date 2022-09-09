@@ -414,3 +414,7 @@ min-height: 200px;
 .logout-buttons{
   cursor: pointer;
 }
+
+.input-password{
+  background: red ;
+}

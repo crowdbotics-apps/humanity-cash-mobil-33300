@@ -31,3 +31,9 @@
 .table{
     height: 60%;
 }
+
+.paginationContainer{
+    position: fixed;
+    bottom:0px;
+    width: 90%;
+}

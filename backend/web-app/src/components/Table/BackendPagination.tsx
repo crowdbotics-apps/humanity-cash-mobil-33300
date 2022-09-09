@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import styles from "./AdvancedTable.module.css"
 import {
     PaginateLeftIcon,
     PaginateRightIcon
@@ -10,10 +10,10 @@ import Col from 'react-bootstrap/Col';
 
 
 type PaginateProps = {
-    data_paginate: any;
     currentPage: number;
     allPerPage: number;
     countDataAll: number;
+    resultsQty: number;
     disabledPaginate: boolean;
     onNext():void
     onPrevious():void
@@ -21,7 +21,7 @@ type PaginateProps = {
 };
 
 
-const BackendPagination = ({ data_paginate, currentPage, onClickPage,onNext, onPrevious,allPerPage, countDataAll, disabledPaginate}: PaginateProps) => {
+const BackendPagination = ({ currentPage, resultsQty, onClickPage,onNext, onPrevious,allPerPage, countDataAll, disabledPaginate}: PaginateProps) => {
 
     // console.log(disabledPaginate,'diabled')
     if (disabledPaginate) return <></>
@@ -40,10 +40,10 @@ const BackendPagination = ({ data_paginate, currentPage, onClickPage,onNext, onP
 
 
     return (
-        <div className='d-flex paginate'>
+        <div className={`d-flex paginate ${styles.paginationContainer}` }>
             <Col className="d-flex  col-paginate container-count-paginate">
                 <h6 className='count-paginate'>
-                    Showing <span>{allPerPage}</span> from <span>{countDataAll}</span> data
+                    Showing <span>{resultsQty}</span> from <span>{countDataAll}</span> data
                 </h6>
             </Col>
             <Col className="d-flex justify-content-end" >

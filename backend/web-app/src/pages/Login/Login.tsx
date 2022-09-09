@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {PageWeb} from "../../components";
 import logo from '../../assets/images/logo.png';
-import {ForgotPasswordForm, FormContent, LoginForm, ResetForm} from "./components";
+import {ForgotPasswordForm, FormContent, LoginForm} from "./components";
 import "./Login.css"
 import {FORM_CONTENT} from "./constants";
 
@@ -19,7 +19,7 @@ export const LoginPage: React.FC = observer(() => {
         }else if(content === FORM_CONTENT.ForgotPassword){
            return <ForgotPasswordForm updateContent={updateContent} />
         }
-        return <ResetForm updateContent={updateContent} />
+        return <LoginForm updateContent={updateContent} />
     }
 
     return (

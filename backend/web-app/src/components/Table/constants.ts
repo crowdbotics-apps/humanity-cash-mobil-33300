@@ -46,5 +46,6 @@ const UserGroup = {
   },
 }
 
+const PAGE_SIZE = 9
 
-export {UserGroup, UserRole}
+export {UserGroup, UserRole, PAGE_SIZE}

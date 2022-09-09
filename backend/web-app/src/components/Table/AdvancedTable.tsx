@@ -3,6 +3,7 @@ import {Table} from "react-bootstrap";
 import styles from "./AdvancedTable.module.css";
 import TablePagination from "./TablePagination";
 import BackendPagination from "./BackendPagination";
+import {PAGE_SIZE} from "./constants";
 
 export const ADV_DELETE_FIELD_NAME:string = "deleteCol"
 
@@ -93,24 +94,25 @@ type AdvancedTableProps = {
 };
 
 
-const AdvancedTable = ({ rows, paginate, onPrevious, onClickPage, onNext, deletable , headerRow, totalItems, currentPage}: AdvancedTableProps) => {
+const AdvancedTable = ({ rows, onPrevious, onClickPage, onNext, deletable , headerRow, totalItems, currentPage}: AdvancedTableProps) => {
+
   return (
-    <>
+    <div style={{height:"100%",display:'flex', flexDirection:'column'}}>
       <Table responsive className={styles.table}>
         <AdvancedTableHeader headers={headerRow} deletable={deletable}/>
         <AdvancedTableBody rows={rows} deletable={deletable} />
       </Table>
       <BackendPagination
+        resultsQty={rows.length}
         onPrevious={onPrevious}
         onNext={onNext}
-        data_paginate={rows}
-        allPerPage={9}
+        allPerPage={PAGE_SIZE}
         currentPage={currentPage}
         onClickPage={onClickPage}
         countDataAll={totalItems}
         disabledPaginate={false}
       />
-    </>
+    </div>
   )
 }
 
