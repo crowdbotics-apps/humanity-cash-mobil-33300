@@ -11,10 +11,12 @@ import {AddStoryForm} from "../Contents/forms";
 import {AddUserForm} from "./Forms";
 import {UserGroup, UserRole} from "../../components/Table/constants";
 import {toast} from "react-toastify";
-import {getErrorMessages} from "../../utils/functions";
+import {getErrorMessages, useDebouncedSearch} from "../../utils/functions";
 import SuccessModal from "../../components/SuccessModal/SuccessModal";
 import {Filter} from "./Filter";
 import {classNames} from "react-select/dist/declarations/src/utils";
+import InputGroup from "react-bootstrap/InputGroup";
+import {SearchIcon} from "../../components/icons";
 
 const TITLE1 = "Admin Portal Access Management"
 const TITLE2 = "Search Results"
@@ -52,8 +54,10 @@ const EmployeesPage: React.FC = observer(() => {
   const [Previous, setPrevious] = useState<string|null>(null)
   const [Next, setNext] = useState<string|null>(null)
   const api = useApi()
-
-
+  // const useSearchStarwarsHero = () => useDebouncedSearch(text => searchStarwarsHeroAsync(text))
+  //
+  // TODO
+    //https://stackoverflow.com/questions/23123138/how-to-perform-debounce
 
   useEffect(() => {
     getUsers()
@@ -127,7 +131,7 @@ const EmployeesPage: React.FC = observer(() => {
             id: data.id,
             name: data.name,
             groupName: (<Badge
-                               className={className}>{data.group_name}</Badge>),
+              className={className}>{data.group_name}</Badge>),
             roleName: data.role_name
           }
           // the delete field name should be called deleteCol to the css can be applied
@@ -205,9 +209,22 @@ const EmployeesPage: React.FC = observer(() => {
   }
 
 
+  const SearchInput = ()=>{
+    return (
+      <InputGroup className="mb-0 search-button-group">
+        <Button variant="outline-secondary" id="button-addon2" className='search-buttons'>
+          <SearchIcon />
+        </Button>
+        <Form.Control
+          placeholder='Search'
 
+          type="search" name="search" className='search-button-navbar'
+        />
+      </InputGroup>)
+  }
   return (
     <AdminPanelContainer
+      search={<SearchInput />}
       onclickFilter={onClickFilter}
       filter={   <Filter
         bank={BankFilter}

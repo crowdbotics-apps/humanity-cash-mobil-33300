@@ -11,10 +11,11 @@ type PropsNav = {
     navbarTitle?:string;
     onclickFilter?():void
     filter?: React.ReactNode;
+    search?: React.ReactNode;
 };
 
 
-export const TheNav: React.FC<PropsNav> = ({ filter, sideBarActions, navbarTitle }) => {
+export const TheNav: React.FC<PropsNav> = ({ filter,search, sideBarActions, navbarTitle }) => {
     let location = useLocation();
     // console.log(location, 'location')
     return (
@@ -30,25 +31,28 @@ export const TheNav: React.FC<PropsNav> = ({ filter, sideBarActions, navbarTitle
                   <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => sideBarActions(true)}/>
               </div>
               <Navbar.Brand href="#home"> <h4 className="nav-title" style={{fontWeight:"400"}} >{navbarTitle??location.pathname}</h4></Navbar.Brand>
-                <div style={{flex:1}}></div>
+              <div style={{flex:1}}></div>
               <div className="me-auto ">
                   <form className="d-flex justify-content-center align-items-center" role="search">
                       <div className='' style={{width: 300}}>
-                          <InputGroup className="mb-0 search-button-group">
-                              <Button variant="outline-secondary" id="button-addon2" className='search-buttons'>
-                                  <SearchIcon />
-                              </Button>
-                              <Form.Control
-                                placeholder='Search'
-                                type="search" name="search" className='search-button-navbar'
-                              />
-                          </InputGroup>
+                          {search? search : (
+                            <InputGroup className="mb-0 search-button-group">
+                                <Button variant="outline-secondary" id="button-addon2" className='search-buttons'>
+                                    <SearchIcon />
+                                </Button>
+                                <Form.Control
+                                  placeholder='Search'
+                                  type="search" name="search" className='search-button-navbar'
+                                />
+                            </InputGroup>
+                          )}
+
                       </div>
                       <div className='filter-navbar mb-1'>
-                        {filter?filter:(
-                          <button className="btn btn-outline-success btn-filter"
-                                  type="button"> <ShapeIcon /></button>
-                        )}
+                          {filter?filter:(
+                            <button className="btn btn-outline-success btn-filter"
+                                    type="button"> <ShapeIcon /></button>
+                          )}
 
                       </div>
                   </form>
