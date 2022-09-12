@@ -58,6 +58,21 @@ class Transaction(db.models.Model):
     def profile(self):
         return self.consumer if self.consumer else self.merchant
 
+    @profile.setter
+    def profile(self, profile):
+        from users.models import Consumer
+        self.consumer = profile if isinstance(profile, Consumer) else None
+        from users.models import Merchant
+        self.merchant = profile if isinstance(profile, Merchant) else None
+
     @property
     def counterpart_profile(self):
         return self.counterpart_consumer if self.counterpart_consumer else self.counterpart_merchant
+
+    @counterpart_profile.setter
+    def counterpart_profile(self, profile):
+        from users.models import Consumer
+        self.counterpart_consumer = profile if isinstance(profile, Consumer) else None
+        from users.models import Merchant
+        self.counterpart_merchant = profile if isinstance(profile, Merchant) else None
+
