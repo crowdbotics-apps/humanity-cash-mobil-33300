@@ -1,9 +1,8 @@
 from django import db
-from django.contrib.auth import get_user_model
 from django.db import models
 
 # Create your models here.
-from cello_humanity.web3helpers import get_contract, ContractProxy
+from celo_humanity.web3helpers import get_contract, ContractProxy
 
 
 class Contract(db.models.Model):

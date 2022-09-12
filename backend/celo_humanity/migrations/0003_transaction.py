@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('cello_humanity', '0002_rename_abi_contract_metadata'),
+        ('celo_humanity', '0002_rename_abi_contract_metadata'),
     ]
 
     operations = [
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('crypto_wallet_id', models.CharField(max_length=128, null=True)),
                 ('counterpart_crypto_wallet_id', models.CharField(max_length=128, null=True)),
                 ('created', models.DateTimeField(auto_now=True)),
-                ('contract', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='cello_humanity.contract')),
+                ('contract', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='celo_humanity.contract')),
             ],
         ),
     ]

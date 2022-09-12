@@ -73,7 +73,7 @@ INSTALLED_APPS = [
 LOCAL_APPS = [
     'home',
     'users.apps.UsersConfig',
-    'cello_humanity'
+    'celo_humanity'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',

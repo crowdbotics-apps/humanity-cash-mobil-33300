@@ -1,6 +1,6 @@
 [
 {
-  "model": "cello_humanity.contract",
+  "model": "celo_humanity.contract",
   "pk": 1,
   "fields": {
     "contract_name": "Controller",

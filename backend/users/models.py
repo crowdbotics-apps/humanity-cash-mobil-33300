@@ -8,9 +8,9 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
-from cello_humanity.humanity_contract_helpers import NoWalletException, get_wallet_balance, transfer_coin, get_wallet, \
+from celo_humanity.humanity_contract_helpers import NoWalletException, get_wallet_balance, transfer_coin, get_wallet, \
     deposit_coin, withdraw_coin, WalletAlreadyCreatedException
-from cello_humanity.web3helpers import get_provider, text2keccak
+from celo_humanity.web3helpers import get_provider, text2keccak
 from users.constants import Industry, UserGroup, UserRole
 
 
