@@ -5,7 +5,7 @@
   "fields": {
     "contract_name": "Controller",
     "description": "main humanity contract",
-    "deployed_address": "0xf1D2c366F8D71525CB899d74fA5874F387516D70",
+    "deployed_address": "0x6F754488557E46f49382b92fa8290800f5f34a5F",
     "version": "1.0.2.3",
     "metadata": {
       "compiler": {
