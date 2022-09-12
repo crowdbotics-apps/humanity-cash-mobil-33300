@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "639112256214",
+    "project_id": "humanitycashcrowdbotics",
+    "storage_bucket": "humanitycashcrowdbotics.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639112256214:android:466acd4d5e4b108fa4c777",
+        "android_client_info": {
+          "package_name": "com.humanity_cash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "639112256214-5g8c5566lc02fl1jd6r68a02o8p0fint.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtDYeKQbgO8x70Y_GW2-t9J17xm8RMk5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "639112256214-5g8c5566lc02fl1jd6r68a02o8p0fint.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "639112256214-5hrj0igtm2a2pbq6cs9tgj93u80lr57b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "humanity-cash-mobil-33300.botics.co"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -9,14 +9,12 @@ import { COLOR, IMAGES } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
-import { notifyMessage } from "../../utils/helpers"
+import {getErrorMessage, notifyMessage} from "../../utils/helpers"
 import {
   GoogleSignin,
-  GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin'
 import {
-  AppleButton,
   appleAuth
 } from '@invertase/react-native-apple-authentication'
 
@@ -48,14 +46,82 @@ export const LoginScreen = observer(function LoginScreen() {
             navigation.navigate("home", {})
           })
         } else if (result.kind === "bad-data") {
-          const key = Object.keys(result?.errors)[0]
-          const msg = `${key}: ${result?.errors?.[key][0]}`
-          notifyMessage(msg)
+          const errors = result.errors
+          notifyMessage(getErrorMessage(errors))
         } else {
           loginStore.reset()
           notifyMessage(null)
         }
+      }).catch((err) => notifyMessage(getErrorMessage(err)))
+  }
+
+  const loginGoogle = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signIn();
+      const user = await GoogleSignin.getCurrentUser();
+      console.log('user ', user)
+      loginStore.environment.api.loginGoogle(user.user, user.idToken).then((result) => {
+        __DEV__ && console.tron.log('loginGoogle', result)
+        setLoading(false)
+        if (result.kind === "ok") {
+          runInAction(() => {
+            loginStore.setUser(result.response.user)
+            loginStore.setApiToken(result.response.access_token)
+            loginStore.setSelectedAccount('consumer')
+            navigation.navigate("home", {})
+          })
+        } else if (result.kind === "bad-data") {
+          const errors = result.errors
+          notifyMessage(getErrorMessage(errors))
+        } else {
+          setLoading(false)
+          notifyMessage(null)
+        }
       })
+    } catch (error) {
+      __DEV__ && console.tron.log('error', error)
+      setLoading(false)
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // errorMessage("Login con Google cancelado")
+      } else {
+        notifyMessage(null)
+      }
+    }
+  }
+
+  const loginFacebook = () => {
+    setLoading(true)
+    LoginManager.logInWithPermissions(["public_profile", "email"]).then(
+      function(result) {
+        if (result.isCancelled) {
+          setLoading(false)
+        } else {
+          AccessToken.getCurrentAccessToken().then((data) => {
+            loginStore.environment.api.loginFacebook(data.accessToken).then((result) => {
+              setLoading(false)
+              if (result.kind === "ok") {
+                runInAction(() => {
+                  loginStore.setUser(result.response.user)
+                  loginStore.setApiToken(result.response.access_token)
+                  loginStore.setSelectedAccount('consumer')
+                  navigation.navigate("home", {})
+                })
+              } else if (result.kind === "bad-data") {
+                const errors = result.errors
+                notifyMessage(getErrorMessage(errors))
+              } else {
+                setLoading(false)
+                notifyMessage(null)
+              }
+            }).catch((err) => notifyMessage(getErrorMessage(err)))
+          })
+        }
+      },
+      function (error) {
+        notifyMessage(null)
+      }
+    )
   }
 
   const loginApple = (identityToken, fullName) => {
@@ -72,44 +138,13 @@ export const LoginScreen = observer(function LoginScreen() {
             navigation.navigate("home", {})
           })
         } else if (result.kind === "bad-data") {
-          const key = Object.keys(result?.errors)[0]
-          const msg = `${key}: ${result?.errors?.[key][0]}`
-          notifyMessage(msg)
+          const errors = result.errors
+          notifyMessage(getErrorMessage(errors))
         } else {
           loginStore.reset()
           notifyMessage(null)
         }
-      })
-  }
-
-  const postSocialLogin = (result: any) => {
-    console.log(' postSocialLogin => ', JSON.stringify(result, null, 2))
-    setLoading(false)
-    if (result.kind === "ok") {
-      runInAction(() => {
-        loginStore.setUser(result.response)
-        loginStore.setApiToken(result.response.token.access)
-        if (result.response.merchant_data == null && result.response.consumer_data == null) {
-          navigation.navigate("setupProfile", {})
-        }
-        else if (!(result.response.merchant === null)) {
-          loginStore.setSelectedAccount('merchant')
-          navigation.navigate("home", {})
-        }
-        else {
-          loginStore.setSelectedAccount('consumer')
-          navigation.navigate("home", {})
-        }
-      })
-
-    } else if (result.kind === "bad-data") {
-      const key = Object.keys(result?.errors)[0]
-      const msg = `${key}: ${result?.errors?.[key][0]}`
-      notifyMessage(msg)
-    } else {
-      loginStore.reset()
-      notifyMessage(null)
-    }
+      }).catch((err) => notifyMessage(getErrorMessage(err)))
   }
 
   async function onAppleButtonPress() {
@@ -117,19 +152,17 @@ export const LoginScreen = observer(function LoginScreen() {
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
       requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-    }).then((response: any) => {
-      console.log(' response => ', response)
     });
-
     // get current authentication state for user
     // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
-    const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+    const credentialState = await appleAuth.getCredentialStateForUser(
+      appleAuthRequestResponse.user
+    );
 
     // use credentialState response to ensure the user is authenticated
     if (credentialState === appleAuth.State.AUTHORIZED) {
       // user is authenticated
-      console.log('apple ', appleAuthRequestResponse)
-      loginApple(appleAuthRequestResponse.identityToken, appleAuthRequestResponse.fullName)
+      loginApple(appleAuthRequestResponse.identityToken, appleAuthRequestResponse.fullName);
     }
   }
 
@@ -155,16 +188,8 @@ export const LoginScreen = observer(function LoginScreen() {
       });
   }
 
-  // useEffect(() => {
-  //   // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
-  //   return appleAuth.onCredentialRevoked(async () => {
-  //     console.warn('If this function executes, User Credentials have been Revoked');
-  //   });
-  // }, []);
-
   return (
     <Screen
-      // preset='scroll'
       preset="scroll"
       statusBar={"dark-content"}
       style={styles.ROOT}
@@ -226,33 +251,14 @@ export const LoginScreen = observer(function LoginScreen() {
               style={styles.LOGIN_TYPE}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => loginGoogle()}>
             <Image
               source={IMAGES.googleIcon}
               resizeMode="contain"
               style={styles.LOGIN_TYPE}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => LoginManager.logInWithPermissions(["public_profile", "email"]).then(
-            function (result) {
-              if (result.isCancelled) {
-                console.warn("Login cancelled");
-              } else {
-                console.warn(
-                  "Login success with permissions: ",
-                  JSON.stringify(result, null, 2)
-                );
-                AccessToken.getCurrentAccessToken().then(accessResult => {
-                  loginStore.environment.api.loginFacebook(accessResult).then((fbloginResult => {
-                    postSocialLogin(fbloginResult)
-                  }))
-                })
-              }
-            },
-            function (error) {
-              console.warn("Login fail with error: " + error);
-            }
-          )}>
+          <TouchableOpacity onPress={() => loginFacebook()}>
             <Image
               source={IMAGES.facebookIcon}
               resizeMode="contain"
@@ -266,8 +272,6 @@ export const LoginScreen = observer(function LoginScreen() {
           Forgot password
         </Text>
       </View>
-      {/* <View style={styles.STEP_CONTAINER}>
-</View> */}
       <Button
         buttonStyle={{
           backgroundColor: Loading ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green

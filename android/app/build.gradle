@@ -249,6 +249,8 @@ dependencies {
 
     implementation 'com.facebook.android:facebook-android-sdk:latest.release' // ADDED
 
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0' // <-- add this; newer versions should work too
+
 }
 
 // Run this once to be able to run the application with BUCK

@@ -50,7 +50,6 @@ class SignupSerializer(serializers.ModelSerializer):
         if phone_number:
             send_verification_phone(user, code, phone_number)
 
-
         code = setup_verification_code(user)
         send_verification_email(user, code)
 

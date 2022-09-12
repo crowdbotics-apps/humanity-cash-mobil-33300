@@ -41,9 +41,13 @@ export class Api extends ApiBase {
   }
 
   async loginApple(identityToken: any, fullName: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(apiv1 + "/social/apple-login/", { identityToken: identityToken, fullName: fullName })
+    return this.simple_post(apiv1 + "/social/apple-login/", { identityToken, fullName })
   }
 
+
+  async loginGoogle(data: any, token: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/social/google-login/", { data, token })
+  }
 
   // SETUP
   async setupConsumer(data: any): Promise<Types.SimplePostResult> {

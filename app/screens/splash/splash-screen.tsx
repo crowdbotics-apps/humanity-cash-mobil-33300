@@ -7,6 +7,7 @@ import styles from "./splash-styles"
 import { IMAGES , COLOR, METRICS } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
+import {GoogleSignin} from "@react-native-google-signin/google-signin";
 
 // import OneSignal from 'react-native-onesignal';
 
@@ -14,6 +15,13 @@ export const SplashScreen = observer(function SplashScreen() {
   const rootStore = useStores()
   const { loginStore } = rootStore
   const navigation = useNavigation()
+
+  GoogleSignin.configure({
+    webClientId:
+      "639112256214-5g8c5566lc02fl1jd6r68a02o8p0fint.apps.googleusercontent.com", // client ID of type WEB for your server
+    iosClientId:
+      "639112256214-5hrj0igtm2a2pbq6cs9tgj93u80lr57b.apps.googleusercontent.com",
+  });
 
   const [Loading, setLoading] = useState(true)
 
@@ -29,7 +37,7 @@ export const SplashScreen = observer(function SplashScreen() {
     setTimeout(function () {
       if (step !== '' && step !== null) {
         navigation.navigate(step, {})
-      } 
+      }
       if (loginStore.isLoggedIn) navigation.navigate('home', {})
       setLoading(false)
     }, 2000)

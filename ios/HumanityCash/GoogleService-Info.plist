@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>65270403402-jngdv4fhnonjrd91snmikcnn67uf6cdp.apps.googleusercontent.com</string>
+	<string>639112256214-5hrj0igtm2a2pbq6cs9tgj93u80lr57b.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.65270403402-jngdv4fhnonjrd91snmikcnn67uf6cdp</string>
+	<string>com.googleusercontent.apps.639112256214-5hrj0igtm2a2pbq6cs9tgj93u80lr57b</string>
 	<key>API_KEY</key>
-	<string>AIzaSyD0hxi7LITf98dN02OHxwdKZZknGfVi4Us</string>
+	<string>AIzaSyANZE9QYYl0x9_Hj3FQYryn_menQkERexc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>65270403402</string>
+	<string>639112256214</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>humanity-cash-mobil-33300.botics.co</string>
 	<key>PROJECT_ID</key>
-	<string>humanity-cash</string>
+	<string>humanitycashcrowdbotics</string>
 	<key>STORAGE_BUCKET</key>
-	<string>humanity-cash.appspot.com</string>
+	<string>humanitycashcrowdbotics.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:65270403402:ios:6df23e1bcd9bbcac9431b3</string>
+	<string>1:639112256214:ios:b08782fe43714877a4c777</string>
 </dict>
 </plist>
