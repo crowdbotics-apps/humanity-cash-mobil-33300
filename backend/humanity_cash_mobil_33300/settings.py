@@ -73,6 +73,7 @@ INSTALLED_APPS = [
 LOCAL_APPS = [
     'home',
     'users.apps.UsersConfig',
+    'cello_humanity'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
@@ -341,3 +342,8 @@ if not DEBUG:
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True
     )
+
+CONTRACT_PROVIDER_URL = env.str("CONTRACT_PROVIDER_URL", default='ws://127.0.0.1:7545')
+CONTRACT_OWNER_ADDRESS = env.str("CONTRACT_OWNER_ADDRESS", default='0x78dc5D2D739606d31509C31d654056A45185ECb6')
+# WALLET_ADDRESS_OFFSET = env.str("CONTRACT_OWNER_ADDRESS", default=10000000)
+# WALLET_ADDRESS_COLLISION_SKIP = env.str("CONTRACT_OWNER_ADDRESS", default=100000000)
