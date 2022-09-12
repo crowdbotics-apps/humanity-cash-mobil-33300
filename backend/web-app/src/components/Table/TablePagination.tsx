@@ -21,7 +21,7 @@ type PaginateProps = {
 
 const TablePagination = ({ data_paginate, currentPage, allPerPage, setCurrentPage, countDataAll, disabledPaginate}: PaginateProps) => {
 
-    console.log(disabledPaginate,'diabled')
+    // console.log(disabledPaginate,'diabled')
     if (disabledPaginate) return <></>
 
 

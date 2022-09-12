@@ -1,5 +1,6 @@
 import random
 
+from dj_rest_auth.serializers import LoginSerializer
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.utils import timezone
@@ -9,7 +10,7 @@ from allauth.utils import email_address_exists
 from allauth.account.adapter import get_adapter
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-
+from rest_framework.exceptions import ValidationError
 from home.api.v1.serializers.setup_profile_serializers import ConsumerProfileDetailSerializer, \
     MerchantMyProfileSerializer
 from home.helpers import send_verification_email, setup_verification_code, send_verification_phone
@@ -93,11 +94,22 @@ class UserDetailSerializer(serializers.ModelSerializer):
     consumer_data = serializers.SerializerMethodField()
     merchant_data = serializers.SerializerMethodField()
     token = serializers.SerializerMethodField()
+    group_name = serializers.SerializerMethodField()
+    role_name = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'verified_email', 'first_name', 'last_name',  'email', 'username', 'password_set',
-                  'consumer_data', 'merchant_data', 'allow_touch_id', 'token']
+        fields = [
+            'id', 'verified_email', 'first_name', 'last_name', 'name', 'role_name',
+            'email', 'username', 'password_set', 'group', 'role', 'group_name',
+            'consumer_data', 'merchant_data', 'allow_touch_id', 'token'
+            ]
+
+    def get_group_name(self, obj):
+        return obj.get_group_display()
+
+    def get_role_name(self, obj):
+        return obj.get_role_display()
 
     def get_password_set(self, obj):
         return obj.password is not None
@@ -116,3 +128,17 @@ class UserDetailSerializer(serializers.ModelSerializer):
             "refresh": str(refresh),
             "access": str(refresh.access_token),
         }
+
+
+class LoginSerializer(LoginSerializer):
+    email = serializers.CharField(required=False, allow_blank=True)
+
+    def _validate_username_email(self, username, email, password):
+        if not username and not email:
+            msg = _('Must include either "username" or "email" and "password".')
+            raise ValidationError(msg)
+        if User.objects.filter(email=email).exists():
+            user = self.authenticate(email=email, password=password)
+        else:
+            user = self.authenticate(username=username, password=password)
+        return user

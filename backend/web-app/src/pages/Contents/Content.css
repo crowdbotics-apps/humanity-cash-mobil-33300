@@ -83,6 +83,7 @@
 }
 .fc-daygrid-day-top{
     height: 40px;
+    flex-direction: unset !important;
 }
 .fc-scroller{
     overflow: unset !important;
@@ -95,7 +96,7 @@
 }
 
 .my-event{
-    margin-left: 10px;
+    /*margin-left: 10px;*/
     height: 30px;
     padding-left: 10px;
 }
@@ -139,13 +140,13 @@ div.fc-daygrid-day-events > div.fc-daygrid-event-harness > a:after{
     border-left: 3px solid var(--blue) !important;
 }
 
-
 .my-event-title{
     color: var(--dark);
     font-weight: 700;
     font-size: 12px;
     text-transform: capitalize;
     margin-bottom: 0px;
+    overflow: hidden;
 }
 
 .my-event-subtitle{

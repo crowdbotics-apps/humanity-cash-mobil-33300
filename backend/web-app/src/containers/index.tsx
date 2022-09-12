@@ -9,17 +9,17 @@ import Col from 'react-bootstrap/Col';
 
 type Props = {
     children: React.ReactNode;
-    title:string;
+    title?:string;
+    navbarTitle?:string;
     header?: React.ReactNode;
-
+    search?: React.ReactNode;
+    filter?: React.ReactNode;
+    onclickFilter?():void
 };
 
 
-const AdminPanelContainer: React.FC<Props> = ({ children, title, header }) => {
-    useEffect(() => {
-       // @ts-ignore
-        console.log("useffect", children.props)
-    },[])
+const AdminPanelContainer: React.FC<Props> = ({ children,search,filter, onclickFilter, navbarTitle, title, header }) => {
+
 
     const [sideBarAction, setSideBarAction] = useState(false);
 
@@ -33,15 +33,14 @@ const AdminPanelContainer: React.FC<Props> = ({ children, title, header }) => {
                 <Col className='content-children'>
                     <Row xs={1}>
                         {/* nabvar */}
-                        <Col><TheNav sideBarActions={setSideBarAction} /></Col>
+                        <Col><TheNav search={search} filter={filter} onclickFilter={onclickFilter} navbarTitle={navbarTitle} sideBarActions={setSideBarAction} /></Col>
                         {/* divider */}
                         <Col><div className='line-primary'></div></Col>
                         {/* header */}
-                        <Col>
+                        <Col className={'mt-3'}>
                             {header !== null && (header)||(
                               <Header title={title} />
                             )}
-
                         </Col>
                         {/* main */}
                         <Col>{children}</Col>

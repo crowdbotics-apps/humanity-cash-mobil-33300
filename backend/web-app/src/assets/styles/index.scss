@@ -20,13 +20,16 @@ $typography: Gotham;
 @import "./paginate";
 @import "./tableBadge";
 @import "./modal";
+@import "fonts.css";
+
 body {
     background: #F7F5F0;
 }
 
 .form-label {
     color: #666666;
-    font-weight: 600;
+    font-weight: 700;
+    font-family: Gotham;
 }
 
 .input-large {
@@ -99,4 +102,28 @@ body {
 }
 body{
     font-family: 'Gotham';
+}
+
+.btn-filter{
+    background: var(--background);
+}
+.btn-filter svg{
+    fill:var(--dark);
+}
+
+.btn-filter:hover , .btn-filter:visited, .btn-filter:focus, .btn-filter:visited{
+    background: var(--blue);
+}
+
+.btn-filter:hover svg, .btn-filter:focus svg, .btn-filter:active svg, .btn-filter:visited svg{
+    fill:var(--white) !important;
+}
+.navbar-filter-checkbox > input:checked{
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+.navbar-filter-divider{
+    height: 1px;
+    border: blue;
 }

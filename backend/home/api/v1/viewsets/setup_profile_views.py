@@ -120,7 +120,11 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
     parser_classes = (MultiPartParser, FormParser)
 
     def get_object(self):
-        return self.request.user.merchant
+        user = self.request.user
+        if user.merchant:
+            return user.merchant
+        else:
+            return None
 
     def update(self, request, *args, **kwargs):
         super(MerchantMyProfileDetailAPIView, self).update(request, *args, **kwargs)

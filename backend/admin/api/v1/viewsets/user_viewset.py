@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from admin.api.v1.serializers.user_serializer import ResetPasswordSerializer, ResetPasswordConfirmSerializer, \
-    UserAdminSerializer, UserDetailAdminSerializer
+    UserAdminSerializer, UserDetailAdminSerializer, CustomPasswordResetForm
 from home.helpers import get_user_by_uidb64, AuthenticatedAPIView
 
 User = get_user_model()
@@ -18,7 +18,7 @@ User = get_user_model()
 def password_reset(request):
     serializer = ResetPasswordSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
-        form = PasswordResetForm(serializer.data)
+        form = CustomPasswordResetForm(serializer.data)
         form.is_valid()
         opts = {
             'use_https': request.is_secure(),

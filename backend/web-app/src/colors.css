@@ -1,4 +1,5 @@
 :root {
+    --green-focus: #e3e5d7;
     --green: #8D955D;
     --blue: #3B88B6;
     --blue-dark: #1c638d;
@@ -9,4 +10,7 @@
     --background: #F7F5F0;
     --white: #ffff;
     --headings: #D59B76;
+    --error:#dc3545;
+    --pink:#df9bb8;
+    --pink-dark:#d3709a;
 }

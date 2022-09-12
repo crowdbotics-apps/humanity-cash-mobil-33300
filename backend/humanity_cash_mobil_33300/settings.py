@@ -90,7 +90,7 @@ THIRD_PARTY_APPS = [
     'phonenumber_field',
     'django_filters',
     'cities_light',
-    'corsheaders'
+    'corsheaders',
 ]
 # MODULES_APPS = get_modules()
 
@@ -170,7 +170,6 @@ else:
         }
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -198,8 +197,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), os.path.join(BASE_DIR, 'we
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # allauth / users
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
@@ -238,11 +237,14 @@ REST_AUTH_SERIALIZERS = {
     # Replace password reset serializer to fix 500 error
     # "PASSWORD_RESET_SERIALIZER": "home.api.v1.serializers.PasswordSerializer",
     "USER_DETAILS_SERIALIZER": "home.api.v1.serializers.signup_signin_serializers.UserDetailSerializer",
+    'LOGIN_SERIALIZER': 'home.api.v1.serializers.signup_signin_serializers.LoginSerializer',
+
 }
 REST_AUTH_REGISTER_SERIALIZERS = {
     # Use custom serializer that has no username and matches web signup
     "REGISTER_SERIALIZER": "home.api.v1.serializers.signup_signin_serializers.SignupSerializer",
 }
+
 
 # Custom user model
 AUTH_USER_MODEL = "users.User"
@@ -292,7 +294,6 @@ SWAGGER_SETTINGS = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://0.0.0.0:3000',
-    'http://192.168.183.55:3000'
 ]
 
 if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):

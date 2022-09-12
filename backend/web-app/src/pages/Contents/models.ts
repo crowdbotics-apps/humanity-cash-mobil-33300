@@ -1,6 +1,7 @@
 
 
 export type ContentEvent = {
+  id?:number
   title: string
   dateFullName: string
   hour: string
@@ -14,4 +15,9 @@ export type ContentEvent = {
   endTime:any
   startDate:any
   endDate:any
+}
+
+export enum EVENT_TYPE {
+  Story='story',
+  Event='event'
 }

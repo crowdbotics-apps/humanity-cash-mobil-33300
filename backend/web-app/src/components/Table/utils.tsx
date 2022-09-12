@@ -40,7 +40,7 @@ const DateForment = ({ title }: any) => {
     )
 }
 
-const TableBadge = ({ title }: badgeProps) => {
+export const TableBadge = ({ title }: badgeProps) => {
     if (title === 'Deposit') return <span className='deposit-badge'>{title}</span>
     if (title === 'complete') return <span className='status-complete-badge'>{title}</span>
     return <span className='withdrawal-badge'>{title}</span>

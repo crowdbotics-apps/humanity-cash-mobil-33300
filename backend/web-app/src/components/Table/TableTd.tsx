@@ -29,10 +29,10 @@ const TableTd = ({ id, info, title, data, dataId }: tdProps) => {
         }
     }, [location])
 
-    console.log(pathLocation, 'pathLocationpathLocation------------TableTd')
+    // console.log(pathLocation, 'pathLocationpathLocation------------TableTd')
 
     let span = modifyTdItem(info,data, title);
-    
+
 
 
 

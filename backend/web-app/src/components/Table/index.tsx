@@ -22,7 +22,6 @@ const SimpleTable = ({ rows, disabledPaginate, delete_items }: TableProps) => {
     if (rows.length < 1) rows = [];
     /// else if (itemDelete) rows = deleteItems(rows);
 
-
     const indexOfLastTodo = currentPage * allPerPage;
     const indexOfFirstTodo = indexOfLastTodo - allPerPage;
     const currentAll = rows.slice(indexOfFirstTodo, indexOfLastTodo);

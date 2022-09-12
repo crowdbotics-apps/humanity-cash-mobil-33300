@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from "react-router-dom";
 
 type Props = {
-    title:string
+    title?:string
 }
 const Header: React.FC<Props>  =  ({ title }) => {
 

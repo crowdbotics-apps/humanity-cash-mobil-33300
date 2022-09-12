@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
-from users.constants import Industry
+from users.constants import Industry, UserGroup, UserRole
 
 
 def code_live_time():
@@ -34,6 +34,8 @@ class User(AbstractUser):
     allow_touch_id = models.BooleanField(default=False)
     facebook_id = models.CharField('Facebook ID', max_length=64, blank=True, null=True)
     facebook_token = models.TextField('Facebook Token', blank=True, null=True)
+    group = models.CharField(max_length=7, choices=UserGroup.choices, null=True)
+    role = models.CharField(max_length=10, choices=UserRole.choices, null=True)
     google_id = models.CharField('Google ID', max_length=255, blank=True, null=True)
     google_token = models.TextField('Google Token', blank=True, null=True)
 
