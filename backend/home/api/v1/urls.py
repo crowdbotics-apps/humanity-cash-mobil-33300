@@ -22,6 +22,7 @@ urlpatterns = [
     ])),
     path('social/', include([
         path('fb-login/', LoginFacebookView.as_view()),
+        path('apple-login/', signup_signin_views.LoginAppleView.as_view()),
     ])),
     path('set-up-profile/', include([
         path('consumer/', setup_profile_views.SetupConsumerProfileAPIView.as_view(), name='setup_consumer_profile'),

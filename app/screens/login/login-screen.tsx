@@ -35,12 +35,33 @@ export const LoginScreen = observer(function LoginScreen() {
   const [Loading, setLoading] = useState(false)
 
   const login = () => {
-    // loginStore.setSelectedAccount('consumer') // remove
-    // navigation.navigate("home", {}) // remove
-    // loginStore.setApiToken('123') // remove
     setLoading(true)
     loginStore.environment.api
       .login({ email: Username, password: Pass })
+      .then((result: any) => {
+        setLoading(false)
+        if (result.kind === "ok") {
+          runInAction(() => {
+            loginStore.setUser(result.response.user)
+            loginStore.setApiToken(result.response.access_token)
+            loginStore.setSelectedAccount('consumer')
+            navigation.navigate("home", {})
+          })
+        } else if (result.kind === "bad-data") {
+          const key = Object.keys(result?.errors)[0]
+          const msg = `${key}: ${result?.errors?.[key][0]}`
+          notifyMessage(msg)
+        } else {
+          loginStore.reset()
+          notifyMessage(null)
+        }
+      })
+  }
+
+  const loginApple = (identityToken, fullName) => {
+    setLoading(true)
+    loginStore.environment.api
+      .loginApple(identityToken, fullName)
       .then((result: any) => {
         setLoading(false)
         if (result.kind === "ok") {
@@ -107,6 +128,8 @@ export const LoginScreen = observer(function LoginScreen() {
     // use credentialState response to ensure the user is authenticated
     if (credentialState === appleAuth.State.AUTHORIZED) {
       // user is authenticated
+      console.log('apple ', appleAuthRequestResponse)
+      loginApple(appleAuthRequestResponse.identityToken, appleAuthRequestResponse.fullName)
     }
   }
 
@@ -137,7 +160,7 @@ export const LoginScreen = observer(function LoginScreen() {
   //   return appleAuth.onCredentialRevoked(async () => {
   //     console.warn('If this function executes, User Credentials have been Revoked');
   //   });
-  // }, []); 
+  // }, []);
 
   return (
     <Screen

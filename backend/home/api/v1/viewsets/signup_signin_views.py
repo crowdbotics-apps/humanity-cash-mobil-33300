@@ -1,6 +1,9 @@
 import json
 import facebook
 import logging
+
+import jwt
+from allauth.utils import generate_unique_username
 from django.contrib.auth import get_user_model
 from django.core import exceptions
 import django.contrib.auth.password_validation as validators
@@ -113,6 +116,87 @@ class LoginFacebookView(APIView):
                     verified_email=True
                 )
 
+        Token.objects.filter(user=user).delete()
+        token = Token.objects.create(user=user)
+        if token:
+            userializer = UserDetailSerializer(user)
+            return Response(userializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response('Invalid data', status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginAppleView(APIView):
+    """Continue with apple"""
+    authentication_classes = []
+
+    def post(self, request):
+        first_name = ''
+        last_name = ''
+        data = request.data
+        identity_token = data.get('identityToken', None)
+        full_name = data.get('fullName', None)
+        if full_name:
+            first_name = full_name.get('givenName', '')
+            last_name = full_name.get('familyName', '')
+        try:
+            decoded = jwt.decode(identity_token, '', verify=False)
+        except:
+            return Response('Invalid data', status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.filter(email=decoded['email']).first()
+        if user:
+            user.verified_email = True
+            user.save()
+        if not user:
+            password = User.objects.make_random_password()
+            user = User.objects.create(
+                password=password,
+                username=generate_unique_username([first_name, last_name, decoded['email']]),
+                first_name=first_name if first_name else '',
+                last_name=last_name if last_name else '',
+                is_active=1,
+                email=decoded['email'],
+                verified_email=True
+            )
+        Token.objects.filter(user=user).delete()
+        token = Token.objects.create(user=user)
+        if token:
+            userializer = UserDetailSerializer(user)
+            return Response(userializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response('Invalid data', status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginGoogleView(APIView):
+    """Continue with google"""
+    authentication_classes = []
+
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        user_info = data.get('data')
+        google_token = data.get('token')
+        user = User.objects.filter(google_id=user_info.get('id')).first()
+        if user:
+            user.google_token = google_token
+            user.save()
+            if user.profile.blocked:
+                return Response('This user is blocked', status=status.HTTP_400_BAD_REQUEST)
+        else:
+            user = User.objects.filter(email=user_info.get('email')).first()
+            password = User.objects.make_random_password()
+            user = User.objects.create(
+                password=password,
+                username=generate_unique_username([
+                    user_info.get('givenName'),
+                    user_info.get('familyName'),
+                    user_info.get('email', '')
+                ]),
+                last_name='{}'.format(user_info.get('familyName')),
+                first_name=user_info.get('givenName'),
+                is_active=1,
+                email=user_info.get('email') or '{0} without email'.format(user_info.get('givenName')),
+                google_id=user_info.get('id'),
+                google_token=google_token,
+            )
         Token.objects.filter(user=user).delete()
         token = Token.objects.create(user=user)
         if token:
