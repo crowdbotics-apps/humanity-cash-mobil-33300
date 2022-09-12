@@ -36,11 +36,28 @@ class Transaction(db.models.Model):
     contract = models.ForeignKey(Contract, null=True, on_delete=models.SET_NULL)
     transaction_id = models.CharField(max_length=255, null=False, blank=False)
     method_or_memo = models.CharField(max_length=255, null=False, blank=True)
+    friendly_memo = models.CharField(max_length=255, null=False, blank=True)
     receipt_id = models.CharField(max_length=255, null=True, blank=False)
     receipt = models.TextField(null=True)
+    created = models.DateTimeField(auto_now=True)
+    amount = models.DecimalField(null=True, decimal_places=2, max_digits=14)
+
     crypto_wallet_id = models.CharField(max_length=128, blank=False, null=True)
     counterpart_crypto_wallet_id = models.CharField(max_length=128, blank=False, null=True)
-    created = models.DateTimeField(auto_now=True)
+
+    consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL, related_name='transactions')
+    merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL, related_name='transactions')
+
+    counterpart_consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL, related_name='counterpart_transactions')
+    counterpart_merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL, related_name='counterpart_transactions')
 
     def __str__(self):
         return f'txn[ {self.transaction_id} ] ({self.method_or_memo})'
+
+    @property
+    def profile(self):
+        return self.consumer if self.consumer else self.merchant
+
+    @property
+    def counterpart_profile(self):
+        return self.counterpart_consumer if self.counterpart_consumer else self.counterpart_merchant
