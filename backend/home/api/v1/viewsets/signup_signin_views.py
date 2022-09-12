@@ -57,6 +57,7 @@ class VerifyUserAccountAPIView(AuthenticatedAPIView):
         user = user_verification_code.user
         user.verified_email = True
         user_verification_code.save()
+        user.new_wallet(save=False)
         user.save()
         return Response(status=status.HTTP_200_OK)
 
