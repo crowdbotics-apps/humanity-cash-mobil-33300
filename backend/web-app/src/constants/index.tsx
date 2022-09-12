@@ -2,7 +2,8 @@
 
 export const ROUTES = {
   SPLASH:"/",
-  LOGIN:"/start-form",
+  LOGIN:"/login",
+  FORGOT_PASSWORD:"/forgot",
   DASHBOARD: "/dashboard",
   TRANSACTIONS: '/transactions',
   CONTENTS: '/content',

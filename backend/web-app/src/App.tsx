@@ -22,12 +22,13 @@ import { RootStore, setupRootStore } from "./models";
 import { RootStoreProvider } from "./models/root-store/root-store-context";
 import ContentsPage from "./pages/Contents/Contents";
 import EmployeesPage from "./pages/Employees/Employees";
+import {ForgotPasswordPage} from "./pages/ForgotPassword/ForgotPassword";
 
 
 // @ts-ignore
 const ProtectedRoute = ({ isAllowed }:{isAllowed:boolean}) => {
   if (!isAllowed) {
-    return <Navigate to="/start-form" replace />;
+    return <Navigate to={ROUTES.LOGIN} replace />;
   }
   return <Outlet />;
 };
@@ -81,6 +82,7 @@ function App() {
 
             <Route path={ROUTES.LOGIN} element={<LoginPage />} />
             <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
+            <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
             <Route element={<ProtectedRoute isAllowed={rootStore && rootStore.userStore.isLoggedIn} />} >
                   <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
                   <Route path={ROUTES.EMPLOYEES} element={<EmployeesPage />} />

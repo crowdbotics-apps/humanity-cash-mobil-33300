@@ -53,14 +53,16 @@ export const UserStoreModel = types
             self.refresh_token = user.token.refresh
             self.verified_email = user.verified_email
         },
-        setApiToken(token: string|null) {
+        setApiToken(access_token: string|null, refresh_token: string|null) {
           const api = self.environment.api.apisauce
-          self.access_token = token
-          if (token) {
-            api?.setHeader(AUTHORIZATION, 'Token ' + token)
+          self.access_token = access_token
+          if (access_token) {
+            api?.setHeader(AUTHORIZATION, 'Bearer ' + access_token)
           } else {
             api?.deleteHeader(AUTHORIZATION)
           }
+          self.refresh_token = refresh_token
+
         },
         reset () {
             const api = self.environment.api.apisauce

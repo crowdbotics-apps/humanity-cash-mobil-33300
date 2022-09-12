@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {PageWeb} from "../../components";
 import logo from '../../assets/images/logo.png';
-import {ForgotPasswordForm, FormContent, LoginForm} from "./components";
 import "./Login.css"
 import {FORM_CONTENT} from "./constants";
+import FormContent from "../../components/FormContent/FormContent";
+import {LoginForm} from "./components";
 
 
 export const LoginPage: React.FC = observer(() => {
@@ -13,14 +14,7 @@ export const LoginPage: React.FC = observer(() => {
    const updateContent = (newContent:FORM_CONTENT)=>{
       setContent(newContent)
    }
-    const Content = ()=>{
-        if(content === FORM_CONTENT.Login){
-            return <LoginForm updateContent={updateContent} />
-        }else if(content === FORM_CONTENT.ForgotPassword){
-           return <ForgotPasswordForm updateContent={updateContent} />
-        }
-        return <LoginForm updateContent={updateContent} />
-    }
+
 
     return (
       <PageWeb header={false}  >
@@ -29,7 +23,7 @@ export const LoginPage: React.FC = observer(() => {
           </div>
           <FormContent>
               <div>
-                  <Content />
+                <LoginForm />
               </div>
           </FormContent>
       </PageWeb>

@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
@@ -16,115 +15,13 @@ import {getErrorMessages} from "../../utils/functions";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../constants";
 import {FORM_CONTENT} from "./constants";
-
-
-export const FormContent: React.FC<{ children: React.ReactNode}> = ({ children}) => (
-  <Container>
-    <Row className="justify-content-md-center">
-      <Col xs md="6" className='background-paper'>
-        <Col xs md="12">
-          {children}
-        </Col>
-      </Col>
-    </Row >
-  </Container>
-)
-
-type FormTypeProps = {
-  updateContent(newContent:FORM_CONTENT):void
-}
-
-
-export const ForgotPasswordForm = ({updateContent}:FormTypeProps) => {
-  const [Loading, setLoading] = useState(false)
-  const api = useApi()
-  const navigate = useNavigate()
-
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-    },
-    validationSchema: Yup.object({
-      email: Yup.string().email()
-        .required("This field is required"),
-
-    }),
-    onSubmit: values => {
-      let data = {email:values.email}
-      setLoading(true)
-
-      api.forgotPassword(data).then((result: any) => {
-        setLoading(false)
-        if (result.kind === "ok") {
-          console.log(result.response.detail)
-          toast.success(result.response.detail, {
-            position: toast.POSITION.TOP_CENTER
-          });
-          console.log(result)
-          updateContent(FORM_CONTENT.ResetPassword)
-          // navigate(ROUTES.DASHBOARD, {replace:true})
-        } else {
-          toast.error(getErrorMessages(result.errors), {
-            position: toast.POSITION.TOP_CENTER
-          });
-        }
-      }).catch((error: any) => {
-        setLoading(false)
-        genericApiError()
-      })
-    }
-  });
-
-
-  return (<FormContent>
-    <Form noValidate className={'pb-5'}
-          method={'post'}
-          onSubmit={(event)=>  formik.handleSubmit(event)} >
-      <Form.Group>
-        <h2 className='title-start-form-primary '>Forgot password</h2>
-      </Form.Group>
-      <Form.Group>
-        <h4 className='title-start-form-secondary mb-3'>Input email to recive a password reset link</h4>
-      </Form.Group>
-      <Form.Group as={Col} md="12">
-        <Form.Label className='form-label mt-4'>EMAIL ADDRESS</Form.Label>
-        <Form.Control
-          name="email"
-          type="text"
-          lang={"us-US"}
-          className={'input-large'}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          isInvalid={!!formik.errors.email}
-          value={formik.values.email}
-        />
-        <Form.Control.Feedback type="invalid">
-          {formik.errors.email}
-        </Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group className="mb-3" >
-        <div className="forgot-password">
-          <a href="#" onClick={() => updateContent(FORM_CONTENT.Login)} className='link-primary'>Log in</a>
-        </div>
-      </Form.Group>
-      <Form.Group
-        className="mb-3 text-center"
-        // onClick={() => setContent('reset')}
-      >
-        {Loading && <><Spinner animation="border" variant="light" size="sm"/><span
-          className={"ms-1"}> Loading...</span></>}
-        {!Loading &&   <Button disabled={Loading}  type="submit" className={'btn-save'} > reset </Button>}
-
-      </Form.Group>
-    </Form>
-  </FormContent>)
-}
+import FormContent from "../../components/FormContent/FormContent";
 
 
 
 
 
-export const LoginForm = ({updateContent}:FormTypeProps)=> {
+export const LoginForm = ()=> {
   const [Loading, setLoading] = useState(false);
   const [PasswordType, setPasswordType] = useState("password")
   const navigate = useNavigate()
@@ -150,9 +47,10 @@ export const LoginForm = ({updateContent}:FormTypeProps)=> {
         console.log(result)
         if (result.kind === "ok") {
           userStore.setUser(result.response.user)
-          toast.success('Welcome', {
-            position: toast.POSITION.TOP_CENTER
-          });
+          userStore.setApiToken(result.response.access_token, result.response.refresh_token)
+          // toast.success('Welcome', {
+          //   position: toast.POSITION.TOP_CENTER
+          // });
           navigate(ROUTES.DASHBOARD, {replace:true})
         } else {
           toast.error(getErrorMessages(result.errors), {
@@ -230,7 +128,9 @@ export const LoginForm = ({updateContent}:FormTypeProps)=> {
         </Form.Group>
         <Form.Group className="mb-3" >
           <div className="forgot-password">
-            <a href="#" onClick={() => updateContent(FORM_CONTENT.ForgotPassword)} className='link-primary'>Forgot password?</a>
+            <a href="#"
+               onClick={()=>navigate(ROUTES.FORGOT_PASSWORD, {replace:false})}
+               className='link-primary'>Forgot password?</a>
           </div>
         </Form.Group>
       </Row>

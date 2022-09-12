@@ -1,6 +1,6 @@
 import django_filters
 from django.contrib.auth import get_user_model
-from rest_framework import serializers, viewsets, status
+from rest_framework import serializers, viewsets, status, permissions
 from rest_framework.response import Response
 
 from home.api.v1.serializers.signup_signin_serializers import UserDetailSerializer
@@ -13,7 +13,7 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.filter(is_active=True, is_superuser=False)
     serializer_class = UserDetailSerializer
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter]
     search_fields = ['^name']
 
