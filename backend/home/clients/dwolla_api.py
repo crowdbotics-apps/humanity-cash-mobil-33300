@@ -42,10 +42,21 @@ class DwollaClient:
         customer_url = '{}/customers/{}/iav-token'.format(self.get_base_url(), dwolla_customer_id)
         return self.app_token.post(customer_url).body.get('token')
 
+    def get_customers(self):
+        url = '{}/customers'.format(self.get_base_url())
+        # url = '{}/customers?status=verified'.format(self.get_base_url())
+        customers = self.app_token.get(url).body.get('_embedded').get('customers')
+        return customers
+
     def get_funding_sources_by_customer(self, dwolla_customer_id):
         funding_url = '{}/customers/{}/funding-sources?removed=false'.format(self.get_base_url(), dwolla_customer_id)
         funding_sources = self.app_token.get(funding_url).body.get('_embedded').get('funding-sources')
         return funding_sources
+
+    def get_transfers_by_customer(self, dwolla_customer_id):
+        transfers_url = '{}/customers/{}/transfers'.format(self.get_base_url(), dwolla_customer_id)
+        transfers = self.app_token.get(transfers_url).body.get('_embedded').get('transfers')
+        return transfers
 
     def get_funding_source_by_id(self, funding_source_id):
         funding_url = 'funding-sources/{}/'.format(self.get_base_url(), funding_source_id)
@@ -62,3 +73,4 @@ class DwollaClient:
             self.get_base_url(), self.get_dwolla_master_account_id())
         funding_sources = self.app_token.get(funding_url).body.get('_embedded').get('funding-sources')
         return funding_sources
+

@@ -6,6 +6,9 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
+from cello_humanity.humanity_contract_helpers import NoWalletException, get_wallet_balance, transfer_coin, get_wallet, \
+    deposit_coin, withdraw_coin, WalletAlreadyCreatedException
+from cello_humanity.web3helpers import get_provider, text2keccak
 from users.constants import Industry, UserGroup, UserRole
 
 
@@ -79,8 +82,58 @@ class BaseProfileModel(models.Model):
     zip_code = models.CharField(max_length=16, null=True, blank=True)
     dwolla_id = models.CharField(max_length=50, null=True, blank=True)
 
+    crypto_wallet_id = models.CharField(max_length=128, blank=False, null=True)
+
     class Meta:
         abstract = True
+
+    def new_wallet(self, save=True):  # WHEN the wallet is new, find a free uid to generate wallet
+        if self.crypto_wallet_id is None:
+            new_uid = uid = None
+            while new_uid is None:
+                try:
+                    uid = text2keccak(f'{time.time()}{self.id}')
+                    get_wallet(uid, create=False)
+                except NoWalletException:  # good, is a fresh uid
+                    get_wallet(uid, create=True)
+                    new_uid = uid
+
+            self.crypto_wallet_id = new_uid
+            if save:
+                self.save()
+        else:
+            raise WalletAlreadyCreatedException()
+
+    @property
+    def balance(self):
+        if self.crypto_wallet_id is None:
+            self.new_wallet()
+        return get_wallet_balance(self.crypto_wallet_id)
+
+    def transfer(self, other_user, amount, roundup = 0): # other user can be a merchant or an user! yay duck typing!
+        if not hasattr(other_user, 'crypto_wallet_id') or self.crypto_wallet_id is None or other_user.crypto_wallet_id is None:
+            raise InvalidTransferDestinationException()
+        # TODO validate ammount or let contract fail and catch?
+        # TODO catch contract exceptions
+        transfer_coin(self.crypto_wallet_id, other_user.crypto_wallet_id, amount, roundup)
+
+    def deposit(self, amount):
+        if self.crypto_wallet_id is None:
+            uid = get_provider().keccak(text=str(self.id))
+            get_wallet(uid=uid, create=True)
+            self.crypto_wallet_id = uid
+            self.save()
+            # TODO do better
+        deposit_coin(self.crypto_wallet_id, amount)
+
+    def withdraw(self, amount):
+        if self.crypto_wallet_id is None:
+            uid = get_provider().keccak(text=str(self.id))
+            get_wallet(uid=uid, create=True)
+            self.crypto_wallet_id = uid
+            self.save()
+            # TODO do better
+        withdraw_coin(self.crypto_wallet_id, amount)
 
 
 class Consumer(BaseProfileModel):
@@ -111,3 +164,11 @@ class Merchant(BaseProfileModel):
 
     class Meta:
         db_table = 'merchant'
+
+
+
+class NoMerchantProfileException(Exception):
+    pass
+
+class InvalidTransferDestinationException(Exception):
+    pass

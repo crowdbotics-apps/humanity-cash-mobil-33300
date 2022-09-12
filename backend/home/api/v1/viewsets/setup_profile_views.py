@@ -1,5 +1,6 @@
 import logging
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -8,7 +9,7 @@ from home.api.v1.serializers import setup_profile_serializers
 from home.clients.dwolla_api import DwollaClient
 from home.functions import create_dwolla_customer_consumer, create_dwolla_customer_merchant
 from home.helpers import AuthenticatedAPIView
-from users.models import Merchant
+from users.models import Merchant, NoMerchantProfileException
 
 User = get_user_model()
 logger = logging.getLogger('django')
@@ -120,11 +121,11 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
     parser_classes = (MultiPartParser, FormParser)
 
     def get_object(self):
-        user = self.request.user
-        if user.merchant:
-            return user.merchant
-        else:
-            return None
+        try:
+            return self.request.user.merchant
+        except ObjectDoesNotExist:
+            raise NoMerchantProfileException()
+
 
     def update(self, request, *args, **kwargs):
         super(MerchantMyProfileDetailAPIView, self).update(request, *args, **kwargs)

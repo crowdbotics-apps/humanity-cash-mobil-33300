@@ -11,3 +11,6 @@ postgres-data/
 .git
 .DS_Store
 __pycache__
+
+
+**/node_modules/
