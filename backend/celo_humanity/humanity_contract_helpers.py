@@ -1,20 +1,6 @@
-from cello_humanity.models import Contract, Transaction
-from cello_humanity.web3helpers import get_txn_receipt, get_provider
+from celo_humanity.models import Contract, Transaction
+from celo_humanity.web3helpers import get_txn_receipt, get_provider
 from web3.exceptions import BadFunctionCallOutput
-
-#
-# def get_humanity_contract():
-#     return get_contract(settings.CONTRACT_ADDRESS, get_contract_abi('Controller'))
-#
-#
-# contract_proxy = None
-#
-#
-# def get_humanity_contract_helper():
-#     global contract_proxy
-#     if contract_proxy is None:
-#         contract_proxy = ContractProxy(get_humanity_contract())
-#     return contract_proxy
 
 
 class NoWalletException(Exception):
