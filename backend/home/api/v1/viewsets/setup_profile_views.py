@@ -43,7 +43,7 @@ class SetupConsumerProfileDetailAPIView(AuthenticatedAPIView, UpdateAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
 
-        if not self.request.user.consumer.dwolla_id:
+        if hasattr(self.request.user, 'consumer') and not self.request.user.consumer.dwolla_id:
             # if dwolla_id is not set yet
             create_dwolla_customer_consumer(instance)
 
@@ -60,6 +60,8 @@ class SetupMerchantProfileAPIView(AuthenticatedAPIView, CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        user = self.request.user
+        user.get_merchant_data.new_wallet()
 
 
 class SetupMerchantProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):

@@ -1,3 +1,5 @@
+import time
+
 from cities_light.models import City, Region
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
