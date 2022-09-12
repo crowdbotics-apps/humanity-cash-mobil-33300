@@ -40,7 +40,7 @@ export const LoginScreen = observer(function LoginScreen() {
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
-            loginStore.setUser(result.response.user)
+            loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
             navigation.navigate("home", {})
@@ -66,7 +66,7 @@ export const LoginScreen = observer(function LoginScreen() {
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
-            loginStore.setUser(result.response.user)
+            loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
             navigation.navigate("home", {})
@@ -85,7 +85,7 @@ export const LoginScreen = observer(function LoginScreen() {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // errorMessage("Login con Google cancelado")
       } else {
-        notifyMessage(null)
+        notifyMessage(getErrorMessage(error))
       }
     }
   }
@@ -102,10 +102,10 @@ export const LoginScreen = observer(function LoginScreen() {
               setLoading(false)
               if (result.kind === "ok") {
                 runInAction(() => {
-                  loginStore.setUser(result.response.user)
+                  loginStore.setUser(result.response)
                   loginStore.setApiToken(result.response.access_token)
                   loginStore.setSelectedAccount('consumer')
-                  navigation.navigate("home", {})
+                  navigation.navigate("home")
                 })
               } else if (result.kind === "bad-data") {
                 const errors = result.errors
@@ -117,9 +117,6 @@ export const LoginScreen = observer(function LoginScreen() {
             }).catch((err) => notifyMessage(getErrorMessage(err)))
           })
         }
-      },
-      function (error) {
-        notifyMessage(null)
       }
     )
   }
@@ -132,7 +129,7 @@ export const LoginScreen = observer(function LoginScreen() {
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
-            loginStore.setUser(result.response.user)
+            loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
             navigation.navigate("home", {})
