@@ -3,10 +3,14 @@ import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
   AGREE_CONTAINER: {
+    alignItems: 'flex-end',
     alignSelf: 'center',
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: 10,
+    maxWidth: METRICS.screenWidth,
+    minHeight: 60,
     width: METRICS.screenWidth,
   },
   AGREE_LABEL: {
@@ -123,9 +127,9 @@ export default StyleSheet.create({
   },
   PASS_INPUT_STYLE: {
     alignSelf: 'center',
+    color: `${COLOR.PALETTE.pureblack}66`,
     height: 55,
-    width: METRICS.screenWidth * 0.80,
-    color: `${COLOR.PALETTE.pureblack}66`
+    width: METRICS.screenWidth * 0.80
   },
   PASS_REQUIREMENTS: {
     color: COLOR.PALETTE.strongGreen,

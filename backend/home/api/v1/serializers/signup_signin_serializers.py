@@ -14,7 +14,7 @@ from rest_framework.exceptions import ValidationError
 from home.api.v1.serializers.setup_profile_serializers import ConsumerProfileDetailSerializer, \
     MerchantMyProfileSerializer
 from home.helpers import send_verification_email, setup_verification_code, send_verification_phone
-from users.models import UserVerificationCode
+from users.models import UserVerificationCode, Consumer
 
 User = get_user_model()
 
@@ -46,12 +46,14 @@ class SignupSerializer(serializers.ModelSerializer):
             username=validated_data.get('email')
         )
         user.save()
-        code = setup_verification_code(user)
-        send_verification_email(user, code)
-
+        consumer = Consumer.objects.create(user=user)
+        consumer.new_wallet()
         phone_number = validated_data.get('phone_number')
         if phone_number:
             send_verification_phone(user, code, phone_number)
+
+        code = setup_verification_code(user)
+        send_verification_email(user, code)
 
         return user
 

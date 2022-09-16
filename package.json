@@ -60,6 +60,7 @@
     "react-native-keychain": "6.2.0",
     "react-native-maps": "^0.31.1",
     "react-native-permissions": "^3.3.1",
+    "react-native-phone-number-input": "^2.1.0",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-qrcode-svg": "^6.1.2",
     "react-native-reanimated": "^2.8.0",

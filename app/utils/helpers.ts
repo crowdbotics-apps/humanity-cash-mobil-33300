@@ -20,6 +20,40 @@ export const notifyMessage = (msg: any, type = "error") => {
   })
 }
 
+export const getErrorMessage = (rawError, emptyError = '') => {
+  let error
+  if (typeof rawError === 'object' && !Array.isArray(rawError) && rawError !== null) {
+    let errorString = ''
+    try {
+      for (const key of Object.keys(rawError)) {
+        errorString = errorString + ' ' + rawError[key]
+      }
+      if (errorString !== null && errorString !== ''){
+        error = errorString
+      } else {
+        if (emptyError !== '') {
+          error = emptyError
+        } else {
+          error = 'An error occurred while communicating with the server, please try again in a few moments'
+        }
+      }
+    } catch (e) {
+      error = 'An error occurred while communicating with the server, please try again in a few moments'
+    }
+  } else {
+    if (Array.isArray(rawError)) {
+      error = rawError[0]
+    } else {
+      if (rawError) {
+        error = rawError.replace(/(\r\n|\n|\r)/gm, "");
+      } else {
+        error = 'An error occurred while communicating with the server, please try again in a few moments'
+      }
+    }
+  }
+  return error
+}
+
 export const checkPermissions = async () => {
   if (Platform.OS === "ios") {
     const res = await checkMultiple([

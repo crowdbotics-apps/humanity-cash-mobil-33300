@@ -1,5 +1,6 @@
 import logging
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -8,7 +9,7 @@ from home.api.v1.serializers import setup_profile_serializers
 from home.clients.dwolla_api import DwollaClient
 from home.functions import create_dwolla_customer_consumer, create_dwolla_customer_merchant
 from home.helpers import AuthenticatedAPIView
-from users.models import Merchant
+from users.models import Merchant, NoMerchantProfileException
 
 User = get_user_model()
 logger = logging.getLogger('django')
@@ -42,7 +43,7 @@ class SetupConsumerProfileDetailAPIView(AuthenticatedAPIView, UpdateAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
 
-        if not self.request.user.consumer.dwolla_id:
+        if hasattr(self.request.user, 'consumer') and not self.request.user.consumer.dwolla_id:
             # if dwolla_id is not set yet
             create_dwolla_customer_consumer(instance)
 
@@ -59,6 +60,8 @@ class SetupMerchantProfileAPIView(AuthenticatedAPIView, CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        user = self.request.user
+        user.get_merchant_data.new_wallet()
 
 
 class SetupMerchantProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
@@ -120,7 +123,11 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
     parser_classes = (MultiPartParser, FormParser)
 
     def get_object(self):
-        return self.request.user.merchant
+        try:
+            return self.request.user.merchant
+        except ObjectDoesNotExist:
+            raise NoMerchantProfileException()
+
 
     def update(self, request, *args, **kwargs):
         super(MerchantMyProfileDetailAPIView, self).update(request, *args, **kwargs)

@@ -73,6 +73,7 @@ INSTALLED_APPS = [
 LOCAL_APPS = [
     'home',
     'users.apps.UsersConfig',
+    'celo_humanity'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
@@ -149,22 +150,25 @@ if env.str("DATABASE_URL", default=None):
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        'OPTIONS': {
-            'min_length': 12,
+if DEBUG:
+    AUTH_PASSWORD_VALIDATORS = []
+else:
+    AUTH_PASSWORD_VALIDATORS = [
+        {
+            'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+            'OPTIONS': {
+                'min_length': 12,
+            }
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
         }
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    }
 ]
 
 # Internationalization
@@ -306,7 +310,6 @@ TWILIO_ACCOUNT_SID = env.str("TWILIO_ACCOUNT_SID", "")
 TWILIO_AUTH_TOKEN = env.str("TWILIO_AUTH_TOKEN", "")
 TWILIO_NUMBER = env.str("TWILIO_NUMBER", "")
 
-
 # Dwolla
 DWOLLA_ENVIRONMENT = env.str("DWOLLA_ENVIRONMENT", default='sandbox')
 DWOLLA_SANDBOX_APP_KEY = env.str("DWOLLA_SANDBOX_APP_KEY", "")
@@ -326,7 +329,6 @@ CITIES_LIGHT_DATA_DIR = '/opt/webapp/cities'
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['US']
 
 if not DEBUG:
-    pass
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -343,3 +345,8 @@ if not DEBUG:
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True
     )
+
+CONTRACT_PROVIDER_URL = env.str("CONTRACT_PROVIDER_URL", default='ws://127.0.0.1:7545')
+CONTRACT_OWNER_ADDRESS = env.str("CONTRACT_OWNER_ADDRESS", default='0x78dc5D2D739606d31509C31d654056A45185ECb6')
+# WALLET_ADDRESS_OFFSET = env.str("CONTRACT_OWNER_ADDRESS", default=10000000)
+# WALLET_ADDRESS_COLLISION_SKIP = env.str("CONTRACT_OWNER_ADDRESS", default=100000000)

@@ -226,12 +226,12 @@ export const SignupScreen = observer(function SignupScreen() {
         value={Email}
         placeholder={"myname@mail.com"}
       />
-      <TextInputComponent
+      {/* <TextInputComponent
         label='PHONE NUMBER'
         onChangeText={t => setPhone(t)}
         value={Phone}
         placeholder={"(555) 555-1234"}
-      />
+      /> */}
 
     </View>
   )
@@ -546,18 +546,18 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>
       {/* <View style={styles.ROOT}> */}
       <View style={styles.ROOT}>
-        <ScrollView>
           <View style={styles.STEP_CONTAINER}>
             <TouchableOpacity
               onPress={() => backButtonHandler()}
               style={styles.BACK_BUTON_CONTAINER}
-            >
+              >
               <Icon name={"arrow-back"} size={23} color={"black"} />
               <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
             </TouchableOpacity>
+              <ScrollView>
             {renderStep()}
-          </View>
         </ScrollView>
+          </View>
       {Step === "email" && (
               <View style={styles.AGREE_CONTAINER}>
                 <CheckBox

@@ -17,7 +17,6 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const { loginStore } = rootStore
 
 	const transactionTypes = [
-		'All',
 		'Incoming transactions',
 		'Outgoing transactions',
 		'Load ups',

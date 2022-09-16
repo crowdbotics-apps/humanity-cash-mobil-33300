@@ -1,6 +1,9 @@
 import json
 import facebook
 import logging
+
+import jwt
+from allauth.utils import generate_unique_username
 from django.contrib.auth import get_user_model
 from django.core import exceptions
 import django.contrib.auth.password_validation as validators
@@ -10,7 +13,7 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 
 from home.api.v1.serializers.signup_signin_serializers import UserDetailSerializer
-from home.helpers import AuthenticatedAPIView, send_verification_email, setup_verification_code
+from home.helpers import AuthenticatedAPIView, send_verification_email, setup_verification_code, send_verification_phone
 import home.api.v1.serializers.signup_signin_serializers as signup_signin_serializers
 
 User = get_user_model()
@@ -75,7 +78,7 @@ class LoginFacebookView(APIView):
 
     def post(self, request):
         data = json.loads(request.body.decode('utf-8'))
-        access_token = data.get('accessToken').get('accessToken')
+        access_token = data.get('accessToken')
         try:
             graph = facebook.GraphAPI(access_token=access_token)
             user_info = graph.get_object(
@@ -85,12 +88,15 @@ class LoginFacebookView(APIView):
             )
         except facebook.GraphAPIError as e:
             logger.exception('Facebook error: {}'.format(e))
-            return Response('Invalid data', status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.filter(facebook_id=user_info.get('id')).first()
+        error_msg = 'Please first verify your user to be able to use the login with social networks'
         if user:
-            user.facebook_token = access_token
-            user.verified_email = True
-            user.save()
+            if user.verified_email:
+                user.facebook_token = access_token
+                user.save()
+            else:
+                return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
         if not user:
             user = User.objects.filter(email=user_info.get('email')).first()
             if user:
@@ -98,26 +104,72 @@ class LoginFacebookView(APIView):
                     user.facebook_id = user_info.get('id')
                     user.facebook_token = access_token
                     user.save()
+                else:
+                    return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
             else:
-                password = User.objects.make_random_password()
-                user = User.objects.create(
-                    password=password,
-                    username=user_info.get('email') or user_info.get('last_name'),
-                    first_name='{} {}'.format(user_info.get('first_name'),
-                                              user_info.get('middle_name') if user_info.get('middle_name') else ''),
-                    last_name=user_info.get('last_name'),
-                    is_active=1,
-                    email=user_info.get('email') or '{0} without email'.format(user_info.get('last_name')),
-                    facebook_id=user_info.get('id'),
-                    facebook_token=access_token,
-                    verified_email=True
-                )
+                error_msg = 'User not registered, please first register a user to be able to use the login with social networks'
+                return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
+        userializer = UserDetailSerializer(user)
+        return Response(userializer.data, status=status.HTTP_200_OK)
 
-        Token.objects.filter(user=user).delete()
-        token = Token.objects.create(user=user)
-        if token:
-            userializer = UserDetailSerializer(user)
-            return Response(userializer.data, status=status.HTTP_200_OK)
+
+class LoginAppleView(APIView):
+
+    def post(self, request):
+        data = request.data
+        identity_token = data.get('identityToken', None)
+        try:
+            decoded = jwt.decode(
+                jwt=identity_token,
+                key='',
+                algorithms=['HS256'],
+                options={
+                    "verify_signature": False,
+                    "verify_exp": True
+                }
+            )
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.filter(email=decoded['email']).first()
+        if user:
+            if not user.verified_email:
+                error_msg = 'Please first verify your user to be able to use the login with social networks'
+                return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response('Invalid data', status=status.HTTP_400_BAD_REQUEST)
+            error_msg = 'User not registered, please first register a user to be able to use the login with social networks'
+            return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
+        userializer = UserDetailSerializer(user)
+        return Response(userializer.data, status=status.HTTP_200_OK)
+
+
+class LoginGoogleView(APIView):
+    """Continue with google"""
+    authentication_classes = []
+
+    def post(self, request):
+        data = json.loads(request.body.decode('utf-8'))
+        user_info = data.get('data')
+        google_token = data.get('token')
+        user = User.objects.filter(google_id=user_info.get('id')).first()
+        error_msg = 'Please first verify your user to be able to use the login with social networks'
+        if user:
+            if user.verified_email:
+                user.google_token = google_token
+                user.save()
+            else:
+                return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
+        if not user:
+            user = User.objects.filter(email=user_info.get('email')).first()
+            if user:
+                if user.verified_email:
+                    user.google_id = user_info.get('id')
+                    user.google_token = google_token
+                    user.save()
+                else:
+                    return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                error_msg = 'User not registered, please first register a user to be able to use the login with social networks'
+                return Response(error_msg, status=status.HTTP_400_BAD_REQUEST)
+        userializer = UserDetailSerializer(user)
+        return Response(userializer.data, status=status.HTTP_200_OK)
 
