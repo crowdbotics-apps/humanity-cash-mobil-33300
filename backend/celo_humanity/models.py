@@ -37,6 +37,7 @@ class Transaction(db.models.Model):
     contract = models.ForeignKey(Contract, null=True, on_delete=models.SET_NULL)
     transaction_id = models.CharField(max_length=255, null=False, blank=False)
     method_or_memo = models.CharField(max_length=255, null=False, blank=True)
+    type = models.CharField(max_length=255, null=False, blank=True)
     friendly_memo = models.CharField(max_length=255, null=False, blank=True)
     receipt_id = models.CharField(max_length=255, null=True, blank=False)
     receipt = models.TextField(null=True)
@@ -66,10 +67,8 @@ class Transaction(db.models.Model):
 
     @profile.setter
     def profile(self, profile):
-        from users.models import Consumer
-        self.consumer = profile if isinstance(profile, Consumer) else None
-        from users.models import Merchant
-        self.merchant = profile if isinstance(profile, Merchant) else None
+        self.consumer = profile if profile and profile.is_consumer else None
+        self.merchant = profile if profile and profile.is_merchant else None
 
     @property
     def counterpart_profile(self):
@@ -77,8 +76,5 @@ class Transaction(db.models.Model):
 
     @counterpart_profile.setter
     def counterpart_profile(self, profile):
-        from users.models import Consumer
-        self.counterpart_consumer = profile if isinstance(profile, Consumer) else None
-        from users.models import Merchant
-        self.counterpart_merchant = profile if isinstance(profile, Merchant) else None
-
+        self.counterpart_consumer = profile if profile and profile.is_consumer else None
+        self.counterpart_merchant = profile if profile and profile.is_merchant else None

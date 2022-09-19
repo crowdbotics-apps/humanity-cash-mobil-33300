@@ -97,7 +97,7 @@ class BaseProfileModel(models.Model):
                     uid = text2keccak(f'{time.time()}{self.id}')
                     get_wallet(uid, create=False)
                 except NoWalletException:  # good, is a fresh uid
-                    get_wallet(uid, create=True)
+                    get_wallet(uid, create=True, profile=self)
                     new_uid = uid
 
             self.crypto_wallet_id = new_uid
@@ -117,7 +117,12 @@ class BaseProfileModel(models.Model):
             raise InvalidTransferDestinationException()
         # TODO validate ammount or let contract fail and catch?
         # TODO catch contract exceptions
-        transfer_coin(self.crypto_wallet_id, other_user.crypto_wallet_id, amount, roundup)
+        transfer_coin(self.crypto_wallet_id,
+                      other_user.crypto_wallet_id,
+                      amount,
+                      roundup,
+                      profile=self,
+                      counterpart_profile=other_user)
 
     def deposit(self, amount):
         if self.crypto_wallet_id is None:
@@ -126,7 +131,7 @@ class BaseProfileModel(models.Model):
             self.crypto_wallet_id = uid
             self.save()
             # TODO do better
-        deposit_coin(self.crypto_wallet_id, amount)
+        deposit_coin(self.crypto_wallet_id, amount, profile=self)
 
     def withdraw(self, amount):
         if self.crypto_wallet_id is None:
@@ -135,13 +140,21 @@ class BaseProfileModel(models.Model):
             self.crypto_wallet_id = uid
             self.save()
             # TODO do better
-        withdraw_coin(self.crypto_wallet_id, amount)
+        withdraw_coin(self.crypto_wallet_id, amount, profile=self)
 
 
 class Consumer(BaseProfileModel):
 
     class Meta:
         db_table = 'consumer'
+
+    @property
+    def is_consumer(self):
+        return True
+
+    @property
+    def is_merchant(self):
+        return False
 
 
 class Merchant(BaseProfileModel):
@@ -167,7 +180,13 @@ class Merchant(BaseProfileModel):
     class Meta:
         db_table = 'merchant'
 
+    @property
+    def is_consumer(self):
+        return False
 
+    @property
+    def is_merchant(self):
+        return True
 
 class NoMerchantProfileException(Exception):
     pass
