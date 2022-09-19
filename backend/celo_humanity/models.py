@@ -1,6 +1,7 @@
 from django import db
 from django.db import models
 
+
 # Create your models here.
 from celo_humanity.web3helpers import get_contract, ContractProxy
 
@@ -53,6 +54,11 @@ class Transaction(db.models.Model):
 
     def __str__(self):
         return f'txn[ {self.transaction_id} ] ({self.method_or_memo})'
+
+    @property
+    def confirmations(self):
+        from celo_humanity.humanity_contract_helpers import get_transaction_confirmations
+        return get_transaction_confirmations(self.transaction_id)
 
     @property
     def profile(self):

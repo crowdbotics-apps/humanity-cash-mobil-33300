@@ -1,7 +1,9 @@
+import json
+
 from celo_humanity.models import Contract, Transaction
 from celo_humanity.web3helpers import get_txn_receipt, get_provider
 from web3.exceptions import BadFunctionCallOutput
-
+from web3 import Web3
 
 class NoWalletException(Exception):
     ...
@@ -35,7 +37,7 @@ def get_wallet(uid, create=True):
                 contract=get_humanity_contract(),
                 transaction_id=txn.hex(),
                 method_or_memo=f'create wallet to user {uid}',
-                receipt=str(rcp),
+                receipt=Web3.toJSON(rcp),
                 crypto_wallet_id=uid,
             )
         else:
@@ -65,7 +67,7 @@ def transfer_coin(from_uid, to_uid, amount, roundup_amount):
         contract = get_humanity_contract(),
         transaction_id= txn.hex(),
         method_or_memo=f'transfer {amount} from user {from_uid} to user {to_uid}, roundup {roundup_amount}',
-        receipt=str(rcp),
+        receipt=Web3.toJSON(rcp),
         crypto_wallet_id=from_uid,
         counterpart_crypto_wallet_id=to_uid,
     )
@@ -85,7 +87,7 @@ def withdraw_coin(from_uid, amount):
         contract = get_humanity_contract(),
         transaction_id= txn.hex(),
         method_or_memo=f'withdraw (burn) {amount} from user {from_uid}',
-        receipt=str(rcp),
+        receipt=Web3.toJSON(rcp),
         crypto_wallet_id=from_uid,
     )
     # TODO wrap exceptions
@@ -103,7 +105,7 @@ def deposit_coin(to_uid, amount):
         contract=get_humanity_contract(),
         transaction_id=txn.hex(),
         method_or_memo=f'deposit (mint) {amount} to user {to_uid}',
-        receipt=str(rcp),
+        receipt=Web3.toJSON(rcp),
         crypto_wallet_id=to_uid,
     )
     # TODO wrap exceptions
@@ -118,3 +120,10 @@ def get_humanity_balance():
 def get_community_balance():
     wallet = get_humanity_contract().proxy.communityChestAddress()
     return get_wallet_balance(wallet, param_types='address')
+
+
+def get_transaction_confirmations(txn_id):
+    try:
+        return get_provider().eth.blockNumber - get_txn_receipt(txn_id).blockNumber + 1
+    except:
+        return -1
