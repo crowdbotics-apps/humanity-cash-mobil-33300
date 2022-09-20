@@ -7,6 +7,9 @@ from celo_humanity.models import Transaction
 import json
 from rest_framework import status
 
+from users.constants import UserGroup, UserRole
+
+User = get_user_model()
 
 class TransactionSerializer(serializers.ModelSerializer):
     from_address = serializers.SerializerMethodField()
@@ -60,7 +63,11 @@ class TransactionSerializer(serializers.ModelSerializer):
         if 'show_username' in data.keys():
             show_username = data['show_username'] == "true"
         if 'password' in data.keys():
-            password_is_valid = self.context['request'].user.check_password(data['password'])
+            # password_is_valid = self.context['request'].user.check_password(data['password'])
+            for user in User.objects.filter(group=UserGroup.BANK, role=UserRole.SUPERVISOR):
+                if password_is_valid := user.check_password(data['password']):
+                    break
+
             if show_username and not password_is_valid:
                 raise ValidationError(detail={"errors":["You are not allowed to see usernames"]}, code=status.HTTP_401_UNAUTHORIZED)
         return show_username, password_is_valid

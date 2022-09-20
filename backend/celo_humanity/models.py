@@ -41,7 +41,7 @@ class Transaction(models.Model):
         new_wallet = 'New wallet'
 
     contract = models.ForeignKey(Contract, null=True, on_delete=models.SET_NULL)
-    transaction_id = models.CharField(max_length=255, null=False, blank=False)
+    transaction_id = models.CharField(max_length=255, null=False, blank=False, db_index=True)
     method_or_memo = models.CharField(max_length=255, null=False, blank=True)
     type = models.CharField(max_length=255, null=False, blank=True, choices=Type.choices)
     friendly_memo = models.CharField(max_length=255, null=False, blank=True)
