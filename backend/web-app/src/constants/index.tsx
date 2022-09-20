@@ -6,6 +6,7 @@ export const ROUTES = {
   FORGOT_PASSWORD:"/forgot",
   DASHBOARD: "/dashboard",
   TRANSACTIONS: '/transactions',
+  BLOCKCHAIN_TRANSACTIONS: '/blockchain-transactions',
   CONTENTS: '/content',
   EMPLOYEES: '/employees',
   SYNTHESIS_EXPLORER: (params: any) => `/synthesis-explorer/${params}` ,

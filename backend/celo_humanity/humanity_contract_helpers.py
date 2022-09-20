@@ -49,7 +49,7 @@ def get_wallet(uid, create=True, profile=None):
                 method_or_memo=f'create wallet to user {uid}',
                 receipt=Web3.toJSON(rcp),
                 crypto_wallet_id=uid,
-                type='New wallet',
+                type=Transaction.Type.new_wallet,
                 **fromandto_to_kwargs(profile)
             )
         else:
@@ -81,8 +81,9 @@ def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart
         method_or_memo=f'transfer {amount} from user {from_uid} to user {to_uid}, roundup {roundup_amount}',
         receipt=Web3.toJSON(rcp),
         crypto_wallet_id=from_uid,
+        amount=amount,
         counterpart_crypto_wallet_id=to_uid,
-        type='Transfer',
+        type=Transaction.Type.transfer,
         **fromandto_to_kwargs(profile, counterpart_profile)
     )
 
@@ -103,7 +104,7 @@ def withdraw_coin(from_uid, amount, profile=None):
         method_or_memo=f'withdraw (burn) {amount} from user {from_uid}',
         receipt=Web3.toJSON(rcp),
         crypto_wallet_id=from_uid,
-        type='Withdraw',
+        type=Transaction.Type.withdraw,
         **fromandto_to_kwargs(profile)
     )
     # TODO wrap exceptions
@@ -123,7 +124,7 @@ def deposit_coin(to_uid, amount, profile=None):
         method_or_memo=f'deposit (mint) {amount} to user {to_uid}',
         receipt=Web3.toJSON(rcp),
         crypto_wallet_id=to_uid,
-        type='Deposit',
+        type=Transaction.Type.deposit,
         **fromandto_to_kwargs(counterpart_profile=profile)
     )
     # TODO wrap exceptions

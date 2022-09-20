@@ -10,11 +10,13 @@ import home.api.v1.viewsets.signup_signin_views as signup_signin_views
 from home.api.v1.viewsets import setup_profile_views, base_views, security_views, dwolla_views
 from home.api.v1.viewsets.event_views import EventViewSet
 from home.api.v1.viewsets.signup_signin_views import LoginFacebookView
+from home.api.v1.viewsets.transaction_views import TransactionViewSet
 from home.api.v1.viewsets.user_views import UserViewSet
 
 router = DefaultRouter()
 router.register("event", EventViewSet, basename="event")
 router.register("user", UserViewSet, basename="user")
+router.register("transaction", TransactionViewSet, basename="transaction")
 # router.register("signup", SignupViewSet, basename="signup")
 
 urlpatterns = [

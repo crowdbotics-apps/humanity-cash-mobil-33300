@@ -23,6 +23,7 @@ import { RootStoreProvider } from "./models/root-store/root-store-context";
 import ContentsPage from "./pages/Contents/Contents";
 import EmployeesPage from "./pages/Employees/Employees";
 import {ForgotPasswordPage} from "./pages/ForgotPassword/ForgotPassword";
+import BlockTransactionsPage from "./pages/BlockchainTransactions";
 
 
 // @ts-ignore
@@ -49,9 +50,19 @@ function App() {
   const isMobile = width <= 768;
 
   useEffect(() => {
+
+    if(rootStore){
+      console.log("reiniciando", rootStore)
+
+      rootStore.userStore.setUp()
+    }
+  },[rootStore])
+
+  useEffect(() => {
     (async () => {
       setupRootStore().then((rootStore)=>{
         setRootStore(rootStore)
+
         setIsLoggedIn(rootStore.userStore.isLoggedIn)
       })
     })()
@@ -88,6 +99,7 @@ function App() {
                   <Route path={ROUTES.EMPLOYEES} element={<EmployeesPage />} />
                   <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                   <Route path={ROUTES.TRANSACTIONS} element={<AchTransactions />} />
+                  <Route path={ROUTES.BLOCKCHAIN_TRANSACTIONS} element={<BlockTransactionsPage />} />
                   <Route path={ROUTES.TRANSACTIONS_DETAIL(":id")} element={<AchTransactionsDetail />} />
 
             </Route>

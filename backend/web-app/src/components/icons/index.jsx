@@ -224,8 +224,17 @@ const SuccessCheckIcon = ()=>(
     <path d="M85 25.5L38.25 72.25L17 51" stroke="#8D955D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
 )
+
+const ArrowRightIcon = ()=>(
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.4297 5.92999L20.4997 12L14.4297 18.07" stroke="#8D955D" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M3.5 12H20.33" stroke="#8D955D" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+
+)
 export {
   SuccessCheckIcon,
+  ArrowRightIcon,
   EditActionIcon,
   DoneActionIcon,
   CloseActionIcon,
