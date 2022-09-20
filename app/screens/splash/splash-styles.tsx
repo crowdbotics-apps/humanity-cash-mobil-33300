@@ -7,30 +7,30 @@ export default StyleSheet.create({
     position: "absolute",
     width: METRICS.screenWidth,
   },
-  CONTAINER: {},
+  CONTAINER: {
+    alignItems: 'flex-end',
+  },
   LOGO_STYLE: {
     alignSelf:'center',
-    bottom: METRICS.screenHeight / 2.2,
-    position: "absolute",
+    marginBottom: 20,
     width: METRICS.screenWidth,
   },
   POWERED_CONTAINER: {
     alignItems: 'flex-end',
-    bottom: 40,
-    right: 30,
-    width: METRICS.screenWidth,
-    
+    alignSelf: "flex-end",
+    bottom: 50,
+    right: 100
   },
   POWERED_CONTAINER_ABSOLUTE: {
-    alignItems: 'flex-end',
-    bottom: 250,
-    position: 'absolute',
-    right: 30,
-    width: METRICS.screenWidth,
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'space-between',
+    width: METRICS.screenWidth
   },
   POWERED_LABEL: {
     color: COLOR.PALETTE.blue,
-    fontSize: 20
+    fontSize: 20,
+    left: 50
   },
   ROOT: {
     backgroundColor: COLOR.PALETTE.background,
@@ -39,6 +39,7 @@ export default StyleSheet.create({
   },
   WATERMARK_STYLE: {
     height: 70,
-    width: 180,
+    left: 50,
+    width: 180
   },
 })

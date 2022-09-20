@@ -92,7 +92,8 @@ const AppStackDrawer = () => {
           width: METRICS.screenWidth * 0.9,
         },
       }}
-      initialRouteName="splash"
+      // initialRouteName="splash"
+      initialRouteName="setupProfile"
       drawerContent={(props) => <DrawerScreen {...props} />}
     >
       <Drawer.Screen name="splash" component={SplashScreen} />
@@ -120,28 +121,6 @@ const AppStackDrawer = () => {
       {/* <Drawer.Screen name="drawer" component={DrawerScreen} /> */}
 
     </Drawer.Navigator>
-
-  )
-}
-
-const AppStack = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        contentStyle: { backgroundColor: COLOR.PALETTE.background }
-      }}
-      initialRouteName={"splash"}
-    >
-      <Stack.Screen name="splash" component={SplashScreen} />
-      <Stack.Screen name="signup" component={SignupScreen} />
-      <Stack.Screen name="setupProfile" component={SetupProfileScreen} />
-
-      <Stack.Screen name="login" component={LoginScreen} />
-      <Stack.Screen name="home" component={HomeScreen} />
-      <Stack.Screen name="return" component={ReturnScreen} />
-      <Stack.Screen name="linkBank" component={LinkBankScreen} />
-    </Stack.Navigator>
 
   )
 }

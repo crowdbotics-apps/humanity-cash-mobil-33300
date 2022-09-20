@@ -5,7 +5,8 @@ import {
 	Text,
 	Button,
 	Screen,
-	ModalSelector
+	ModalSelector,
+	MaskInput
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
@@ -630,30 +631,32 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					{IndentifierType === 'EIN' && <View style={styles.CHECK_INSIDE} />}
 				</TouchableOpacity>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					editable={IndentifierType === 'EIN'}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setEmployerId(t)}
-					value={EmployerId}
-					placeholder={'XX-XXXXXXX'}
-				/>
-			</View>
+			<MaskInput
+				value={EmployerId}
+				mask={[/\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+				name="ein"
+				placeholder="XX-XXXXXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setEmployerId(unmasked)}
+				style={styles.INPUT_STYLE_CONTAINER}
+				editable={IndentifierType === 'EIN'}
+			/>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>{'Social Security Number (SSN)'}</Text>
 				<TouchableOpacity style={styles.CHECK_OUTSIDE} onPress={() => setIndentifierType('SSN')}>
 					{IndentifierType === 'SSN' && <View style={styles.CHECK_INSIDE} />}
 				</TouchableOpacity>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					editable={IndentifierType === 'SSN'}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setSocialSecurityNumber(t)}
-					value={SocialSecurityNumber}
-					placeholder={'XXX-XX-XXXX'}
-				/>
-			</View>
+			<MaskInput
+				value={SocialSecurityNumber}
+				mask={[/\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/]}
+				name="ssn"
+				placeholder="XXX-XX-XXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setSocialSecurityNumber(unmasked)}
+				style={styles.INPUT_STYLE_CONTAINER}
+				editable={IndentifierType === 'SSN'}
+			/>
 		</View>
 	)
 	const renderbusinessAddresss = () => (

@@ -20,17 +20,18 @@ export default StyleSheet.create({
         width: METRICS.screenWidth * 0.95
     },
     INPUT_CONTAINER_ERROR: {
-        alignItems: 'center',
-        alignSelf: 'center',
-        backgroundColor: COLOR.PALETTE.whiteTextInput,
-        borderColor: COLOR.PALETTE.pink,
         borderRadius: 5,
+        height: 55,
+        width: METRICS.screenWidth * 0.95,
+        // backgroundColor: `${COLOR.PALETTE.green}25`,
+        backgroundColor: COLOR.PALETTE.whiteTextInput,
+        alignSelf: 'center',
+        marginTop: 10,
+        borderColor: COLOR.PALETTE.pink,
         borderWidth: 0.8,
         flexDirection: 'row',
-        height: 55,
         justifyContent: 'center',
-        marginTop: 10,
-        width: METRICS.screenWidth * 0.95
+        alignItems: 'center'
     },
     LABEL: {
         color: COLOR.PALETTE.black,

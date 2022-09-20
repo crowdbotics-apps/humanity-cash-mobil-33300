@@ -13,10 +13,12 @@ export const notifyMessage = (msg: any, type = "error") => {
   } else {
     Alert.alert(msg);
   }
+  const time = 5000
   Toast.show({
     type: type,
     text1: msg,
-    // topOffset: Platform.OS === "ios" ? 50 : 50
+    autoHide: false,
+    visibilityTime: time
   })
 }
 

@@ -10,17 +10,25 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
 
 const maxAmount = 5000
+const feePercentage = 1.5
 
 export const CashOutScreen = observer(function CashOutScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 
-	const [Amount, setAmount] = useState('')
+	const [CheckMaxAmount, setCheckMaxAmount] = useState(false)	
+	const [Amount, setAmount] = useState('0')
+	const [Fee, setFee] = useState(0.50)
 	const [ShowModal, setShowModal] = useState(false)
 	const [AmountError, setAmountError] = useState(false)
 	const [TransactionConfirm, setTransactionConfirm] = useState(false)
 	const [TransactionFinished, setTransactionFinished] = useState(false)
+
+	useEffect(() => {
+		if (loginStore.getSelectedAccount === 'consumer') setCheckMaxAmount(true)
+		else setCheckMaxAmount(false)
+	  }, [])
 
 	const ConfirmModal = () => (
 		<Modal transparent visible={ShowModal}>
@@ -30,7 +38,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 						? [
 							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>{`Your redemption is in process!
 							`}</Text>,
-							<Text key={'congrat_sub_title'} style={styles.SUB_TITLE}>You’ll get an email once your funds are available in your bank account. This should take 1-3 business days.</Text>,
+							<Text key={'congrat_sub_title'} style={styles.SUB_TITLE}>You’ll get an email once your funds are available in your bank account. This should take 5 business days.</Text>,
 							<Button
 								key={'congrat_button'}
 								buttonStyle={{
@@ -42,7 +50,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 									setTransactionConfirm(false),
 									setShowModal(false),
 									setTransactionFinished(false),
-									setAmount(''),
+									setAmount(''), 
 									navigation.navigate("home", {})
 								]}
 								buttonLabel={'Go back to home'}
@@ -70,7 +78,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 					<View style={styles.MODAL_CONTAINER}>
 						<View style={styles.MODAL_CONTENT}>
 							<Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Are you sure you want to cash out?</Text>
-							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will redeem C$ ${Amount} for USD $${parseFloat(Amount) - 0.50} after a $0.50 fee.`}</Text>
+							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will redeem C$ ${Amount} for USD $${(parseFloat(Amount) - Fee).toFixed(2)} after a $${Fee.toFixed(2)} fee.`}</Text>
 							<TouchableOpacity
 								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor}]}
 								onPress={() => {
@@ -123,19 +131,24 @@ export const CashOutScreen = observer(function CashOutScreen() {
 
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
+						{CheckMaxAmount &&
 						<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ {maxAmount}</Text>
+						}
 					</View>
 					<View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
 						<TextInput
 							style={styles.INPUT_STYLE}
 							keyboardType='numeric'
-							
 							onChangeText={t => {
 								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
 								temp = temp.replace(/[^0-9]/g, '')
-								if (parseInt(temp) > maxAmount) setAmountError(true)
+								if (CheckMaxAmount && parseInt(temp) > maxAmount) setAmountError(true)
 								else setAmountError(false)
-								setAmount(temp.replace(",", "."))
+								temp = temp.replace(",", ".")
+								const tempFee = (parseFloat(temp) * feePercentage) / 100
+								if (tempFee > 0.50) setFee(tempFee)
+								else setFee(0.50)
+								setAmount(temp)
 							}}
 							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
 							placeholder={`Amount`}
@@ -147,11 +160,11 @@ export const CashOutScreen = observer(function CashOutScreen() {
 
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.COSTS_FEE_LABEL}>Cash out fee</Text>
-						<Text style={styles.COSTS_FEE_LABEL}>{`$ 0.50`}</Text>
+						<Text style={styles.COSTS_FEE_LABEL}>{`$ ${Fee.toFixed(2)}`}</Text>
 					</View>
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.COSTS_LABEL}>Net cash out</Text>
-						<Text style={styles.COSTS_LABEL}>{`$ ${Amount}`}</Text>
+						<Text style={styles.COSTS_LABEL}>{`$  ${parseFloat(Amount) > 0 ? (parseFloat(Amount) - Fee).toFixed(2) : 0}`}</Text>
 					</View>
 
 				</View>
@@ -159,10 +172,11 @@ export const CashOutScreen = observer(function CashOutScreen() {
 			</KeyboardAvoidingView>
 				<Button
 					buttonStyle={{
-						backgroundColor: loginStore.getAccountColor,
+						backgroundColor: AmountError ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor,
 						bottom: 5,
 						position: 'absolute'
 					}}
+					disabled={AmountError}
 					onPress={() => setShowModal(true)}
 					buttonLabel={'Confirm'}
 				/>

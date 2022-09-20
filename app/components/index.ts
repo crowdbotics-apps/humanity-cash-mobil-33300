@@ -1,4 +1,5 @@
 export * from "./bullet-item/bullet-item"
+export * from "./mask-input/mask-input"
 export * from "./button/button"
 export * from "./checkbox/checkbox"
 export * from "./form-row/form-row"

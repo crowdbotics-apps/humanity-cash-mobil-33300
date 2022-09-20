@@ -43,11 +43,17 @@ export default StyleSheet.create({
     marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },
-  LOGIN_TYPE: {
+  LOGIN_OPTIONS_CONTAINER: {
+    flex: 1,
+    height: 200,
+    justifyContent: 'space-around',
+    marginTop: 20
+  },
+	LOGIN_TYPE: {
     height: 45,
     width: 45
   },
-	LOGIN_TYPES_CONTAINER: {
+  LOGIN_TYPES_CONTAINER: {
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -57,6 +63,7 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.green,
     fontSize: 16,
     marginLeft: 10,
+    marginVertical: 15,
     textAlign: 'center',
     // paddingBottom: 30
   },
@@ -73,8 +80,6 @@ export default StyleSheet.create({
     textDecorationLine: 'underline'
   },
   PASS_INPUT_STYLE: {
-    alignSelf: 'center',
-    height: 55,
     width: METRICS.screenWidth * 0.80,
   },
   PASS_REQUIREMENTS: {
