@@ -219,7 +219,7 @@ export const LoginScreen = observer(function LoginScreen() {
         <Icon name={"arrow-back"} size={23} color={"#8B9555"} />
         <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
       </TouchableOpacity>
-      <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+      <ScrollView bounces={false}>
         <View style={styles.STEP_CONTAINER}>
           <View style={styles.STEP_CONTAINER}>
             <Text style={styles.STEP_TITLE}>Log in</Text>

@@ -78,14 +78,11 @@ export type NavigatorParamList = {
   contact: any
 }
 
-// Documentation: https://reactnavigation.org/docs/stack-navigator/
-const Stack = createNativeStackNavigator<NavigatorParamList>()
-const Drawer = createDrawerNavigator<NavigatorParamList>();
+const DrawerNav = createDrawerNavigator<NavigatorParamList>();
 
-
-const AppStackDrawer = () => {
+const AppStackDrawer: React.FC = () => {
   return (
-    <Drawer.Navigator
+    <DrawerNav.Navigator
       screenOptions={{
         headerShown: false,
         drawerStyle: {
@@ -93,48 +90,69 @@ const AppStackDrawer = () => {
         },
       }}
       // initialRouteName="splash"
-      initialRouteName="setupProfile"
+      initialRouteName="home"
       drawerContent={(props) => <DrawerScreen {...props} />}
     >
-      <Drawer.Screen name="splash" component={SplashScreen} />
-      <Drawer.Screen name="signup" component={SignupScreen} />
-      <Drawer.Screen name="setupProfile" component={SetupProfileScreen} />
-      <Drawer.Screen name="signupProfile" component={SignupProfileScreen} />
-      <Drawer.Screen name="login" component={LoginScreen} />
-      <Drawer.Screen name="home" component={HomeScreen} />
-      <Drawer.Screen name="return" component={ReturnScreen} />
-      <Drawer.Screen name="linkBank" component={LinkBankScreen} />
-      <Drawer.Screen name="loadWallet" component={LoadWalletScreen} />
-      <Drawer.Screen name="myProfile" component={MyProfileScreen} />
-      <Drawer.Screen name="communityChest" component={CommunityChestScreen} />
-      <Drawer.Screen name="settings" component={SettingsScreen} />
-      <Drawer.Screen name="helpContact" component={HelpContactScreen} />
-      <Drawer.Screen name="security" component={SecurityScreen} />
-      <Drawer.Screen name="legal" component={LegalScreen} />
-      <Drawer.Screen name="whereSpend" component={WhereSpendScreen} />
-      <Drawer.Screen name="qr" component={QRScreen} />
-      <Drawer.Screen name="makeReport" component={MakeReportScreen} />
-      <Drawer.Screen name="cashierTransaction" component={CashierTransactionScreen} />
-      <Drawer.Screen name="myTransactions" component={MyTransactionsScreen} />
-      <Drawer.Screen name="cashOut" component={CashOutScreen} />
-      <Drawer.Screen name="contact" component={ContactScreen} />
-      {/* <Drawer.Screen name="drawer" component={DrawerScreen} /> */}
+      <DrawerNav.Screen name="splash" component={SplashScreen} />
+      <DrawerNav.Screen name="signup" component={SignupScreen} />
+      <DrawerNav.Screen name="setupProfile" component={SetupProfileScreen} />
+      <DrawerNav.Screen name="signupProfile" component={SignupProfileScreen} />
+      <DrawerNav.Screen name="login" component={LoginScreen} />
+      <DrawerNav.Screen name="home" component={HomeScreen} />
+      <DrawerNav.Screen name="return" component={ReturnScreen} />
+      <DrawerNav.Screen name="linkBank" component={LinkBankScreen} />
+      <DrawerNav.Screen name="loadWallet" component={LoadWalletScreen} />
+      <DrawerNav.Screen name="myProfile" component={MyProfileScreen} />
+      <DrawerNav.Screen name="communityChest" component={CommunityChestScreen} />
+      <DrawerNav.Screen name="settings" component={SettingsScreen} />
+      <DrawerNav.Screen name="helpContact" component={HelpContactScreen} />
+      <DrawerNav.Screen name="security" component={SecurityScreen} />
+      <DrawerNav.Screen name="legal" component={LegalScreen} />
+      <DrawerNav.Screen name="whereSpend" component={WhereSpendScreen} />
+      <DrawerNav.Screen name="qr" component={QRScreen} />
+      <DrawerNav.Screen name="makeReport" component={MakeReportScreen} />
+      <DrawerNav.Screen name="cashierTransaction" component={CashierTransactionScreen} />
+      <DrawerNav.Screen name="myTransactions" component={MyTransactionsScreen} />
+      <DrawerNav.Screen name="cashOut" component={CashOutScreen} />
+      <DrawerNav.Screen name="contact" component={ContactScreen} />
+      {/* <DrawerNav.Screen name="drawer" component={DrawerScreen} /> */}
 
-    </Drawer.Navigator>
+    </DrawerNav.Navigator>
 
   )
 }
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> { }
 
-export const AppNavigator = (props: NavigationProps) => {
-  const colorScheme = useColorScheme()
-  const navigationRef = useNavigationContainerRef()
+// -- old
+// export const AppNavigator = (props: NavigationProps) => {
+//   const colorScheme = useColorScheme()
+//   const navigationRef = useNavigationContainerRef()
+//   return (
+//     <NavigationContainer
+//       ref={navigationRef}
+//       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+//       {...props}
+//     >
+//       {/* <AppStack /> */}
+//       <AppStackDrawer />
+//     </NavigationContainer>
+//   )
+// }
+
+// -- new
+export const AppNavigator = () => {
+  const ref = React.useRef<any>();
   return (
     <NavigationContainer
-      ref={navigationRef}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-      {...props}
+      ref={ref}
+      theme={{
+        ...DefaultTheme,
+        colors: {
+          ...DefaultTheme.colors,
+          background: "transparent",
+        },
+      }}
     >
       {/* <AppStack /> */}
       <AppStackDrawer />
