@@ -8,7 +8,7 @@ from users.models import Consumer, Merchant
 class ConsumerAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'city', 'state']
     search_fields = ['user_username']
-
+    readonly_fields = ['dwolla_id', 'crypto_wallet_id']
 
 @admin.register(Merchant)
 class MerchantAdmin(admin.ModelAdmin):

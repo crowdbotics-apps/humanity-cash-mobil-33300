@@ -4,6 +4,8 @@ export const ROUTES = {
   SPLASH:"/",
   LOGIN:"/login",
   FORGOT_PASSWORD:"/forgot",
+  USERS:"/users",
+  USERS_DETAIL: (params: any) => `/users/${params}` ,
   DASHBOARD: "/dashboard",
   TRANSACTIONS: '/transactions',
   BLOCKCHAIN_TRANSACTIONS: '/blockchain-transactions',

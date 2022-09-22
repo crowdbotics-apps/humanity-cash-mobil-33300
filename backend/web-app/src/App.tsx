@@ -24,6 +24,8 @@ import ContentsPage from "./pages/Contents/Contents";
 import EmployeesPage from "./pages/Employees/Employees";
 import {ForgotPasswordPage} from "./pages/ForgotPassword/ForgotPassword";
 import BlockTransactionsPage from "./pages/BlockchainTransactions";
+import UsersPage from "./pages/Users";
+import UserDetailPage from "./pages/UserDetail";
 
 
 // @ts-ignore
@@ -97,6 +99,8 @@ function App() {
             <Route element={<ProtectedRoute isAllowed={rootStore && rootStore.userStore.isLoggedIn} />} >
                   <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
                   <Route path={ROUTES.EMPLOYEES} element={<EmployeesPage />} />
+                  <Route path={ROUTES.USERS} element={<UsersPage />} />
+                  <Route path={ROUTES.USERS_DETAIL(":id")} element={<UserDetailPage />} />
                   <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                   <Route path={ROUTES.TRANSACTIONS} element={<AchTransactions />} />
                   <Route path={ROUTES.BLOCKCHAIN_TRANSACTIONS} element={<BlockTransactionsPage />} />
