@@ -60,5 +60,9 @@ urlpatterns = [
     path('where-to-spend/', base_views.WhereToSpendView.as_view(), name='where_to_spend'),
     path('business-details/<int:pk>/', base_views.BusinessDetailsView.as_view(), name='business_details'),
     path('my-qr-code-send/', base_views.SendQrCodeView.as_view(), name='my_qr_code_send'),
+    path('community-chest/', base_views.CommunityChestView.as_view(), name='communitychest_info'),
+    path('cashier-mode/', setup_profile_views.SetCashierModeView.as_view(), name='cashiermode'),
+    # path('is-cashier-mode/', setup_profile_views.CashierTestView.as_view(), name='iscashiermode'),
+    # path('is-cashier-mode-not/', setup_profile_views.NoCashierTestView.as_view(), name='iscashiermode'),
     path("", include(router.urls))
 ]

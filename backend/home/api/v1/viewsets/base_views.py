@@ -6,7 +6,10 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from cities_light.models import City, Region
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from base import configs
+from celo_humanity.humanity_contract_helpers import get_community_balance
 from home.api.v1.serializers.base_serializers import CityListSerializer, StateListSerializer, \
     WhereToSpendListSerializer, BusinessDetailsSerializer, SendQrCodeSerializer
 from home.helpers import AuthenticatedAPIView, send_qr_code_email
@@ -103,3 +106,16 @@ class SendQrCodeView(AuthenticatedAPIView):
         send_qr_code_email(user=request.user, qr_code_image=serializer.validated_data.get('qr_code_image'))
 
         return Response(status=status.HTTP_200_OK)
+
+
+class CommunityChestView(APIView):
+
+    def get(self, request):
+        data = dict(
+            goal=float(configs.HUMANITY_CHEST_GOAL),
+            balance=get_community_balance(),
+            achievements1=configs.HUMANITY_CHEST_ACHIEVEMENTS1,
+            achievements2=configs.HUMANITY_CHEST_ACHIEVEMENTS2,
+        )
+
+        return Response(data, status=status.HTTP_200_OK)
