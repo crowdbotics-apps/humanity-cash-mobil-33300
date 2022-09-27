@@ -1,10 +1,12 @@
 import logging
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 
+from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers import setup_profile_serializers
 from home.clients.dwolla_api import DwollaClient
 from home.functions import create_dwolla_customer_consumer, create_dwolla_customer_merchant
@@ -141,3 +143,22 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
             create_dwolla_customer_merchant(instance)
 
         return Response(serializer.data)
+
+
+class SetCashierModeView(AuthenticatedAPIView):
+
+    def post(self, request, *args, **kwargs):
+        request.session['cashier'] = True
+        return Response(status=status.HTTP_200_OK)
+
+
+# class CashierTestView(AuthenticatedAPIView):
+#
+#     def get(self, request, *args, **kwargs):
+#         return Response(dict(cashier=request.session.get('cashier', False)), status=status.HTTP_200_OK)
+#
+# class NoCashierTestView(AuthenticatedAPIView):
+#     permission_classes = [IsNotCashier]
+#
+#     def get(self, request, *args, **kwargs):
+#         return Response(dict(cashier=request.session.get('cashier', False)), status=status.HTTP_200_OK)

@@ -47,6 +47,10 @@ export class Api extends ApiBase {
         return this.simple_get(API_VERSION_PREFIX+"/user/", data)
     }
 
+    async getConsumers(data: any): Promise<Types.SimpleGetResult> {
+        return this.simple_get(API_VERSION_PREFIX+"/consumer/", data)
+    }
+
     async createUser(data: any): Promise<Types.SimplePostResult> {
         return this.simple_post(API_VERSION_PREFIX+"/user/", data)
     }
@@ -78,6 +82,14 @@ export class Api extends ApiBase {
 
     async getProblemResult(reactant: string, reagent: number): Promise<Types.SimpleGetResult> {
         return this.simple_get(`/GenerateProduct.py?PathwayWeb=Yes&reactant=${reactant}&product=*&reagent_id=${reagent}`)
+    }
+
+    async getBlockchainTransactions(data: any): Promise<Types.SimpleGetResult> {
+        return this.simple_get(API_VERSION_PREFIX+"/transaction/", data)
+    }
+
+    async getBlockchainTransaction(id:number, data: any): Promise<Types.SimpleGetResult> {
+        return this.simple_get(API_VERSION_PREFIX+`/transaction/${id}/`, data)
     }
 
 }

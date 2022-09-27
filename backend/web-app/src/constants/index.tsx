@@ -2,9 +2,13 @@
 
 export const ROUTES = {
   SPLASH:"/",
-  LOGIN:"/start-form",
+  LOGIN:"/login",
+  FORGOT_PASSWORD:"/forgot",
+  USERS:"/users",
+  USERS_DETAIL: (params: any) => `/users/${params}` ,
   DASHBOARD: "/dashboard",
   TRANSACTIONS: '/transactions',
+  BLOCKCHAIN_TRANSACTIONS: '/blockchain-transactions',
   CONTENTS: '/content',
   EMPLOYEES: '/employees',
   SYNTHESIS_EXPLORER: (params: any) => `/synthesis-explorer/${params}` ,

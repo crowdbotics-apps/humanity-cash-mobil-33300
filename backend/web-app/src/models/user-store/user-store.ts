@@ -30,6 +30,8 @@ export const UserStoreModel = types
         username: types.maybeNull(types.string),
         first_name: types.maybeNull(types.string),
         last_name: types.maybeNull(types.string),
+        group: types.maybeNull(types.string),
+        role: types.maybeNull(types.string),
         email: types.maybeNull(types.string),
         access_token: types.maybeNull(types.string),
         refresh_token: types.maybeNull(types.string),
@@ -42,25 +44,31 @@ export const UserStoreModel = types
         },
     }))
     .actions(self => ({
-
+        setUp(){
+          self.environment.api.apisauce?.setHeader(AUTHORIZATION, 'Bearer ' + self.access_token)
+        },
         setUser (user:any) {
             self.id = user.id
             self.username = user.username
             self.first_name = user.first_name
             self.last_name = user.last_name
             self.email = user.email
+            self.group = user.group
+            self.role = user.role
             self.access_token = user.token.access
             self.refresh_token = user.token.refresh
             self.verified_email = user.verified_email
         },
-        setApiToken(token: string|null) {
+        setApiToken(access_token: string|null, refresh_token: string|null) {
           const api = self.environment.api.apisauce
-          self.access_token = token
-          if (token) {
-            api?.setHeader(AUTHORIZATION, 'Token ' + token)
+          self.access_token = access_token
+          if (access_token) {
+            api?.setHeader(AUTHORIZATION, 'Bearer ' + access_token)
           } else {
             api?.deleteHeader(AUTHORIZATION)
           }
+          self.refresh_token = refresh_token
+
         },
         reset () {
             const api = self.environment.api.apisauce

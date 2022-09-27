@@ -1,4 +1,4 @@
-from django import db
+
 from django.db import models
 
 
@@ -6,7 +6,7 @@ from django.db import models
 from celo_humanity.web3helpers import get_contract, ContractProxy
 
 
-class Contract(db.models.Model):
+class Contract(models.Model):
     contract_name = models.CharField(max_length=255, null=False, blank=False)
     description = models.CharField(max_length=255, null=False, blank=False)
     deployed_address = models.CharField(max_length=255, null=False, blank=False)
@@ -33,11 +33,17 @@ class Contract(db.models.Model):
         return f'Contract {self.contract_name} at {self.deployed_address}'
 
 
-class Transaction(db.models.Model):
+class Transaction(models.Model):
+    class Type(models.TextChoices):
+        withdraw = 'Withdraw'
+        deposit = 'Deposit'
+        transfer = 'Transfer'
+        new_wallet = 'New wallet'
+
     contract = models.ForeignKey(Contract, null=True, on_delete=models.SET_NULL)
-    transaction_id = models.CharField(max_length=255, null=False, blank=False)
+    transaction_id = models.CharField(max_length=255, null=False, blank=False, db_index=True)
     method_or_memo = models.CharField(max_length=255, null=False, blank=True)
-    type = models.CharField(max_length=255, null=False, blank=True)
+    type = models.CharField(max_length=255, null=False, blank=True, choices=Type.choices)
     friendly_memo = models.CharField(max_length=255, null=False, blank=True)
     receipt_id = models.CharField(max_length=255, null=True, blank=False)
     receipt = models.TextField(null=True)

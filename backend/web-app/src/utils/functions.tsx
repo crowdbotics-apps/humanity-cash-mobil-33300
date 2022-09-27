@@ -47,3 +47,6 @@ export const useDebouncedSearch = (searchFunction:any) => {
     searchResults,
   };
 };
+
+export const truncate = (input:string, size:number) => input && input.length > size ? `${input.substring(0, size)}...` : input;
+

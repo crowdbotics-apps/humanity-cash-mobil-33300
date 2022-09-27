@@ -22,12 +22,16 @@ import { RootStore, setupRootStore } from "./models";
 import { RootStoreProvider } from "./models/root-store/root-store-context";
 import ContentsPage from "./pages/Contents/Contents";
 import EmployeesPage from "./pages/Employees/Employees";
+import {ForgotPasswordPage} from "./pages/ForgotPassword/ForgotPassword";
+import BlockTransactionsPage from "./pages/BlockchainTransactions";
+import UsersPage from "./pages/Users";
+import UserDetailPage from "./pages/UserDetail";
 
 
 // @ts-ignore
 const ProtectedRoute = ({ isAllowed }:{isAllowed:boolean}) => {
   if (!isAllowed) {
-    return <Navigate to="/start-form" replace />;
+    return <Navigate to={ROUTES.LOGIN} replace />;
   }
   return <Outlet />;
 };
@@ -48,9 +52,19 @@ function App() {
   const isMobile = width <= 768;
 
   useEffect(() => {
+
+    if(rootStore){
+      console.log("reiniciando", rootStore)
+
+      rootStore.userStore.setUp()
+    }
+  },[rootStore])
+
+  useEffect(() => {
     (async () => {
       setupRootStore().then((rootStore)=>{
         setRootStore(rootStore)
+
         setIsLoggedIn(rootStore.userStore.isLoggedIn)
       })
     })()
@@ -81,11 +95,15 @@ function App() {
 
             <Route path={ROUTES.LOGIN} element={<LoginPage />} />
             <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
+            <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
             <Route element={<ProtectedRoute isAllowed={rootStore && rootStore.userStore.isLoggedIn} />} >
                   <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
                   <Route path={ROUTES.EMPLOYEES} element={<EmployeesPage />} />
+                  <Route path={ROUTES.USERS} element={<UsersPage />} />
+                  <Route path={ROUTES.USERS_DETAIL(":id")} element={<UserDetailPage />} />
                   <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                   <Route path={ROUTES.TRANSACTIONS} element={<AchTransactions />} />
+                  <Route path={ROUTES.BLOCKCHAIN_TRANSACTIONS} element={<BlockTransactionsPage />} />
                   <Route path={ROUTES.TRANSACTIONS_DETAIL(":id")} element={<AchTransactionsDetail />} />
 
             </Route>

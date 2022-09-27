@@ -84,7 +84,7 @@ class BaseProfileModel(models.Model):
     zip_code = models.CharField(max_length=16, null=True, blank=True)
     dwolla_id = models.CharField(max_length=50, null=True, blank=True)
 
-    crypto_wallet_id = models.CharField(max_length=128, blank=False, null=True)
+    crypto_wallet_id = models.CharField(max_length=128, blank=True, null=True)
 
     class Meta:
         abstract = True

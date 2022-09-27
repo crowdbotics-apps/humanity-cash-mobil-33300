@@ -19,19 +19,7 @@ import Container from "react-bootstrap/Container";
 import {Spinner} from "react-bootstrap";
 import {Eyes} from "../../components/icons";
 import {ROUTES} from "../../constants";
-
-
-const FormContent: React.FC<{ children: React.ReactNode}> = ({ children}) => (
-  <Container>
-    <Row className="justify-content-md-center">
-      <Col xs md="6" className='background-paper'>
-        <Col xs md="12">
-          {children}
-        </Col>
-      </Col>
-    </Row >
-  </Container>
-)
+import FormContent from "../../components/FormContent/FormContent";
 
 
 export const ResetPasswordPage: React.FC = observer((props) => {
