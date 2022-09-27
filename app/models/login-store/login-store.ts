@@ -74,6 +74,10 @@ export const LoginStoreModel = types
         billing_data_added: self.billing_data_added,
       }
     },
+    get getUserName() {
+      const name = self.first_name ? self.first_name + ' ' + self.last_name : self.email
+      return name
+    },
     get getAllData() {
       return {
         id: self.id,
