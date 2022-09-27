@@ -159,7 +159,12 @@ export const SignupScreen = observer(function SignupScreen() {
           setStep("email_confirmed")
         } else if (result.kind === "bad-data") {
           notifyMessage(result.errors.verification_code[0])
-          setStep("email_confirmed")
+          setCode1('')
+          setCode2('')
+          setCode3('')
+          setCode4('')
+          setCode5('')
+          setCode6('')
         } else {
           notifyMessage(null)
         }
@@ -171,11 +176,13 @@ export const SignupScreen = observer(function SignupScreen() {
     loginStore.environment.api
       .setUserPassword({ password: Pass, password_confirm: PassConfirm })
       .then(result => {
+        console.log(' result ===>>> ', JSON.stringify(result, null, 2))
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
             // loginStore.setUser(result.response.user)
             // loginStore.setApiToken(result.response.access_token)
+
             navigation.navigate("setupProfile", {})
             resetData()
           })
@@ -517,8 +524,8 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         } else {
           setPassword()
           setMatchPassword(true)
-          pressHandler()
-          setStep('touch_id')
+          // pressHandler()
+          // setStep('touch_id')
         }
         break;
       case "touch_id":

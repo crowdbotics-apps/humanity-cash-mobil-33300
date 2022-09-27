@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-color-literals */
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import { observer } from 'mobx-react-lite';
 import { View, TouchableOpacity, Image } from 'react-native';
@@ -43,6 +45,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
       unsafe={true}
       headerStyle={[styles.HEADER, {backgroundColor:  loginStore.getSelectedAccount === 'consumer' ? 'white': loginStore.getAccountColor}]}
     >
+      {console.log(' ====>>> ', loginStore.getSelectedAccount)}
       <View style={[styles.ROOT, {backgroundColor: loginStore.getSelectedAccount === 'consumer' ? 'white': loginStore.getAccountColor}]}>
         <View style={styles.HEADER}>
           <TouchableOpacity onPress={() => props.navigation.closeDrawer()} style={styles.BACK_BUTON_CONTAINER}>
@@ -146,7 +149,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
                   <Text style={styles.USER_NAME_BLACK}>{loginStore.ProfileData.first_name + ' ' + loginStore.ProfileData.last_name}</Text>
                   <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
-                    <Text style={[styles.SWITCH_ACCOUNT_LABEL_BLUE]}>Switch account</Text>
+                    <Text style={styles.SWITCH_ACCOUNT_LABEL_BLUE}>Switch account</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -162,7 +165,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
                   <Text style={styles.USER_NAME_BLACK}>{loginStore.ProfileDataBusiness.business_name}</Text>
                   <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
-                    <Text style={[styles.SWITCH_ACCOUNT_LABEL_BLUE]}>Switch account</Text>
+                    <Text style={styles.SWITCH_ACCOUNT_LABEL_BLUE}>Switch account</Text>
                   </TouchableOpacity>
                 </View>
               </View>

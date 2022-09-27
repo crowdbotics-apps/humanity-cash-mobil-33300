@@ -89,8 +89,8 @@ const AppStackDrawer: React.FC = () => {
           width: METRICS.screenWidth * 0.9,
         },
       }}
-      // initialRouteName="splash"
-      initialRouteName="home"
+      initialRouteName="splash"
+      // initialRouteName="home"
       drawerContent={(props) => <DrawerScreen {...props} />}
     >
       <DrawerNav.Screen name="splash" component={SplashScreen} />

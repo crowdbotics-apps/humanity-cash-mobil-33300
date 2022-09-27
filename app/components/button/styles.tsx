@@ -66,7 +66,7 @@ export default StyleSheet.create({
         marginTop: 20,
     },
     CONTAINER: {
-      backgroundColor: COLOR.PALETTE.white
+      backgroundColor: COLOR.PALETTE.transparent
     },
     ICONS_CONTAINER: {
         alignSelf: 'center',

@@ -64,7 +64,7 @@ export const LoginStoreModel = types
       return self.setupData
     },
     get getSelectedAccount() {
-      return self.selected_account
+      return self.selected_account || 'consumer'
     },
     get getAccountColor() {
       return self.account_base_color || COLOR.PALETTE.blue

@@ -116,8 +116,10 @@ export default StyleSheet.create({
   NEED_HELP_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
+    flex: 0.9,
+    justifyContent: 'flex-end',
     marginBottom: 20,
-    width: METRICS.screenWidth * 0.80
+    width: METRICS.screenWidth * 0.80,
   },
   NEED_HELP_LINK: {
     color: COLOR.PALETTE.darkYellow,
@@ -127,7 +129,7 @@ export default StyleSheet.create({
   },
   PASS_INPUT_STYLE: {
     alignSelf: 'center',
-    color: `${COLOR.PALETTE.pureblack}66`,
+    color: `${COLOR.PALETTE.pureblack}`,
     height: 55,
     width: METRICS.screenWidth * 0.80
   },
