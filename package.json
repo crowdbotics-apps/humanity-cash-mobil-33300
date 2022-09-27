@@ -60,6 +60,7 @@
     "react-native-keychain": "6.2.0",
     "react-native-maps": "^0.31.1",
     "react-native-mask-input": "^1.2.1",
+    "react-native-onesignal": "^4.4.1",
     "react-native-permissions": "^3.3.1",
     "react-native-phone-number-input": "^2.1.0",
     "react-native-qrcode-scanner": "^1.5.5",
