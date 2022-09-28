@@ -121,6 +121,7 @@ export const SignupScreen = observer(function SignupScreen() {
   const register = () => {
     setLoading(true)
     loginStore.environment.api.userRegister({ email: Email }).then(result => {
+      console.log('register ', result)
       setLoading(false)
       if (result.kind === "ok") {
         runInAction(() => {
@@ -226,10 +227,10 @@ export const SignupScreen = observer(function SignupScreen() {
             : EmailErrorMessage
           : ""}
         error={EmailError}
-        onChangeText={t => [
-          setEmail(t),
-          setEmailError(!validateEmail(t, Agree))
-        ]}
+        onChangeText={t => {
+            setEmail(t)
+            setEmailError(!validateEmail(t, Agree))
+        }}
         value={Email}
         placeholder={"myname@mail.com"}
       />
