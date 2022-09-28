@@ -5,7 +5,7 @@ import { Screen, Text, Button } from "../../components"
 
 import styles from "./splash-styles"
 import { IMAGES, COLOR, METRICS } from "../../theme"
-import { useNavigation } from "@react-navigation/native"
+import {CommonActions, useNavigation} from "@react-navigation/native"
 import { useStores } from "../../models"
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
@@ -38,7 +38,14 @@ export const SplashScreen = observer(function SplashScreen() {
       if (step !== '' && step !== null) {
         navigation.navigate(step, {})
       }
-      if (loginStore.isLoggedIn) navigation.navigate('home', {})
+      if (loginStore.isLoggedIn) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'home' }],
+          })
+        );
+      }
       setLoading(false)
     }, 2000)
   }, [])

@@ -16,7 +16,6 @@ const { StatusBarManager } = NativeModules
 import { HeaderProps } from "./header.props"
 import { Text } from "../text/text"
 import { COLOR } from "../../theme"
-// import { translate } from "../../i18n/"
 import { IMAGES } from "../../theme/images"
 const window = Dimensions.get("window")
 import { useStores } from "../../models"

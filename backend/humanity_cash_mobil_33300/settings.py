@@ -304,7 +304,7 @@ if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):
         EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
         logging.warning("You should setup `SENDGRID_USERNAME` and `SENDGRID_PASSWORD` env vars to send emails.")
     else:
-        EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+        EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 # Twilio
 TWILIO_ACCOUNT_SID = env.str("TWILIO_ACCOUNT_SID", "")
