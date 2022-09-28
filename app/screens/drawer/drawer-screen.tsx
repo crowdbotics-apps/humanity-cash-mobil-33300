@@ -23,155 +23,156 @@ const profileTypes = [
   },
 ]
 
-const drawerRouter = {
-  consumer: [
-    <TouchableOpacity key={'consumer_1'} onPress={() => props.navigation.navigate("qr", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.scanToPay}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Receive payment / Scan to pay</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'consumer_2'} onPress={() => props.navigation.navigate("myTransactions", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.receive_payment}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>My Transactions</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'consumer_3'} onPress={() => props.navigation.navigate("loadWallet", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.load_wallet}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Load Wallet</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'consumer_4'} onPress={() => props.navigation.navigate("cashOut", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.cash_out}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Cash out to USD</Text>
-    </TouchableOpacity>,
-    <View key={'consumer_line'} style={styles.LINE} />,
-    <TouchableOpacity key={'consumer_5'} onPress={() => props.navigation.navigate("whereSpend", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.where_to_spend}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Where to spend</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'consumer_6'} onPress={() => props.navigation.navigate("communityChest", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.chest}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Community Chest</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'consumer_7'} style={styles.MENU_ITEM_CONTAINER} onPress={() => props.navigation.navigate("signupProfile", { profile_type: profileTypes[1] })}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.sign_up_your_business}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Sign up your business</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'consumer_8'} onPress={() => props.navigation.navigate("settings", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.settings}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Settings</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'consumer_9'} onPress={() => props.navigation.navigate("helpContact", {})} style={styles.MENU_ITEM_CONTAINER} >
-      <Image
-        resizeMode="contain"
-        source={IMAGES.help_and_contact}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Help and Contact</Text>
-    </TouchableOpacity>,
-  ],
-  merchant: [
-    <TouchableOpacity key={'merchant_1'} onPress={() => props.navigation.navigate("qr", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.scanToPay}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Receive payment / Scan to pay</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'merchant_2'} onPress={() => props.navigation.navigate("myTransactions", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.receive_payment}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>My Transactions</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'merchant_3'} onPress={() => props.navigation.navigate("loadWallet", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.load_wallet}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Load Wallet</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'merchant_4'} onPress={() => props.navigation.navigate("cashOut", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.cash_out}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Cash out to USD</Text>
-    </TouchableOpacity>,
-    <View key={'merchant_line'} style={styles.LINE} />,
-    <TouchableOpacity key={'merchant_5'} onPress={() => props.navigation.navigate("whereSpend", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.where_to_spend}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Where to spend</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'merchant_6'} onPress={() => props.navigation.navigate("communityChest", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.make_a_report}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Make a report</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'merchant_8'} onPress={() => props.navigation.navigate("settings", {})} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.settings}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Settings</Text>
-    </TouchableOpacity>,
-    <TouchableOpacity key={'merchant_9'} onPress={() => props.navigation.navigate("helpContact", {})} style={styles.MENU_ITEM_CONTAINER} >
-      <Image
-        resizeMode="contain"
-        source={IMAGES.help_and_contact}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Help and Contact</Text>
-    </TouchableOpacity>,
-  ]
-}
 
 export const DrawerScreen = observer(function DrawerScreen(props) {
   const navigation = useNavigation()
   const rootStore = useStores()
   const { loginStore } = rootStore
+
+  const drawerRouter = {
+    consumer: [
+      <TouchableOpacity key={'consumer_1'} onPress={() => props.navigation.navigate("qr", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.scanToPay}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Receive payment / Scan to pay</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'consumer_2'} onPress={() => props.navigation.navigate("myTransactions", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.receive_payment}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>My Transactions</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'consumer_3'} onPress={() => props.navigation.navigate("loadWallet", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.load_wallet}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Load Wallet</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'consumer_4'} onPress={() => props.navigation.navigate("cashOut", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.cash_out}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Cash out to USD</Text>
+      </TouchableOpacity>,
+      <View key={'consumer_line'} style={styles.LINE} />,
+      <TouchableOpacity key={'consumer_5'} onPress={() => props.navigation.navigate("whereSpend", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.where_to_spend}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Where to spend</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'consumer_6'} onPress={() => props.navigation.navigate("communityChest", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.chest}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Community Chest</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'consumer_7'} style={styles.MENU_ITEM_CONTAINER} onPress={() => props.navigation.navigate("signupProfile", { profile_type: profileTypes[1] })}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.sign_up_your_business}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Sign up your business</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'consumer_8'} onPress={() => props.navigation.navigate("settings", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.settings}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Settings</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'consumer_9'} onPress={() => props.navigation.navigate("helpContact", {})} style={styles.MENU_ITEM_CONTAINER} >
+        <Image
+          resizeMode="contain"
+          source={IMAGES.help_and_contact}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Help and Contact</Text>
+      </TouchableOpacity>,
+    ],
+    merchant: [
+      <TouchableOpacity key={'merchant_1'} onPress={() => props.navigation.navigate("qr", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.scanToPay}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Receive payment / Scan to pay</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_2'} onPress={() => props.navigation.navigate("myTransactions", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.receive_payment}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>My Transactions</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_3'} onPress={() => props.navigation.navigate("loadWallet", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.load_wallet}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Load Wallet</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_4'} onPress={() => props.navigation.navigate("cashOut", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.cash_out}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Cash out to USD</Text>
+      </TouchableOpacity>,
+      <View key={'merchant_line'} style={styles.LINE} />,
+      <TouchableOpacity key={'merchant_5'} onPress={() => props.navigation.navigate("whereSpend", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.where_to_spend}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Where to spend</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_6'} onPress={() => props.navigation.navigate("communityChest", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.make_a_report}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Make a report</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_8'} onPress={() => props.navigation.navigate("settings", {})} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.settings}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Settings</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_9'} onPress={() => props.navigation.navigate("helpContact", {})} style={styles.MENU_ITEM_CONTAINER} >
+        <Image
+          resizeMode="contain"
+          source={IMAGES.help_and_contact}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Help and Contact</Text>
+      </TouchableOpacity>,
+    ]
+  }
 
   const [ChangeAccountOpen, setChangeAccountOpen] = useState(false)
   const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
