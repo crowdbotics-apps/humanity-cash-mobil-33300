@@ -21,7 +21,7 @@
 		870AEE307C5D7C2BCCA446DC /* libPods-HumanityCash-HumanityCashTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 97539C54AFCB19BE1B78CE31 /* libPods-HumanityCash-HumanityCashTests.a */; };
 		9F410E03F169F90EE08D2B28 /* libPods-HumanityCash.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 940E83B48D3C6A09247019B4 /* libPods-HumanityCash.a */; };
 		D3BBD1EE28083B32DCCCD9E7 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BB11C19824A84866ED4603 /* ExpoModulesProvider.swift */; };
-		FBB3EFD428CFD75D00BF1CE9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FBB3EFD328CFD75C00BF1CE9 /* GoogleService-Info.plist */; };
+		FB758B5B28E4D4BE00F6F35F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FB758B5A28E4D4BE00F6F35F /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,7 +107,7 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		EDD597385E6401AFC33FFAED /* Pods-HumanityCash-HumanityCashTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HumanityCash-HumanityCashTests.debug.xcconfig"; path = "Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F0B0852248024A9AA88284E9 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
-		FBB3EFD328CFD75C00BF1CE9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../Users/rafael/work/crowdbotics/humanity-cash-mobil-33300/ios/HumanityCash/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FB758B5A28E4D4BE00F6F35F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,7 +171,7 @@
 		13B07FAE1A68108700A75B9A /* HumanityCash */ = {
 			isa = PBXGroup;
 			children = (
-				FBB3EFD328CFD75C00BF1CE9 /* GoogleService-Info.plist */,
+				FB758B5A28E4D4BE00F6F35F /* GoogleService-Info.plist */,
 				53F809C6286B589A00C18DE9 /* HumanityCash.entitlements */,
 				53D246E328380C9E00EBE427 /* HumanityCashRelease.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
@@ -475,7 +475,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				FBB3EFD428CFD75D00BF1CE9 /* GoogleService-Info.plist in Resources */,
+				FB758B5B28E4D4BE00F6F35F /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
