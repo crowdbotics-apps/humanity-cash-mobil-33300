@@ -77,7 +77,6 @@ export const checkPermissions = async () => {
         PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY
       ])
     }
-    __DEV__ && console.tron.log("===Ios====", res)
   } else {
     const res = await checkMultiple([
       PERMISSIONS.ANDROID.CAMERA,

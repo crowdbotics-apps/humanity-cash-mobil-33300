@@ -82,7 +82,7 @@ export const LoginScreen = observer(function LoginScreen() {
       const user = await GoogleSignin.getCurrentUser();
       console.log('user ', user)
       loginStore.environment.api.loginGoogle(user.user, user.idToken).then((result) => {
-        __DEV__ && console.tron.log('loginGoogle', result)
+
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
@@ -100,7 +100,7 @@ export const LoginScreen = observer(function LoginScreen() {
         }
       })
     } catch (error) {
-      __DEV__ && console.tron.log('error', error)
+
       setLoading(false)
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // errorMessage("Login con Google cancelado")
@@ -225,7 +225,7 @@ export const LoginScreen = observer(function LoginScreen() {
             <Text style={styles.STEP_TITLE}>Log in</Text>
             <Text style={styles.STEP_SUB_TITLE}>{"Welcome back"}</Text>
           </View>
-          
+
           <TextInputComponent
             label='EMAIL ADDRESS OR USER NAME'
             errorLabel={UsernameError
@@ -255,7 +255,7 @@ export const LoginScreen = observer(function LoginScreen() {
           />
 
 
-         
+
         </View>
         <View style={styles.LOGIN_OPTIONS_CONTAINER}>
           <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
