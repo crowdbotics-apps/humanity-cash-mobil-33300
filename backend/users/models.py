@@ -103,6 +103,7 @@ class BaseProfileModel(models.Model):
             self.crypto_wallet_id = new_uid
             if save:
                 self.save()
+            return new_uid
         else:
             raise WalletAlreadyCreatedException()
 
@@ -126,20 +127,12 @@ class BaseProfileModel(models.Model):
 
     def deposit(self, amount):
         if self.crypto_wallet_id is None:
-            uid = get_provider().keccak(text=str(self.id))
-            get_wallet(uid=uid, create=True)
-            self.crypto_wallet_id = uid
-            self.save()
-            # TODO do better
+            self.crypto_wallet_id = self.new_wallet()
         deposit_coin(self.crypto_wallet_id, amount, profile=self)
 
     def withdraw(self, amount):
         if self.crypto_wallet_id is None:
-            uid = get_provider().keccak(text=str(self.id))
-            get_wallet(uid=uid, create=True)
-            self.crypto_wallet_id = uid
-            self.save()
-            # TODO do better
+            self.crypto_wallet_id = self.new_wallet()
         withdraw_coin(self.crypto_wallet_id, amount, profile=self)
 
 
