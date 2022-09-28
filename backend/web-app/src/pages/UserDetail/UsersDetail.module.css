@@ -22,3 +22,27 @@
 .showButton{
     width: 120px;
 }
+
+.th{
+    color: var(--gray);
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+}
+
+.tableContainer{
+    margin-top: 30px;
+    border: 1px var(--headings) solid;
+    padding: 0px 10px 0px 10px;
+    border-radius: 14px;
+}
+
+.table {
+    border: none;
+}
+
+.balance{
+    color: var(--green);
+    text-align: right;
+    margin-right: 15px;
+}

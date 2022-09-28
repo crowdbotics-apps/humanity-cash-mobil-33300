@@ -414,3 +414,7 @@ min-height: 200px;
 .logout-buttons{
   cursor: pointer;
 }
+
+#user-detail-tab-blockchain_transactions{
+  width: 300px !important;
+}

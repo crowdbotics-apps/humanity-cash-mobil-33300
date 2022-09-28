@@ -4,11 +4,11 @@ from rest_framework import serializers, viewsets, status, permissions, mixins
 from rest_framework.response import Response
 
 from home.api.v1.serializers.signup_signin_serializers import UserDetailSerializer
-from home.api.v1.serializers.user_serializers import ConsumerSerializer
+from home.api.v1.serializers.user_serializers import ConsumerSerializer, DwollaUserSerializer
 from users.constants import UserGroup, UserRole
 from rest_framework import filters
 
-from users.models import Consumer
+from users.models import Consumer, DwollaUser
 
 User = get_user_model()
 
@@ -48,3 +48,15 @@ class ConsumerViewSet(mixins.ListModelMixin,
     permission_classes = [permissions.IsAuthenticated]
     # filter_backends = [filters.SearchFilter]
     # search_fields = ['^name']
+
+
+class DwollaUserView(mixins.ListModelMixin,
+                      mixins.RetrieveModelMixin,
+                      viewsets.GenericViewSet):
+    queryset = DwollaUser.objects.all()
+    serializer_class = DwollaUserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ['^name']
+
+
