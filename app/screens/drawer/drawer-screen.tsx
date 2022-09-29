@@ -6,7 +6,6 @@ import { View, TouchableOpacity, Image } from 'react-native';
 import { Text, Screen } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from './drawer-style';
-import { useNavigation } from "@react-navigation/native"
 import { IMAGES, COLOR } from "../../theme"
 import { useStores } from "../../models"
 
@@ -25,7 +24,6 @@ const profileTypes = [
 
 
 export const DrawerScreen = observer(function DrawerScreen(props) {
-  const navigation = useNavigation()
   const rootStore = useStores()
   const { loginStore } = rootStore
 
@@ -191,7 +189,6 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
       unsafe={true}
       headerStyle={[styles.HEADER, { backgroundColor: loginStore.getSelectedAccount === 'consumer' ? COLOR.PALETTE.background : loginStore.getAccountColor }]}
     >
-      {console.log(' ====>>> ', JSON.stringify(loginStore.ProfileDataBusiness.id, null, 2))}
       <View style={[styles.ROOT, { backgroundColor: loginStore.getSelectedAccount === 'consumer' ? COLOR.PALETTE.background : loginStore.getAccountColor }]}>
         <View style={styles.HEADER}>
           <TouchableOpacity onPress={() => props.navigation.closeDrawer()} style={styles.BACK_BUTON_CONTAINER}>

@@ -8,7 +8,7 @@ import styles from './community-chest-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import moment from 'moment'
 import { useStores } from "../../models";
-import {plata_fmt} from "../../utils/helpers";
+import {moneyFormat} from "../../utils/helpers";
 
 const news = [
 	{
@@ -112,8 +112,8 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 										<Text style={styles.INPUT_LABEL_STYLE_OFF}>GOAL</Text>
 									</View>
 									<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-										<Text style={styles.NEWS_AMOUNT}>{plata_fmt(communityChest?.balance)}</Text>
-										<Text style={styles.NEWS_AMOUNT_OFF}>{plata_fmt(communityChest?.goal)}</Text>
+										<Text style={styles.NEWS_AMOUNT}>{moneyFormat(communityChest?.balance)}</Text>
+										<Text style={styles.NEWS_AMOUNT_OFF}>{moneyFormat(communityChest?.goal)}</Text>
 									</View>
 									{renderProgressData()}
 								</View>

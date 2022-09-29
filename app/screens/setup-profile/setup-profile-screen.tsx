@@ -26,7 +26,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { IMAGES, METRICS } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
-import { notifyMessage } from "../../utils/helpers"
+import {getErrorMessage, getImageFileFromSource, notifyMessage} from "../../utils/helpers"
 
 
 // const steps_user = ['pic_username', 'name']
@@ -158,30 +158,20 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		setLoading(true)
 		setUsernameErrorMsg("")
 		setUsernameError(false)
-		const pic = {
-			uri:
-				Platform.OS === "android"
-					? imageSource?.uri
-					: imageSource?.uri.replace("file://", ""),
-			type: imageSource?.type,
-			name: imageSource?.fileName
-		}
-		loginStore.environment.api.setupConsumer({
-			username: Username,
-			consumer_profile: pic
-		}).then((result: any) => {
-			console.log('result ==> ', result)
+		const pic = getImageFileFromSource(imageSource)
+		const keys = imageSource === null ? [] : ["consumer_profile"]
+		const data = imageSource === null ? {username: Username} : {username: Username, consumer_profile: pic}
+		loginStore.environment.api.setupConsumerFirstStep(data, keys).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setStep("name")
 			} else if (result.kind === "bad-data") {
-				const key = Object.keys(result?.errors)[0]
-				const msg = `${key}: ${result?.errors?.[key][0]}`
-				if (key === 'username') {
+				const errors = result?.errors
+				if (errors?.username) {
 					setUsernameError(true)
-					setUsernameErrorMsg(result?.errors?.[key][0])
+					setUsernameErrorMsg(errors?.username)
 				}
-				notifyMessage(msg)
+				notifyMessage(getErrorMessage(errors))
 			} else if (result.kind === "unauthorized") {
 				loginStore.reset()
 				navigation.navigate("login", {})
@@ -196,7 +186,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const setupConsumerDetail = () => {
 		setLoading(true)
-		loginStore.environment.api.setupConsumerDetail({
+		loginStore.environment.api.setupConsumerSecondStep({
 			first_name: Name,
 			last_name: LastName
 		}).then((result: any) => {

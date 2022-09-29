@@ -204,10 +204,18 @@ export const processApiResult = (result:any, onSuccess:any, onBadData:any, onErr
 
 }
 
-export const plata_fmt = (monto, dollar = false) => {
+export const moneyFormat = (monto, dollar = false) => {
   const formatedNumber = numeral(monto).format('0,0.00')
   if (dollar) {
     return '$ ' + formatedNumber
   }
   return 'C$ ' + formatedNumber
+}
+
+export const getImageFileFromSource = (imageSource) => {
+  return  {
+    uri: Platform.OS === "android" ? imageSource?.uri : imageSource?.uri.replace("file://", ""),
+    type: imageSource?.type,
+    name: imageSource?.fileName
+  }
 }
