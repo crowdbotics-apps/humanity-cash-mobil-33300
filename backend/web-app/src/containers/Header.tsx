@@ -10,7 +10,7 @@ const Header: React.FC<Props>  =  ({ title }) => {
 
     return (
         <header>
-            <h4 className='title-h4'>{title} </h4>
+            <div className='title-h4'>{title} </div>
         </header>
     )
 

@@ -101,17 +101,24 @@ const AdvancedTable = ({ rows, onPrevious, onClickPage, onNext, deletable , head
       <Table responsive className={styles.table}>
         <AdvancedTableHeader headers={headerRow} deletable={deletable}/>
         <AdvancedTableBody rows={rows} deletable={deletable} />
+        <tfoot style={{ borderStyle:"none"}}>
+          <tr>
+            <td colSpan={headerRow.length}>
+              <BackendPagination
+                resultsQty={rows.length}
+                onPrevious={onPrevious}
+                onNext={onNext}
+                allPerPage={PAGE_SIZE}
+                currentPage={currentPage}
+                onClickPage={onClickPage}
+                countDataAll={totalItems}
+                disabledPaginate={false}
+              />
+            </td>
+          </tr>
+        </tfoot>
       </Table>
-      <BackendPagination
-        resultsQty={rows.length}
-        onPrevious={onPrevious}
-        onNext={onNext}
-        allPerPage={PAGE_SIZE}
-        currentPage={currentPage}
-        onClickPage={onClickPage}
-        countDataAll={totalItems}
-        disabledPaginate={false}
-      />
+
     </div>
   )
 }

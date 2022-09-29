@@ -21,7 +21,7 @@
     border-bottom: 2px solid #3B88B6;
 }
 .tableData {
-    vertical-align: middle;
+    /*vertical-align: middle;*/
 }
 .tableRow {
     align-items: center;
@@ -30,10 +30,11 @@
 }
 .table{
     height: 60%;
+    min-height: 600px;
 }
 
 .paginationContainer{
-    position: fixed;
-    bottom:0px;
-    width: 90%;
+    /*position: fixed;*/
+    /*bottom:0px;*/
+    /*width: 90%;*/
 }

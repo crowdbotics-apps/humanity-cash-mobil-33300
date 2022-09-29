@@ -34,7 +34,9 @@ const BackendPagination = ({ currentPage, resultsQty, onClickPage,onNext, onPrev
 
 
     const renderPageNumbers = pageNumbers.map((number: any) => {
-        return <Pagination.Item className='action-item' active={currentPage == number && true} id={number}
+        return <Pagination.Item className='action-item'
+                                active={currentPage == number && true}
+                                id={number}
                                 key={number} onClick={(e: any) => onClickPage(number)}>{number}</Pagination.Item>;
     });
 

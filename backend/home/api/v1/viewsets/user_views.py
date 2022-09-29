@@ -9,10 +9,12 @@ from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers.signup_signin_serializers import UserDetailSerializer
 from home.api.v1.serializers.user_serializers import ConsumerSerializer
 from home.helpers import AuthenticatedAPIView
+from home.api.v1.serializers.user_serializers import ConsumerSerializer, DwollaUserSerializer
 from users.constants import UserGroup, UserRole
 from rest_framework import filters
 
 from users.models import Consumer, Merchant
+from users.models import Consumer, DwollaUser
 
 User = get_user_model()
 
@@ -63,3 +65,14 @@ class GetBalancesView(APIView):
             consumer=c.balance if c else 0,
             merchant=m.balance if c else 0,
         ), status=status.HTTP_200_OK)
+
+class DwollaUserView(mixins.ListModelMixin,
+                      mixins.RetrieveModelMixin,
+                      viewsets.GenericViewSet):
+    queryset = DwollaUser.objects.all()
+    serializer_class = DwollaUserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    # filter_backends = [filters.SearchFilter]
+    # search_fields = ['^name']
+
+
