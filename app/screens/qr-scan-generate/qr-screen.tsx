@@ -12,9 +12,10 @@ import styles from './qr-style';
 import { COLOR } from '../../theme';
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
-
+import { getErrorMessage, notifyMessage } from "../../utils/helpers"
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import QRCode from 'react-native-qrcode-svg'
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 export const QRScreen = observer(function QRScreen() {
   const navigation = useNavigation()
@@ -22,10 +23,15 @@ export const QRScreen = observer(function QRScreen() {
   const { loginStore } = rootStore
 
   const [ScanQR, setScanQR] = useState(true)
+  const [QR, setQR] = useState(null)
   const [ShowQR, setShowQR] = useState(false)
+
+  const [ShowPassModal, setShowPassModal] = useState(false)
+  const [Pass, setPass] = useState('')
+  const [HidePass, setHidePass] = useState(true)
   const toggleSwitch = () => setScanQR(previousState => !previousState)
 
-  const [Amount, setAmount] = useState('')
+  const [Amount, setAmount] = useState('0')
 
   const [ShowBankModal, setShowBankModal] = useState(false)
 
@@ -66,23 +72,98 @@ const generateQR = () => {
     );
   };
 
+  const passModal = () => (
+      <Modal visible={ShowPassModal} transparent>
+        <View style={styles.ROOT_MODAL_PASS}>
+          <View style={styles.CONTAINER}>
+            <TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
+              <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+              <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+            </TouchableOpacity>
+            <View style={styles.STEP_CONTAINER}>
+              <Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor}]}>Verify with password</Text>
+
+              <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+                <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
+              </View>
+              <View style={styles.INPUT_STYLE_CONTAINER}>
+                <TextInput
+                  style={styles.PASS_INPUT_STYLE}
+                  onChangeText={t => [setPass(t)]}
+                  value={Pass}
+                  secureTextEntry={HidePass}
+                  placeholder={"*********"}
+                />
+                <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+                  <Ionicons name="eye" color={"#39534480"} size={20} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          <View style={styles.CONTAINER}>
+            <TouchableOpacity onPress={() => {}} style={styles.FORGOT_PASSWORD_CONTAINER}>
+              <Text style={styles.NEED_HELP_LINK}>Forgot password</Text>
+            </TouchableOpacity>
+            <Button
+              buttonStyle={{
+                backgroundColor: loginStore.getAccountColor,
+              }}
+              onPress={() => transferCurrency()}
+              buttonLabel={'Confirm'}
+            />
+          </View>
+        </View>
+      </Modal>
+    )
+
+
+  const transferCurrency = () => {
+    if (!QR) return
+    const qrData = JSON.parse(QR)
+    const data = {
+      "from" : loginStore.getAllData.id,
+      "to": qrData.to,
+      "from_is_consumer": loginStore.getSelectedAccount === 'consumer',
+      "to_is_consumer": qrData.to_is_consumer,
+      "password" : Pass,
+      "amount" : qrData.amount,
+      "roundup" : 0,
+    }
+    loginStore.environment.api
+      .sendMoney(data)
+      .then((result: any) => {
+        console.log(' result ===>>> ', JSON.stringify(result, null, 2 ))
+        if (result.kind === "ok") {
+          console.log(' result ok')
+        } else if (result.kind === "bad-data") {
+          const errors = result.errors 
+          notifyMessage(getErrorMessage(errors))
+        } else {
+          loginStore.reset()
+          notifyMessage(null)
+        }
+      }).catch((err) => notifyMessage(getErrorMessage(err)))
+  }
+
   const inputQR = () => <View style={{ flex: 1, justifyContent: 'space-between' }}>
     <View>
       <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
         <Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
         <Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
       </View>
-      <View style={[styles.INPUT_STYLE_CONTAINER]}>
-        <Text style={styles.INPUT_LABEL_STYLE}> C$</Text>
+      <View style={styles.INPUT_STYLE_CONTAINER}>
+        {/* <Text style={styles.INPUT_LABEL_STYLE}> C$</Text> */}
         <TextInput
           style={styles.INPUT_STYLE}
           keyboardType='numeric'
           onChangeText={t => {
-            t.replace(",", ".")
-            setAmount(t)
+            let temp = t.replace('C', '').replace('$', '').replace(' ', '')
+            temp = temp.replace(/[^0-9]/g, '')
+            temp = temp.replace(",", ".")
+            setAmount(temp)
           }}
           // value={`C$ ` + Amount}
-          value={Amount}
+          value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
           placeholder={`Amount`}
         />
       </View>
@@ -93,7 +174,6 @@ const generateQR = () => {
       </TouchableOpacity>
       <Button
         buttonStyle={{
-          // backgroundColor: 'red'
           backgroundColor: loginStore.getAccountColor,
         }}
         onPress={() => setShowQR(true)}
@@ -121,7 +201,13 @@ const generateQR = () => {
         </View>
         <Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor }]}>{loginStore.ProfileData.username}</Text>
         <QRCode
-          value="http://awesome.link.qr"
+          value={
+            JSON.stringify({
+              to: loginStore.getAllData.id,
+              to_is_consumer: loginStore.getSelectedAccount === 'consumer',
+              amount: Amount
+            })
+          }
           size={200}
         />
         <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>C$ {Amount}</Text>
@@ -157,11 +243,12 @@ const generateQR = () => {
           </View>
         </View>
         {ScanQR
-          ? <QRCodeScanner onRead={e => console.warn(' ===>>>>> ', e)} /> // TODO: action when read
+          ? <QRCodeScanner onRead={e => setQR(e)} /> // TODO: action when read
           : inputQR()
         }
         {viewQR()}
         {bankModal()}
+        {passModal()}
       </View>
     </Screen>
   )

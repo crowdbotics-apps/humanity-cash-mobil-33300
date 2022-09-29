@@ -33,6 +33,12 @@ export default StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 25
   },
+  ROOT_MODAL_PASS: {
+    marginTop: 35,
+		backgroundColor: COLOR.PALETTE.white,
+		flex: 1,
+		justifyContent: 'space-between'
+	},
   INPUT_LABEL_STYLE: {
     color: COLOR.PALETTE.black,
     fontSize: 10,
@@ -165,6 +171,13 @@ export default StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 20
+  },
+  STEP_TITLE_PASS: {
+    color: COLOR.PALETTE.orange,
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    marginLeft: 10
   },
   SUBMIT_BUTTON_LABEL: {
     color: COLOR.PALETTE.white,

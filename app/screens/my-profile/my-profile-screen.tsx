@@ -485,8 +485,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</KeyboardAvoidingView>
 			<Button
 				buttonStyle={{
-					bottom: 5,
-					position: 'absolute',
+					marginVertical: 5,
+					// position: 'absolute',
 					backgroundColor: Loading
 						? `${loginStore.getAccountColor}40`
 						: loginStore.getAccountColor
