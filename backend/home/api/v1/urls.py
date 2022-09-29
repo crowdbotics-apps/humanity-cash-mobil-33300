@@ -1,13 +1,15 @@
 from django.urls import path, include
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.routers import DefaultRouter
 import home.api.v1.viewsets.signup_signin_views as signup_signin_views
-
 
 # from home.api.v1.viewsets import (
 #     # SignupViewSet,
 #     # LoginViewSet,
 # )
-from home.api.v1.viewsets import setup_profile_views, base_views, security_views, dwolla_views, transaction_views
+from home.api.v1.viewsets import setup_profile_views, base_views, security_views, dwolla_views, transaction_views, \
+    user_views
+from home.api.v1.viewsets.dwolla_webhooks import views as dwolla_webhooks_views
 from home.api.v1.viewsets.event_views import EventViewSet
 from home.api.v1.viewsets.signup_signin_views import LoginFacebookView
 from home.api.v1.viewsets.transaction_views import TransactionViewSet
@@ -50,6 +52,8 @@ urlpatterns = [
         path('create-iav-token/', dwolla_views.CreateIavTokenView.as_view(), name='dwolla_iav_token'),
         path('customers/<int:id>/funding-sources/', dwolla_views.DwollaFundingSourcesByCustomerView.as_view(), name='dwolla_funding_sources_by_customer'),
         path('my-funding-sources/', dwolla_views.DwollaFundingSourcesByCustomerView.as_view(), name='dwolla_my_funding_sources'),
+        path('webhook', dwolla_webhooks_views.DwollaWebhooksView.as_view(), name='dwolla_webhooks'),
+
     ])),
     path('base/', include([
         path('cities/', base_views.CityListView.as_view(), name='cities'),
@@ -60,6 +64,7 @@ urlpatterns = [
     path('where-to-spend/', base_views.WhereToSpendView.as_view(), name='where_to_spend'),
     path('business-details/<int:pk>/', base_views.BusinessDetailsView.as_view(), name='business_details'),
     path('my-qr-code-send/', base_views.SendQrCodeView.as_view(), name='my_qr_code_send'),
+    path('balances/', user_views.GetBalancesView.as_view(), name='balances'),
     path('community-chest/', base_views.CommunityChestView.as_view(), name='communitychest_info'),
     path('cashier-mode/', setup_profile_views.SetCashierModeView.as_view(), name='cashiermode'),
     path('send-money/', transaction_views.SendMoneyView.as_view(), name='send_money'),
