@@ -74,3 +74,27 @@ class DwollaClient:
         funding_sources = self.app_token.get(funding_url).body.get('_embedded').get('funding-sources')
         return funding_sources
 
+    def get_subscriptions(self):
+        url = '{}/webhook-subscriptions'.format(self.get_base_url())
+        subscriptions = self.app_token.get(url).body.get('_embedded').get('webhook-subscriptions')
+        return subscriptions
+
+    def subscribe_webhook(self, url, secret):
+        resource_url = '{}/webhook-subscriptions'.format(self.get_base_url())
+        result = self.app_token.post(resource_url, dict(url=url, secret=secret))
+        return result.headers['location'].split('/')[-1]
+
+    def pause_unpause_webhook(self, webhooks_id, pause=False):
+        url = '{}/webhook-subscriptions/{}'.format(self.get_base_url(), webhooks_id)
+        result = self.app_token.post(url, dict(paused=pause)).body
+        return result
+
+    def delete_webhook(self, webhooks_id):
+        url = '{}/webhook-subscriptions/{}'.format(self.get_base_url(), webhooks_id)
+        self.app_token.delete(url)
+
+    def get_resource(self, link):
+        return self.app_token.get(link).body
+
+    def get_transaction(self, trn_id):
+        return self.get_resource('{}/transfers/{}'.format(self.get_base_url(), trn_id))
