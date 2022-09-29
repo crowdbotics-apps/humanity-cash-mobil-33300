@@ -110,4 +110,8 @@ export class Api extends ApiBase {
     return this.simple_get(apiv1 + "/dwolla/my-funding-sources/", data)
   }
 
+  async getCommunityChestData(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/community-chest/")
+  }
+
 }

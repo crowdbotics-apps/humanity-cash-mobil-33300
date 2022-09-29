@@ -3,6 +3,7 @@
 import Toast from "react-native-toast-message"
 import { Platform, ToastAndroid, Alert } from "react-native"
 import { checkMultiple, requestMultiple, PERMISSIONS } from "react-native-permissions"
+import numeral from "numeral";
 
 export const notifyMessage = (msg: any, type = "error") => {
   if (msg === null) {
@@ -201,4 +202,12 @@ export const processApiResult = (result:any, onSuccess:any, onBadData:any, onErr
     onError(null)
   }
 
+}
+
+export const plata_fmt = (monto, dollar = false) => {
+  const formatedNumber = numeral(monto).format('0,0.00')
+  if (dollar) {
+    return '$ ' + formatedNumber
+  }
+  return 'C$ ' + formatedNumber
 }
