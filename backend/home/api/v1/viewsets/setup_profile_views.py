@@ -18,35 +18,35 @@ User = get_user_model()
 logger = logging.getLogger('django')
 
 
-class SetupConsumerProfileAPIView(AuthenticatedAPIView):
-
-    def post(self, request):
-        user = self.request.user
-        # serializer = self.serializer_class(data=request.data)
-        # serializer.is_valid(raise_exception=True)
-        # password = serializer.data.get("password")
-        # errors = dict()
-        # try:
-        #     validators.validate_password(password=password, user=user)
-        # except exceptions.ValidationError as e:
-        #     errors['password'] = list(e.messages)
-        # if errors:
-        #     raise serializers.ValidationError(errors)
-        # user.set_password(password)
-        # user.save()
-        return Response(status=status.HTTP_200_OK)
-
-
-# class SetupConsumerProfileAPIView(AuthenticatedAPIView, UpdateAPIView):
-#     """
-#     Endpoint to set up Consumer Profile after first log in
-#     """
-#     serializer_class = setup_profile_serializers.SetupConsumerProfileSerializer
-#     parser_classes = (MultiPartParser, FormParser)
-#     queryset = User.objects.all()
+# class SetupConsumerProfileAPIView(AuthenticatedAPIView):
 #
-#     def get_object(self):
-#         return self.request.user
+#     def post(self, request):
+#         user = self.request.user
+#         # serializer = self.serializer_class(data=request.data)
+#         # serializer.is_valid(raise_exception=True)
+#         # password = serializer.data.get("password")
+#         # errors = dict()
+#         # try:
+#         #     validators.validate_password(password=password, user=user)
+#         # except exceptions.ValidationError as e:
+#         #     errors['password'] = list(e.messages)
+#         # if errors:
+#         #     raise serializers.ValidationError(errors)
+#         # user.set_password(password)
+#         # user.save()
+#         return Response(status=status.HTTP_200_OK)
+
+
+class SetupConsumerProfileAPIView(AuthenticatedAPIView, UpdateAPIView):
+    """
+    Endpoint to set up Consumer Profile after first log in
+    """
+    serializer_class = setup_profile_serializers.SetupConsumerProfileSerializer
+    parser_classes = (MultiPartParser, FormParser)
+    queryset = User.objects.all()
+
+    def get_object(self):
+        return self.request.user
 
 
 class SetupConsumerProfileDetailAPIView(AuthenticatedAPIView, UpdateAPIView):
