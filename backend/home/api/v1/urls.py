@@ -35,6 +35,8 @@ urlpatterns = [
         path('google-login/', signup_signin_views.LoginGoogleView.as_view()),
     ])),
     path('set-up-profile/', include([
+        path('consumer/first-step/', setup_profile_views.SetupConsumerProfileFirstStepAPIView.as_view(), name='setup_consumer_profile_first_name'),
+        path('consumer/second-step/', setup_profile_views.SetupConsumerProfileSecondStepAPIView.as_view(), name='setup_consumer_profile_second_name'),
         path('consumer/', setup_profile_views.SetupConsumerProfileAPIView.as_view(), name='setup_consumer_profile'),
         path('consumer-detail/', setup_profile_views.SetupConsumerProfileDetailAPIView.as_view(), name='setup_consumer_profile_detail'),
         path('merchant/', setup_profile_views.SetupMerchantProfileAPIView.as_view(), name='setup_merchant_profile'),

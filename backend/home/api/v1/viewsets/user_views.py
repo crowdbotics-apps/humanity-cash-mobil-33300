@@ -58,13 +58,15 @@ class ConsumerViewSet(mixins.ListModelMixin,
 
 class GetBalancesView(APIView):
     permission_classes = [IsNotCashier]
+
     def get(self, request, *args, **kwargs):
         c = Consumer.objects.filter(user=self.request.user).first()
         m = Merchant.objects.filter(user=self.request.user).first()
         return Response(dict(
             consumer=c.balance if c else 0,
-            merchant=m.balance if c else 0,
+            merchant=m.balance if m else 0,
         ), status=status.HTTP_200_OK)
+
 
 class DwollaUserView(mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
