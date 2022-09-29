@@ -149,6 +149,8 @@ class Consumer(BaseProfileModel):
     def is_merchant(self):
         return False
 
+    def __str__(self):
+        return f'Customer id: {self.id}'
 
 class Merchant(BaseProfileModel):
     background_picture = models.ImageField(upload_to='background-pictures', null=True, blank=True)
@@ -180,6 +182,9 @@ class Merchant(BaseProfileModel):
     @property
     def is_merchant(self):
         return True
+
+    def __str__(self):
+        return f'Merchant id: {self.id}'
 
 class NoMerchantProfileException(Exception):
     pass

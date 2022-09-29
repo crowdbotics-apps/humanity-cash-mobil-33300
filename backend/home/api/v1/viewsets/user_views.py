@@ -1,14 +1,18 @@
 import django_filters
 from django.contrib.auth import get_user_model
 from rest_framework import serializers, viewsets, status, permissions, mixins
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers.signup_signin_serializers import UserDetailSerializer
 from home.api.v1.serializers.user_serializers import ConsumerSerializer
+from home.helpers import AuthenticatedAPIView
 from users.constants import UserGroup, UserRole
 from rest_framework import filters
 
-from users.models import Consumer
+from users.models import Consumer, Merchant
 
 User = get_user_model()
 
@@ -48,3 +52,14 @@ class ConsumerViewSet(mixins.ListModelMixin,
     permission_classes = [permissions.IsAuthenticated]
     # filter_backends = [filters.SearchFilter]
     # search_fields = ['^name']
+
+
+class GetBalancesView(APIView):
+    permission_classes = [IsNotCashier]
+    def get(self, request, *args, **kwargs):
+        c = Consumer.objects.filter(user=self.request.user).first()
+        m = Merchant.objects.filter(user=self.request.user).first()
+        return Response(dict(
+            consumer=c.balance if c else 0,
+            merchant=m.balance if c else 0,
+        ), status=status.HTTP_200_OK)
