@@ -97,10 +97,33 @@ export const HomeScreen = observer(function HomeScreen() {
 			})
 	}
 
+	const getBalanceData = () => {
+		loginStore.environment.api
+			.getBalanceData()
+			.then((result: any) => {
+				if (result.kind === "ok") {
+					runInAction(() => {
+						loginStore.setBalanceData(result.data)
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login", {})
+				} else {
+					//   loginStore.reset()
+					notifyMessage(null)
+				}
+			})
+	}
+
 	useEffect(() => {
 		if (!userData.profile.name) navigation.navigate("setupProfile", {})
 		// else if (!userData.bankInfo.bankName) setShowBankModal(true)
 		// navigation.navigate("return", {})
+		getBalanceData()
 		getProfileConsumer()
 		getProfileMerchant()
 	}, [])

@@ -36,7 +36,7 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 				<View style={styles.MODAL_CONTENT}>
 					<Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
 					<Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => navigation.navigate("linkBank", {})}>
+					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
 						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
 					</TouchableOpacity>
 				</View>
