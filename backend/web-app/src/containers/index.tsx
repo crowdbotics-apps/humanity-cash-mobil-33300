@@ -37,7 +37,7 @@ const AdminPanelContainer: React.FC<Props> = ({ children,search,filter, onclickF
                         {/* divider */}
                         <Col><div className='line-primary'></div></Col>
                         {/* header */}
-                        <Col className={'mt-3'}>
+                        <Col className={'mt-0'}>
                             {header !== null && (header)||(
                               <Header title={title} />
                             )}

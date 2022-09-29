@@ -1,28 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
-import {Button, Col, Form, Row, Tab, Tabs} from "react-bootstrap";
+import {Button, Col, Form, Tab, Tabs} from "react-bootstrap";
 import AdminPanelContainer from "../../containers";
 import InputGroup from "react-bootstrap/InputGroup";
-import {SearchIcon} from "../../components/icons";
-import AdvancedTable from "../../components/Table/AdvancedTable";
+import {ArrowRightIcon, SearchIcon} from "../../components/icons";
 import {useApi, useUserStore} from "../../utils";
-import {UserGroup} from "../../components/Table/constants";
 import {genericApiError} from "../../helpers";
 import {truncate} from "../../utils/functions";
 import moment from 'moment'
 import styles from './UsersDetail.module.css'
-import {useLocation, useParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import SimpleTable from "../../components/Table";
 import {dataCompleted} from "../Dashboard/constants";
-import {USER_DETAIL} from "./data";
+import AdvancedTable from "../../components/Table/AdvancedTable";
+import {UserGroup} from "../../components/Table/constants";
 
 
 const wrapHash = (txt:string)=>{
   if (!txt) return ''
-  txt  = truncate(txt, 30)
+  txt  = truncate(txt, 23)
   const  middle:number = Math.round(txt.length/2) - 1
-
-  return <div className={styles.textTD}>{txt}</div>
+  return <div className={styles.textTD}>{txt.slice(0, middle)}<br/>{txt.slice(middle, txt.length)}</div>
 }
 
 const COLUMN_TITLES = [
@@ -30,6 +28,11 @@ const COLUMN_TITLES = [
   'BALANCE', 'ADDRESS', 'EMAIL'
 ]
 
+const Keys = {
+  ACH:"ach_transactions",
+  USER:"user_details",
+  BLOCKCHAIN: "blockchain_transactions"
+}
 const UserDetailPage: React.FC = observer(() => {
 
   const params = useParams();
@@ -38,7 +41,6 @@ const UserDetailPage: React.FC = observer(() => {
 
 
   const [LeftOpen, setLeftOpen] = useState<any>(true);
-  //const [RightOpen, setRightOpen] = useState<any>(true);
   const [Items, setItems] = useState<any>([])
   const [TotalItems, setTotalItems] = useState(0)
   const [CurrentPage, setCurrentPage] = useState(1)
@@ -46,22 +48,15 @@ const UserDetailPage: React.FC = observer(() => {
   const [Next, setNext] = useState<string|null>(null)
   const [ShowUsername, setShowUsername] = useState<boolean>(true)
   const [User, setUser] = useState<any>(null)
-  const [ShowPasswordModal, setShowPasswordModal] = useState<boolean>(false)
-  const [CurrentIndex, setCurrentIndex] = useState<number|null>(null)
-  const [CurrentItem, setCurrentItem] = useState<any|null>(null)
-  const [Password, setPassword] = useState<string>("holamundo")
-  const [Title, setTitle] = useState<string>("John Travolta")
+  const [Title, setTitle] = useState<string>("")
   const [ColumnsTitles, setColumnsTitles] = useState(COLUMN_TITLES)
+  const [CurrentTab, setCurrentTab] = useState<string|null>(Keys.USER)
   const api = useApi()
   const userStore = useUserStore()
 
 
   useEffect(() => {
-    console.log("useEffect", userStore.access_token, userStore.group, userStore.role)
     userStore.setUp()
-    if (userStore.group === UserGroup.BANK.code){
-      setColumnsTitles(COLUMN_TITLES.concat(['USERNAME']))
-    }
     getUserData()
   },[])
 
@@ -75,34 +70,63 @@ const UserDetailPage: React.FC = observer(() => {
   }
 
 
-  const getItem = ()=>{
-    if(CurrentItem === null){
-      return
-    }
-    let params:any = {}
-    if (ShowUsername){
-      params["show_username"] = true
-      params["password"] = Password
-    }
-  }
-
   const getUserData = ()=>{
     api.getDwollaUser(id).then((response: any) => {
       console.log("cosumers", response.data)
       if (response.kind === "ok") {
+
         const data = response.data
+        setTitle(data.name)
         setUser({
           id: data.id,
-          fullName: data.full_name,
+          fullName: data.name,
           email: data.email,
-          userDwollaId: wrapHash(data.dwolla_id),
+          userDwollaId:  <div className={styles.textTD}>{truncate(data.dwolla_id, 25)}</div>,
           balance: <div className={styles.balance}> $ {data.balance}</div>,
           lastLogin:<CreatedColumn created={data.last_login}/>,
           accountCreated:<CreatedColumn created={data.date_joined}/>,
-          walletAddress: wrapHash(data.crypto_wallet_id),
+          walletAddress: <div className={styles.textTD}>{truncate(data.crypto_wallet_id, 25)}</div>,
           address: data.address,
           accountType: data.account_type
         })
+      }
+    }).catch((error: any) => {
+      console.log(error)
+      genericApiError()
+    })
+  }
+
+  const getItems = ()=>{
+    if (CurrentTab === Keys.BLOCKCHAIN){
+      getTransactions()
+    }
+  }
+
+
+
+  const getTransactions = ()=>{
+    api.getBlockchainTransactions({user:User.id}).then((response: any) => {
+      if (response.kind === "ok") {
+        setPrevious(response.data.previous)
+        setNext(response.data.next)
+        setTotalItems(response.data.count)
+        const tableRows = []
+        for(let data of response.data.results){
+          let row:any = {
+            id: data.id,
+            hash: wrapHash(data.transaction_id),
+            fromUsername: wrapHash(data.from_username) ,
+            toUsername: <div className={styles.toColumn}><div style={{marginRight:8}}> <ArrowRightIcon /> </div> {wrapHash(data.to_username)}</div>,
+            fromAddress: wrapHash(data.from_address),
+            toAddress: wrapHash(data.to_address),
+            type: data.type,
+            createdAt:<CreatedColumn created={data.created}/>,
+            amount:data.amount,
+            confirmedBlocks: <div style={{textAlign:"center"}}>{data.confirmations}</div>
+          }
+          tableRows.push(row)
+        }
+        setItems(tableRows)
       }
     }).catch((error: any) => {
       console.log(error)
@@ -171,7 +195,6 @@ const UserDetailPage: React.FC = observer(() => {
 
   const handleClose = ()=>{
     console.log("handle close")
-    setShowPasswordModal(false)
   }
 
   return (
@@ -194,15 +217,25 @@ const UserDetailPage: React.FC = observer(() => {
         <div id='layout'>
           <div id='main' className={`main${LeftOpen ? '' : '-closed'}`}>
             <div className='content'>
-              <Tabs defaultActiveKey="details" id="user-detail" className="mb-2 ">
-                <Tab eventKey="details" title="USER DETAILS" style={{ color: '#808080' }}>
+              <Tabs defaultActiveKey={Keys.USER} id="user-detail" className="mb-2 "  onSelect={(k)=>{
+                setCurrentTab(k)
+                if(k === Keys.USER){
+                  setTitle(User.fullName)
+                }else if(k === Keys.ACH){
+                  setTitle("ACH Transactions")
+                }else{
+                  setTitle("Blockchain Transactions")
+                  getTransactions()
+                }
+              }}>
+                <Tab eventKey={Keys.USER} title="USER DETAILS" style={{ color: '#808080' }}>
 
                   <div className={styles.tableContainer}>
-                    <table className={`table table-responsive mt-3 mb-3 ${styles.table}`}  >
+                    <table className={`table table-responsive mt-0 mb-3 ${styles.table}`}  >
                       <thead>
                       <tr>
 
-                      {COLUMN_TITLES.map(((value, index) => <th key={"th-"+index} className={styles.th}>{value}</th>))}
+                        {COLUMN_TITLES.map(((value, index) => <th key={"th-"+index} className={styles.th}>{value}</th>))}
 
                       </tr>
                       </thead>
@@ -218,20 +251,30 @@ const UserDetailPage: React.FC = observer(() => {
                           <td key={"td-6"} style={{borderStyle:"none"}}>{User.email}</td>
                         </tr>
                       )}
-
-
                       </tbody>
                     </table>
 
                   </div>
                   {/*<SimpleTable rows={USER_DETAIL} delete_items={false}/>*/}
 
+
+
                 </Tab>
-                <Tab eventKey="ach_transactions" title="ACH TRANSACTIONS" style={{ color: '#808080' }} >
+                <Tab eventKey={Keys.ACH} title="ACH TRANSACTIONS" style={{ color: '#808080' }} >
                   <SimpleTable rows={dataCompleted} />
                 </Tab>
-                <Tab eventKey="blockchain_transactions" title="BLOCKCHAIN TRANSACTIONS" style={{ color: '#808080' }} >
-                  <SimpleTable rows={dataCompleted} />
+                <Tab eventKey={Keys.BLOCKCHAIN} title="BLOCKCHAIN TRANSACTIONS" style={{ color: '#808080' }} >
+                  {CurrentTab === Keys.BLOCKCHAIN && (
+                    <AdvancedTable
+                      onClickPage={onClickPage}
+                      currentPage={CurrentPage}
+                      totalItems={TotalItems}
+                      headerRow={['HASH', 'FROM', 'TO', 'FROM ADDRESS', 'TO ADDRESS', 'TYPE', 'CREATED AT', 'AMOUNT', 'BLOCKS CONFIRMED']}
+                      deletable={true} paginate={false} rows={Items}
+                      onNext={onNextPage}
+                      onPrevious={onPreviousPage}/>
+                  )}
+
                 </Tab>
               </Tabs>
             </div>
