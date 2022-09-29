@@ -119,11 +119,12 @@ export const LoginScreen = observer(function LoginScreen() {
         } else {
           AccessToken.getCurrentAccessToken().then((data) => {
             loginStore.environment.api.loginFacebook(data.accessToken).then((result) => {
+              console.log(JSON.stringify(result, null, 2))
               setLoading(false)
               if (result.kind === "ok") {
                 runInAction(() => {
                   loginStore.setUser(result.response)
-                  loginStore.setApiToken(result.response.access_token)
+                  loginStore.setApiToken(result.response.token.access)
                   loginStore.setSelectedAccount('consumer')
                   navigation.navigate("home")
                 })

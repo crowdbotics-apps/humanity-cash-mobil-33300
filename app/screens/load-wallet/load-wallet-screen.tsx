@@ -19,13 +19,39 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const [TransactionConfirm, setTransactionConfirm] = useState(false)
 	const [TransactionFinished, setTransactionFinished] = useState(false)
 
+	const [ShowBankModal, setShowBankModal] = useState(false)
+
+	useEffect(() => {
+		if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+		else setShowBankModal(false)
+	}, [])
+
+	const bankModal = () => <Modal visible={ShowBankModal} transparent>
+		<View style={styles.ROOT_MODAL}>
+			<TouchableOpacity onPress={() => setShowBankModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
+				<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
+				<Icon name={"close"} size={20} color={'#8B9555'} />
+			</TouchableOpacity>
+			<View style={styles.MODAL_CONTAINER}>
+				<View style={styles.MODAL_CONTENT}>
+					<Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
+					<Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
+					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => navigation.navigate("linkBank", {})}>
+						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+			<View />
+		</View>
+	</Modal>
+
 	const ConfirmModal = () => (
 		<Modal visible={ShowModal}>
 			{TransactionConfirm
 				? <View style={styles.LOADING_RETURN}>
 					{TransactionFinished
 						? [
-							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>{`Congratulations! You 
+							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Congratulations! You 
 have topped up 
 C$ ${Amount}`}
 							</Text>,
@@ -48,7 +74,7 @@ C$ ${Amount}`}
 							/>
 						]
 						: [
-							<Text key={'pending_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>Pending...</Text>,
+							<Text key={'pending_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Pending...</Text>,
 							<Text key={'pending_sub_title'} style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>,
 							<ActivityIndicator key={'pending_ind'} style={styles.ACTIVITY} size="large" color={'black'} />
 						]
@@ -76,10 +102,10 @@ C$ ${Amount}`}
 					</View>
 					<View style={styles.MODAL_CONTAINER}>
 						<View style={styles.MODAL_CONTENT}>
-							<Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Please confirm your transaction.</Text>
+							<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Please confirm your transaction.</Text>
 							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will load up C$ ${Amount} to your wallet.`}</Text>
 							<TouchableOpacity
-								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor}]}
+								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
 								onPress={() => {
 									setTransactionConfirm(true)
 									setTimeout(function () {
@@ -136,8 +162,8 @@ C$ ${Amount}`}
 						<Button
 							buttonStyle={
 								(Amount === '50' || Amount === '50.00')
-									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
-									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
 							buttonLabelStyle={{ color: (Amount === '50' || Amount === '50.00') ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => setAmount('50.00')}
@@ -146,8 +172,8 @@ C$ ${Amount}`}
 						<Button
 							buttonStyle={
 								(Amount === '100' || Amount === '100.00')
-									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
-									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
 							buttonLabelStyle={{ color: (Amount === '100' || Amount === '100.00') ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => setAmount('100.00')}
@@ -156,8 +182,8 @@ C$ ${Amount}`}
 						<Button
 							buttonStyle={
 								(Amount === '200' || Amount === '200.00')
-									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
-									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
 							buttonLabelStyle={(Amount === '200' || Amount === '200.00') ? { color: COLOR.PALETTE.white } : { color: loginStore.getAccountColor }}
 							onPress={() => setAmount('200.00')}
@@ -189,16 +215,17 @@ C$ ${Amount}`}
 
 				</View>
 				{ConfirmModal()}
+				{bankModal()}
 			</KeyboardAvoidingView>
-				<Button
-					buttonStyle={{
-						backgroundColor: loginStore.getAccountColor,
-						bottom: 5,
-						position: 'absolute'
-					}}
-					onPress={() => setShowModal(true)}
-					buttonLabel={'Load up'}
-				/>
+			<Button
+				buttonStyle={{
+					backgroundColor: loginStore.getAccountColor,
+					bottom: 5,
+					position: 'absolute'
+				}}
+				onPress={() => setShowModal(true)}
+				buttonLabel={'Load up'}
+			/>
 		</Screen>
 	)
 })
