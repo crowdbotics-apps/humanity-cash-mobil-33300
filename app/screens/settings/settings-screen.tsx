@@ -24,6 +24,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
   // had_currency | confirm | password | finish
   const [ModalStep, setModalStep] = useState('confirm')
 
+ 
   const [Pass, setPass] = useState("")
   const [HidePass, setHidePass] = useState(true)
 
