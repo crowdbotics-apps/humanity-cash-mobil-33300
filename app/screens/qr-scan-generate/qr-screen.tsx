@@ -74,14 +74,14 @@ const generateQR = () => {
 
   const passModal = () => (
       <Modal visible={ShowPassModal} transparent>
-        <View style={styles.ROOT}>
+        <View style={styles.ROOT_MODAL_PASS}>
           <View style={styles.CONTAINER}>
             <TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
               <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
               <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
             </TouchableOpacity>
             <View style={styles.STEP_CONTAINER}>
-              <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor}]}>Verify with password</Text>
+              <Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor}]}>Verify with password</Text>
 
               <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
                 <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
@@ -152,7 +152,7 @@ const generateQR = () => {
         <Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
       </View>
       <View style={styles.INPUT_STYLE_CONTAINER}>
-        <Text style={styles.INPUT_LABEL_STYLE}> C$</Text>
+        {/* <Text style={styles.INPUT_LABEL_STYLE}> C$</Text> */}
         <TextInput
           style={styles.INPUT_STYLE}
           keyboardType='numeric'
