@@ -17,18 +17,22 @@ export const CashOutScreen = observer(function CashOutScreen() {
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 
-	const [CheckMaxAmount, setCheckMaxAmount] = useState(false)	
+	const [CheckMaxAmount, setCheckMaxAmount] = useState(false)
 	const [Amount, setAmount] = useState('0')
 	const [Fee, setFee] = useState(0.50)
 	const [ShowModal, setShowModal] = useState(false)
 	const [AmountError, setAmountError] = useState(false)
 	const [TransactionConfirm, setTransactionConfirm] = useState(false)
 	const [TransactionFinished, setTransactionFinished] = useState(false)
+	const [ShowBankModal, setShowBankModal] = useState(false)
 
 	useEffect(() => {
+		if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+		else setShowBankModal(false)
+
 		if (loginStore.getSelectedAccount === 'consumer') setCheckMaxAmount(true)
 		else setCheckMaxAmount(false)
-	  }, [])
+	}, [])
 
 	const ConfirmModal = () => (
 		<Modal transparent visible={ShowModal}>
@@ -36,7 +40,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 				? <View style={styles.LOADING_RETURN}>
 					{TransactionFinished
 						? [
-							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>{`Your redemption is in process!
+							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Your redemption is in process!
 							`}</Text>,
 							<Text key={'congrat_sub_title'} style={styles.SUB_TITLE}>You’ll get an email once your funds are available in your bank account. This should take 5 business days.</Text>,
 							<Button
@@ -50,14 +54,14 @@ export const CashOutScreen = observer(function CashOutScreen() {
 									setTransactionConfirm(false),
 									setShowModal(false),
 									setTransactionFinished(false),
-									setAmount(''), 
+									setAmount(''),
 									navigation.navigate("home", {})
 								]}
 								buttonLabel={'Go back to home'}
 							/>
 						]
 						: [
-							<Text key={'pending_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>Pending...</Text>,
+							<Text key={'pending_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Pending...</Text>,
 							<Text key={'pending_sub_title'} style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>,
 							<ActivityIndicator key={'pending_ind'} style={styles.ACTIVITY} size="large" color={'black'} />
 						]
@@ -77,10 +81,10 @@ export const CashOutScreen = observer(function CashOutScreen() {
 					</View>
 					<View style={styles.MODAL_CONTAINER}>
 						<View style={styles.MODAL_CONTENT}>
-							<Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Are you sure you want to cash out?</Text>
+							<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Are you sure you want to cash out?</Text>
 							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will redeem C$ ${Amount} for USD $${(parseFloat(Amount) - Fee).toFixed(2)} after a $${Fee.toFixed(2)} fee.`}</Text>
 							<TouchableOpacity
-								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor}]}
+								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
 								onPress={() => {
 									setTransactionConfirm(true)
 									setTimeout(function () {
@@ -95,10 +99,27 @@ export const CashOutScreen = observer(function CashOutScreen() {
 					<View />
 				</View>
 			}
-
-
 		</Modal>
 	)
+
+	const bankModal = () => <Modal visible={ShowBankModal} transparent>
+    <View style={styles.ROOT_MODAL}>
+      <TouchableOpacity onPress={() => setShowBankModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
+        <Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
+        <Icon name={"close"} size={20} color={'#8B9555'} />
+      </TouchableOpacity>
+      <View style={styles.MODAL_CONTAINER}>
+        <View style={styles.MODAL_CONTENT}>
+          <Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
+          <Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
+          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+            <Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View />
+    </View>
+  </Modal>
 
 	return (
 		<Screen
@@ -120,7 +141,6 @@ export const CashOutScreen = observer(function CashOutScreen() {
 						</TouchableOpacity>
 					}
 				</View>
-
 				<View style={styles.STEP_CONTAINER}>
 					<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Cash Out</Text>
 					<Text style={styles.LINE} />
@@ -132,7 +152,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 						{CheckMaxAmount &&
-						<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ {maxAmount}</Text>
+							<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ {maxAmount}</Text>
 						}
 					</View>
 					<View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
@@ -155,8 +175,8 @@ export const CashOutScreen = observer(function CashOutScreen() {
 						/>
 					</View>
 					<View style={styles.INPUT_LABEL_ERROR_STYLE_CONTAINER}>
-				<Text style={styles.INPUT_LABEL_ERROR}>{AmountError ? 'CANNOT EXCEED BALANCE AND/OR MAXIMUM CASHOUT' : ''}</Text>
-			</View>
+						<Text style={styles.INPUT_LABEL_ERROR}>{AmountError ? 'CANNOT EXCEED BALANCE AND/OR MAXIMUM CASHOUT' : ''}</Text>
+					</View>
 
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.COSTS_FEE_LABEL}>Cash out fee</Text>
@@ -169,17 +189,18 @@ export const CashOutScreen = observer(function CashOutScreen() {
 
 				</View>
 				{ConfirmModal()}
+				{bankModal()}
 			</KeyboardAvoidingView>
-				<Button
-					buttonStyle={{
-						backgroundColor: AmountError ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor,
-						bottom: 5,
-						position: 'absolute'
-					}}
-					disabled={AmountError}
-					onPress={() => setShowModal(true)}
-					buttonLabel={'Confirm'}
-				/>
+			<Button
+				buttonStyle={{
+					backgroundColor: AmountError ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor,
+					bottom: 5,
+					position: 'absolute'
+				}}
+				disabled={AmountError}
+				onPress={() => setShowModal(true)}
+				buttonLabel={'Confirm'}
+			/>
 		</Screen>
 	)
 })

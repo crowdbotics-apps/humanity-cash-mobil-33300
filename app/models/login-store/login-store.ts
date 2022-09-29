@@ -41,6 +41,8 @@ export const LoginStoreModel = types
     zip_code: types.maybeNull(types.string),
     phone_number: types.maybeNull(types.string),
     billing_data_added: types.maybeNull(types.boolean),
+    merchant_balance: types.maybeNull(types.number),
+    consumer_balance: types.maybeNull(types.number),
 
     access_token: types.maybeNull(types.string),
     // currentStep
@@ -77,6 +79,12 @@ export const LoginStoreModel = types
     get getUserName() {
       const name = self.first_name ? self.first_name + ' ' + self.last_name : self.email
       return name
+    },
+    get balance() {
+      return {
+        merchant: self.merchant_balance || 0,
+        consumer: self.merchant_balance || 0
+      }
     },
     get getAllData() {
       return {
@@ -189,6 +197,10 @@ export const LoginStoreModel = types
       self.state = user.state
       self.zip_code = user.zip_code
       self.phone_number = user.phone_number
+    },
+    setBalanceData(data) {
+      self.consumer_balance = data.consumer
+      self.merchant_balance = data.merchant
     },
     setAllowTouchId(user){
       self.allow_touch_id = user.allow_touch_id

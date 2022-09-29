@@ -72,6 +72,13 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const [DateTo, setDateTo] = useState(new Date())
 	const [OpenTo, setOpenTo] = useState(false)
 
+	const [ShowBankModal, setShowBankModal] = useState(false)
+
+	useEffect(() => {
+		if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+		else setShowBankModal(false)
+	},[])
+
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>
 		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 			<Text style={styles.INPUT_LABEL_STYLE}>START DATE</Text>
@@ -176,6 +183,25 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		</View>
 	</Modal>
 
+	const bankModal = () => <Modal visible={ShowBankModal} transparent>
+		<View style={styles.ROOT_MODAL}>
+			<TouchableOpacity onPress={() => setShowBankModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
+				<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
+				<Icon name={"close"} size={20} color={'#8B9555'} />
+			</TouchableOpacity>
+			<View style={styles.MODAL_CONTAINER}>
+				<View style={styles.MODAL_CONTENT}>
+					<Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
+					<Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
+					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+			<View />
+		</View>
+	</Modal>
+
 	return (
 		<Screen
 			showHeader
@@ -261,6 +287,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 					</View>
 				</ScrollView>
 				{ReturnDetailModal()}
+				{bankModal()}
 				{ShowIndex &&
 					<Button
 						buttonStyle={{

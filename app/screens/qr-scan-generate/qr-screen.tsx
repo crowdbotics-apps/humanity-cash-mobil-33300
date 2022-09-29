@@ -27,23 +27,44 @@ export const QRScreen = observer(function QRScreen() {
 
   const [Amount, setAmount] = useState('')
 
-  const generateQR = () => {
-    setShowQR(true)
-  }
+  const [ShowBankModal, setShowBankModal] = useState(false)
 
   useEffect(() => {
-    // TODO: redirect on acc connect if necessary
-    console.log(' ===>>> entre aca ', JSON.stringify(loginStore.getBillingData, null, 2)) // TODO: send to add account if false
-  })
+    if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+    else setShowBankModal(false)
+  }, [])
+
+  const bankModal = () => <Modal visible={ShowBankModal} transparent>
+    <View style={styles.ROOT_MODAL}>
+      <TouchableOpacity onPress={() => setShowBankModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
+        <Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
+        <Icon name={"close"} size={20} color={'#8B9555'} />
+      </TouchableOpacity>
+      <View style={styles.MODAL_CONTAINER}>
+        <View style={styles.MODAL_CONTENT}>
+          <Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
+          <Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
+          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+            <Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View />
+    </View>
+  </Modal>
+
+const generateQR = () => {
+  setShowQR(true)
+}
 
   const formatValue = value => {
     const strFormat = parseFloat(value).toFixed(2);
     const [firstPart, secondPart] = strFormat.split(".");
     return (
-        firstPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-            (secondPart ? "." + secondPart : "")
+      firstPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+      (secondPart ? "." + secondPart : "")
     );
-};
+  };
 
   const inputQR = () => <View style={{ flex: 1, justifyContent: 'space-between' }}>
     <View>
@@ -52,7 +73,7 @@ export const QRScreen = observer(function QRScreen() {
         <Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
       </View>
       <View style={[styles.INPUT_STYLE_CONTAINER]}>
-      <Text style={styles.INPUT_LABEL_STYLE}> C$</Text>
+        <Text style={styles.INPUT_LABEL_STYLE}> C$</Text>
         <TextInput
           style={styles.INPUT_STYLE}
           keyboardType='numeric'
@@ -105,7 +126,7 @@ export const QRScreen = observer(function QRScreen() {
         />
         <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>C$ {Amount}</Text>
       </View>
-    <View />
+      <View />
     </View>
   </Modal>
 
@@ -140,6 +161,7 @@ export const QRScreen = observer(function QRScreen() {
           : inputQR()
         }
         {viewQR()}
+        {bankModal()}
       </View>
     </Screen>
   )
