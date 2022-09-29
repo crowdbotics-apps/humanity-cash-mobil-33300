@@ -23,11 +23,11 @@ export const Splash: React.FC = observer(() => {
 
   return (
     <div className="d-flex flex-column justify-content-center align-items-center vh-100">
-        <Lottie
-          options={defaultOptions}
-          height={300}
-          width={300}
-        />
+        {/*<Lottie*/}
+        {/*  options={defaultOptions}*/}
+        {/*  height={300}*/}
+        {/*  width={300}*/}
+        {/*/>*/}
         <span style={{color: "white", fontSize: 20}} className={'mt-3'}>Humanity Cash</span>
     </div>
   );
