@@ -136,6 +136,10 @@ def get_humanity_balance():
     return get_wallet_balance(wallet, param_types='address')
 
 
+def get_humanity_userid():
+    return get_humanity_contract().proxy.HUMANITY_CASH()
+
+
 def get_community_balance():
     wallet = get_humanity_contract().proxy.communityChestAddress()
     return get_wallet_balance(wallet, param_types='address')

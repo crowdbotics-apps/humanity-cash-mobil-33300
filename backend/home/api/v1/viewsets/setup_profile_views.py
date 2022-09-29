@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers import setup_profile_serializers
@@ -15,6 +16,25 @@ from users.models import Merchant, NoMerchantProfileException
 
 User = get_user_model()
 logger = logging.getLogger('django')
+
+
+# class SetupConsumerProfileAPIView(AuthenticatedAPIView):
+#
+#     def post(self, request):
+#         user = self.request.user
+#         # serializer = self.serializer_class(data=request.data)
+#         # serializer.is_valid(raise_exception=True)
+#         # password = serializer.data.get("password")
+#         # errors = dict()
+#         # try:
+#         #     validators.validate_password(password=password, user=user)
+#         # except exceptions.ValidationError as e:
+#         #     errors['password'] = list(e.messages)
+#         # if errors:
+#         #     raise serializers.ValidationError(errors)
+#         # user.set_password(password)
+#         # user.save()
+#         return Response(status=status.HTTP_200_OK)
 
 
 class SetupConsumerProfileAPIView(AuthenticatedAPIView, UpdateAPIView):

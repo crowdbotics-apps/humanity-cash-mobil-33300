@@ -16,6 +16,7 @@ import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../constants";
 import {FORM_CONTENT} from "./constants";
 import FormContent from "../../components/FormContent/FormContent";
+import {AUTHORIZATION} from "../../services/constants";
 
 
 
@@ -42,6 +43,8 @@ export const LoginForm = ()=> {
     onSubmit: values => {
       // alert(JSON.stringify(values, null, 2));
       let data = {username:values.email, email:values.email, password:values.password}
+
+
 
       api.login(data).then((result: any) => {
         console.log(result)

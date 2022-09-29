@@ -315,11 +315,13 @@ TWILIO_NUMBER = env.str("TWILIO_NUMBER", "")
 DWOLLA_ENVIRONMENT = env.str("DWOLLA_ENVIRONMENT", default='sandbox')
 DWOLLA_SANDBOX_APP_KEY = env.str("DWOLLA_SANDBOX_APP_KEY", "")
 DWOLLA_SANDBOX_APP_SECRET = env.str("DWOLLA_SANDBOX_APP_SECRET", "")
+DWOLLA_SANDBOX_WEBHOOK_SECRET = env.str("DWOLLA_SANDBOX_WEBHOOK_SECRET", "")
 
 DWOLLA_PRODUCTION_APP_KEY = env.str("DWOLLA_PRODUCTION_APP_KEY", "")
 DWOLLA_PRODUCTION_APP_SECRET = env.str("DWOLLA_PRODUCTION_APP_SECRET", "")
+DWOLLA_PRODUCTION_WEBHOOK_SECRET = env.str("DWOLLA_PRODUCTION_WEBHOOK_SECRET", "")
 
-# GCP config 
+# GCP config
 GS_BUCKET_NAME = env.str("GS_BUCKET_NAME", "")
 if GS_BUCKET_NAME:
     DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
@@ -328,6 +330,27 @@ if GS_BUCKET_NAME:
 
 CITIES_LIGHT_DATA_DIR = '/opt/webapp/cities'
 CITIES_LIGHT_INCLUDE_COUNTRIES = ['US']
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'dwolla': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}
 
 if not DEBUG:
     import sentry_sdk

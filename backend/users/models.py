@@ -149,6 +149,8 @@ class Consumer(BaseProfileModel):
     def is_merchant(self):
         return False
 
+    def __str__(self):
+        return f'Customer id: {self.id}'
 
 class Merchant(BaseProfileModel):
     background_picture = models.ImageField(upload_to='background-pictures', null=True, blank=True)
@@ -181,8 +183,42 @@ class Merchant(BaseProfileModel):
     def is_merchant(self):
         return True
 
+    def __str__(self):
+        return f'Merchant id: {self.id}'
+
+
+"""
+
+  u.name,
+       u.email,
+       m.dwolla_id,
+       u.last_login,
+       m.crypto_wallet_id,
+       m.address_1 as address,
+       'BUSINESS'  as account_type
+
+       """
+
+class DwollaUser(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    name = models.CharField(max_length=100, null=True)
+    email = models.CharField(max_length=100, null=True)
+    last_login = models.DateTimeField(null=True)
+    date_joined = models.DateTimeField(null=True)
+    dwolla_id = models.CharField(max_length=50, null=True, blank=True)
+    crypto_wallet_id = models.CharField(max_length=128, blank=True, null=True)
+    account_type = models.CharField(max_length=100, null=True)
+    address = models.CharField(max_length=150, null=True, blank=True)
+
+    class Meta:
+        db_table = "dwolla_user"
+        managed = False
+
+
+
 class NoMerchantProfileException(Exception):
     pass
 
 class InvalidTransferDestinationException(Exception):
     pass
+

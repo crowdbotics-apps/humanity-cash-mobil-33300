@@ -9,7 +9,7 @@ from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 
 # from rest_auth.serializers import PasswordResetSerializer
-from users.models import Consumer
+from users.models import Consumer, DwollaUser
 
 User = get_user_model()
 
@@ -47,6 +47,24 @@ class ConsumerSerializer(serializers.ModelSerializer):
     def get_last_login(self, obj):
         return obj.user.last_login
 
+
+class DwollaUserSerializer(serializers.ModelSerializer):
+    balance = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DwollaUser
+        fields = ['id', 'balance', 'name', 'address', 'email', 'dwolla_id',
+                  'crypto_wallet_id', 'last_login', 'date_joined', 'account_type']
+
+    def get_balance(self, obj):
+        user = User.objects.get(pk=obj.pk)
+        if hasattr(user, 'merchant'):
+            return user.merchant.balance
+
+        if hasattr(user, 'consumer'):
+            return user.consumer.balance
+
+        return 0
 
 
 

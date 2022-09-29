@@ -170,6 +170,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			username: Username,
 			consumer_profile: pic
 		}).then((result: any) => {
+			console.log('result ==> ', result)
 			setLoading(false)
 			if (result.kind === "ok") {
 				setStep("name")
@@ -187,6 +188,9 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			} else {
 				notifyMessage(null)
 			}
+		}).catch((error) => {
+			console.log(error)
+			notifyMessage(null)
 		})
 	}
 
