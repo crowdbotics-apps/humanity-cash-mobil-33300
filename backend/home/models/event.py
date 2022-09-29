@@ -37,3 +37,12 @@ class Event(TimeStampedModel):
 
     class Meta:
         ordering = ['start_date']
+
+
+class DwollaEvent(TimeStampedModel):
+    eventId = models.CharField(max_length=200, unique=True)
+    topic = models.CharField(max_length=200)
+    resourceId = models.CharField(max_length=200)
+    resourceLink = models.CharField(max_length=200)
+    customerLink = models.CharField(max_length=200, null=True)
+    timestamp = models.DateTimeField()
