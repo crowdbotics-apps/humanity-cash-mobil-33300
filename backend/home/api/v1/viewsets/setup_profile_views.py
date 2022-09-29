@@ -161,7 +161,7 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
         try:
             return self.request.user.merchant
         except ObjectDoesNotExist:
-            raise NoMerchantProfileException()
+            return None
 
 
     def update(self, request, *args, **kwargs):
