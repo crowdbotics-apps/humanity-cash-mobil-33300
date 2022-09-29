@@ -2,50 +2,49 @@ import { Animated, StyleSheet } from 'react-native';
 import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
-    LABEL_CONTAINER: {
-        flexDirection: 'row',
-        width: METRICS.screenWidth * 0.95,
-        justifyContent: 'space-between',
-        alignSelf: 'center',
-        marginTop: 30
-    },
-    LABEL: {
-        fontSize: 10,
-        color: COLOR.PALETTE.black,
-    },
-    LABEL_ERROR: {
-        fontSize: 10,
-        color: COLOR.PALETTE.pink,
-    },
-    INPUT_CONTAINER: {
-        borderRadius: 5,
-        height: 55,
-        width: METRICS.screenWidth * 0.95,
-        backgroundColor: COLOR.PALETTE.whiteTextInput,
-        alignSelf: 'center',
-        marginTop: 10,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    INPUT_CONTAINER_ERROR: {
-        borderRadius: 5,
-        height: 55,
-        width: METRICS.screenWidth * 0.95,
-        // backgroundColor: `${COLOR.PALETTE.green}25`,
-        backgroundColor: COLOR.PALETTE.whiteTextInput,
-        alignSelf: 'center',
-        marginTop: 10,
-        borderColor: COLOR.PALETTE.pink,
-        borderWidth: 0.8,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
     INPUT: {
+        alignSelf: 'center',
         color: COLOR.PALETTE.pureblack,
         height: 55,
-        width: METRICS.screenWidth * 0.90,
-        alignSelf: 'center'
+        width: METRICS.screenWidth * 0.90
+    },
+    INPUT_CONTAINER: {
+        alignItems: 'center',
+        alignSelf: 'center',
+        backgroundColor: COLOR.PALETTE.whiteTextInput,
+        borderRadius: 5,
+        flexDirection: 'row',
+        height: 55,
+        justifyContent: 'center',
+        marginTop: 10,
+        width: METRICS.screenWidth * 0.95
+    },
+    INPUT_CONTAINER_ERROR: {
+        alignItems: 'center',
+        alignSelf: 'center',
+        backgroundColor: COLOR.PALETTE.whiteTextInput,
+        borderColor: COLOR.PALETTE.pink,
+        borderRadius: 5,
+        borderWidth: 0.8,
+        flexDirection: 'row',
+        height: 55,
+        justifyContent: 'center',
+        marginTop: 10,
+        width: METRICS.screenWidth * 0.95
+    },
+    LABEL: {
+        color: COLOR.PALETTE.black,
+        fontSize: 10,
+    },
+    LABEL_CONTAINER: {
+        alignSelf: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 30,
+        width: METRICS.screenWidth * 0.95
+    },
+    LABEL_ERROR: {
+        color: COLOR.PALETTE.pink,
+        fontSize: 10,
     },
 })

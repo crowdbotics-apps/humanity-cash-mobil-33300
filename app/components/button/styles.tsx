@@ -1,4 +1,5 @@
 import { Animated, StyleSheet } from 'react-native';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
@@ -64,7 +65,9 @@ export default StyleSheet.create({
         marginLeft: 15,
         marginTop: 20,
     },
-    CONTAINER: {},
+    CONTAINER: {
+      backgroundColor: COLOR.PALETTE.transparent
+    },
     ICONS_CONTAINER: {
         alignSelf: 'center',
         bottom: 24,

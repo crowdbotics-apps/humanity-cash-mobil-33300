@@ -11,13 +11,14 @@ type TextInputComponentProps = {
   errorLabelStyle?: any,
   errorLabel?: string  | '',
   error?: boolean | false,
-
+  secureTextEntry?: boolean | false,
   inputContainerStyle?: any,
   inputContainerErrorStyle?: any,
   inputStyle?: any,
   value?: any,
   onChangeText?: any,
   placeholder?: string
+  inputDecoration?: any
 }
 
 
@@ -42,7 +43,9 @@ export function TextInputComponent(props: TextInputComponentProps) {
           value={props.value}
           placeholder={props.placeholder}
           autoCapitalize={"none"}
+          secureTextEntry={props.secureTextEntry}
         />
+        {props.inputDecoration && props.inputDecoration}
       </View>
     </>
   )

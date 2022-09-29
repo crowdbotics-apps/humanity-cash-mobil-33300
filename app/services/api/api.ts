@@ -110,4 +110,26 @@ export class Api extends ApiBase {
     return this.simple_get(apiv1 + "/dwolla/my-funding-sources/", data)
   }
 
+  async getCommunityChestData(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/community-chest/")
+  }
+
+  // BILLING
+  async sendMoney(data?: any): Promise<Types.SimplePostResult> {
+  // data example
+  //   {
+  //     "from" : 1,
+  //     "to": 2,
+  //     "from_is_consumer": true,
+  //     "to_is_consumer": false,
+  //     "password" : "pass2022",
+  //     "amount" : 13.40,
+  //     "roundup" : 0.60,
+  // }
+    return this.simple_post(apiv1 + "/send-money/", data)
+  }
+
+  async getBalanceData(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/balances/")
+  }
 }

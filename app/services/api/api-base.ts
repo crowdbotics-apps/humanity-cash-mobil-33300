@@ -309,9 +309,13 @@ export class ApiBase {
         }
         try {
             response = await this.apisauce.axiosInstance.patch(path, fdata, {headers})
+            console.log('response ', response)
         } catch (e) {
+            console.log('error ', JSON.parse(JSON.stringify(e)))
             if (e.message.indexOf("status code 400") !== -1) {
                 return {kind: "bad-data", errors: e.response.data}
+            } else if(e.message.indexOf("status code 405") !== -1) {
+                return {kind: "method-not-allowed"}
             }
             response = {status: 500}
         }
@@ -321,6 +325,7 @@ export class ApiBase {
             return {kind: "bad-data", errors: response.data}
         } else {
             // @ts-ignore
+            console.log('response error ', JSON.parse(JSON.stringify(response)))
             const problem = getGeneralApiProblem(response)
             if (problem) {return problem}
         }

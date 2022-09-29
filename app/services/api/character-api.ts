@@ -30,7 +30,7 @@ export class CharacterApi {
 
       return { kind: "ok", characters }
     } catch (e) {
-      __DEV__ && console.tron.log(e.message)
+
       return { kind: "bad-data" }
     }
   }

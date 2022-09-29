@@ -4,9 +4,8 @@ import { View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Pl
 import { Text, Button, Screen } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from "./link-bank-style"
-import { COLOR, METRICS, IMAGES } from "../../theme"
+import { COLOR, IMAGES } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
-import Entypo from "react-native-vector-icons/Entypo"
 import { WebView } from 'react-native-webview'
 import { useStores } from "../../models"
 
@@ -41,7 +40,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         })
     }
   }, [CustomerDwollaId]);
-  
+
   const [iavToken, setIavToken] = useState('')
   const [fundingSources, setFundingSources] = useState([])
 

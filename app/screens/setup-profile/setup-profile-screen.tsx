@@ -15,7 +15,8 @@ import {
 	Text,
 	Button,
 	Screen,
-	ModalSelector
+	ModalSelector,
+	MaskInput
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
@@ -141,16 +142,16 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	}
 
 	const fetchCity = (data?: string) => {
-		loginStore.environment.api.getCities({ value: data})
+		loginStore.environment.api.getCities({ value: data })
 			.then((result: any) => {
-				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name})))
+				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
 			})
 	}
 	const fetchState = (data?: string) => {
-		loginStore.environment.api.getStates({ value: data})
-		.then((result: any) => {
-			setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
-		})
+		loginStore.environment.api.getStates({ value: data })
+			.then((result: any) => {
+				setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+			})
 	}
 
 	const setupConsumer = () => {
@@ -168,7 +169,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		loginStore.environment.api.setupConsumer({
 			username: Username,
 			consumer_profile: pic
-		}).then((result:any) => {
+		}).then((result: any) => {
+			console.log('result ==> ', result)
 			setLoading(false)
 			if (result.kind === "ok") {
 				setStep("name")
@@ -181,11 +183,14 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				}
 				notifyMessage(msg)
 			} else if (result.kind === "unauthorized") {
-					loginStore.reset()
-					navigation.navigate("login", {})
-				} else {
+				loginStore.reset()
+				navigation.navigate("login", {})
+			} else {
 				notifyMessage(null)
 			}
+		}).catch((error) => {
+			console.log(error)
+			notifyMessage(null)
 		})
 	}
 
@@ -194,7 +199,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		loginStore.environment.api.setupConsumerDetail({
 			first_name: Name,
 			last_name: LastName
-		}).then((result:any) => {
+		}).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setShowThankyouModal(true)
@@ -203,9 +208,9 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				const msg = `${key}: ${result?.errors?.[key][0]}`
 				notifyMessage(msg)
 			} else if (result.kind === "unauthorized") {
-					loginStore.reset()
-					navigation.navigate("login", {})
-				} else {
+				loginStore.reset()
+				navigation.navigate("login", {})
+			} else {
 				notifyMessage(null)
 			}
 		})
@@ -235,7 +240,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			background_picture: backPic,
 			business_story: BusinessStory
 		})
-			.then((result:any) => {
+			.then((result: any) => {
 				setLoading(false)
 				setStep('business_type')
 				if (result.kind === "ok") {
@@ -256,7 +261,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const setupMerchantDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
-			.then((result:any) => {
+			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
 					setStep('business_exec')
@@ -288,7 +293,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			zip_code: PostalCode,
 			phone_number: PhoneNumber
 		})
-			.then((result:any) => {
+			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
 					setShowThankyouModal(true)
@@ -588,30 +593,32 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					{IndentifierType === 'EIN' && <View style={styles.CHECK_INSIDE} />}
 				</TouchableOpacity>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					editable={IndentifierType === 'EIN'}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setEmployerId(t)}
-					value={EmployerId}
-					placeholder={'XX-XXXXXXX'}
-				/>
-			</View>
+			<MaskInput
+				value={EmployerId}
+				mask={[/\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+				name="ein"
+				placeholder="XX-XXXXXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setEmployerId(unmasked)}
+				style={styles.INPUT_STYLE_CONTAINER}
+				editable={IndentifierType === 'EIN'}
+			/>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>{'Social Security Number (SSN)'}</Text>
 				<TouchableOpacity style={styles.CHECK_OUTSIDE} onPress={() => setIndentifierType('SSN')}>
 					{IndentifierType === 'SSN' && <View style={styles.CHECK_INSIDE} />}
 				</TouchableOpacity>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					editable={IndentifierType === 'SSN'}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setSocialSecurityNumber(t)}
-					value={SocialSecurityNumber}
-					placeholder={'XXX-XX-XXXX'}
-				/>
-			</View>
+			<MaskInput
+				value={SocialSecurityNumber}
+				mask={[/\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/]}
+				name="ssn"
+				placeholder="XXX-XX-XXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setSocialSecurityNumber(unmasked)}
+				style={styles.INPUT_STYLE_CONTAINER}
+				editable={IndentifierType === 'SSN'}
+			/>
 		</View>
 	)
 	const renderbusinessAddresss = () => (

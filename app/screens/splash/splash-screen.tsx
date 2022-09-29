@@ -4,10 +4,10 @@ import { TouchableOpacity, Image, View } from "react-native"
 import { Screen, Text, Button } from "../../components"
 
 import styles from "./splash-styles"
-import { IMAGES , COLOR, METRICS } from "../../theme"
-import { useNavigation } from "@react-navigation/native"
+import { IMAGES, COLOR, METRICS } from "../../theme"
+import {CommonActions, useNavigation} from "@react-navigation/native"
 import { useStores } from "../../models"
-import {GoogleSignin} from "@react-native-google-signin/google-signin";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 // import OneSignal from 'react-native-onesignal';
 
@@ -38,7 +38,14 @@ export const SplashScreen = observer(function SplashScreen() {
       if (step !== '' && step !== null) {
         navigation.navigate(step, {})
       }
-      if (loginStore.isLoggedIn) navigation.navigate('home', {})
+      if (loginStore.isLoggedIn) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'home' }],
+          })
+        );
+      }
       setLoading(false)
     }, 2000)
   }, [])
@@ -65,37 +72,39 @@ export const SplashScreen = observer(function SplashScreen() {
 
   const LoginSetp = () => (
     <View style={styles.ROOT}>
+      <View style={styles.POWERED_CONTAINER_ABSOLUTE} />
       <Image
         resizeMode="contain"
         source={IMAGES.logoFull}
         style={styles.LOGO_STYLE}
       />
-      <View />
       <View style={styles.POWERED_CONTAINER_ABSOLUTE}>
-        <Text style={styles.POWERED_LABEL}>Powered by</Text>
-        <Image
-          resizeMode="contain"
-          source={IMAGES.humanityCashWatermark}
-          style={styles.WATERMARK_STYLE}
-        />
-      </View>
-      <View style={styles.CONTAINER}>
-        <Button
-          buttonStyle={{
-            backgroundColor: COLOR.PALETTE.blue,
-            marginBottom: 10
-          }}
-          onPress={() => navigation.navigate("login", {})}
-          buttonLabel={'Log in'}
-        />
-        <Button
-          buttonStyle={{
-            backgroundColor: COLOR.PALETTE.white,
-          }}
-          buttonLabelStyle={{ color: COLOR.PALETTE.black }}
-          onPress={() => navigation.navigate("signup", {})}
-          buttonLabel={'Create an account'}
-        />
+        <View style={styles.CONTAINER}>
+          <Text style={styles.POWERED_LABEL}>Powered by</Text>
+          <Image
+            resizeMode="contain"
+            source={IMAGES.humanityCashWatermark}
+            style={styles.WATERMARK_STYLE}
+          />
+        </View>
+        <View style={styles.CONTAINER}>
+          <Button
+            buttonStyle={{
+              backgroundColor: COLOR.PALETTE.blue,
+              marginBottom: 10
+            }}
+            onPress={() => navigation.navigate("login", {})}
+            buttonLabel={'Log in'}
+          />
+          <Button
+            buttonStyle={{
+              backgroundColor: COLOR.PALETTE.white,
+            }}
+            buttonLabelStyle={{ color: COLOR.PALETTE.black }}
+            onPress={() => navigation.navigate("signup", {})}
+            buttonLabel={'Create an account'}
+          />
+        </View>
       </View>
     </View>
   )
