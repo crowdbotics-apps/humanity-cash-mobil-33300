@@ -248,6 +248,7 @@ const generateQR = () => {
         }
         {viewQR()}
         {bankModal()}
+        {passModal()}
       </View>
     </Screen>
   )
