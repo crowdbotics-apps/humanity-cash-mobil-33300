@@ -11,10 +11,13 @@ from rest_framework.response import Response
 from celo_humanity.models import Transaction
 from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers.transaction_serializers import TransactionSerializer
+from home.clients.dwolla_api import DwollaClient
 from home.helpers import AuthenticatedAPIView
 from users.models import Consumer, Merchant
+from base import configs
 
 logger = logging.getLogger('transaction')
+
 
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.filter()
@@ -85,4 +88,80 @@ class SendMoneyView(AuthenticatedAPIView):
             return Response('Error while transfering, please try again', status=status.HTTP_400_BAD_REQUEST)
 
 
+class WithdrawView(AuthenticatedAPIView):
+    permission_classes = [IsAuthenticated & IsNotCashier]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            dwolla_client = DwollaClient()
+            body = json.loads(request.body)
+            user_as_consumer = body['user_as_consumer']
+            user_password = body['password']
+            user = (Consumer if user_as_consumer else Merchant).objects.get(pk=body['user'])
+            amount = float(body.get('amount', 0))
+
+            if user.user.check_password(user_password):
+                if amount <= 0:
+                    return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
+
+                if amount > user.balance:
+                    return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
+
+                user.withdraw(amount)
+
+                destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
+                origin_source = configs.DWOLLA_ACCOUNT_DESTINATION
+
+                dwolla_client.create_transfer(origin_source, destination_source, amount)
+
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
+        except (AttributeError, KeyError, ValueError):
+            return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
+        except Merchant.DoesNotExist:
+            return Response('Merchant not found', status=status.HTTP_400_BAD_REQUEST)
+        except Consumer.DoesNotExist:
+            return Response('Consumer not found', status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            logger.exception("Error withdrawing money")
+            return Response('Error while withdrawing, please try again', status=status.HTTP_400_BAD_REQUEST)
+
+
+class DepositView(AuthenticatedAPIView):
+    permission_classes = [IsAuthenticated & IsNotCashier]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            dwolla_client = DwollaClient()
+            body = json.loads(request.body)
+            user_as_consumer = body['user_as_consumer']
+            user_password = body['password']
+            user = (Consumer if user_as_consumer else Merchant).objects.get(pk=body['user'])
+            amount = float(body.get('amount', 0))
+
+            if user.user.check_password(user_password):
+                if amount <= 0:
+                    return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
+
+                if amount > user.balance:
+                    return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
+
+                destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
+                origin_source = configs.DWOLLA_ACCOUNT_DESTINATION
+
+                dwolla_client.create_transfer(destination_source, origin_source, amount)
+
+                return Response(status=status.HTTP_200_OK)
+            else:
+                return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
+        except (AttributeError, KeyError, ValueError):
+            return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
+        except Merchant.DoesNotExist:
+            return Response('Merchant not found', status=status.HTTP_400_BAD_REQUEST)
+        except Consumer.DoesNotExist:
+            return Response('Consumer not found', status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            logger.exception("Error depositing money")
+            return Response('Error while depositing, please try again', status=status.HTTP_400_BAD_REQUEST)
 

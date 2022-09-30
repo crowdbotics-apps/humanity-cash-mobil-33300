@@ -71,6 +71,8 @@ urlpatterns = [
     path('community-chest/', base_views.CommunityChestView.as_view(), name='communitychest_info'),
     path('cashier-mode/', setup_profile_views.SetCashierModeView.as_view(), name='cashiermode'),
     path('send-money/', transaction_views.SendMoneyView.as_view(), name='send_money'),
+    path('withdraw/', transaction_views.WithdrawView.as_view(), name='withdraw'),
+    path('deposit/', transaction_views.DepositView.as_view(), name='deposit'),
     # path('is-cashier-mode/', setup_profile_views.CashierTestView.as_view(), name='iscashiermode'),
     # path('is-cashier-mode-not/', setup_profile_views.NoCashierTestView.as_view(), name='iscashiermode'),
     path("", include(router.urls))

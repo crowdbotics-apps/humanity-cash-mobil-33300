@@ -189,7 +189,6 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
       unsafe={true}
       headerStyle={[styles.HEADER, { backgroundColor: loginStore.getSelectedAccount === 'consumer' ? COLOR.PALETTE.background : loginStore.getAccountColor }]}
     >
-      {console.log(' ====>>> ', JSON.stringify(loginStore.ProfileDataBusiness.id, null, 2))}
       <View style={[styles.ROOT, { backgroundColor: loginStore.getSelectedAccount === 'consumer' ? COLOR.PALETTE.background : loginStore.getAccountColor }]}>
         <View style={styles.HEADER}>
           <TouchableOpacity onPress={() => props.navigation.closeDrawer()} style={styles.BACK_BUTON_CONTAINER}>
