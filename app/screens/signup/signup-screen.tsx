@@ -122,12 +122,11 @@ export const SignupScreen = observer(function SignupScreen() {
   }
 
   const register = () => {
-    console.log('email ', Email)
-    console.log('phone ', Phone)
-    // return
     setLoading(true)
-    loginStore.environment.api.userRegister({ email: Email, phone_number: '+1' + Phone }).then(result => {
-      console.log('register ', result)
+    const phoneNumber = Phone !== '' ? `+1${Phone}` : ''
+    loginStore.environment.api.userRegister({ email: Email, phone_number: phoneNumber }).then(result => {
+      setPhoneNumberError(false)
+      setEmailError(false)
       setLoading(false)
       if (result.kind === "ok") {
         runInAction(() => {
