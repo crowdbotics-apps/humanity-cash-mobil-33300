@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { TextInput, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from "react-native"
-import { Text, Screen, Button, TextInputComponent } from "../../components"
+import {Text, Screen, Button, TextInputComponent, MaskInput} from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -13,6 +13,7 @@ import { notifyMessage } from "../../utils/helpers"
 import { COLOR } from '../../theme';
 import { CheckBox } from 'react-native-elements'
 import TouchID from 'react-native-touch-id'
+import {Masks} from "react-native-mask-input";
 
 const steps = [
   "email",
@@ -38,6 +39,8 @@ export const SignupScreen = observer(function SignupScreen() {
   const [Phone, setPhone] = useState("")
   const [EmailError, setEmailError] = useState(false)
   const [EmailErrorMessage, setEmailErrorMessage] = useState("")
+  const [PhoneNumberError, setPhoneNumberError] = useState(false)
+  const [PhoneNumberErrorMessage, setPhoneNumberErrorMessage] = useState("")
   const [Agree, setAgree] = useState(false)
 
   const [ShowTerms, setShowTerms] = useState(false)
@@ -119,8 +122,11 @@ export const SignupScreen = observer(function SignupScreen() {
   }
 
   const register = () => {
+    console.log('email ', Email)
+    console.log('phone ', Phone)
+    // return
     setLoading(true)
-    loginStore.environment.api.userRegister({ email: Email }).then(result => {
+    loginStore.environment.api.userRegister({ email: Email, phone_number: '+1' + Phone }).then(result => {
       console.log('register ', result)
       setLoading(false)
       if (result.kind === "ok") {
@@ -131,9 +137,15 @@ export const SignupScreen = observer(function SignupScreen() {
         setStep("verify_email")
       } else if (result.kind === "bad-data") {
         console.log(' result => ', result)
+        if (result.errors.email) {
+          setEmailError(true)
+          setEmailErrorMessage(result.errors.email[0])
+        }
+        if (result.errors.phone_number) {
+          setPhoneNumberError(true)
+          setPhoneNumberErrorMessage(result.errors.phone_number[0])
+        }
         notifyMessage("Please correct the errors and try again")
-        setEmailError(true)
-        setEmailErrorMessage(result.errors.email[0])
       } else {
         loginStore.reset()
         notifyMessage(null)
@@ -234,12 +246,32 @@ export const SignupScreen = observer(function SignupScreen() {
         value={Email}
         placeholder={"myname@mail.com"}
       />
-      {/* <TextInputComponent
-        label='PHONE NUMBER'
-        onChangeText={t => setPhone(t)}
+      {/*<TextInputComponent*/}
+      {/*  label='PHONE NUMBER'*/}
+      {/*  onChangeText={t => setPhone(t)}*/}
+      {/*  value={Phone}*/}
+      {/*  placeholder={"(555) 555-1234"}*/}
+      {/*/>*/}
+      <View style={styles.LABEL_CONTAINER}>
+        <Text style={styles.LABEL}>PHONE NUMBER</Text>
+        {(PhoneNumberErrorMessage !== '') &&
+          <Text style={styles.LABEL_ERROR}>
+            {PhoneNumberError ? PhoneNumberErrorMessage : ''}
+          </Text>
+        }
+      </View>
+      <MaskInput
         value={Phone}
-        placeholder={"(555) 555-1234"}
-      /> */}
+        mask={Masks.USA_PHONE}
+        name="ssn"
+        placeholder="(XXX)-XXX-XXXX"
+        keyboardType="number-pad"
+        onChange={(masked, unmasked) => {
+          setPhoneNumberError(false)
+          setPhone(unmasked)
+        }}
+        style={styles.INPUT_STYLE_CONTAINER}
+      />
 
     </View>
   )
