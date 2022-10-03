@@ -1,0 +1,182 @@
+{% load i18n account %}
+
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/html">
+<link>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<title>Humanity Cash</title>
+<style>
+    @import url(http://fonts.googleapis.com/css?family=Roboto);
+
+    div {
+        flex-grow: 1;
+    }
+
+    u + .body .gmail-blend-screen {
+        background: #000;
+        mix-blend-mode: screen;
+    }
+
+    u + .body .gmail-blend-difference {
+        background: #000;
+        mix-blend-mode: difference;
+    }
+
+    body {
+        font-family: 'Roboto';
+    }
+
+    @media only screen and (max-width: 650px) {
+        table.body h1 {
+            font-size: 28px !important;
+            margin-bottom: 10px !important;
+        }
+
+        table.body p,
+        table.body ul,
+        table.body ol,
+        table.body td,
+        table.body span,
+        table.body a {
+            font-size: 16px !important;
+        }
+
+        table.body .wrapper,
+        table.body .article {
+            padding: 10px !important;
+        }
+
+        table.body .content {
+            padding: 0 !important;
+        }
+
+        table.body .container {
+            padding: 0 !important;
+            width: 100% !important;
+        }
+
+        table.body .main {
+            border-left-width: 0 !important;
+            border-radius: 0 !important;
+            border-right-width: 0 !important;
+        }
+
+        table.body .btn table {
+            width: 100% !important;
+        }
+
+        table.body .btn a {
+            width: 100% !important;
+        }
+
+        table.body .img-responsive {
+            height: auto !important;
+            max-width: 100% !important;
+            width: auto !important;
+        }
+    }
+
+    @media all {
+        .ExternalClass {
+            width: 100%;
+        }
+
+        .ExternalClass,
+        .ExternalClass p,
+        .ExternalClass span,
+        .ExternalClass font,
+        .ExternalClass td,
+        .ExternalClass div {
+            line-height: 100%;
+        }
+
+        .apple-link a {
+            color: inherit !important;
+            font-family: inherit !important;
+            font-size: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+            text-decoration: none !important;
+        }
+
+        #MessageViewBody a {
+            color: inherit;
+            text-decoration: none;
+            font-size: inherit;
+            font-family: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+        }
+    }
+</style>
+</head>
+<body
+  style="background-color: #F7F5F0; font-family: Roboto, Arial, sans-serif; -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
+<span class="preheader"
+      style="color: #F7F5F0; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Welcome email</span>
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body"
+       style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; background-color: #F7F5F0; width: 100%;">
+  <tr>
+    <td style="font-family: Roboto, Arial, sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
+    <td class="container"
+        style="font-family: Roboto, Arial, sans-serif; font-size: 14px; vertical-align: top; display: block; max-width: 650px; padding: 10px; width: 650px; margin: 0 auto;"
+        width="650" valign="top">
+      <div class="content"
+           style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">
+
+        <!-- START CENTERED black CONTAINER -->
+        <table role="presentation" class="main"
+               style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; height: 88px; width: 100%;"
+               }>
+
+          <!-- START MAIN CONTENT AREA -->
+          <tr>
+            <td class="wrapper"
+                style="font-family: Roboto, Arial, sans-serif; font-size: 14px; vertical-align: top; box-sizing: border-box; padding: 20px;"
+                valign="top">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0"
+                     style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;"
+                     width="100%">
+                <tr>
+                  <td style="font-family: Roboto, Arial, sans-serif; font-size: 14px; vertical-align: top;"
+                      valign="top" ; align="center">
+                    <img src="https://insignia-30234.botics.co/static/img/email-head.png"
+                         style="margin: 0px"/>
+                    <h1
+                      style="font-family: Roboto, Arial, sans-serif; font-size: 15px; font-weight: 400; margin-left: 40px; margin-right: 40px; margin-top: 36px; margin-bottom: 28px; color: black; text-align: left;">
+                      Dear, {{ username }}</h1>
+                    <h2
+                      style="font-family: Roboto, Arial, sans-serif; font-size: 15px; font-weight: 400; margin-left: 40px; margin-right: 40px; margin-bottom: 28px; color: black; text-align: left;">
+                      Welcome to Kingston Dollar! Thank you for putting your money to work in Kingston. To get started,
+                      <b>link your bank account</b> as a funding source to load your wallet. Once your load up is
+                      complete, you can start spending
+                      your Kingston Dollars at local businesses. Check out the <b>Where to Spend</b> tab on the menu in your
+                      app to find participating local busineses. Using Kingston Dollars saves your favorite stores 3-4%
+                      credit card fees every year, while keeping money invested locally through our community banks.
+                    </h2>
+                    <h4
+                      style="font-family: Roboto, Arial, sans-serif; font-size: 15px; font-weight: 400; margin-left: 40px; margin-right: 40px; margin-bottom: 28px; color: black; text-align: left;">
+                      This is your community so please give us a shout if you'd like to sign up your business, be an ambassador, or other contributor. We're available at {{ email }}. </h4>
+                    <p
+                      style="font-family: Roboto, Arial, sans-serif; font-size: 15px; font-weight: 400; margin-left: 40px; margin-right: 40px; margin-bottom: 28px; color: black; text-align: left;">
+                      Thank you for paying local! Kingston Dollar team</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- END MAIN CONTENT AREA -->
+        </table>
+        <!-- END CENTERED black CONTAINER -->
+
+      </div>
+    </td>
+    <td style="font-family: Roboto, Arial, sans-serif; font-size: 14px; vertical-align: top;" valign="top">&nbsp;</td>
+  </tr>
+</table>
+</body>
+</html>
