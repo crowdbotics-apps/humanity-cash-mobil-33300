@@ -26,7 +26,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { IMAGES, METRICS } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
-import {getErrorMessage, getImageFileFromSource, notifyMessage} from "../../utils/helpers"
+import { getErrorMessage, getImageFileFromSource, notifyMessage } from "../../utils/helpers"
 
 
 // const steps_user = ['pic_username', 'name']
@@ -160,7 +160,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		setUsernameError(false)
 		const pic = getImageFileFromSource(imageSource)
 		const keys = imageSource === null ? [] : ["consumer_profile"]
-		const data = imageSource === null ? {username: Username} : {username: Username, consumer_profile: pic}
+		const data = imageSource === null ? { username: Username } : { username: Username, consumer_profile: pic }
 		loginStore.environment.api.setupConsumerFirstStep(data, keys).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {

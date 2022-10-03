@@ -813,17 +813,17 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					zoomControlEnabled
 					initialRegion={Region}
 				>
-						<Marker 
+					<Marker
 						draggable
 						onDragEnd={e => {
 							setLatitud(e?.nativeEvent?.coordinate?.latitude)
 							setLongitud(e?.nativeEvent?.coordinate?.longitude)
 							MapInputAddress === 1
 								? setAddress1(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)
-								:setAddress2(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)
+								: setAddress2(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)
 						}}
 						coordinate={{ latitude: Latitud, longitude: Longitud }}
-						/>
+					/>
 				</MapView>
 			</View>
 		</Modal>

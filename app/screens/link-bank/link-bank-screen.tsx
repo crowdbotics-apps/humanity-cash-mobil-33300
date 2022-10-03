@@ -64,7 +64,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         </View>
       </View>
       <View style={styles.BANKS_ICON_CONTAINER}>
-        {[0].map((temp, key) => (
+        {[].map((temp, key) => (
           <TouchableOpacity onPress={() => setStep('bankLogin')} key={key} style={styles.BANK_ICON_CONTAINER}>
             <Image
               resizeMode="contain"

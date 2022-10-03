@@ -77,7 +77,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	useEffect(() => {
 		if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
 		else setShowBankModal(false)
-	},[])
+	}, [])
 
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>
 		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>

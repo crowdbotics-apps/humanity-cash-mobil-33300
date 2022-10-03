@@ -157,16 +157,15 @@ export const SecurityScreen = observer(function SecurityScreen() {
             </View>
           </View>
         </ScrollView>
-        <Button
-          buttonStyle={{
-            backgroundColor: loginStore.getAccountColor,
-            bottom: 5,
-            position: 'absolute'
-          }}
-          onPress={() => updateSecurity()}
-          buttonLabel={'Save changes'}
-        />
       </KeyboardAvoidingView>
+      <Button
+        buttonStyle={{
+          backgroundColor: loginStore.getAccountColor,
+          // bottom: 5,
+        }}
+        onPress={() => updateSecurity()}
+        buttonLabel={'Save changes'}
+      />
     </Screen>
   )
 })

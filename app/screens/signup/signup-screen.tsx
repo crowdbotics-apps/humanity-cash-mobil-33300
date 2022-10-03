@@ -228,8 +228,8 @@ export const SignupScreen = observer(function SignupScreen() {
           : ""}
         error={EmailError}
         onChangeText={t => {
-            setEmail(t)
-            setEmailError(!validateEmail(t, Agree))
+          setEmail(t)
+          setEmailError(!validateEmail(t, Agree))
         }}
         value={Email}
         placeholder={"myname@mail.com"}
@@ -554,66 +554,66 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>
       {/* <View style={styles.ROOT}> */}
       <View style={styles.ROOT}>
-          <View style={styles.STEP_CONTAINER}>
-            <TouchableOpacity
-              onPress={() => backButtonHandler()}
-              style={styles.BACK_BUTON_CONTAINER}
-              >
-              <Icon name={"arrow-back"} size={23} color={"black"} />
-              <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
-            </TouchableOpacity>
-              <ScrollView>
+        <View style={styles.STEP_CONTAINER}>
+          <TouchableOpacity
+            onPress={() => backButtonHandler()}
+            style={styles.BACK_BUTON_CONTAINER}
+          >
+            <Icon name={"arrow-back"} size={23} color={"black"} />
+            <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
+          </TouchableOpacity>
+          <ScrollView>
             {renderStep()}
-        </ScrollView>
+          </ScrollView>
+        </View>
+        {Step === "email" && (
+          <View style={styles.AGREE_CONTAINER}>
+            <CheckBox
+              checked={Agree}
+              onPress={() => [
+                setAgree(!Agree),
+                validateEmail(Email, !Agree)
+              ]}
+              checkedColor={COLOR.PALETTE.green}
+            />
+            <Text style={styles.AGREE_LABEL}>
+              {
+                "By checking this box, you agree to our partner Humanity Cash's "
+              }
+              <Text
+                style={styles.AGREE_LABEL_LINK}
+                onPress={() => setStep("legal")}
+              >
+                {"Terms & Conditions"}
+              </Text>
+              {" "}and{" "}
+              <Text
+                style={styles.AGREE_LABEL_LINK}
+                onPress={() => setStep("legal")}
+              >
+                {"Privacy Policy"}
+              </Text>
+            </Text>
           </View>
-      {Step === "email" && (
-              <View style={styles.AGREE_CONTAINER}>
-                <CheckBox
-                  checked={Agree}
-                  onPress={() => [
-                    setAgree(!Agree),
-                    validateEmail(Email, !Agree)
-                  ]}
-                  checkedColor={COLOR.PALETTE.green}
-                />
-                <Text style={styles.AGREE_LABEL}>
-                  {
-                    "By checking this box, you agree to our partner Humanity Cash's "
-                  }
-                  <Text
-                    style={styles.AGREE_LABEL_LINK}
-                    onPress={() => setStep("legal")}
-                  >
-                    {"Terms & Conditions"}
-                  </Text>
-                  {" "}and{" "}
-                  <Text
-                    style={styles.AGREE_LABEL_LINK}
-                    onPress={() => setStep("legal")}
-                  >
-                    {"Privacy Policy"}
-                  </Text>
-                </Text>
-              </View>
-            )}
-              {Step === "verify_email" && (
-              <View style={styles.NEED_HELP_CONTAINER}>
-                <Text onPress={() => sendCodeAgainHandler()} style={styles.NEED_HELP_LINK}>
-                  Send code again
-                </Text>
-              </View>
-            )}
-            {Step !== "legal" && (
-              <Button
-                buttonStyle={{
-                  backgroundColor: (ButtonDisabled || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green,
-                }}
-                onPress={() => nextButtonHandler()}
-                buttonLabel={'Next'}
-                disabled={ButtonDisabled || Loading}
-                loading={Loading}
-              />
-            )}
+        )}
+        {Step === "verify_email" && (
+          <View style={styles.NEED_HELP_CONTAINER}>
+            <Text onPress={() => sendCodeAgainHandler()} style={styles.NEED_HELP_LINK}>
+              Send code again
+            </Text>
+          </View>
+        )}
+        {Step !== "legal" && (
+          <Button
+            buttonStyle={{
+              backgroundColor: (ButtonDisabled || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green,
+            }}
+            onPress={() => nextButtonHandler()}
+            buttonLabel={'Next'}
+            disabled={ButtonDisabled || Loading}
+            loading={Loading}
+          />
+        )}
       </View>
     </Screen>
   )

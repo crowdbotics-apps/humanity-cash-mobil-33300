@@ -218,9 +218,9 @@ export const HomeScreen = observer(function HomeScreen() {
 							<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>0</Text>
 						</View>
 						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}> */}
-						<TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => setShowBankModal(true)} >
+						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => setShowBankModal(true)} >
 							<Text style={styles.LOAD_WALLET_LABEL}>Load Wallet</Text>
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 					</View>
 					<View style={styles.LINE} />
 					{renderNews()}

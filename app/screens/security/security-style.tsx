@@ -4,13 +4,14 @@ import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 export default StyleSheet.create({
 	ROOT: {
 		backgroundColor: COLOR.PALETTE.white,
+    justifyContent: 'space-between'
 	},
 	CONTAINER: {},
   ROOT_CONTAINER: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: COLOR.PALETTE.white,
     justifyContent: 'space-between',
-    minHeight: METRICS.screenHeight,
+    // minHeight: METRICS.screenHeight,
   },
   HEADER: {
     marginLeft: 10,

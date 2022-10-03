@@ -24,7 +24,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
   // had_currency | confirm | password | finish
   const [ModalStep, setModalStep] = useState('confirm')
 
- 
+
   const [Pass, setPass] = useState("")
   const [HidePass, setHidePass] = useState(true)
 
@@ -75,9 +75,9 @@ export const SettingsScreen = observer(function SettingsScreen() {
           </TouchableOpacity>
           <View style={styles.MODAL_CONTAINER}>
             <View style={styles.MODAL_CONTENT}>
-              <Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Are you sure you want to delete your account?</Text>
+              <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Are you sure you want to delete your account?</Text>
               <TouchableOpacity
-                style={[styles.MODAL_BUTTON, {backgroundColor: loginStore.getAccountColor}]}
+                style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
                 onPress={() => setModalStep('password')}
               >
                 <Text style={styles.SUBMIT_BUTTON_LABEL}>Delete account</Text>
@@ -97,7 +97,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
               <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
             </TouchableOpacity>
             <View style={styles.STEP_CONTAINER}>
-              <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor}]}>Verify with password</Text>
+              <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Verify with password</Text>
 
               <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
                 <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
@@ -117,7 +117,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
             </View>
           </View>
           <View style={styles.CONTAINER}>
-            <TouchableOpacity onPress={() => {}} style={styles.FORGOT_PASSWORD_CONTAINER}>
+            <TouchableOpacity onPress={() => { }} style={styles.FORGOT_PASSWORD_CONTAINER}>
               <Text style={styles.NEED_HELP_LINK}>Forgot password</Text>
             </TouchableOpacity>
             <Button
@@ -137,10 +137,10 @@ export const SettingsScreen = observer(function SettingsScreen() {
           <View style={styles.CONTAINER}>
             <TouchableOpacity style={styles.BACK_BUTON_CONTAINER} />
             <View style={styles.STEP_CONTAINER}>
-              <Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>{`Sad to see you leave.
+              <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>{`Sad to see you leave.
 Your account has been deleted. Hope to see
 you back soon. `}
-              </Text>              
+              </Text>
             </View>
           </View>
           <View style={styles.CONTAINER}>
@@ -172,35 +172,35 @@ you back soon. `}
             <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
           </TouchableOpacity>
           <View style={styles.STEP_CONTAINER}>
-            <Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Settings</Text>
+            <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Settings</Text>
             <Text style={styles.LINE} />
 
             <Button
-              buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor}]}
+              buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
               onPress={() => navigation.navigate("myProfile", {})}
               buttonLabel={'My profile'}
             />
             <Button
-              buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor}]}
+              buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
               onPress={() => { }}
               buttonLabel={'Bank account'}
             />
             <Button
-              buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor}]}
+              buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
               onPress={() => { }}
               buttonLabel={'Static QR '}
             />
             <Button
-              buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor}]}
+              buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
               onPress={() => navigation.navigate("legal", {})}
               buttonLabel={'Legal'}
             />
             <Button
-              buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor}]}
+              buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
               onPress={() => navigation.navigate("security", {})}
               buttonLabel={'Security'}

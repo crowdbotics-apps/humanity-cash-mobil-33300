@@ -59,9 +59,9 @@ export const QRScreen = observer(function QRScreen() {
     </View>
   </Modal>
 
-const generateQR = () => {
-  setShowQR(true)
-}
+  const generateQR = () => {
+    setShowQR(true)
+  }
 
   const formatValue = value => {
     const strFormat = parseFloat(value).toFixed(2);
@@ -73,70 +73,70 @@ const generateQR = () => {
   };
 
   const passModal = () => (
-      <Modal visible={ShowPassModal} transparent>
-        <View style={styles.ROOT_MODAL_PASS}>
-          <View style={styles.CONTAINER}>
-            <TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
-              <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-              <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-            </TouchableOpacity>
-            <View style={styles.STEP_CONTAINER}>
-              <Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor}]}>Verify with password</Text>
+    <Modal visible={ShowPassModal} transparent>
+      <View style={styles.ROOT_MODAL_PASS}>
+        <View style={styles.CONTAINER}>
+          <TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
+            <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+            <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+          </TouchableOpacity>
+          <View style={styles.STEP_CONTAINER}>
+            <Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor }]}>Verify with password</Text>
 
-              <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-                <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
-              </View>
-              <View style={styles.INPUT_STYLE_CONTAINER}>
-                <TextInput
-                  style={styles.PASS_INPUT_STYLE}
-                  onChangeText={t => [setPass(t)]}
-                  value={Pass}
-                  secureTextEntry={HidePass}
-                  placeholder={"*********"}
-                />
-                <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
-                  <Ionicons name="eye" color={"#39534480"} size={20} />
-                </TouchableOpacity>
-              </View>
+            <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+              <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
+            </View>
+            <View style={styles.INPUT_STYLE_CONTAINER}>
+              <TextInput
+                style={styles.PASS_INPUT_STYLE}
+                onChangeText={t => [setPass(t)]}
+                value={Pass}
+                secureTextEntry={HidePass}
+                placeholder={"*********"}
+              />
+              <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+                <Ionicons name="eye" color={"#39534480"} size={20} />
+              </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.CONTAINER}>
-            <TouchableOpacity onPress={() => {}} style={styles.FORGOT_PASSWORD_CONTAINER}>
-              <Text style={styles.NEED_HELP_LINK}>Forgot password</Text>
-            </TouchableOpacity>
-            <Button
-              buttonStyle={{
-                backgroundColor: loginStore.getAccountColor,
-              }}
-              onPress={() => transferCurrency()}
-              buttonLabel={'Confirm'}
-            />
-          </View>
         </View>
-      </Modal>
-    )
+        <View style={styles.CONTAINER}>
+          <TouchableOpacity onPress={() => { }} style={styles.FORGOT_PASSWORD_CONTAINER}>
+            <Text style={styles.NEED_HELP_LINK}>Forgot password</Text>
+          </TouchableOpacity>
+          <Button
+            buttonStyle={{
+              backgroundColor: loginStore.getAccountColor,
+            }}
+            onPress={() => transferCurrency()}
+            buttonLabel={'Confirm'}
+          />
+        </View>
+      </View>
+    </Modal>
+  )
 
 
   const transferCurrency = () => {
     if (!QR) return
     const qrData = JSON.parse(QR)
     const data = {
-      "from" : loginStore.getAllData.id,
+      "from": loginStore.getAllData.id,
       "to": qrData.to,
       "from_is_consumer": loginStore.getSelectedAccount === 'consumer',
       "to_is_consumer": qrData.to_is_consumer,
-      "password" : Pass,
-      "amount" : qrData.amount,
-      "roundup" : 0,
+      "password": Pass,
+      "amount": qrData.amount,
+      "roundup": 0,
     }
     loginStore.environment.api
       .sendMoney(data)
       .then((result: any) => {
-        console.log(' result ===>>> ', JSON.stringify(result, null, 2 ))
+        console.log(' result ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           console.log(' result ok')
         } else if (result.kind === "bad-data") {
-          const errors = result.errors 
+          const errors = result.errors
           notifyMessage(getErrorMessage(errors))
         } else {
           loginStore.reset()

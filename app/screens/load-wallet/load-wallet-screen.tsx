@@ -221,7 +221,6 @@ C$ ${Amount}`}
 				buttonStyle={{
 					backgroundColor: loginStore.getAccountColor,
 					bottom: 5,
-					position: 'absolute'
 				}}
 				onPress={() => setShowModal(true)}
 				buttonLabel={'Load up'}

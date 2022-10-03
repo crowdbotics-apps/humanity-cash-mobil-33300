@@ -43,7 +43,7 @@ export const LoginScreen = observer(function LoginScreen() {
       .login({ email: Username, password: Pass })
       .then((result: any) => {
         setLoading(false)
-        console.log(' result ===>>> ', JSON.stringify(result, null, 2 ))
+        console.log(' result ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setUser(result.response)
@@ -241,7 +241,7 @@ export const LoginScreen = observer(function LoginScreen() {
           />
 
 
-<TextInputComponent
+          <TextInputComponent
             label='PASSWORD'
             errorLabel={PassError ? PassErrorMessage : ""}
             error={PassError}
@@ -251,8 +251,8 @@ export const LoginScreen = observer(function LoginScreen() {
             secureTextEntry={HidePass}
             inputStyle={styles.PASS_INPUT_STYLE}
             inputDecoration={<TouchableOpacity onPress={() => setHidePass(!HidePass)}>
-            <Ionicons name="eye" color={"#39534440"} size={20} />
-          </TouchableOpacity>}
+              <Ionicons name="eye" color={"#39534440"} size={20} />
+            </TouchableOpacity>}
           />
 
 

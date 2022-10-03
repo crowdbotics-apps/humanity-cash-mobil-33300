@@ -73,16 +73,16 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	}
 
 	const fetchCity = (data?: string) => {
-		loginStore.environment.api.getCities({ value: data})
+		loginStore.environment.api.getCities({ value: data })
 			.then((result: any) => {
-				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name})))
+				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
 			})
 	}
 	const fetchState = (data?: string) => {
-		loginStore.environment.api.getStates({ value: data})
-		.then((result: any) => {
-			setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
-		})
+		loginStore.environment.api.getStates({ value: data })
+			.then((result: any) => {
+				setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+			})
 	}
 
 	const PersonalProfile = () => (
