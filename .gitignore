@@ -77,3 +77,4 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+env.dev.js
