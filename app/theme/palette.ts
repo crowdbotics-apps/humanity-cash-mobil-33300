@@ -49,5 +49,6 @@ export const PALETTE = {
   pink: "#DF9BB9",
   orange: "#D59B76",
   purple: "#442E88",
-  mustard: "#D2A824"
+  mustard: "#D2A824",
+  placeholderTextColor:"#00000066"
 }

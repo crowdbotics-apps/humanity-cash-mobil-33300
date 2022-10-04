@@ -293,6 +293,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                       onChangeText={t => setSearch(t)}
                       value={Search}
                       placeholder={`Search`}
+                      placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
                     />
                   </View>
                 </View>

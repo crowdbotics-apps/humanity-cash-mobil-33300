@@ -75,8 +75,8 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
 	useEffect(() => {
-		if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-		else setShowBankModal(false)
+		// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+		// else setShowBankModal(false)
 	}, [])
 
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>
@@ -87,6 +87,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 			<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					onFocus={() => setOpenFrom(true)}
 					style={styles.SMALL_INPUT_STYLE}
 					keyboardType='numeric'
@@ -106,6 +107,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 			</View>
 			<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.SMALL_INPUT_STYLE}
 					onFocus={() => setOpenTo(true)}
 					keyboardType='numeric'
@@ -245,6 +247,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 									<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
 										<Icon name={"search"} size={25} color={COLOR.PALETTE.black} />
 										<TextInput
+											placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 											style={styles.SEARCH_INPUT_STYLE}
 											onChangeText={t => setSearch(t)}
 											value={Search}

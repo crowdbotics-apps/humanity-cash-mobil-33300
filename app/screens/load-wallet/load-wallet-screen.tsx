@@ -22,8 +22,8 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
 	useEffect(() => {
-		if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-		else setShowBankModal(false)
+		// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+		// else setShowBankModal(false)
 	}, [])
 
 	const bankModal = () => <Modal visible={ShowBankModal} transparent>
@@ -131,6 +131,7 @@ C$ ${Amount}`}
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			style={styles.ROOT}
 		>
 			<KeyboardAvoidingView
 				enabled
@@ -205,6 +206,7 @@ C$ ${Amount}`}
 							}}
 							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
 							placeholder={`Amount`}
+							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 						/>
 					</View>
 

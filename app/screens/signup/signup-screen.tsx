@@ -375,6 +375,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       <View style={styles.CODE_CONFIRMATION_CONTAINER}>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp1 = ref)}
@@ -385,6 +386,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp2 = ref)}
@@ -395,6 +397,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp3 = ref)}
@@ -406,6 +409,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         <View style={styles.SHORT_LINE} />
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp4 = ref)}
@@ -416,6 +420,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp5 = ref)}
@@ -426,6 +431,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp6 = ref)}
@@ -474,7 +480,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           value={Pass}
           secureTextEntry={HidePass}
           placeholder={"*********"}
-          placeholderTextColor="#00000066"
+          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         />
         <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
           <Ionicons name="eye" color={"#39534440"} size={20} />
@@ -499,6 +505,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           value={PassConfirm}
           placeholder={"*********"}
           secureTextEntry={HidePassConfirm}
+          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         />
         <TouchableOpacity onPress={() => setHidePassConfirm(!HidePassConfirm)}>
           <Ionicons name="eye" color={"#39534440"} size={20} />

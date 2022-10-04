@@ -13,7 +13,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import styles from './signup-profile-style';
 import { useNavigation } from "@react-navigation/native"
 import { launchImageLibrary } from 'react-native-image-picker';
-import { IMAGES, METRICS } from "../../theme"
+import { IMAGES, METRICS, COLOR } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
 import { notifyMessage } from "../../utils/helpers"
@@ -389,6 +389,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setUsername(t)}
 					value={Username?.charAt(0) === '@' ? Username : '@' + (Username || '')}
@@ -407,6 +408,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setName(t)}
 					value={Name}
@@ -418,6 +420,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setLastName(t)}
 					value={LastName}
@@ -478,6 +481,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
 						setBusinessName(t)
@@ -493,6 +497,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.BIG_INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.BIG_INPUT_STYLE}
 					onChangeText={t => setBusinessStory(t)}
 					value={BusinessStory}
@@ -530,6 +535,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setInstagramLink(t)}
 					value={InstagramLink}
@@ -541,6 +547,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setFacebookLink(t)}
 					value={FacebookLink}
@@ -552,6 +559,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setTwitterLink(t)}
 					value={TwitterLink}
@@ -570,6 +578,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessExecName(t)}
 					value={BusinessExecName}
@@ -581,6 +590,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessExecLastName(t)}
 					value={BusinessExecLastName}
@@ -598,6 +608,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessRegName(t)}
 					value={BusinessRegName}
@@ -669,6 +680,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress1(t)}
 					value={Address1}
@@ -685,6 +697,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress2(t)}
 					value={Address2}
@@ -752,10 +765,10 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPostalCode(t)}
 					value={PostalCode}
-					placeholderTextColor='gray'
 					placeholder={'xxxxxxxxx'}
 				/>
 			</View>
@@ -765,6 +778,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPhoneNumber(t)}
 					value={PhoneNumber}
@@ -784,6 +798,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				{MapInputAddress === 1
 					? <View style={styles.INPUT_STYLE_CONTAINER}>
 						<TextInput
+							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 							style={styles.INPUT_STYLE}
 							onChangeText={t => setAddress1(t)}
 							value={Address1}
@@ -792,6 +807,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					</View>
 					: <View style={styles.INPUT_STYLE_CONTAINER}>
 						<TextInput
+							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 							style={styles.INPUT_STYLE}
 							onChangeText={t => setAddress2(t)}
 							value={Address2}

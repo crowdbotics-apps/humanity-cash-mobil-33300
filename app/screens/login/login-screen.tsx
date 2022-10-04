@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextInput, View, TouchableOpacity, Image, ScrollView, Alert } from "react-native"
+import {TextInput, View, TouchableOpacity, Image, ScrollView, Alert, Platform} from "react-native"
 import { Text, Button, Screen, Checkbox, TextInputComponent } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -43,7 +43,6 @@ export const LoginScreen = observer(function LoginScreen() {
       .login({ email: Username, password: Pass })
       .then((result: any) => {
         setLoading(false)
-        console.log(' result ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setUser(result.response)
@@ -262,13 +261,13 @@ export const LoginScreen = observer(function LoginScreen() {
           <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
           <View style={styles.STEP_CONTAINER}>
             <View style={styles.LOGIN_TYPES_CONTAINER}>
-              <TouchableOpacity onPress={() => onAppleButtonPress()}>
+              {Platform.OS === 'ios' && <TouchableOpacity onPress={() => onAppleButtonPress()}>
                 <Image
                   source={IMAGES.appleIcon}
                   resizeMode="contain"
                   style={styles.LOGIN_TYPE}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity>}
               <TouchableOpacity onPress={() => loginGoogle()}>
                 <Image
                   source={IMAGES.googleIcon}

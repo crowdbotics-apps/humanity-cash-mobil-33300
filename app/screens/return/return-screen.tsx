@@ -79,6 +79,7 @@ export const ReturnScreen = observer(function ReturnScreen() {
 			<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
 				<Icon name={"search"} size={25} color={COLOR.PALETTE.black} />
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.SEARCH_INPUT_STYLE}
 					onChangeText={t => setSearch(t)}
 					value={Search}
@@ -230,6 +231,7 @@ Thank you
 		</View>
 		<View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
 			<TextInput
+				placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 				style={styles.INPUT_STYLE}
 				keyboardType='numeric'
 				onChangeText={t => {

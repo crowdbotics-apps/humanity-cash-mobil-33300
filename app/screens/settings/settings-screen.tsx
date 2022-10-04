@@ -104,6 +104,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
               </View>
               <View style={styles.INPUT_STYLE_CONTAINER}>
                 <TextInput
+                  placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
                   style={styles.PASS_INPUT_STYLE}
                   onChangeText={t => [setPass(t)]}
                   value={Pass}

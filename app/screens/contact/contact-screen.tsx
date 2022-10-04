@@ -159,6 +159,7 @@ export const ContactScreen = observer(function ContactScreen() {
 											onChangeText={t => setSearch(t)}
 											value={Search}
 											placeholder={`Search`}
+											placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 										/>
 									</View>
 								</View>
