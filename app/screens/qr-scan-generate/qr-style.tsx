@@ -33,12 +33,6 @@ export default StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 25
   },
-  ROOT_MODAL_PASS: {
-    marginTop: 35,
-		backgroundColor: COLOR.PALETTE.white,
-		flex: 1,
-		justifyContent: 'space-between'
-	},
   INPUT_LABEL_STYLE: {
     color: COLOR.PALETTE.black,
     fontSize: 10,
@@ -56,7 +50,7 @@ export default StyleSheet.create({
     marginLeft: 3,
     width: METRICS.screenWidth * 0.85,
   },
-	INPUT_STYLE_CONTAINER: {
+  INPUT_STYLE_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor: `${COLOR.PALETTE.green}25`,
@@ -80,7 +74,7 @@ export default StyleSheet.create({
     height: 50,
     width: 50
   },
-	LOGIN_TYPES_CONTAINER: {
+  LOGIN_TYPES_CONTAINER: {
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -94,7 +88,7 @@ export default StyleSheet.create({
     marginTop: 70,
     textAlign: 'center'
   },
-  MODAL_BUTTON: {
+	MODAL_BUTTON: {
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.green,
     borderRadius: 27.5,
@@ -103,7 +97,7 @@ export default StyleSheet.create({
     marginBottom: 20,
     width: METRICS.screenWidth * 0.70
   },
-  MODAL_CONTAINER: {
+	MODAL_CONTAINER: {
     alignItems: 'center',
     backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 20,
@@ -116,24 +110,24 @@ export default StyleSheet.create({
     shadowRadius: 2,
     width: METRICS.screenWidth * 0.80,
   },
-	MODAL_CONTENT: {
+  MODAL_CONTENT: {
     height: 330,
     justifyContent: 'space-evenly',
     width: METRICS.screenWidth * 0.70
   },
-	NEED_HELP_CONTAINER: {
+  NEED_HELP_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
     marginBottom: 20,
     width: METRICS.screenWidth * 0.80
   },
-  NEED_HELP_LINK: {
+	NEED_HELP_LINK: {
     color: COLOR.PALETTE.darkYellow,
     fontSize: 16,
     textAlign: 'center',
     textDecorationLine: 'underline'
   },
-  PASS_INPUT_STYLE: {
+	PASS_INPUT_STYLE: {
     alignSelf: 'center',
     height: 55,
     width: METRICS.screenWidth * 0.80,
@@ -150,6 +144,18 @@ export default StyleSheet.create({
     backgroundColor: 'rgba(240, 240, 240, 0.80)',
     flex: 1,
     justifyContent: 'space-around'
+  },
+  ROOT_MODAL_PASS: {
+    backgroundColor: COLOR.PALETTE.white,
+		flex: 1,
+		justifyContent: 'space-between',
+		marginTop: 35
+	},
+  SHOW_PASS_CONTAINER: {
+    alignItems: 'center',
+    height: 50,
+    justifyContent: 'center',
+    width: 50
   },
   STEP_CONTAINER: {
   },

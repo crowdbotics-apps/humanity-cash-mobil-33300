@@ -48,7 +48,7 @@ export const LoginScreen = observer(function LoginScreen() {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home", {})
+            navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors
@@ -88,7 +88,7 @@ export const LoginScreen = observer(function LoginScreen() {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home", {})
+            navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors
@@ -152,7 +152,7 @@ export const LoginScreen = observer(function LoginScreen() {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home", {})
+            navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors
@@ -225,7 +225,6 @@ export const LoginScreen = observer(function LoginScreen() {
             <Text style={styles.STEP_TITLE}>Log in</Text>
             <Text style={styles.STEP_SUB_TITLE}>{"Welcome back"}</Text>
           </View>
-
           <TextInputComponent
             label='EMAIL ADDRESS OR USER NAME'
             errorLabel={UsernameError
@@ -238,8 +237,6 @@ export const LoginScreen = observer(function LoginScreen() {
             value={Username}
             placeholder={"EMAIL ADDRESS OR USER NAME"}
           />
-
-
           <TextInputComponent
             label='PASSWORD'
             errorLabel={PassError ? PassErrorMessage : ""}
@@ -249,13 +246,10 @@ export const LoginScreen = observer(function LoginScreen() {
             placeholder={"*********"}
             secureTextEntry={HidePass}
             inputStyle={styles.PASS_INPUT_STYLE}
-            inputDecoration={<TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+            inputDecoration={<TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
               <Ionicons name="eye" color={"#39534440"} size={20} />
             </TouchableOpacity>}
           />
-
-
-
         </View>
         <View style={styles.LOGIN_OPTIONS_CONTAINER}>
           <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>

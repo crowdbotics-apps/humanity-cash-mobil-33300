@@ -2,82 +2,88 @@ import { Animated, StyleSheet } from 'react-native';
 import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
-	ROOT: {
+	ALLOW_LABEL: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16,
+    marginLeft: 10
+  },
+	BACK_BUTON_LABEL: {
+    color: COLOR.PALETTE.black,
+    fontSize: 20,
+  },
+  CONTAINER: {},
+  HEADER: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginLeft: 10,
+    marginTop: 10
+  },
+  INPUT_LABEL_STYLE: {
+    color: COLOR.PALETTE.black,
+    fontSize: 10,
+  },
+  INPUT_LABEL_STYLE_CONTAINER: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: METRICS.screenWidth * 0.95,
+  },
+  INPUT_STYLE_CONTAINER: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    borderRadius: 5,
+    flexDirection: 'row',
+    height: 55,
+    justifyContent: 'center',
+    marginBottom: 25,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.95
+  },
+  LINE: {
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.strongGreen,
+    height: 1,
+    marginVertical: 10,
+    width: METRICS.screenWidth * 0.95
+  },
+  PASS_INPUT_STYLE: {
+    alignSelf: 'center',
+    height: 55,
+    width: METRICS.screenWidth * 0.80,
+  },
+  ROOT: {
 		backgroundColor: COLOR.PALETTE.white,
     justifyContent: 'space-between'
 	},
-	CONTAINER: {},
-  ROOT_CONTAINER: {
+	ROOT_CONTAINER: {
     // flex: 1,
     backgroundColor: COLOR.PALETTE.white,
     justifyContent: 'space-between',
     // minHeight: METRICS.screenHeight,
   },
-  HEADER: {
-    marginLeft: 10,
-    marginTop: 10,
-    flexDirection: 'row',
-    alignItems: 'center'
+	SHOW_PASS_CONTAINER: {
+    alignItems: 'center',
+    height: 50,
+    justifyContent: 'center',
+    width: 50
   },
   STEP_TITLE: {
-    fontSize: 32,
     color: COLOR.PALETTE.green,
+    fontSize: 32,
     marginLeft: 10,
     marginTop: 10
   },
-  BACK_BUTON_LABEL: {
-    fontSize: 20,
-    color: COLOR.PALETTE.black,
-  },
-  ALLOW_LABEL: {
-    fontSize: 16,
-    color: COLOR.PALETTE.black,
-    marginLeft: 10
-  },
-  LINE: {
-    width: METRICS.screenWidth * 0.95,
-    backgroundColor: COLOR.PALETTE.strongGreen,
-    height: 1,
-    alignSelf: 'center',
-    marginVertical: 10
-  },
-  INPUT_LABEL_STYLE_CONTAINER: {
-    flexDirection: 'row',
-    width: METRICS.screenWidth * 0.95,
-    justifyContent: 'space-between',
-    alignSelf: 'center',
-  },
-	INPUT_LABEL_STYLE: {
-    fontSize: 10,
-    color: COLOR.PALETTE.black,
-  },
-	PASS_INPUT_STYLE: {
-    height: 55,
-    width: METRICS.screenWidth * 0.80,
-    alignSelf: 'center',
-  },
-  INPUT_STYLE_CONTAINER: {
-    borderRadius: 5,
-    height: 55,
-    width: METRICS.screenWidth * 0.95,
-    backgroundColor: `${COLOR.PALETTE.green}25`,
-    alignSelf: 'center',
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 25
-  },
   SWITCH_INPUT_STYLE_CONTAINER: {
-    borderRadius: 5,
-    height: 80,
-    width: METRICS.screenWidth * 0.95,
-    backgroundColor: `${COLOR.PALETTE.green}25`,
-    alignSelf: 'center',
-    marginTop: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 25
+    alignSelf: 'center',
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    borderRadius: 5,
+    flexDirection: 'row',
+    height: 80,
+    justifyContent: 'space-between',
+    marginBottom: 25,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.95
   },
 })

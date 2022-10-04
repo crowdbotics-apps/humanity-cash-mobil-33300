@@ -115,7 +115,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
                   secureTextEntry={HidePass}
                   placeholder={"*********"}
                 />
-                <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+                <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
                   <Ionicons name="eye" color={"#39534480"} size={20} />
                 </TouchableOpacity>
               </View>
@@ -132,7 +132,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
                   secureTextEntry={HideNewPass}
                   placeholder={"*********"}
                 />
-                <TouchableOpacity onPress={() => setHideNewPass(!HideNewPass)}>
+                <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHideNewPass(!HideNewPass)}>
                   <Ionicons name="eye" color={"#39534480"} size={20} />
                 </TouchableOpacity>
               </View>
@@ -152,7 +152,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
                   secureTextEntry={HideNewPassConfirmation}
                   placeholder={"*********"}
                 />
-                <TouchableOpacity onPress={() => setHideNewPassConfirmation(!HideNewPassConfirmation)}>
+                <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHideNewPassConfirmation(!HideNewPassConfirmation)}>
                   <Ionicons name="eye" color={"#39534480"} size={20} />
                 </TouchableOpacity>
               </View>

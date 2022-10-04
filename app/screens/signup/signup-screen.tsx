@@ -482,7 +482,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           placeholder={"*********"}
           placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         />
-        <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+        <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
           <Ionicons name="eye" color={"#39534440"} size={20} />
         </TouchableOpacity>
       </View>
@@ -507,7 +507,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           secureTextEntry={HidePassConfirm}
           placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         />
-        <TouchableOpacity onPress={() => setHidePassConfirm(!HidePassConfirm)}>
+        <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePassConfirm(!HidePassConfirm)}>
           <Ionicons name="eye" color={"#39534440"} size={20} />
         </TouchableOpacity>
       </View>

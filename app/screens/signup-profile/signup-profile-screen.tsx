@@ -299,6 +299,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
+					loginStore.setSelectedAccount('merchant')
 					setShowThankyouModal(true)
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]

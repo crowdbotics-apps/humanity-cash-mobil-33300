@@ -197,7 +197,7 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
     justifyContent: 'space-between',
-    minHeight: METRICS.screenHeight,
+    // minHeight: METRICS.screenHeight,
   },
   ROOT_MODAL: {
     alignItems: 'center',

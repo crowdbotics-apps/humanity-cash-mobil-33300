@@ -106,6 +106,21 @@ export default StyleSheet.create({
     marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },
+  LABEL: {
+    color: COLOR.PALETTE.black,
+    fontSize: 10,
+  },
+  LABEL_CONTAINER: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 30,
+    width: METRICS.screenWidth * 0.95
+  },
+  LABEL_ERROR: {
+    color: COLOR.PALETTE.pink,
+    fontSize: 10,
+  },
   LINE: {
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.strongGreen,
@@ -168,6 +183,12 @@ export default StyleSheet.create({
     height: 2,
     width: 10
   },
+  SHOW_PASS_CONTAINER: {
+    alignItems: 'center',
+    height: 50,
+    justifyContent: 'center',
+    width: 50
+  },
   STEP_CONTAINER: {
     width: METRICS.screenWidth,
   },
@@ -216,20 +237,5 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.pureblack,
     fontSize: 16,
     marginLeft: 15
-  },
-  LABEL_ERROR: {
-    color: COLOR.PALETTE.pink,
-    fontSize: 10,
-  },
-  LABEL: {
-    color: COLOR.PALETTE.black,
-    fontSize: 10,
-  },
-  LABEL_CONTAINER: {
-    alignSelf: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 30,
-    width: METRICS.screenWidth * 0.95
   },
 })

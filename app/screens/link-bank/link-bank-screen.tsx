@@ -126,7 +126,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           placeholder={"*********"}
           placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         />
-        <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+        <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
           <Ionicons name="eye" color={"#39534440"} size={20} />
         </TouchableOpacity>
       </View>
@@ -156,17 +156,18 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
       })
   }
 
-  function getIavToken() {
-    // TODO: change user_type argument with the one selected at that moment, consumer o merchant
-    loginStore.environment.api.getDwollaToken({ "user_type": "consumer" })
+  const getIavToken = () => {
+    loginStore.environment.api.getDwollaToken({ "user_type": loginStore.getSelectedAccount })
       .then((result: any) => {
         if (result.kind === "ok") {
           runInAction(() => {
             setIavToken(result.response.iav_token)
           })
+          bankLoginDwolla();
         } else if (result.kind === "bad-data") {
           const key = Object.keys(result?.errors)[0]
-          const msg = `${key}: ${result?.errors?.[key][0]}`
+          const msg = `${key}: ${result?.errors?.[key]}`
+          console.log(' aca => ', key, msg)
           notifyMessage(msg)
         } else {
           loginStore.reset()
@@ -181,7 +182,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   function getDwollaIav() {
     getIavToken();
-    bankLoginDwolla();
   }
 
   const jsCode = `

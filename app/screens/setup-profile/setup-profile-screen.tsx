@@ -23,7 +23,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import styles from './setup-profile-style';
 import { useNavigation } from "@react-navigation/native"
 import { launchImageLibrary } from 'react-native-image-picker';
-import { IMAGES, METRICS } from "../../theme"
+import { IMAGES, METRICS, COLOR } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
 import { getErrorMessage, getImageFileFromSource, notifyMessage } from "../../utils/helpers"
@@ -286,6 +286,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
+					loginStore.setSelectedAccount('merchant')
 					setShowThankyouModal(true)
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -335,11 +336,13 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			<Text style={styles.STEP_TITLE}>Hi</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>Select the profile you’d like to create. If you’re a business owner, you can automatically set up a personal profile. You can have one account login with two profiles.</Text>
-			{profileTypes.map((t, key) => (
-				<TouchableOpacity key={key + '_ptype'} style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(t.value), setStep(t.first_step)]}>
-					<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{t.label}</Text>
-				</TouchableOpacity>
-			))}
+			{profileTypes.map((t, key) => {
+				return (loginStore.ProfileDataBusiness.business_name !== '' && t.value === 'business_personal')
+					? null
+					: <TouchableOpacity key={key + '_ptype'} style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(t.value), setStep(t.first_step)]}>
+						<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{t.label}</Text>
+					</TouchableOpacity>
+			})}
 		</View>
 	)
 	const renderPicUsername = () => (
@@ -772,9 +775,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		switch (Step) {
 			case 'profile_type':
 				if (loginStore.isLoggedIn) {
-					navigation.navigate("home", {})
+					navigation.navigate("home")
 				} else {
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				}
 				break;
 			case 'pic_username':
@@ -908,10 +911,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
 							<View style={styles.HEADER_ACTIONS}>
-								<TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
-									<Icon name={"arrow-back"} size={23} color={'black'} />
-									<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-								</TouchableOpacity>
+								<View style={styles.BACK_BUTON_CONTAINER} />
 								<TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
 									<Text style={styles.BACK_BUTON_LABEL}>{`Log out`}</Text>
 								</TouchableOpacity>

@@ -112,12 +112,12 @@ export default StyleSheet.create({
     marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },
-
   SEARCH_INPUT_STYLE: {
     alignSelf: 'center',
     height: 55,
     width: METRICS.screenWidth * 0.85,
   },
+
   SEARCH_INPUT_STYLE_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
@@ -127,6 +127,12 @@ export default StyleSheet.create({
     height: 55,
     justifyContent: 'center',
     width: METRICS.screenWidth * 0.95
+  },
+  SHOW_PASS_CONTAINER: {
+    alignItems: 'center',
+    height: 50,
+    justifyContent: 'center',
+    width: 50
   },
   STEP_SUB_TITLE: {
     color: COLOR.PALETTE.black,

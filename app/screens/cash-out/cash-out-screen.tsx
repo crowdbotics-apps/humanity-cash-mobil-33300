@@ -102,6 +102,11 @@ export const CashOutScreen = observer(function CashOutScreen() {
 		</Modal>
 	)
 
+	useEffect(() => {
+		if (Amount && (Number(Amount) > 0 ))
+		setAmountError(!(Number(Amount) > 0));
+	  }, [Amount]);
+
 	const bankModal = () => <Modal visible={ShowBankModal} transparent>
     <View style={styles.ROOT_MODAL}>
       <TouchableOpacity onPress={() => setShowBankModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
@@ -130,7 +135,6 @@ export const CashOutScreen = observer(function CashOutScreen() {
 		>
 			<KeyboardAvoidingView
 				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
 				<View style={styles.HEADER_ACTIONS}>
@@ -161,7 +165,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 							keyboardType='numeric'
 							onChangeText={t => {
 								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-								temp = temp.replace(/[^0-9]/g, '')
+								// temp = temp.replace(/[^0-9]/g, '')
 								if (CheckMaxAmount && parseInt(temp) > maxAmount) setAmountError(true)
 								else setAmountError(false)
 								temp = temp.replace(",", ".")
@@ -170,7 +174,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 								else setFee(0.50)
 								setAmount(temp)
 							}}
-							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount + '.00'}
+							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
 							placeholder={`Amount`}
 							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 						/>
@@ -194,11 +198,11 @@ export const CashOutScreen = observer(function CashOutScreen() {
 			</KeyboardAvoidingView>
 			<Button
 				buttonStyle={{
-					backgroundColor: AmountError ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor,
+					backgroundColor: (AmountError || !Amount || Number(Amount) === 0) ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor,
 					bottom: 5,
 					position: 'absolute'
 				}}
-				disabled={AmountError}
+				disabled={(AmountError || !Amount || Number(Amount) === 0)}
 				onPress={() => setShowModal(true)}
 				buttonLabel={'Confirm'}
 			/>

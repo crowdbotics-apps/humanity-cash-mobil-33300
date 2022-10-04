@@ -291,8 +291,8 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                   />
                 </View>
                 <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
-                  <Text style={styles.USER_NAME_BLACK}>{loginStore.getUserName}</Text>
-                  {loginStore.ProfileDataBusiness.id &&
+                  <Text style={styles.USER_NAME_BLACK}>{loginStore.username}</Text>
+                  {loginStore.ProfileDataBusiness.business_name === '' &&
                     <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
                       <Text style={styles.SWITCH_ACCOUNT_LABEL_BLUE}>Switch account</Text>
                     </TouchableOpacity>

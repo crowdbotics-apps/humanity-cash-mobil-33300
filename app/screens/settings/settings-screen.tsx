@@ -111,7 +111,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
                   secureTextEntry={HidePass}
                   placeholder={"*********"}
                 />
-                <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+                <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
                   <Ionicons name="eye" color={"#39534480"} size={20} />
                 </TouchableOpacity>
               </View>
