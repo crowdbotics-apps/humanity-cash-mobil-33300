@@ -25,8 +25,6 @@ import {AUTHORIZATION} from "../../services/constants";
 export const LoginForm = ()=> {
   const [Loading, setLoading] = useState(false);
   const [PasswordType, setPasswordType] = useState("password")
-  const [Email, setEmail] = useState("")
-  const [Password, setPassword] = useState("")
   const navigate = useNavigate()
   const api = useApi()
   const userStore = useUserStore()
@@ -46,7 +44,8 @@ export const LoginForm = ()=> {
       // alert(JSON.stringify(values, null, 2));
       let data = {username:values.email, email:values.email, password:values.password}
 
-
+      // @ts-ignore
+      api.apisauce.deleteHeader(AUTHORIZATION)
 
       api.login(data).then((result: any) => {
         console.log(result)
@@ -98,15 +97,10 @@ export const LoginForm = ()=> {
             type="text"
             lang={"us-US"}
             className={'input-large'}
-            style={{color:"black"}}
-            onChange={(event)=>{
-              setEmail(event.target.value)
-              // formik.setFieldValue('email', event.target.value)
-              console.log("probando email sin formik", event.target.value)
-            }}
-            // onBlur={formik.handleBlur}
-            // isInvalid={!!formik.errors.email}
-            value={Email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            isInvalid={!!formik.errors.email}
+            value={formik.values.email}
           />
           <Form.Control.Feedback type="invalid">
             {formik.errors.email}
@@ -116,19 +110,13 @@ export const LoginForm = ()=> {
           <Form.Label className='form-label'>PASSWORD</Form.Label>
           <InputGroup className="mb-3 ">
             <Form.Control
-              style={{color:"black"}}
               name="password"
               className={'input-large input-password'}
               type={PasswordType}
-              // onChange={formik.handleChange}
-              onChange={(event)=>{
-                setPassword(event.target.value)
-                // formik.setFieldValue('password', event.target.value)
-                console.log("probando sin formik", event.target.value)
-              }}
-              // onBlur={formik.handleBlur}
-              // isInvalid={!!formik.errors.password && !!formik.touched.password}
-              value={Password}
+              onBlur={formik.handleBlur}
+              isInvalid={!!formik.errors.password && !!formik.touched.password}
+              value={formik.values.password}
+              onChange={formik.handleChange}
             />
             <Button type={"button"} variant="outline-secondary"
                     onClick={event => {
@@ -144,9 +132,12 @@ export const LoginForm = ()=> {
         </Form.Group>
         <Form.Group className="mb-3" >
           <div className="forgot-password">
-            <a href="#"
-               onClick={()=>navigate(ROUTES.FORGOT_PASSWORD, {replace:false})}
-               className='link-primary'>Forgot password?</a>
+            <div
+               onClick={()=>{
+                 console.log("onclick ", ROUTES.FORGOT_PASSWORD)
+                 navigate(ROUTES.FORGOT_PASSWORD, {replace:false})
+               }}
+               className='link-primary'>Forgot password?</div>
           </div>
         </Form.Group>
       </Row>

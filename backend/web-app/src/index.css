@@ -415,6 +415,10 @@ min-height: 200px;
   cursor: pointer;
 }
 
+
 #user-detail-tab-blockchain_transactions{
   width: 300px !important;
+}
+input{
+  font-family: Helvetica;
 }

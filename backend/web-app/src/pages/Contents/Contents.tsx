@@ -21,6 +21,7 @@ import {ROUTES} from "../../constants";
 import {toast} from "react-toastify";
 import {getErrorMessages} from "../../utils/functions";
 import {genericApiError} from "../../helpers";
+import {useNavigate} from "react-router-dom";
 
 const getHourFormatted = (date:string)=>{
   return moment(date).format('HH a').toUpperCase()
@@ -58,6 +59,7 @@ const ContentsPage: React.FC = observer(() => {
   const [CurrentEvent, setCurrentEvent] = useState<ContentEvent| null>(null)
   const [DateRange, setDateRange] = useState<{start:string, end:string}|null>(getDateRange())
   const api = useApi()
+  const navigate = useNavigate()
   const handleShow = () => setShow(true);
 
   const initCalendar = ()=>{
@@ -357,6 +359,9 @@ const ContentsPage: React.FC = observer(() => {
       <div className={'header-row'}>
         <h4 className='title-h4 pt-3 mb-0  pb-3'>Calendar - Events</h4>
         <Button variant="primary" className={'btn-connect-social me-4'}
+                onClick={()=>{
+                  navigate(ROUTES.SOCIAL)
+                }}
                 style={{borderRadius:50}}> Connect Social Media </Button>{' '}
       </div>
     </header>)

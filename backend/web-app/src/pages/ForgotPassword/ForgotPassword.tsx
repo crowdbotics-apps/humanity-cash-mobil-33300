@@ -60,7 +60,7 @@ export const ForgotPasswordPage: React.FC = observer((props) => {
 
   return (
     <PageWeb header={false}  >
-      <div style={{marginTop:50, marginBottom:20}}>
+      <div style={{marginTop:30, marginBottom:20}}>
         <img src={logo} alt={"logo"} className={"logo img-fluid"} />
       </div>
       <FormContent>
@@ -91,7 +91,7 @@ export const ForgotPasswordPage: React.FC = observer((props) => {
           </Form.Group>
           <Form.Group className="mb-3" >
             <div className="forgot-password">
-              <a href="#"  onClick={()=>navigate(ROUTES.LOGIN, {replace:false})}className='link-primary'>Log in</a>
+              <div  onClick={()=>navigate(ROUTES.LOGIN, {replace:false})}className='link-primary'>Log in</div>
             </div>
           </Form.Group>
           <Form.Group
