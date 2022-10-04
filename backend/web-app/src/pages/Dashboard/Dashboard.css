@@ -37,11 +37,9 @@
     --bg-main: #fff;
 }
 
-/* body {
-    min-height: 800px;
-    max-width: 100vw;
-    margin: 0;
-} */
+ body {
+     font-family: Gotham, Helvetica, sans-serif;
+}
 
 /* #layout {
     display: flex;
