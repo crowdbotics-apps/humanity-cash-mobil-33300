@@ -2,7 +2,7 @@
     text-align: left;
     vertical-align: center;
     font-size: 18px;
-    font-family: Gotham;
+    font-family: Gotham, Helvetica, sans-serif;
     line-height: 75%;
     color: #3b88b6;
     margin-left: 30px;
@@ -13,7 +13,7 @@
     text-align: left;
     vertical-align: center;
     font-size: 18px;
-    font-family: Gotham;
+    font-family: Gotham, Helvetica, sans-serif;
     line-height: 75%;
     color: #0D0e20;
     margin-left: 30px;
@@ -37,11 +37,9 @@
     --bg-main: #fff;
 }
 
-/* body {
-    min-height: 800px;
-    max-width: 100vw;
-    margin: 0;
-} */
+ body {
+     font-family: Gotham, Helvetica, sans-serif;
+}
 
 /* #layout {
     display: flex;
@@ -205,7 +203,7 @@
 
 .cell_bank_name {
     width: 25%;
-    font-family: 'Gotham';
+    font-family: Gotham, Helvetica, sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -236,7 +234,7 @@
 
 .cell_deposits {
     width: 25%;
-    font-family: 'Gotham';
+    font-family: Gotham, Helvetica, sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -248,7 +246,7 @@
 .cell_withdrawls {
     width: 25%;
     font-weight: bold;
-    font-family: 'Gotham';
+    font-family: Gotham, Helvetica, sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -259,7 +257,7 @@
 
 .cell_ot_token_balance {
     width: 25%;
-    font-family: 'Gotham';
+    font-family: Gotham, Helvetica, sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 16px;
@@ -299,7 +297,7 @@
     color: #3B88B6;
     border: none;
     border-bottom: 3px solid #3B88B6;
-    font-family: 'Gotham';
+    font-family: Gotham, Helvetica, sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -311,7 +309,7 @@
 .nav-tabs .nav-link {
     color: #808080;
     border: none;
-    font-family: 'Gotham';
+    font-family: Gotham, Helvetica, sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
