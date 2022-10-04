@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Text, View, TextInput } from "react-native"
 import styles from "./styles"
+import { COLOR } from "../../theme"
 
 type TextInputComponentProps = {
   labelContainerStyle?: any,
@@ -42,6 +43,7 @@ export function TextInputComponent(props: TextInputComponentProps) {
           placeholder={props.placeholder}
           autoCapitalize={"none"}
           secureTextEntry={props.secureTextEntry}
+          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         />
         {props.inputDecoration && props.inputDecoration}
       </View>

@@ -70,6 +70,7 @@ export function ModalSelector(props: ModalSelectortProps) {
                         }}
                         value={Search}
                         placeholder={'Search'}
+                        placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
                     />
                     <ScrollView style={[styles.FORM_CONTAINER, { marginTop: 10 }]}>
                         {props.options.map(option => {

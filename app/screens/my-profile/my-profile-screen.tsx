@@ -112,6 +112,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={[UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
 						setUsername(t)
@@ -128,6 +129,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setName(t)}
 					value={Name}
@@ -139,6 +141,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setLastName(t)}
 					value={LastName}
@@ -188,6 +191,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
 						setBusinessName(t)
@@ -201,6 +205,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={styles.BIG_INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.BIG_INPUT_STYLE}
 					onChangeText={t => setBusinessStory(t)}
 					value={BusinessStory}
@@ -215,6 +220,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
 						setBusinessCategory(t)
@@ -229,6 +235,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
 						setBusinessWebsite(t)
@@ -243,6 +250,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress1(t)}
 					value={Address1}
@@ -255,6 +263,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress2(t)}
 					value={Address2}
@@ -317,6 +326,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPostalCode(t)}
 					value={PostalCode}
@@ -328,6 +338,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPhoneNumber(t)}
 					value={PhoneNumber}

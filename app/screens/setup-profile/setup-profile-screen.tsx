@@ -373,6 +373,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setUsername(t)}
 					value={Username?.charAt(0) === '@' ? Username : '@' + (Username || '')}
@@ -391,6 +392,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setName(t)}
 					value={Name}
@@ -402,6 +404,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setLastName(t)}
 					value={LastName}
@@ -462,6 +465,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
 						setBusinessName(t)
@@ -477,6 +481,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.BIG_INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.BIG_INPUT_STYLE}
 					onChangeText={t => setBusinessStory(t)}
 					value={BusinessStory}
@@ -522,6 +527,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessExecName(t)}
 					value={BusinessExecName}
@@ -533,6 +539,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessExecLastName(t)}
 					value={BusinessExecLastName}
@@ -550,6 +557,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessRegName(t)}
 					value={BusinessRegName}
@@ -621,6 +629,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress1(t)}
 					value={Address1}
@@ -632,6 +641,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress2(t)}
 					value={Address2}
@@ -696,6 +706,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPostalCode(t)}
 					value={PostalCode}
@@ -708,6 +719,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPhoneNumber(t)}
 					value={PhoneNumber}

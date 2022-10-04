@@ -88,6 +88,7 @@ export const QRScreen = observer(function QRScreen() {
             </View>
             <View style={styles.INPUT_STYLE_CONTAINER}>
               <TextInput
+                placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
                 style={styles.PASS_INPUT_STYLE}
                 onChangeText={t => [setPass(t)]}
                 value={Pass}
@@ -154,6 +155,7 @@ export const QRScreen = observer(function QRScreen() {
       <View style={styles.INPUT_STYLE_CONTAINER}>
         {/* <Text style={styles.INPUT_LABEL_STYLE}> C$</Text> */}
         <TextInput
+          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
           style={styles.INPUT_STYLE}
           keyboardType='numeric'
           onChangeText={t => {
@@ -163,7 +165,7 @@ export const QRScreen = observer(function QRScreen() {
             setAmount(temp)
           }}
           // value={`C$ ` + Amount}
-          value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
+          value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount + '.00'}
           placeholder={`Amount`}
         />
       </View>

@@ -60,6 +60,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
             onChangeText={t => setSearch(t)}
             value={Search}
             placeholder={`Search`}
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
           />
         </View>
       </View>
@@ -123,6 +124,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           value={Pass}
           secureTextEntry={HidePass}
           placeholder={"*********"}
+          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         />
         <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
           <Ionicons name="eye" color={"#39534440"} size={20} />

@@ -8,6 +8,8 @@ import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from './make-report';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
+import DatePicker from 'react-native-date-picker'
+import Entypo from "react-native-vector-icons/Entypo"
 
 export const MakeReportScreen = observer(function MakeReportScreen() {
 	const navigation = useNavigation()
@@ -21,9 +23,23 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
+	const [SelectOpen, setSelectOpen] = useState(false)
+	const [TransactionType, setTransactionType] = React.useState('All');
+	const [DateFrom, setDateFrom] = useState(new Date())
+	const [OpenFrom, setOpenFrom] = useState(false)
+	const [DateTo, setDateTo] = useState(new Date())
+	const [OpenTo, setOpenTo] = useState(false)
+
+	const transactionTypes = [
+		'Incoming transactions',
+		'Outgoing transactions',
+		'Load ups',
+		'Cash out to USD',
+	]
+
 	useEffect(() => {
-		if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-		else setShowBankModal(false)
+		// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+		// else setShowBankModal(false)
 	}, [])
 
 	const bankModal = () => <Modal visible={ShowBankModal} transparent>
@@ -131,6 +147,7 @@ C$ ${Amount}`}
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			style={styles.ROOT}
 		>
 			<KeyboardAvoidingView
 				enabled
@@ -189,36 +206,67 @@ C$ ${Amount}`}
 						/>
 					</View>
 
-					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-						<Text style={styles.INPUT_LABEL_STYLE}>START DATE</Text>
-						<Text style={styles.INPUT_LABEL_STYLE}>END DATE</Text>
-					</View>
-					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-						<View style={[styles.INPUT_STYLE_CONTAINER]}>
-							<TextInput
-								style={styles.INPUT_STYLE}
-								keyboardType='numeric'
-								onChangeText={t => {
-									if (t) t = t.split(' ')[1]
-									else t = ''
-									setAmount(t)
-								}}
-								value={''}
-								placeholder={`MM/DD/YY`}
-							/>
+					<View style={styles.FILTER_CONTAINER}>
+						<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+							<Text style={styles.INPUT_LABEL_STYLE}>START DATE</Text>
+							<Text style={styles.INPUT_LABEL_STYLE}>END DATE</Text>
 						</View>
-						<View style={[styles.INPUT_STYLE_CONTAINER]}>
-							<TextInput
-								style={styles.INPUT_STYLE}
-								keyboardType='numeric'
-								onChangeText={t => {
-									if (t) t = t.split(' ')[1]
-									else t = ''
-									setAmount(t)
-								}}
-								value={''}
-								placeholder={`MM/DD/YY`}
-							/>
+						<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+							<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
+								<TextInput
+									onFocus={() => setOpenFrom(true)}
+									style={styles.SMALL_INPUT_STYLE}
+									keyboardType='numeric'
+									value={`${DateFrom.toLocaleDateString()}`}
+									placeholder={`MM/DD/YY`}
+									placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+								/>
+								<DatePicker
+									modal
+									open={OpenFrom}
+									date={DateFrom}
+									onConfirm={(date) => {
+										setOpenFrom(false)
+										setDateFrom(date)
+									}}
+									onCancel={() => setOpenFrom(false)}
+								/>
+							</View>
+							<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
+								<TextInput
+									style={styles.SMALL_INPUT_STYLE}
+									onFocus={() => setOpenTo(true)}
+									keyboardType='numeric'
+									value={`${DateTo.toLocaleDateString()}`}
+									placeholder={`MM/DD/YY`}
+									placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+								/>
+								<DatePicker
+									modal
+									open={OpenTo}
+									date={DateTo}
+									onConfirm={(date) => {
+										setOpenTo(false)
+										setDateTo(date)
+									}}
+									onCancel={() => setOpenTo(false)}
+								/>
+							</View>
+						</View>
+
+						<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+							<Text style={styles.INPUT_LABEL_STYLE}>TYPE OF TRANSACTIONS</Text>
+						</View>
+						<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
+							<TouchableOpacity style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType('')]}>
+								<Text style={styles.SELECT_LABEL}>{TransactionType || 'All'}</Text>
+								<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
+							</TouchableOpacity>
+							{SelectOpen && transactionTypes.map((t, key) => (
+								<TouchableOpacity key={key + 'btype'} style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType(t)]}>
+									<Text style={styles.SELECT_LABEL}>{t}</Text>
+								</TouchableOpacity>
+							))}
 						</View>
 					</View>
 					<Text style={styles.LINE} />

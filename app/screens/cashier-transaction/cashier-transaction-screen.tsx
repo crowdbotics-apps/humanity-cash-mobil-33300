@@ -101,6 +101,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 						onChangeText={t => setSearch(t)}
 						value={Search}
 						placeholder={`Search`}
+						placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					/>
 				</View>
 			</View>
