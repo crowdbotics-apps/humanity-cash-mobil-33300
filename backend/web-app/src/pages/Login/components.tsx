@@ -98,12 +98,14 @@ export const LoginForm = ()=> {
             type="text"
             lang={"us-US"}
             className={'input-large'}
+            style={{color:"black"}}
             onChange={(event)=>{
               setEmail(event.target.value)
-              formik.setFieldValue('email', event.target.value)
+              // formik.setFieldValue('email', event.target.value)
+              console.log("probando email sin formik", event.target.value)
             }}
-            onBlur={formik.handleBlur}
-            isInvalid={!!formik.errors.email}
+            // onBlur={formik.handleBlur}
+            // isInvalid={!!formik.errors.email}
             value={Email}
           />
           <Form.Control.Feedback type="invalid">
@@ -114,16 +116,18 @@ export const LoginForm = ()=> {
           <Form.Label className='form-label'>PASSWORD</Form.Label>
           <InputGroup className="mb-3 ">
             <Form.Control
+              style={{color:"black"}}
               name="password"
               className={'input-large input-password'}
               type={PasswordType}
               // onChange={formik.handleChange}
               onChange={(event)=>{
                 setPassword(event.target.value)
-                formik.setFieldValue('password', event.target.value)
+                // formik.setFieldValue('password', event.target.value)
+                console.log("probando sin formik", event.target.value)
               }}
-              onBlur={formik.handleBlur}
-              isInvalid={!!formik.errors.password && !!formik.touched.password}
+              // onBlur={formik.handleBlur}
+              // isInvalid={!!formik.errors.password && !!formik.touched.password}
               value={Password}
             />
             <Button type={"button"} variant="outline-secondary"
