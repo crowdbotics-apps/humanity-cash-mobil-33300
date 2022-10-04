@@ -25,6 +25,8 @@ import {AUTHORIZATION} from "../../services/constants";
 export const LoginForm = ()=> {
   const [Loading, setLoading] = useState(false);
   const [PasswordType, setPasswordType] = useState("password")
+  const [Email, setEmail] = useState("")
+  const [Password, setPassword] = useState("")
   const navigate = useNavigate()
   const api = useApi()
   const userStore = useUserStore()
@@ -96,10 +98,13 @@ export const LoginForm = ()=> {
             type="text"
             lang={"us-US"}
             className={'input-large'}
-            onChange={formik.handleChange}
+            onChange={(event)=>{
+              setEmail(event.target.value)
+              formik.setFieldValue('email', event.target.value)
+            }}
             onBlur={formik.handleBlur}
             isInvalid={!!formik.errors.email}
-            value={formik.values.email}
+            value={Email}
           />
           <Form.Control.Feedback type="invalid">
             {formik.errors.email}
@@ -112,10 +117,14 @@ export const LoginForm = ()=> {
               name="password"
               className={'input-large input-password'}
               type={PasswordType}
-              onChange={formik.handleChange}
+              // onChange={formik.handleChange}
+              onChange={(event)=>{
+                setPassword(event.target.value)
+                formik.setFieldValue('password', event.target.value)
+              }}
               onBlur={formik.handleBlur}
               isInvalid={!!formik.errors.password && !!formik.touched.password}
-              value={formik.values.password}
+              value={Password}
             />
             <Button type={"button"} variant="outline-secondary"
                     onClick={event => {
