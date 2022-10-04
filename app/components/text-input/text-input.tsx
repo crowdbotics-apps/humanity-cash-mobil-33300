@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { Text, View, TextInput } from "react-native"
-import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from "./styles"
 import { COLOR } from "../../theme"
 

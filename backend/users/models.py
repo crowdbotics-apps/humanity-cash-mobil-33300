@@ -43,6 +43,7 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=UserRole.choices, null=True)
     google_id = models.CharField('Google ID', max_length=255, blank=True, null=True)
     google_token = models.TextField('Google Token', blank=True, null=True)
+    phone_number = PhoneNumberField('Phone Number', max_length=50, null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
