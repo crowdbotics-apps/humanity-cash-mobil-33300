@@ -170,8 +170,9 @@ export const CashOutScreen = observer(function CashOutScreen() {
 								else setFee(0.50)
 								setAmount(temp)
 							}}
-							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
+							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount + '.00'}
 							placeholder={`Amount`}
+							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 						/>
 					</View>
 					<View style={styles.INPUT_LABEL_ERROR_STYLE_CONTAINER}>

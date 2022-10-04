@@ -145,7 +145,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         />
         <Text style={styles.MENU_ITEM_LABEL}>Where to spend</Text>
       </TouchableOpacity>,
-      <TouchableOpacity key={'merchant_6'} onPress={() => props.navigation.navigate("communityChest", {})} style={styles.MENU_ITEM_CONTAINER}>
+      <TouchableOpacity key={'merchant_6'} onPress={() => props.navigation.navigate("makeReport", {})} style={styles.MENU_ITEM_CONTAINER}>
         <Image
           resizeMode="contain"
           source={IMAGES.make_a_report}
