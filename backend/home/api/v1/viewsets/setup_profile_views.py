@@ -131,7 +131,11 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
     queryset = User.objects.all()
 
     def get_object(self):
-        return self.request.user
+        user = self.request.user
+        if not user.consumer.dwolla_id:
+            # if dwolla_id is not set yet
+            create_dwolla_customer_consumer(user)
+        return user
 
     def update(self, request, *args, **kwargs):
         super(ConsumerMyProfileAPIView, self).update(request, *args, **kwargs)
