@@ -42,10 +42,8 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 	}
 
 	const [ShowIndex, setShowIndex] = useState(true)
-	const [ShowScanModal, setShowScanModal] = useState(false)
 	const [Search, setSearch] = useState('')
 	const [ShowFilter, setShowFilter] = useState(false)
-	const [DistanceFilter, setDistanceFilter] = useState('')
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
@@ -64,7 +62,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 		  <View style={styles.MODAL_CONTENT}>
 			<Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
 			<Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}>
 			  <Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
 			</TouchableOpacity>
 		  </View>
@@ -74,19 +72,12 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 	</Modal>
 
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>
-		<Text onPress={() => setDistanceFilter('')} style={styles.CLEAR_FILTERS}>Clear filters</Text>
+		<Text style={styles.CLEAR_FILTERS}>Clear filters</Text>
 		<View style={styles.LINE} />
 	</View>
 
 	const ReturnIndex = () =>
 		<View style={styles.CONTAINER}>
-			<View style={styles.HEADER_ACTIONS}>
-				<View />
-				<TouchableOpacity style={styles.BACK_BUTON_CONTAINER} onPress={() => navigation.navigate("home", {})}>
-					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Close `}</Text>
-					<Icon name={"close"} size={23} color={loginStore.getAccountColor} />
-				</TouchableOpacity>
-			</View>
 			<View style={styles.STEP_CONTAINER}>
 				<Text style={styles.STEP_TITLE}>Transactions</Text>
 			</View>
@@ -133,22 +124,38 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
+<View style={styles.HEADER_ACTIONS}>
+				<View />
+				<TouchableOpacity style={styles.BACK_BUTON_CONTAINER} onPress={() => navigation.navigate("home")}>
+					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Close `}</Text>
+					<Icon name={"close"} size={23} color={loginStore.getAccountColor} />
+				</TouchableOpacity>
+			</View>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
-
 							{ReturnIndex()}
 						</View>
 					</View>
 				</ScrollView>
 			</KeyboardAvoidingView>
 			{bankModal()}
+			{ShowIndex &&
+					<Button
+						buttonStyle={{
+							backgroundColor: loginStore.getAccountColor,
+						}}
+						buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
+						onPress={() => setShowIndex(false)}
+						buttonLabel={'Receive or Scan to pay'}
+						showBottonMenu
+						hideButton
+						accountType={loginStore.getSelectedAccount}
+					/>
+				}
 		</Screen>
 	)
 })

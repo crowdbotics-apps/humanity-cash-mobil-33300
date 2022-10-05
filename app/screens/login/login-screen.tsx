@@ -42,13 +42,14 @@ export const LoginScreen = observer(function LoginScreen() {
     loginStore.environment.api
       .login({ email: Username, password: Pass })
       .then((result: any) => {
+        console.log(' login ===>>>  ', JSON.stringify(result, null, 2))
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home", {})
+            navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors
@@ -88,7 +89,7 @@ export const LoginScreen = observer(function LoginScreen() {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home", {})
+            navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors
@@ -118,7 +119,6 @@ export const LoginScreen = observer(function LoginScreen() {
         } else {
           AccessToken.getCurrentAccessToken().then((data) => {
             loginStore.environment.api.loginFacebook(data.accessToken).then((result) => {
-              console.log(JSON.stringify(result, null, 2))
               setLoading(false)
               if (result.kind === "ok") {
                 runInAction(() => {
@@ -152,7 +152,7 @@ export const LoginScreen = observer(function LoginScreen() {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home", {})
+            navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors
@@ -213,7 +213,7 @@ export const LoginScreen = observer(function LoginScreen() {
       showHeader
     >
       <TouchableOpacity
-        onPress={() => navigation.navigate("splash", {})}
+        onPress={() => navigation.navigate("splash")}
         style={styles.BACK_BUTON_CONTAINER}
       >
         <Icon name={"arrow-back"} size={23} color={"#8B9555"} />
@@ -225,7 +225,6 @@ export const LoginScreen = observer(function LoginScreen() {
             <Text style={styles.STEP_TITLE}>Log in</Text>
             <Text style={styles.STEP_SUB_TITLE}>{"Welcome back"}</Text>
           </View>
-
           <TextInputComponent
             label='EMAIL ADDRESS OR USER NAME'
             errorLabel={UsernameError
@@ -238,8 +237,6 @@ export const LoginScreen = observer(function LoginScreen() {
             value={Username}
             placeholder={"EMAIL ADDRESS OR USER NAME"}
           />
-
-
           <TextInputComponent
             label='PASSWORD'
             errorLabel={PassError ? PassErrorMessage : ""}
@@ -249,13 +246,10 @@ export const LoginScreen = observer(function LoginScreen() {
             placeholder={"*********"}
             secureTextEntry={HidePass}
             inputStyle={styles.PASS_INPUT_STYLE}
-            inputDecoration={<TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+            inputDecoration={<TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
               <Ionicons name="eye" color={"#39534440"} size={20} />
             </TouchableOpacity>}
           />
-
-
-
         </View>
         <View style={styles.LOGIN_OPTIONS_CONTAINER}>
           <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>

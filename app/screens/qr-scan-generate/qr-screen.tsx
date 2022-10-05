@@ -25,10 +25,11 @@ export const QRScreen = observer(function QRScreen() {
   const [ScanQR, setScanQR] = useState(true)
   const [QR, setQR] = useState(null)
   const [ShowQR, setShowQR] = useState(false)
-
+  const [ButtonDisabled, setButtonDisabled] = useState(false)
   const [ShowPassModal, setShowPassModal] = useState(false)
   const [Pass, setPass] = useState('')
   const [HidePass, setHidePass] = useState(true)
+  const [PayerSetAmount, setPayerSetAmount] = useState(true)
   const toggleSwitch = () => setScanQR(previousState => !previousState)
 
   const [Amount, setAmount] = useState('0')
@@ -50,7 +51,7 @@ export const QRScreen = observer(function QRScreen() {
         <View style={styles.MODAL_CONTENT}>
           <Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
           <Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}>
             <Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
           </TouchableOpacity>
         </View>
@@ -95,7 +96,7 @@ export const QRScreen = observer(function QRScreen() {
                 secureTextEntry={HidePass}
                 placeholder={"*********"}
               />
-              <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+              <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
                 <Ionicons name="eye" color={"#39534480"} size={20} />
               </TouchableOpacity>
             </View>
@@ -150,7 +151,6 @@ export const QRScreen = observer(function QRScreen() {
     <View>
       <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
         <Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
-        <Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
       </View>
       <View style={styles.INPUT_STYLE_CONTAINER}>
         {/* <Text style={styles.INPUT_LABEL_STYLE}> C$</Text> */}
@@ -160,34 +160,38 @@ export const QRScreen = observer(function QRScreen() {
           keyboardType='numeric'
           onChangeText={t => {
             let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-            temp = temp.replace(/[^0-9]/g, '')
+            // temp = temp.replace(/[^0-9]/g, '')
             temp = temp.replace(",", ".")
             setAmount(temp)
           }}
-          // value={`C$ ` + Amount}
-          value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount + '.00'}
+          value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
           placeholder={`Amount`}
         />
       </View>
     </View>
     <View>
-      <TouchableOpacity style={styles.NEED_HELP_CONTAINER} onPress={() => setShowQR(true)}>
+      <TouchableOpacity style={styles.NEED_HELP_CONTAINER} onPress={() => [setShowQR(true), setPayerSetAmount(true)]}>
         <Text style={styles.NEED_HELP_LINK}>Let the payer choose the amount</Text>
       </TouchableOpacity>
       <Button
         buttonStyle={{
-          backgroundColor: loginStore.getAccountColor,
+          backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
         }}
         onPress={() => setShowQR(true)}
         buttonLabel={'Next'}
+        disabled={ButtonDisabled}
       />
     </View>
   </View>
 
+useEffect(() => {
+  setButtonDisabled(!(Number(Amount) > 0));
+}, [Amount]);
+
   const viewQR = () => <Modal transparent visible={ShowQR}>
     <View style={styles.ROOT_MODAL}>
       <TouchableOpacity
-        onPress={() => setShowQR(false)}
+        onPress={() => [setShowQR(false), setPayerSetAmount(false)]}
         style={styles.CLOSE_MODAL_BUTTON}
       >
         <Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
@@ -212,7 +216,11 @@ export const QRScreen = observer(function QRScreen() {
           }
           size={200}
         />
-        <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>C$ {Amount}</Text>
+        <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>
+        { !PayerSetAmount &&
+          `C$ ${Amount}`
+        }
+          </Text>
       </View>
       <View />
     </View>
@@ -227,7 +235,7 @@ export const QRScreen = observer(function QRScreen() {
     >
       <View style={[styles.ROOT, { backgroundColor: ScanQR ? '#000' : '#FFF' }]}>
         <View style={styles.CONTAINER}>
-          <TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
+          <TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
             <Icon name={"arrow-back"} size={23} color={!ScanQR ? '#000' : '#FFF'} />
             <Text style={[styles.BACK_BUTON_LABEL, { color: !ScanQR ? '#000' : '#FFF' }]}>{` Home`}</Text>
           </TouchableOpacity>

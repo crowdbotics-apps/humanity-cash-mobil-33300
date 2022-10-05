@@ -109,6 +109,10 @@ export class Api extends ApiBase {
     return this.simple_get(url)
   }
 
+  async getEvents(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/event/")
+  }
+
   // DWOLLA
   async getDwollaToken(data?: any): Promise<Types.SimplePostResult> {
     return this.simple_post(apiv1 + "/dwolla/create-iav-token/", data)

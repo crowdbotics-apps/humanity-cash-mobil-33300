@@ -100,7 +100,6 @@ export class ApiBase {
         if (!this.apisauce) {
             return {kind: "unknown", temporary: true} as T
         }
-
         const response: ApiResponse<any> = await this.apisauce.get(path, extra_params, axios)
         if (!response.ok) {
             if (response.status === 400) {

@@ -55,7 +55,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 									setShowModal(false),
 									setTransactionFinished(false),
 									setAmount(''),
-									navigation.navigate("home", {})
+									navigation.navigate("home")
 								]}
 								buttonLabel={'Go back to home'}
 							/>
@@ -102,6 +102,11 @@ export const CashOutScreen = observer(function CashOutScreen() {
 		</Modal>
 	)
 
+	useEffect(() => {
+		if (Amount && (Number(Amount) > 0 ))
+		setAmountError(!(Number(Amount) > 0));
+	  }, [Amount]);
+
 	const bankModal = () => <Modal visible={ShowBankModal} transparent>
     <View style={styles.ROOT_MODAL}>
       <TouchableOpacity onPress={() => setShowBankModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
@@ -112,7 +117,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
         <View style={styles.MODAL_CONTENT}>
           <Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
           <Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}>
             <Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
           </TouchableOpacity>
         </View>
@@ -130,12 +135,11 @@ export const CashOutScreen = observer(function CashOutScreen() {
 		>
 			<KeyboardAvoidingView
 				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
 				<View style={styles.HEADER_ACTIONS}>
 					{!ShowModal &&
-						<TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
+						<TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
 							<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
 						</TouchableOpacity>
@@ -161,7 +165,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 							keyboardType='numeric'
 							onChangeText={t => {
 								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-								temp = temp.replace(/[^0-9]/g, '')
+								// temp = temp.replace(/[^0-9]/g, '')
 								if (CheckMaxAmount && parseInt(temp) > maxAmount) setAmountError(true)
 								else setAmountError(false)
 								temp = temp.replace(",", ".")
@@ -170,7 +174,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 								else setFee(0.50)
 								setAmount(temp)
 							}}
-							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount + '.00'}
+							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
 							placeholder={`Amount`}
 							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 						/>
@@ -194,11 +198,11 @@ export const CashOutScreen = observer(function CashOutScreen() {
 			</KeyboardAvoidingView>
 			<Button
 				buttonStyle={{
-					backgroundColor: AmountError ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor,
+					backgroundColor: (AmountError || !Amount || Number(Amount) === 0) ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor,
 					bottom: 5,
 					position: 'absolute'
 				}}
-				disabled={AmountError}
+				disabled={(AmountError || !Amount || Number(Amount) === 0)}
 				onPress={() => setShowModal(true)}
 				buttonLabel={'Confirm'}
 			/>

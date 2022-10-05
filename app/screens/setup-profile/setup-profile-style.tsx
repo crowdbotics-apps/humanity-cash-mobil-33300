@@ -281,12 +281,12 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
   },
   ROOT: {
+    backgroundColor: COLOR.PALETTE.white,
     flex: 1,
   },
   ROOT_CONTAINER: {
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
-    height: METRICS.screenHeight,
     justifyContent: 'space-between',
   },
   ROOT_MODAL: {

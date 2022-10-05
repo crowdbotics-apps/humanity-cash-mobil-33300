@@ -69,7 +69,8 @@ export const LoginStoreModel = types
       return self.selected_account || 'consumer'
     },
     get getAccountColor() {
-      return self.account_base_color || COLOR.PALETTE.blue
+      // return self.account_base_color || COLOR.PALETTE.blue
+      return COLOR.PALETTE.blue
     },
     get getBillingData() {
       return {
@@ -77,7 +78,7 @@ export const LoginStoreModel = types
       }
     },
     get getUserName() {
-      const name = self.first_name ? self.first_name + ' ' + self.last_name : self.email
+      const name = (self.first_name && self.first_name !== '') ? self.first_name + ' ' + self.last_name : self.email
       return name
     },
     get balance() {
@@ -89,19 +90,38 @@ export const LoginStoreModel = types
     get getAllData() {
       return {
         id: self.id,
+        selected_account: self.selected_account,
+        account_base_color: self.account_base_color,
         username: self.username,
         first_name: self.first_name,
         last_name: self.last_name,
+        email: self.email,
         verified_email: self.verified_email,
         allow_touch_id: self.allow_touch_id,
-        email: self.email,
-        phone_number: self.phone_number,
+        password_set: self.password_set,
+        business_name: self.business_name,
+        type_of_business: self.type_of_business,
+        business_story: self.business_story,
+        random_profile_picture_index: self.random_profile_picture_index,
         profile_picture: self.profile_picture,
         profile_picture_merchant: self.profile_picture_merchant,
-        access_token: self.access_token,
+        background_picture: self.background_picture,
+        owner_first_name: self.owner_first_name,
+        owner_last_name: self.owner_last_name,
+        registered_business_name: self.registered_business_name,
+        industry: self.industry,
+        website: self.website,
+        employer_identification_number: self.employer_identification_number,
+        social_security_number: self.social_security_number,
+        address_1: self.address_1,
+        address_2: self.address_2,
         city: self.city,
         state: self.state,
+        zip_code: self.zip_code,
+        phone_number: self.phone_number,
         billing_data_added: self.billing_data_added,
+        merchant_balance: self.merchant_balance,
+        consumer_balance: self.consumer_balance,
       }
     },
     get ProfileData() {

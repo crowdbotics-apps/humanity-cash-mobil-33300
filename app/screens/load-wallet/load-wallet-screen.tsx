@@ -14,7 +14,8 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 
-	const [Amount, setAmount] = useState('')
+	const [ButtonDisabled, setButtonDisabled] = useState(false)
+	const [Amount, setAmount] = useState('0')
 	const [ShowModal, setShowModal] = useState(false)
 	const [TransactionConfirm, setTransactionConfirm] = useState(false)
 	const [TransactionFinished, setTransactionFinished] = useState(false)
@@ -22,8 +23,8 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
 	useEffect(() => {
-		// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-		// else setShowBankModal(false)
+		if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+		else setShowBankModal(false)
 	}, [])
 
 	const bankModal = () => <Modal visible={ShowBankModal} transparent>
@@ -36,7 +37,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 				<View style={styles.MODAL_CONTENT}>
 					<Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
 					<Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}>
 						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
 					</TouchableOpacity>
 				</View>
@@ -44,7 +45,6 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 			<View />
 		</View>
 	</Modal>
-
 	const ConfirmModal = () => (
 		<Modal visible={ShowModal}>
 			{TransactionConfirm
@@ -67,8 +67,8 @@ C$ ${Amount}`}
 									setTransactionConfirm(false),
 									setShowModal(false),
 									setTransactionFinished(false),
-									setAmount(''),
-									navigation.navigate("home", {})
+									setAmount('0'),
+									navigation.navigate("home")
 								]}
 								buttonLabel={'Explore your community'}
 							/>
@@ -120,10 +120,12 @@ C$ ${Amount}`}
 					<View />
 				</View>
 			}
-
-
 		</Modal>
 	)
+
+	useEffect(() => {
+		setButtonDisabled(!(Number(Amount) > 0));
+	  }, [Amount]);
 
 	return (
 		<Screen
@@ -133,20 +135,15 @@ C$ ${Amount}`}
 			unsafe={true}
 			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<View style={styles.HEADER_ACTIONS}>
 					{!ShowModal &&
-						<TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
+						<TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
 							<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
 						</TouchableOpacity>
 					}
 				</View>
-
 				<View style={styles.STEP_CONTAINER}>
 					<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Load Wallet</Text>
 					<Text style={styles.LINE} />
@@ -154,76 +151,70 @@ C$ ${Amount}`}
 						{`Specify the amount of Currents 
 (C$ 1 = USD 1) you would like to load up. `}
 					</Text>
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 					</View>
-
 					<View style={styles.INPUT_AMOUNT_STYLE_CONTAINER}>
 						<Button
 							buttonStyle={
-								(Amount === '50' || Amount === '50.00')
+								(Number(Amount) === 50)
 									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
 									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
-							buttonLabelStyle={{ color: (Amount === '50' || Amount === '50.00') ? COLOR.PALETTE.white : loginStore.getAccountColor }}
+							buttonLabelStyle={{ color: (Number(Amount) === 50) ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => setAmount('50.00')}
 							buttonLabel={'C$ 50'}
 						/>
 						<Button
 							buttonStyle={
-								(Amount === '100' || Amount === '100.00')
+								(Number(Amount) === 100)
 									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
 									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
-							buttonLabelStyle={{ color: (Amount === '100' || Amount === '100.00') ? COLOR.PALETTE.white : loginStore.getAccountColor }}
+							buttonLabelStyle={{ color: (Number(Amount) === 100) ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => setAmount('100.00')}
 							buttonLabel={'C$ 100'}
 						/>
 						<Button
 							buttonStyle={
-								(Amount === '200' || Amount === '200.00')
+								(Number(Amount) === 200)
 									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
 									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
-							buttonLabelStyle={(Amount === '200' || Amount === '200.00') ? { color: COLOR.PALETTE.white } : { color: loginStore.getAccountColor }}
+							buttonLabelStyle={(Number(Amount) === 200) ? { color: COLOR.PALETTE.white } : { color: loginStore.getAccountColor }}
 							onPress={() => setAmount('200.00')}
 							buttonLabel={'C$ 200'}
 						/>
 					</View>
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 						<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
 					</View>
-					<View style={[styles.INPUT_STYLE_CONTAINER]}>
+					<View style={styles.INPUT_STYLE_CONTAINER}>
 						<TextInput
 							style={styles.INPUT_STYLE}
 							keyboardType='numeric'
 							onChangeText={t => {
-								const temp = t.replace('C', '').replace('$', '').replace(' ', '')
-								setAmount(temp.replace(",", "."))
-							}}
-							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
+								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
+								temp = temp.replace(",", ".")
+								setAmount(temp)
+							  }}
+							  value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
 							placeholder={`Amount`}
 							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 						/>
 					</View>
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.COSTS_LABEL}>Total costs</Text>
 						<Text style={styles.COSTS_LABEL}>{`$ ${Amount}`}</Text>
 					</View>
-
 				</View>
 				{ConfirmModal()}
 				{bankModal()}
 			</KeyboardAvoidingView>
 			<Button
-				buttonStyle={{
-					backgroundColor: loginStore.getAccountColor,
-					bottom: 5,
-				}}
+				buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor, bottom: 5 }}
+				disabled={ButtonDisabled}
 				onPress={() => setShowModal(true)}
 				buttonLabel={'Load up'}
 			/>

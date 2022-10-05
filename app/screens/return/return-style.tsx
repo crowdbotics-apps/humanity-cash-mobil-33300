@@ -78,12 +78,12 @@ export default StyleSheet.create({
   },
   HEADER: {
     flexDirection: 'row',
+    marginBottom: 10,
     marginLeft: 10,
     marginTop: 10,
   },
   HEADER_ACTIONS: {
     flexDirection: 'row',
-    height: 50,
     justifyContent: 'space-between',
   },
   INPUT_LABEL_ERROR: {
@@ -243,7 +243,6 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
     justifyContent: 'space-between',
-    minHeight: METRICS.screenHeight,
   },
   ROOT_MODAL: {
     alignItems: 'center',
@@ -266,6 +265,7 @@ export default StyleSheet.create({
   },
   SEARCH_INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.pureblack,
     height: 55,
     width: METRICS.screenWidth * 0.65,
   },

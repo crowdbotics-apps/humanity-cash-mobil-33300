@@ -46,7 +46,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   const RenderBanks = () => (
     <View style={styles.CONTAINER}>
-      <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home", {})}>
+      <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home")}>
         <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
         <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
       </TouchableOpacity>
@@ -126,7 +126,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           placeholder={"*********"}
           placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         />
-        <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+        <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
           <Ionicons name="eye" color={"#39534440"} size={20} />
         </TouchableOpacity>
       </View>
@@ -148,7 +148,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           notifyMessage(msg)
         } else if (result.kind === "unauthorized") {
           loginStore.reset()
-          navigation.navigate("login", {})
+          navigation.navigate("login")
         } else {
           loginStore.reset()
           notifyMessage(null)
@@ -156,17 +156,19 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
       })
   }
 
-  function getIavToken() {
-    // TODO: change user_type argument with the one selected at that moment, consumer o merchant
-    loginStore.environment.api.getDwollaToken({ "user_type": "consumer" })
+  const getIavToken = () => {
+    loginStore.environment.api.getDwollaToken({ "user_type": loginStore.getSelectedAccount })
       .then((result: any) => {
+        console.log(' getIavToken ===>>>  ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             setIavToken(result.response.iav_token)
           })
+          bankLoginDwolla();
         } else if (result.kind === "bad-data") {
           const key = Object.keys(result?.errors)[0]
-          const msg = `${key}: ${result?.errors?.[key][0]}`
+          const msg = `${key}: ${result?.errors?.[key]}`
+          console.log(' aca => ', key, msg)
           notifyMessage(msg)
         } else {
           loginStore.reset()
@@ -181,7 +183,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   function getDwollaIav() {
     getIavToken();
-    bankLoginDwolla();
   }
 
   const jsCode = `

@@ -23,7 +23,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import styles from './setup-profile-style';
 import { useNavigation } from "@react-navigation/native"
 import { launchImageLibrary } from 'react-native-image-picker';
-import { IMAGES, METRICS } from "../../theme"
+import { IMAGES, METRICS, COLOR } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
 import { getErrorMessage, getImageFileFromSource, notifyMessage } from "../../utils/helpers"
@@ -144,13 +144,15 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const fetchCity = (data?: string) => {
 		loginStore.environment.api.getCities({ value: data })
 			.then((result: any) => {
-				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
+				console.log(' fetchCity ==>> ', JSON.stringify(result, null, 2))
+				result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
 			})
 	}
 	const fetchState = (data?: string) => {
 		loginStore.environment.api.getStates({ value: data })
 			.then((result: any) => {
-				setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+				console.log(' fetchState ==>> ', JSON.stringify(result, null, 2))
+				result?.data?.results && setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
 			})
 	}
 
@@ -174,7 +176,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				notifyMessage(getErrorMessage(errors))
 			} else if (result.kind === "unauthorized") {
 				loginStore.reset()
-				navigation.navigate("login", {})
+				navigation.navigate("login")
 			} else {
 				notifyMessage(null)
 			}
@@ -183,7 +185,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			notifyMessage(null)
 		})
 	}
-
 	const setupConsumerDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupConsumerSecondStep({
@@ -199,13 +200,12 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				notifyMessage(msg)
 			} else if (result.kind === "unauthorized") {
 				loginStore.reset()
-				navigation.navigate("login", {})
+				navigation.navigate("login")
 			} else {
 				notifyMessage(null)
 			}
 		})
 	}
-
 	const setupMerchant = () => {
 		setLoading(true)
 		const profPic = {
@@ -241,13 +241,12 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					notifyMessage(null)
 				}
 			})
 	}
-
 	const setupMerchantDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
@@ -261,7 +260,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					notifyMessage(null)
 				}
@@ -286,6 +285,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
+					loginStore.setSelectedAccount('merchant')
 					setShowThankyouModal(true)
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -293,12 +293,13 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					notifyMessage(null)
 				}
 			})
 	}
+
 	const renderStep = () => {
 		let render
 		switch (Step) {
@@ -327,19 +328,23 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				break;
 			default:
 				render = renderSelectBusinessType()
+				break;
 		}
 		return render
 	}
+
 	const renderSelectBusinessType = () => (
 		<View style={styles.STEP_CONTAINER}>
 			<Text style={styles.STEP_TITLE}>Hi</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>Select the profile you’d like to create. If you’re a business owner, you can automatically set up a personal profile. You can have one account login with two profiles.</Text>
-			{profileTypes.map((t, key) => (
-				<TouchableOpacity key={key + '_ptype'} style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(t.value), setStep(t.first_step)]}>
-					<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{t.label}</Text>
-				</TouchableOpacity>
-			))}
+			{profileTypes.map((t, key) => {
+				return (loginStore.ProfileDataBusiness.business_name !== '' && t.value === 'business_personal')
+					? null
+					: <TouchableOpacity key={key + '_ptype'} style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(t.value), setStep(t.first_step)]}>
+						<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{t.label}</Text>
+					</TouchableOpacity>
+			})}
 		</View>
 	)
 	const renderPicUsername = () => (
@@ -742,7 +747,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text>
 						<TouchableOpacity
 							style={styles.MODAL_BUTTON}
-							onPress={() => [navigation.navigate("splash", {}), loginStore.setApiToken(null), setShowConfirmLogoutModal(false)]}>
+							onPress={() => [navigation.navigate("splash"), loginStore.setApiToken(null), setShowConfirmLogoutModal(false)]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
 					</View>
@@ -757,7 +762,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Thank you! Welcome to the Currents App. Now it is time to add some Currents to your wallet!</Text>
 				<View style={styles.CONTAINER}>
-					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home", {})]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
+					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
 					<Button
 						// onPress={() => nextButtonHandler()}
 						buttonLabel={'Link my personal bank account'}
@@ -772,9 +777,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		switch (Step) {
 			case 'profile_type':
 				if (loginStore.isLoggedIn) {
-					navigation.navigate("home", {})
+					navigation.navigate("home")
 				} else {
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				}
 				break;
 			case 'pic_username':
@@ -849,7 +854,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				break;
 			case 'business_addresss':
 				setupMerchantDetailComplete()
-
 				break;
 
 		}
@@ -898,24 +902,24 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
+			<View style={styles.HEADER_ACTIONS}>
+				{Step !== 'profile_type'
+					? <TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
+						<Icon name={"arrow-back"} size={23} color={'black'} />
+						<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+					</TouchableOpacity>
+					: <View style={styles.BACK_BUTON_CONTAINER} />
+				}
+				<TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
+					<Text style={styles.BACK_BUTON_LABEL}>{`Log out`}</Text>
+				</TouchableOpacity>
+			</View>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
-							<View style={styles.HEADER_ACTIONS}>
-								<TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
-									<Icon name={"arrow-back"} size={23} color={'black'} />
-									<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
-									<Text style={styles.BACK_BUTON_LABEL}>{`Log out`}</Text>
-								</TouchableOpacity>
-							</View>
 							{renderStep()}
 						</View>
 					</View>

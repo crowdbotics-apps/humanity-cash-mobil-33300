@@ -36,7 +36,7 @@ export const SplashScreen = observer(function SplashScreen() {
     setupDatosIniciales()
     setTimeout(function () {
       if (step !== '' && step !== null) {
-        navigation.navigate(step, {})
+        navigation.navigate(step)
       }
       if (loginStore.isLoggedIn) {
         navigation.dispatch(
@@ -93,7 +93,7 @@ export const SplashScreen = observer(function SplashScreen() {
               backgroundColor: COLOR.PALETTE.blue,
               marginBottom: 10
             }}
-            onPress={() => navigation.navigate("login", {})}
+            onPress={() => navigation.navigate("login")}
             buttonLabel={'Log in'}
           />
           <Button
@@ -101,7 +101,7 @@ export const SplashScreen = observer(function SplashScreen() {
               backgroundColor: COLOR.PALETTE.white,
             }}
             buttonLabelStyle={{ color: COLOR.PALETTE.black }}
-            onPress={() => navigation.navigate("signup", {})}
+            onPress={() => navigation.navigate("signup")}
             buttonLabel={'Create an account'}
           />
         </View>
