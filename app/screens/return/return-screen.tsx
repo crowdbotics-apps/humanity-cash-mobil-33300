@@ -66,56 +66,56 @@ export const ReturnScreen = observer(function ReturnScreen() {
 		<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
 			<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
 			<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
-
 		</TouchableOpacity>
-		<Image
-			resizeMode="contain"
-			source={IMAGES.logoFull}
-			style={styles.LOGO_STYLE}
-		/>
-		<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>C$ 0</Text>
-		<View style={styles.LINE} />
-		<View style={styles.SEARCH_INPUT_CONTAINER}>
-			<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
-				<Icon name={"search"} size={25} color={COLOR.PALETTE.black} />
-				<TextInput
-					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-					style={styles.SEARCH_INPUT_STYLE}
-					onChangeText={t => setSearch(t)}
-					value={Search}
-					placeholder={`Search`}
-				/>
-			</View>
-			<TouchableOpacity style={styles.SEARCH_INPUT_ADJUSTMENTS} onPress={() => setShowFilter(!ShowFilter)}>
-				<Image source={IMAGES.shortIcon} resizeMode='contain' style={{ width: 20, height: 20 }} />
-			</TouchableOpacity>
-		</View>
-		{ShowFilter && Filters()}
-		{Object.keys(returns).map((r, key) => ([
-			<Text key={key + '_label'} style={styles.RETURNS_LABEL}>TODAY</Text>,
-			returns[r].map((i, key2) => (
-				<View key={key2 + '_values'} style={styles.RETURN_ITEM}>
-					<View style={{ marginLeft: 15 }}>
-						<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
-						<Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text>
-					</View>
-					<View style={styles.CONTAINER}>
-						{i.credit
-							? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
-							: <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
-						}
-
-					</View>
+		<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+			<Image
+				resizeMode="contain"
+				source={IMAGES.logoFull}
+				style={styles.LOGO_STYLE}
+			/>
+			<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>C$ 0</Text>
+			<View style={styles.LINE} />
+			<View style={styles.SEARCH_INPUT_CONTAINER}>
+				<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
+					<Icon name={"search"} size={25} color={COLOR.PALETTE.black} />
+					<TextInput
+						placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+						style={styles.SEARCH_INPUT_STYLE}
+						onChangeText={t => setSearch(t)}
+						value={Search}
+						placeholder={`Search`}
+					/>
 				</View>
-			))
-		]))}
-		<View style={{ height: 100 }} />
+				<TouchableOpacity style={styles.SEARCH_INPUT_ADJUSTMENTS} onPress={() => setShowFilter(!ShowFilter)}>
+					<Image source={IMAGES.shortIcon} resizeMode='contain' style={{ width: 20, height: 20 }} />
+				</TouchableOpacity>
+			</View>
+			{ShowFilter && Filters()}
+			{Object.keys(returns).map((r, key) => ([
+				<Text key={key + '_label'} style={styles.RETURNS_LABEL}>TODAY</Text>,
+				returns[r].map((i, key2) => (
+					<View key={key2 + '_values'} style={styles.RETURN_ITEM}>
+						<View style={{ marginLeft: 15 }}>
+							<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
+							<Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text>
+						</View>
+						<View style={styles.CONTAINER}>
+							{i.credit
+								? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
+								: <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
+							}
+
+						</View>
+					</View>
+				))
+			]))}
+			<View style={{ height: 100 }} />
+		</ScrollView>
 	</View>
 
 	useEffect(() => {
 		if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
 		else setShowBankModal(false)
-
 	}, [])
 
 	const bankModal = () => <Modal visible={ShowBankModal} transparent>
@@ -128,7 +128,7 @@ export const ReturnScreen = observer(function ReturnScreen() {
 				<View style={styles.MODAL_CONTENT}>
 					<Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
 					<Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}>
 						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
 					</TouchableOpacity>
 				</View>
@@ -136,18 +136,9 @@ export const ReturnScreen = observer(function ReturnScreen() {
 			<View />
 		</View>
 	</Modal>
-
 	const ScanModal = () => (
 		<Modal visible={ShowScanModal}>
-			<View style={[
-				styles.ROOT_MODAL,
-				{
-					backgroundColor:
-						loginStore.getSelectedAccount === 'merchant'
-							? 'rgba(157, 165, 111, 0.50)'
-							: 'rgba(59, 136, 182, 0.50)'
-				}
-			]}>
+			<View style={[styles.ROOT_MODAL, { backgroundColor: loginStore.getSelectedAccount === 'merchant' ? 'rgba(157, 165, 111, 0.50)' : 'rgba(59, 136, 182, 0.50)' }]}>
 				<TouchableOpacity onPress={() => [setShowScanModal(false), setShowIndex(true)]} style={styles.CLOSE_MODAL_BUTTON}>
 					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Close `}</Text>
 					<Icon name={"close"} size={20} color={loginStore.getAccountColor} />
@@ -205,7 +196,6 @@ Thank you
 		<Text style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>
 		<ActivityIndicator style={styles.ACTIVITY} size="large" color={'black'} />
 	</View>
-
 	const SendReturn = () => <View style={styles.CONTAINER}>
 		<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Send return</Text>
 		<View style={styles.LINE} />
@@ -246,10 +236,7 @@ Thank you
 			/>
 		</View>
 		<Button
-			buttonStyle={{
-				marginTop: 20,
-				backgroundColor: (AmountError || Loading) ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor
-			}}
+			buttonStyle={{ marginTop: 20, backgroundColor: (AmountError || Loading) ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
 			onPress={() => {
 				setLoading(true)
 				setSendingReturn(false)
@@ -262,7 +249,6 @@ Thank you
 			disabled={AmountError || Loading}
 			loading={Loading}
 		/>
-
 	</View>
 
 	return (
@@ -272,45 +258,34 @@ Thank you
 			statusBar={'dark-content'}
 			unsafe={true}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
-				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-					<View style={styles.ROOT_CONTAINER}>
-						<View style={styles.CONTAINER}>
-							{(!ShowScanModal && !Loading && !Finish && !ShowIndex) &&
-								<View style={styles.HEADER_ACTIONS}>
-									<TouchableOpacity
-										onPress={() => [setShowIndex(true)]}
-										style={styles.BACK_BUTON_CONTAINER}
-									>
-										<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
-										<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Back`}</Text>
-									</TouchableOpacity>
-									<TouchableOpacity style={styles.BACK_BUTON_CONTAINER}>
-										<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Close `}</Text>
-										<Icon name={"close"} size={23} color={loginStore.getAccountColor} />
-									</TouchableOpacity>
-								</View>
-							}
-							{ShowIndex && ReturnIndex()}
-							{SendingReturn && SendReturn()}
-							{Loading && LoadingReturn()}
-							{Finish && FinishReturn()}
-						</View>
+			{(!ShowScanModal && !Loading && !Finish && !ShowIndex) &&
+				<View style={styles.HEADER_ACTIONS}>
+					<TouchableOpacity
+						onPress={() => [setShowIndex(true)]}
+						style={styles.BACK_BUTON_CONTAINER}
+					>
+						<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
+						<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Back`}</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.BACK_BUTON_CONTAINER}>
+						<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Close `}</Text>
+						<Icon name={"close"} size={23} color={loginStore.getAccountColor} />
+					</TouchableOpacity>
+				</View>
+			}
+				<View style={styles.ROOT_CONTAINER}>
+					<View style={styles.CONTAINER}>
+						{ShowIndex && ReturnIndex()}
+						{SendingReturn && SendReturn()}
+						{Loading && LoadingReturn()}
+						{Finish && FinishReturn()}
 					</View>
-					{ScanModal()}
-				</ScrollView>
+				</View>
+				{ScanModal()}
 				{bankModal()}
 				{ShowIndex &&
 					<Button
-						buttonStyle={{
-							backgroundColor: loginStore.getAccountColor,
-							// bottom: 125,
-							// position: 'absolute'
-						}}
+						buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
 						buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
 						onPress={() => [setShowIndex(false), setShowScanModal(true)]}
 						buttonLabel={'Receive or Scan to pay'}
@@ -318,7 +293,6 @@ Thank you
 						hideButton
 					/>
 				}
-			</KeyboardAvoidingView>
 		</Screen>
 	)
 })

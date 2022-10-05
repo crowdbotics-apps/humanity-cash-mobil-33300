@@ -15,6 +15,7 @@ export default StyleSheet.create({
   HEADER: {
     alignItems: 'center',
     flexDirection: 'row',
+    marginBottom: 10,
     marginLeft: 10,
     marginTop: 10
   },
@@ -44,7 +45,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.strongGreen,
     height: 1,
-    marginVertical: 10,
+    marginVertical: 15,
     width: METRICS.screenWidth * 0.95
   },
   PASS_INPUT_STYLE: {
@@ -54,13 +55,12 @@ export default StyleSheet.create({
   },
   ROOT: {
 		backgroundColor: COLOR.PALETTE.white,
+    flex: 1,
     justifyContent: 'space-between'
 	},
 	ROOT_CONTAINER: {
-    // flex: 1,
     backgroundColor: COLOR.PALETTE.white,
     justifyContent: 'space-between',
-    // minHeight: METRICS.screenHeight,
   },
 	SHOW_PASS_CONTAINER: {
     alignItems: 'center',
@@ -82,7 +82,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     height: 80,
     justifyContent: 'space-between',
-    marginBottom: 25,
     marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },

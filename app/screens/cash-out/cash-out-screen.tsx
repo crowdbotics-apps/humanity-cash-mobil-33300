@@ -55,7 +55,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 									setShowModal(false),
 									setTransactionFinished(false),
 									setAmount(''),
-									navigation.navigate("home", {})
+									navigation.navigate("home")
 								]}
 								buttonLabel={'Go back to home'}
 							/>
@@ -117,7 +117,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
         <View style={styles.MODAL_CONTENT}>
           <Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
           <Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}>
             <Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
           </TouchableOpacity>
         </View>
@@ -139,7 +139,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 			>
 				<View style={styles.HEADER_ACTIONS}>
 					{!ShowModal &&
-						<TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
+						<TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
 							<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
 						</TouchableOpacity>

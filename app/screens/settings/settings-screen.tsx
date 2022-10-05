@@ -168,10 +168,10 @@ you back soon. `}
     >
       <View style={styles.ROOT}>
         <View style={styles.CONTAINER}>
-          <TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
-            <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-            <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
-          </TouchableOpacity>
+        <TouchableOpacity style={styles.BACK_BUTON_CONTAINER} onPress={() => navigation.toggleDrawer()}>
+				<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+				<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
+			</TouchableOpacity>
           <View style={styles.STEP_CONTAINER}>
             <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Settings</Text>
             <Text style={styles.LINE} />
@@ -179,7 +179,7 @@ you back soon. `}
             <Button
               buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
-              onPress={() => navigation.navigate("myProfile", {})}
+              onPress={() => navigation.navigate("myProfile")}
               buttonLabel={'My profile'}
             />
             <Button
@@ -197,13 +197,13 @@ you back soon. `}
             <Button
               buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
-              onPress={() => navigation.navigate("legal", {})}
+              onPress={() => navigation.navigate("legal")}
               buttonLabel={'Legal'}
             />
             <Button
               buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
-              onPress={() => navigation.navigate("security", {})}
+              onPress={() => navigation.navigate("security")}
               buttonLabel={'Security'}
             />
           </View>

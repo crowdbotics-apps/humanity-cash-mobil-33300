@@ -13,37 +13,29 @@ import Entypo from "react-native-vector-icons/Entypo"
 export const LegalScreen = observer(function LegalScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
-	const { loginStore } = rootStore
+  const { loginStore } = rootStore
 
   const [ShowTerms, setShowTerms] = useState(false)
   const [ShowPolicy, setShowPolicy] = useState(false)
 
   return (
     <Screen
-      // preset='scroll'
       preset="fixed"
       statusBar={"dark-content"}
       style={styles.ROOT}
       showHeader
     >
-      <KeyboardAvoidingView
-        enabled
-        // behavior={Platform.OS === 'ios' ? 'padding' : null}
-        style={styles.ROOT}
-      >
+      <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings")}>
+        <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+        <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+      </TouchableOpacity>
+      <KeyboardAvoidingView enabled style={styles.ROOT}>
         <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
           <View style={styles.ROOT_CONTAINER}>
             <View style={styles.CONTAINER}>
 
-              <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings", {})}>
-                <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-                <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-
-              </TouchableOpacity>
-
-              <Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Legal</Text>
+              <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Legal</Text>
               <View style={styles.LINE} />
-
               {!ShowTerms ? (
                 <TouchableOpacity
                   onPress={() => setShowTerms(!ShowTerms)}
@@ -128,8 +120,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
                   </Text>
                 </View>
               )}
-
-
             </View>
           </View>
         </ScrollView>

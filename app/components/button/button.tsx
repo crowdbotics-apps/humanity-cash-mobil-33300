@@ -29,29 +29,29 @@ export function Button(props: ButtonProps) {
   const navigation = useNavigation()
 
   const BottomMenu = () => <View key={"key-for-array"} style={styles.ICONS_CONTAINER}>
-    <TouchableOpacity onPress={() => navigation.navigate("home", {})}>
+    <TouchableOpacity onPress={() => navigation.navigate("home")}>
       <Image
         source={IMAGES.menu_home_inactive}
         style={styles.BOTTON_MENU_ICON_HOME}
       />
     </TouchableOpacity>
-    <TouchableOpacity onPress={() => navigation.navigate("loadWallet", {})}>
+    <TouchableOpacity onPress={() => navigation.navigate("loadWallet")}>
       <Image
         source={IMAGES.menu_load_wallet_inactive}
         style={styles.BOTTON_MENU_ICON_WALLET}
       />
     </TouchableOpacity>
-    <TouchableOpacity style={props.accountType === 'merchant' ? styles.QR_BUTTON_MERCHANT : styles.QR_BUTTON} onPress={() => navigation.navigate("qr", {})}>
+    <TouchableOpacity style={props.accountType === 'merchant' ? styles.QR_BUTTON_MERCHANT : styles.QR_BUTTON} onPress={() => navigation.navigate("qr")}>
       <Icon key={'button_adornment'} name={"qr-code-2"} size={35} color={'white'} style={{ marginBottom: 3 }} />
     </TouchableOpacity>
-    <TouchableOpacity onPress={() => navigation.navigate("whereSpend", {})}>
+    <TouchableOpacity onPress={() => navigation.navigate("whereSpend")}>
       <Image
         resizeMode="contain"
         source={IMAGES.menu_where_spend_inactive}
         style={styles.BOTTON_MENU_ICON_SPEND}
       />
     </TouchableOpacity>
-    <TouchableOpacity onPress={() => navigation.navigate("contact", {})}>
+    <TouchableOpacity onPress={() => navigation.navigate("contact")}>
       <Image
         source={IMAGES.menu_address_inactive}
         style={styles.BOTTON_MENU_ICON_ADDRESS}

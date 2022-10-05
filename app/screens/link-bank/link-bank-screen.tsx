@@ -46,7 +46,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   const RenderBanks = () => (
     <View style={styles.CONTAINER}>
-      <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home", {})}>
+      <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home")}>
         <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
         <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
       </TouchableOpacity>
@@ -148,7 +148,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           notifyMessage(msg)
         } else if (result.kind === "unauthorized") {
           loginStore.reset()
-          navigation.navigate("login", {})
+          navigation.navigate("login")
         } else {
           loginStore.reset()
           notifyMessage(null)
@@ -159,6 +159,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const getIavToken = () => {
     loginStore.environment.api.getDwollaToken({ "user_type": loginStore.getSelectedAccount })
       .then((result: any) => {
+        console.log(' getIavToken ===>>>  ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             setIavToken(result.response.iav_token)

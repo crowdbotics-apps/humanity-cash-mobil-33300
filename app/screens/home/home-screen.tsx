@@ -27,12 +27,12 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getProfileConsumer()
 			.then((result: any) => {
-				console.log(' getProfileConsumer ===>>> ', JSON.stringify(result, null, 2))
+				console.log(' getProfileConsumer ===>>>  ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
 						// loginStore.setApiToken(result.response.access_token)
-						// navigation.navigate("home", {})
+						// navigation.navigate("home")
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -40,7 +40,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					//   loginStore.reset()
 					notifyMessage(null)
@@ -56,7 +56,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
 						// loginStore.setApiToken(result.response.access_token)
-						// navigation.navigate("home", {})
+						// navigation.navigate("home")
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -64,7 +64,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					//   loginStore.reset()
 					notifyMessage(null)
@@ -86,7 +86,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					//   loginStore.reset()
 					notifyMessage(null)
@@ -107,7 +107,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					//   loginStore.reset()
 					notifyMessage(null)
@@ -116,7 +116,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	}
 
 	useEffect(() => {
-		if (loginStore.ProfileData.first_name === '') navigation.navigate("setupProfile", {})
+		if (loginStore.ProfileData.first_name === '') navigation.navigate("setupProfile")
 		getEvents()
 		getBalanceData()
 		getProfileConsumer()
@@ -153,7 +153,7 @@ export const HomeScreen = observer(function HomeScreen() {
 									</Text>
 								</Text>
 							</View>
-							<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => [setShowBankModal(false), navigation.navigate("linkBank", {})]}>
+							<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => [setShowBankModal(false), navigation.navigate("linkBank")]}>
 								<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
 							</TouchableOpacity>
 						</View>
@@ -216,7 +216,7 @@ export const HomeScreen = observer(function HomeScreen() {
 							/>
 							<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>0</Text>
 						</View>
-						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet", {})}> */}
+						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet")}> */}
 						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => setShowBankModal(true)} >
 							<Text style={styles.LOAD_WALLET_LABEL}>Load Wallet</Text>
 						</TouchableOpacity> */}
@@ -238,7 +238,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity style={styles.CASHIER_BUTTON_BIG} onPress={() => navigation.navigate("qr", {})}>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_BIG} onPress={() => navigation.navigate("qr")}>
 					<Image
 						resizeMode="contain"
 						source={IMAGES.currentDollarIconCashier}
@@ -246,7 +246,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					/>
 					<Text style={styles.CASHIER_BUTTON_LABEL}>Receive payment</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => navigation.navigate("cashierTransaction", {})}>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => navigation.navigate("cashierTransaction")}>
 					<Image
 						resizeMode="contain"
 						source={IMAGES.transactions_cashier}
@@ -254,7 +254,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					/>
 					<Text style={styles.CASHIER_BUTTON_LABEL}>Transactions</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => navigation.navigate("qr", {})}>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => navigation.navigate("qr")}>
 					<Image
 						resizeMode="contain"
 						source={IMAGES.return_cashier}
@@ -262,7 +262,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					/>
 					<Text style={styles.CASHIER_BUTTON_LABEL}>Make a return</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => navigation.navigate("makeReport", {})}>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => navigation.navigate("makeReport")}>
 					<Image
 						resizeMode="contain"
 						source={IMAGES.report_cashier}
@@ -274,7 +274,7 @@ export const HomeScreen = observer(function HomeScreen() {
 				<View style={{ height: 200 }} />
 			</View>
 			<View style={styles.STEP_CONTAINER}>
-				<TouchableOpacity onPress={() => navigation.navigate("helpContact", {})} style={styles.NEED_HELP_CONTAINER}>
+				<TouchableOpacity onPress={() => navigation.navigate("helpContact")} style={styles.NEED_HELP_CONTAINER}>
 					<Text style={styles.NEED_HELP_LINK}>Need help?</Text>
 				</TouchableOpacity>
 			</View>
@@ -303,7 +303,7 @@ export const HomeScreen = observer(function HomeScreen() {
 								backgroundColor: loginStore.getAccountColor,
 							}}
 							buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
-							onPress={() => navigation.navigate("return", {})}
+							onPress={() => navigation.navigate("return")}
 							buttonLabel={'Scan to Pay or Receive'}
 							showBottonMenu
 							hideButton

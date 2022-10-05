@@ -89,13 +89,13 @@ export default StyleSheet.create({
   },
   ROOT: {
     backgroundColor: COLOR.PALETTE.white,
+    flex: 1
   },
   ROOT_CONTAINER: {
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
     justifyContent: 'space-between',
     marginBottom: 80,
-    minHeight: METRICS.screenHeight
   },
   SEARCH_INPUT_ADJUSTMENTS: {
     alignItems: 'center',

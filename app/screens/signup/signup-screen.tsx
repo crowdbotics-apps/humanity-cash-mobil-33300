@@ -46,7 +46,7 @@ export const SignupScreen = observer(function SignupScreen() {
   const [ShowTerms, setShowTerms] = useState(false)
   const [ShowPolicy, setShowPolicy] = useState(false)
 
-  let CodeInp1, CodeInp2, CodeInp3, CodeInp4, CodeInp5, CodeInp6
+  let CodeInp2, CodeInp3, CodeInp4, CodeInp5, CodeInp6
   const [Code1, setCode1] = useState("")
   const [Code2, setCode2] = useState("")
   const [Code3, setCode3] = useState("")
@@ -105,7 +105,6 @@ export const SignupScreen = observer(function SignupScreen() {
         Alert.alert('Authentication Failed');
       });
   }
-
   const validateEmail = (email, agree) => {
     const valid = String(email)
       .toLowerCase()
@@ -120,7 +119,6 @@ export const SignupScreen = observer(function SignupScreen() {
       return false
     }
   }
-
   const register = () => {
     setLoading(true)
     const phoneNumber = Phone !== '' ? `+1${Phone}` : ''
@@ -151,14 +149,12 @@ export const SignupScreen = observer(function SignupScreen() {
       }
     })
   }
-
   const sendVerificationCode = () => {
     setLoading(true)
     loginStore.environment.api.sendVerificaitonCode().then(() => {
       setLoading(false)
     })
   }
-
   const verifyUserAuthenticationCode = () => {
     const code = Code1 + Code2 + Code3 + Code4 + Code5 + Code6
     setLoading(true)
@@ -182,7 +178,6 @@ export const SignupScreen = observer(function SignupScreen() {
         }
       })
   }
-
   const setPassword = () => {
     setLoading(true)
     loginStore.environment.api
@@ -195,7 +190,7 @@ export const SignupScreen = observer(function SignupScreen() {
             // loginStore.setUser(result.response.user)
             // loginStore.setApiToken(result.response.access_token)
 
-            navigation.navigate("setupProfile", {})
+            navigation.navigate("setupProfile")
             resetData()
           })
         } else if (result.kind === "bad-data") {
@@ -206,11 +201,9 @@ export const SignupScreen = observer(function SignupScreen() {
         }
       })
   }
-
   const resetData = () => {
     loginStore.setStep('')
     loginStore.setSignupData({})
-
     setStep('email')
     setEmail('')
     setPhone('')
@@ -229,7 +222,6 @@ export const SignupScreen = observer(function SignupScreen() {
         Hello! Tell us how to reach you. We will send a verification code to
         your email.
       </Text>
-
       <TextInputComponent
         label='EMAIL ADDRESS'
         errorLabel={EmailError
@@ -245,12 +237,6 @@ export const SignupScreen = observer(function SignupScreen() {
         value={Email}
         placeholder={"myname@mail.com"}
       />
-      {/*<TextInputComponent*/}
-      {/*  label='PHONE NUMBER'*/}
-      {/*  onChangeText={t => setPhone(t)}*/}
-      {/*  value={Phone}*/}
-      {/*  placeholder={"(555) 555-1234"}*/}
-      {/*/>*/}
       <View style={styles.LABEL_CONTAINER}>
         <Text style={styles.LABEL}>PHONE NUMBER</Text>
         {(PhoneNumberErrorMessage !== '') &&
@@ -369,16 +355,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const VerifyEmailStep = () => (
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Verify your email</Text>
-      <Text
-        style={styles.STEP_SUB_TITLE}
-      >{`We have sent an email with a verification code to ${Email}. Please check your spam if you haven’t received it.`}</Text>
+      <Text style={styles.STEP_SUB_TITLE}>
+        {`We have sent an email with a verification code to ${Email}. Please check your spam if you haven’t received it.`}
+      </Text>
       <View style={styles.CODE_CONFIRMATION_CONTAINER}>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
             placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
-            ref={ref => (CodeInp1 = ref)}
             onFocus={() => setCode1("")}
             onChangeText={t => [setCode1(t), CodeInp2.focus()]}
             value={Code1}
@@ -447,9 +432,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Need help?</Text>
       <Text style={styles.STEP_SUB_TITLE}>
-        {
-          "If you need help, have questions, complaints, remarks, or just like to chat, please send an email to berkshares@humanitycash.com"
-        }
+        If you need help, have questions, complaints, remarks, or just like to chat, please send an email to berkshares@humanitycash.com
       </Text>
     </View>
   )
@@ -517,7 +500,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const backButtonHandler = () => {
     switch (Step) {
       case "email":
-        navigation.navigate("splash", {})
+        navigation.navigate("splash")
         break
       case "legal":
         setStep("email")
@@ -545,13 +528,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     switch (Step) {
       case "email":
         register()
-        // loginStore.setStep('signup')
-        // setStep("verify_email")
         break
       case "verify_email":
         if (Code1 && Code2 && Code3 && Code4 && Code5 && Code6) {
           verifyUserAuthenticationCode()
-          // setStep("email_confirmed")
         }
         break
       case "email_confirmed":
@@ -563,12 +543,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         } else {
           setPassword()
           setMatchPassword(true)
-          // pressHandler()
-          // setStep('touch_id')
         }
         break;
       case "touch_id":
-        navigation.navigate("setupProfile", {})
+        navigation.navigate("setupProfile")
         loginStore.setStep('')
         break;
     }
@@ -590,7 +568,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
   return (
     <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>
-      {/* <View style={styles.ROOT}> */}
       <View style={styles.ROOT}>
         <View style={styles.STEP_CONTAINER}>
           <TouchableOpacity
@@ -615,9 +592,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
               checkedColor={COLOR.PALETTE.green}
             />
             <Text style={styles.AGREE_LABEL}>
-              {
-                "By checking this box, you agree to our partner Humanity Cash's "
-              }
+              {"By checking this box, you agree to our partner Humanity Cash's "}
               <Text
                 style={styles.AGREE_LABEL_LINK}
                 onPress={() => setStep("legal")}

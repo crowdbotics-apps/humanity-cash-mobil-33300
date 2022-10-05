@@ -37,7 +37,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 				<View style={styles.MODAL_CONTENT}>
 					<Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
 					<Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}>
 						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
 					</TouchableOpacity>
 				</View>
@@ -45,7 +45,6 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 			<View />
 		</View>
 	</Modal>
-
 	const ConfirmModal = () => (
 		<Modal visible={ShowModal}>
 			{TransactionConfirm
@@ -69,7 +68,7 @@ C$ ${Amount}`}
 									setShowModal(false),
 									setTransactionFinished(false),
 									setAmount('0'),
-									navigation.navigate("home", {})
+									navigation.navigate("home")
 								]}
 								buttonLabel={'Explore your community'}
 							/>
@@ -136,20 +135,15 @@ C$ ${Amount}`}
 			unsafe={true}
 			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<View style={styles.HEADER_ACTIONS}>
 					{!ShowModal &&
-						<TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
+						<TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
 							<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
 						</TouchableOpacity>
 					}
 				</View>
-
 				<View style={styles.STEP_CONTAINER}>
 					<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Load Wallet</Text>
 					<Text style={styles.LINE} />
@@ -157,11 +151,9 @@ C$ ${Amount}`}
 						{`Specify the amount of Currents 
 (C$ 1 = USD 1) you would like to load up. `}
 					</Text>
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 					</View>
-
 					<View style={styles.INPUT_AMOUNT_STYLE_CONTAINER}>
 						<Button
 							buttonStyle={
@@ -194,12 +186,11 @@ C$ ${Amount}`}
 							buttonLabel={'C$ 200'}
 						/>
 					</View>
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 						<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
 					</View>
-					<View style={[styles.INPUT_STYLE_CONTAINER]}>
+					<View style={styles.INPUT_STYLE_CONTAINER}>
 						<TextInput
 							style={styles.INPUT_STYLE}
 							keyboardType='numeric'
@@ -213,21 +204,16 @@ C$ ${Amount}`}
 							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 						/>
 					</View>
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.COSTS_LABEL}>Total costs</Text>
 						<Text style={styles.COSTS_LABEL}>{`$ ${Amount}`}</Text>
 					</View>
-
 				</View>
 				{ConfirmModal()}
 				{bankModal()}
 			</KeyboardAvoidingView>
 			<Button
-				buttonStyle={{
-					backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
-					bottom: 5,
-				}}
+				buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor, bottom: 5 }}
 				disabled={ButtonDisabled}
 				onPress={() => setShowModal(true)}
 				buttonLabel={'Load up'}

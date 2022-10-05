@@ -195,7 +195,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 				<View style={styles.MODAL_CONTENT}>
 					<Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
 					<Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+					<TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}>
 						<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
 					</TouchableOpacity>
 				</View>
@@ -210,35 +210,28 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
-				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-					<View style={styles.ROOT_CONTAINER}>
-						<View style={styles.CONTAINER}>
-
-							<View style={styles.HEADER_ACTIONS}>
+				<View style={styles.HEADER_ACTIONS}>
 								<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
 									<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
 									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
 
 								</TouchableOpacity>
 							</View>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
+				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+					<View style={styles.ROOT_CONTAINER}>
+						<View style={styles.CONTAINER}>
+
+						
 
 							<View style={styles.STEP_CONTAINER}>
 
-								<Text style={styles.STEP_TITLE}>My Transactions</Text>
+								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor}]}>My Transactions</Text>
 								<View style={styles.AMOUNT_CONTAINER}>
 									<View style={{ flexDirection: 'row' }}>
-										<Image
-											resizeMode="contain"
-											source={IMAGES.currentDollarIcon}
-											style={styles.AMOUNT_ICON}
-										/>
-										<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>0</Text>
+										<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>C$ 0</Text>
 									</View>
 
 								</View>
@@ -301,6 +294,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 						buttonLabel={'Receive or Scan to pay'}
 						showBottonMenu
 						hideButton
+						accountType={loginStore.getSelectedAccount}
 					/>
 				}
 			</KeyboardAvoidingView>

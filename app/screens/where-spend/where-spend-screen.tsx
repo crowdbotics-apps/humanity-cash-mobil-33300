@@ -1164,7 +1164,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
         </View>
               </View>
               : <View style={styles.CONTAINER}>
-                <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home", {})}>
+                <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home")}>
                   <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
                   <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
                 </TouchableOpacity>

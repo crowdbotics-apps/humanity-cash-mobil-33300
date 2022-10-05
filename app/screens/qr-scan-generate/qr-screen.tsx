@@ -51,7 +51,7 @@ export const QRScreen = observer(function QRScreen() {
         <View style={styles.MODAL_CONTENT}>
           <Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
           <Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank", {}), setShowBankModal(false)]}>
+          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}>
             <Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
           </TouchableOpacity>
         </View>
@@ -235,7 +235,7 @@ useEffect(() => {
     >
       <View style={[styles.ROOT, { backgroundColor: ScanQR ? '#000' : '#FFF' }]}>
         <View style={styles.CONTAINER}>
-          <TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
+          <TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
             <Icon name={"arrow-back"} size={23} color={!ScanQR ? '#000' : '#FFF'} />
             <Text style={[styles.BACK_BUTON_LABEL, { color: !ScanQR ? '#000' : '#FFF' }]}>{` Home`}</Text>
           </TouchableOpacity>

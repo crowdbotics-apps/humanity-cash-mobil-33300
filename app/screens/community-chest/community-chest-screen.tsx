@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import {useIsFocused, useNavigation} from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text } from "../../components";
 import { Image, TouchableOpacity, View, Modal, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
@@ -8,18 +8,7 @@ import styles from './community-chest-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import moment from 'moment'
 import { useStores } from "../../models";
-import {moneyFormat} from "../../utils/helpers";
-
-const news = [
-	{
-		tag: 'COMMUNITY CHEST',
-		date: 'JULY',
-		title: 'Market Match',
-		body: `Donated Currents from the Community Chest are redistributed to families in need to top up their Supplemental Nutrition Assistance Program (SNAP) benefits when used at the local farmers markets. This enables families to access high quality local food, while providing support to local farmers. 
-
-Let’s do this together!`,
-	}
-]
+import { moneyFormat } from "../../utils/helpers";
 
 export const CommunityChestScreen = observer(function CommunityChestScreen() {
 	const navigation = useNavigation()
@@ -30,15 +19,13 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 
 	const renderProgressData = () => {
 
-
 		const balance = communityChest?.balance || 0
-		const goal =  communityChest?.goal || 1
+		const goal = communityChest?.goal || 1
 		const total = ((balance * 100) / goal)
 		const currentPosition = total / 100
 		const lastPositon = 0.8 - currentPosition
 		return (
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-				{/* LINE */}
 				<View
 					style={[
 						{ backgroundColor: COLOR.PALETTE.black, width: METRICS.screenWidth * currentPosition },
@@ -56,7 +43,9 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 	}
 
 	const getCommunityChestData = () => {
-		loginStore.environment.api.getCommunityChestData()
+		console.log(' aca ')
+		loginStore.environment.api
+			.getCommunityChestData()
 			.then((result: any) => {
 				if (result.kind === 'ok') {
 					setCommunityChest(result.data)
@@ -65,11 +54,8 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 	}
 
 	useEffect(() => {
-		console.log('asd')
-		if(isFocused) {
-			getCommunityChestData()
-		}
-	}, [isFocused])
+		getCommunityChestData()
+	}, [])
 
 	return (
 		<Screen
@@ -77,35 +63,27 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 			statusBar={'dark-content'}
 			unsafe={true}
 			showHeader
+			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
+			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+				<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+				<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
+			</TouchableOpacity>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.STEP_CONTAINER}>
-							<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-								<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
-								<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
-
-							</TouchableOpacity>
-
 							<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Community chest</Text>
 							<View style={styles.LINE} />
 							<Text style={styles.STEP_SUB_TITLE}>Currents is all about supporting the local community. You can choose to round up and donate your change to the community chest, which will be distributed to local projects or neighbors in need.</Text>
-
-							<View  style={styles.NEWS_CONTAINER}>
+							<View style={styles.NEWS_CONTAINER}>
 								<View style={styles.NEWS_HEADER_CONTAINER}>
 									<Text style={styles.NEWS_TAG}>COMMUNITY CHEST</Text>
 									<Text style={styles.NEWS_TAG}>{moment().format('MMMM')}</Text>
 								</View>
 								<Text style={styles.NEWS_TITLE}>Market Match</Text>
 								<Text style={styles.NEWS_BODY}>Donated Currents from the Community Chest are redistributed to families in need to top up their Supplemental Nutrition Assistance Program (SNAP) benefits when used at the local farmers markets. This enables families to access high quality local food, while providing support to local farmers.
-
 									Let’s do this together!</Text>
-
 								<View style={styles.NEWS_INFO_CONTAINER}>
 									<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 										<Text style={styles.INPUT_LABEL_STYLE}>RAISED THIS MONTH</Text>
@@ -117,8 +95,6 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 									</View>
 									{renderProgressData()}
 								</View>
-
-
 								<View style={styles.NEWS_INFO_CONTAINER}>
 									<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 										<Text style={styles.INPUT_LABEL_STYLE}>IMPACT TO DATE</Text>
@@ -134,8 +110,6 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 										/>
 									</View>
 								</View>
-
-
 								<View style={styles.NEWS_INFO_CONTAINER}>
 									<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 										<Text style={styles.NEWS_AMOUNT}>{communityChest?.achievements2}</Text>
@@ -146,19 +120,12 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 										/>
 									</View>
 								</View>
-
 							</View>
-							<View style={{ height: 100 }} />
 						</View>
 					</View>
-
 				</ScrollView>
 				<Button
-					buttonStyle={{
-						backgroundColor: COLOR.PALETTE.blue,
-						top: METRICS.screenHeight - 100,
-						position: 'absolute'
-					}}
+					buttonStyle={{ backgroundColor: loginStore.getAccountColor, marginTop: 10 }}
 					buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
 					onPress={() => navigation.navigate("return", {})}
 					buttonLabel={'Scan to Pay or Receive'}

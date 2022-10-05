@@ -42,6 +42,7 @@ export const LoginScreen = observer(function LoginScreen() {
     loginStore.environment.api
       .login({ email: Username, password: Pass })
       .then((result: any) => {
+        console.log(' login ===>>>  ', JSON.stringify(result, null, 2))
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
@@ -118,7 +119,6 @@ export const LoginScreen = observer(function LoginScreen() {
         } else {
           AccessToken.getCurrentAccessToken().then((data) => {
             loginStore.environment.api.loginFacebook(data.accessToken).then((result) => {
-              console.log(JSON.stringify(result, null, 2))
               setLoading(false)
               if (result.kind === "ok") {
                 runInAction(() => {
@@ -213,7 +213,7 @@ export const LoginScreen = observer(function LoginScreen() {
       showHeader
     >
       <TouchableOpacity
-        onPress={() => navigation.navigate("splash", {})}
+        onPress={() => navigation.navigate("splash")}
         style={styles.BACK_BUTON_CONTAINER}
       >
         <Icon name={"arrow-back"} size={23} color={"#8B9555"} />
