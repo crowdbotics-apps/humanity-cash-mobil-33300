@@ -100,7 +100,7 @@ export const LoginScreen = observer(function LoginScreen() {
         }
       })
     } catch (error) {
-
+      console.log('error ', error)
       setLoading(false)
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // errorMessage("Login con Google cancelado")
