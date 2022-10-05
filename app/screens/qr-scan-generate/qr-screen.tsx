@@ -6,6 +6,7 @@ import {
   Button,
   CustomSwitch,
   Screen,
+  ConnectBankModal
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from './qr-style';
@@ -41,24 +42,12 @@ export const QRScreen = observer(function QRScreen() {
     else setShowBankModal(false)
   }, [])
 
-  const bankModal = () => <Modal visible={ShowBankModal} transparent>
-    <View style={styles.ROOT_MODAL}>
-      <TouchableOpacity onPress={() => setShowBankModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
-        <Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-        <Icon name={"close"} size={20} color={'#8B9555'} />
-      </TouchableOpacity>
-      <View style={styles.MODAL_CONTAINER}>
-        <View style={styles.MODAL_CONTENT}>
-          <Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
-          <Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-          <TouchableOpacity style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]} onPress={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}>
-            <Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View />
-    </View>
-  </Modal>
+  const bankModal = () =>
+    <ConnectBankModal
+      visible={ShowBankModal}
+      buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+      buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+    />
 
   const generateQR = () => {
     setShowQR(true)

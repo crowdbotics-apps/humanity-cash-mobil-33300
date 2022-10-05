@@ -5,11 +5,6 @@ import styles from "./styles"
 import { IMAGES, COLOR } from "../../theme"
 import { useNavigation } from "@react-navigation/native";
 
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import QRCode from 'react-native-qrcode-svg'
-
-import { CustomSwitch } from '../../components'
-
 type ButtonProps = {
   onPress?: any
   buttonStyle?: any
