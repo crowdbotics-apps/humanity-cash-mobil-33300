@@ -1,0 +1,54 @@
+.card{
+    border-radius: 20px;
+    border: var(--headings) solid;
+    border-width: 1px;
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+.cardSubtitle{
+    font-size: 17px;
+    text-transform: uppercase;
+    color: var(--gray)
+}
+.cardTitle{
+    color:var(--dark);
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.title{
+    font-size: 24px;
+    color: var(--blue);
+}
+.money{
+    color:var(--dark);
+    font-weight: bold;
+}
+.moneyInt{
+    font-size: 38px;
+}
+
+.moneyDec{
+    font-size: 28px;
+}
+.button{
+    width: 250px;
+    height: 40px;
+}
+
+.buttonSecondary{
+    width: 250px;
+    margin-bottom: 10px;
+    background: var(--white);
+    color: var(--blue);
+}
+
+.moneyBox{
+    font-size: 28px;
+    color:#272727;
+    text-align: left;
+}
+.labelBox{
+    font-size: 17px;
+    color:var(--gray)
+}

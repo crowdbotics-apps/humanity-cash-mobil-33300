@@ -273,7 +273,24 @@ const LinkedIn = ()=>(
   </svg>
 
 )
+const IncomingIcon = ()=>(
+  <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="54" height="54" rx="15" fill="#D1DB94"/>
+    <path d="M18.9071 30.24L27.0004 38.3333L35.0938 30.24" stroke="#8D955D" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M27 15.6667L27 38.1067" stroke="#8D955D" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+)
+
+const OutgoingIcon = ()=>(
+  <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect opacity="0.2" width="54" height="54" rx="15" fill="#FC7100"/>
+    <path d="M35.0929 23.76L26.9996 15.6667L18.9062 23.76" stroke="#D59B76" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M27 38.3333L27 15.8933" stroke="#D59B76" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+)
 export {
+  IncomingIcon,
+  OutgoingIcon,
   SuccessCheckIcon,
   LinkedIn,
   ArrowBackIcon,

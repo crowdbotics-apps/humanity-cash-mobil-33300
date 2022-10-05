@@ -27,6 +27,7 @@ import BlockTransactionsPage from "./pages/BlockchainTransactions";
 import UsersPage from "./pages/Users";
 import UserDetailPage from "./pages/UserDetail";
 import {SocialMediaPage} from "./pages/SocialMedia/SocialMedia";
+import {AdminWalletControlPage} from "./pages/AdminWalletControl/AdminWalletControl";
 
 
 // @ts-ignore
@@ -100,6 +101,7 @@ function App() {
             <Route element={<ProtectedRoute isAllowed={rootStore && rootStore.userStore.isLoggedIn} />} >
                   <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
                   <Route path={ROUTES.SOCIAL} element={<SocialMediaPage />} />
+                  <Route path={ROUTES.WALLET} element={<AdminWalletControlPage />} />
                   <Route path={ROUTES.EMPLOYEES} element={<EmployeesPage />} />
                   <Route path={ROUTES.USERS} element={<UsersPage />} />
                   <Route path={ROUTES.USERS_DETAIL(":id")} element={<UserDetailPage />} />
