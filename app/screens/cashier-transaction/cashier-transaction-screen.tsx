@@ -57,6 +57,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 			visible={ShowBankModal}
 			buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
 			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
 		/>
 	
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>

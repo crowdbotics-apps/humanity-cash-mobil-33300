@@ -47,6 +47,7 @@ export const QRScreen = observer(function QRScreen() {
       visible={ShowBankModal}
       buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
       buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+		  onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
     />
 
   const generateQR = () => {
