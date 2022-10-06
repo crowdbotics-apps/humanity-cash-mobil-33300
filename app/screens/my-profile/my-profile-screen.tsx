@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Button, Screen, Text, ModalSelector } from "../../components";
+import { Button, Screen, Text, ModalSelector, MaskInput } from "../../components";
 import { TextInput, TouchableOpacity, View, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -11,6 +11,7 @@ import { notifyMessage } from "../../utils/helpers"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
+import {Masks} from "react-native-mask-input";
 
 export const MyProfileScreen = observer(function MyProfileScreen() {
 	const navigation = useNavigation()
@@ -40,7 +41,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
 	const [Citys, setCitys] = React.useState([]);
-	const [City, setCity] = React.useState('');
+	const [City, setCity] = React.useState({});
 	const [States, setStates] = React.useState([]);
 	const [State, setState] = React.useState('');
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
@@ -75,7 +76,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const fetchState = (data?: string) => {
 		loginStore.environment.api.getStates({ value: data })
 			.then((result: any) => {
-				result?.data?.results && setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+				result?.data?.results && setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_name })))
 			})
 	}
 
@@ -264,7 +265,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
 					<TouchableOpacity
-						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, backgroundColor: `${loginStore.getAccountColor}25` }]}
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, backgroundColor: `${loginStore.getAccountColor}25`, justifyContent: 'flex-start' }]}
 						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
 					>
 						<ModalSelector
@@ -318,15 +319,15 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
-			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
-				<TextInput
-					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setPhoneNumber(t)}
-					value={PhoneNumber}
-					placeholder={'Phone number'}
-				/>
-			</View>
+			<MaskInput
+				value={PhoneNumber}
+				mask={Masks.USA_PHONE}
+				name="ssn"
+				placeholder="(XXX)-XXX-XXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setPhoneNumber(unmasked)}
+				style={{...styles.INPUT_STYLE_CONTAINER, backgroundColor: `${loginStore.getAccountColor}25`}}
+			/>
 		</View>
 	)
 
@@ -356,6 +357,9 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			type: BackBusinessImageSource.type,
 			name: BackBusinessImageSource.fileName
 		}
+		const phoneNumber = PhoneNumber !== ''
+			?  PhoneNumber.includes('+1') ? PhoneNumber : `+1${PhoneNumber}`
+			: ''
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
 				.updateProfileMerchant({
@@ -365,12 +369,30 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					business_story: BusinessStory,
 					address_1: Address1,
 					address_2: Address2,
+					city_id: City?.id,
+					state_id: State?.id,
 					zip_code: PostalCode,
-					phone_number: PhoneNumber,
+					phone_number: phoneNumber,
 					website: BusinessWebsite,
 					industry: BusinessCategory
 				})
 				.then((result: any) => {
+					console.log(' updateProfile ===>>> ', JSON.stringify(result, null, 2))
+					console.log(' updateProfile send ===>>> ', JSON.stringify({
+						business_name: BusinessName,
+						profile_picture: profPic,
+						background_picture: backPic,
+						business_story: BusinessStory,
+						address_1: Address1,
+						address_2: Address2,
+						city: City?.id,
+						state: State?.id,
+						zip_code: PostalCode,
+						phone_number: phoneNumber,
+						website: BusinessWebsite,
+						industry: BusinessCategory
+					}, null, 2))
+					
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {

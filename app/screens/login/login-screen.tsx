@@ -42,14 +42,14 @@ export const LoginScreen = observer(function LoginScreen() {
     loginStore.environment.api
       .login({ email: Username, password: Pass })
       .then((result: any) => {
-        console.log(' login ===>>>  ', JSON.stringify(result, null, 2))
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home")
+            if (result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) navigation.navigate("setupProfile")
+            else navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors

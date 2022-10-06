@@ -94,7 +94,6 @@ const AppStackDrawer: React.FC = () => {
       <DrawerNav.Screen name="cashOut" component={CashOutScreen} />
       <DrawerNav.Screen name="contact" component={ContactScreen} />
     </DrawerNav.Navigator>
-
   )
 }
 

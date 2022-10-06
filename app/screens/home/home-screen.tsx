@@ -28,8 +28,6 @@ export const HomeScreen = observer(function HomeScreen() {
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
-						// loginStore.setApiToken(result.response.access_token)
-						// navigation.navigate("home")
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -44,11 +42,11 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
-
 	const getProfileMerchant = () => {
 		loginStore.environment.api
 			.getProfileMerchant()
 			.then((result: any) => {
+				console.log(' getProfileMerchant ===>>>  ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
@@ -63,12 +61,10 @@ export const HomeScreen = observer(function HomeScreen() {
 					loginStore.reset()
 					navigation.navigate("login")
 				} else {
-					//   loginStore.reset()
 					notifyMessage(null)
 				}
 			})
 	}
-
 	const getBalanceData = () => {
 		loginStore.environment.api
 			.getBalanceData()
@@ -85,7 +81,6 @@ export const HomeScreen = observer(function HomeScreen() {
 					loginStore.reset()
 					navigation.navigate("login")
 				} else {
-					//   loginStore.reset()
 					notifyMessage(null)
 				}
 			})
@@ -113,14 +108,13 @@ export const HomeScreen = observer(function HomeScreen() {
 	}
 
 	useEffect(() => {
-		if (loginStore.ProfileData.first_name === '') navigation.navigate("setupProfile")
+		if (loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null) navigation.navigate("setupProfile")
 		getEvents()
 		getBalanceData()
 		getProfileConsumer()
 		getProfileMerchant()
 	}, [])
 
-	
 	function DateFormat(date: string) {
 		const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 		return monthNames[new Date(date).getMonth()]

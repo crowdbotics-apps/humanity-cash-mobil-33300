@@ -69,8 +69,8 @@ export const LoginStoreModel = types
       return self.selected_account || 'consumer'
     },
     get getAccountColor() {
-      // return self.account_base_color || COLOR.PALETTE.blue
-      return COLOR.PALETTE.blue
+      return self.account_base_color || COLOR.PALETTE.blue
+      // return COLOR.PALETTE.blue
     },
     get getBillingData() {
       return {

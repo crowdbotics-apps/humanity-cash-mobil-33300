@@ -101,7 +101,6 @@ export class ApiBase {
             return {kind: "unknown", temporary: true} as T
         }
         const response: ApiResponse<any> = await this.apisauce.get(path, extra_params, axios)
-        console.log(" simple_get => ", JSON.stringify(response, null, 2))
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T
@@ -339,10 +338,5 @@ export class ApiBase {
             return {kind: "bad-data"}
         }
     }
-
-    // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
-    // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
-    // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
-    // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
 
 }
