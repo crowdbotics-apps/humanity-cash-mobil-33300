@@ -114,12 +114,14 @@ class ACHTransaction(models.Model):
     ach_id = models.CharField(max_length=10)
     status = models.CharField(max_length=10, choices=Status.choices)
     type = models.CharField(max_length=255, null=False, blank=True, choices=Type.choices)
-    consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL, related_name='ach_transactions')
-    merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL, related_name='ach_transactions')
+    consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL,
+                                 related_name='ach_transactions', blank=True)
+    merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL,
+                                 related_name='ach_transactions', blank=True)
     confirmed_at = models.DateTimeField(null=True, blank=True)
     amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=14)
     currency = models.CharField(max_length=5, null=True, blank=True)
-    account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True)
+    account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
 
 
     def __str__(self):

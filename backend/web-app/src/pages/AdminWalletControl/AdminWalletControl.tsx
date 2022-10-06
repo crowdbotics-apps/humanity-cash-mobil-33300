@@ -14,11 +14,12 @@ import {
   TwitterIcon
 } from "../../components/icons";
 import styles from "./AdminWalletControl.module.css"
-import {LinkBankAccountModal} from "./modals";
+import {LinkBankAccountModal, SearchUserModal} from "./modals";
 
 export const AdminWalletControlPage: React.FC = observer((props) => {
   const navigate = useNavigate()
   const [ShowLinkBankModal, setShowLinkBankModal] = useState(false)
+  const [ShowUserModal, setShowUserModal] = useState(false)
 
   const MoneyBox = (opts:{kind:"in"|"out", amount:number, label:string})=>{
     const {kind, label, amount}  = opts
@@ -114,7 +115,9 @@ export const AdminWalletControlPage: React.FC = observer((props) => {
                    }}>
                 <AttachmentIcon color={"var(--green)"}/> Link Bank Account</div>
 
-              <Button className={styles.button}>Send /Transfer</Button>
+              <Button
+                onClick={()=>setShowUserModal(true)}
+                className={styles.button}>Send /Transfer</Button>
             </div>
           </div>
           <div className={`flex-row d-flex col-12 mt-2 `}>
@@ -131,6 +134,7 @@ export const AdminWalletControlPage: React.FC = observer((props) => {
         </div>
       </Row>
       <LinkBankAccountModal show={ShowLinkBankModal} onHide={()=>setShowLinkBankModal(false)} />
+      <SearchUserModal show={ShowUserModal} onHide={()=>setShowUserModal(false)} />
     </AdminPanelContainer>
   )
 })

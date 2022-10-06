@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from "react-bootstrap/Modal";
-import {Form, Row} from "react-bootstrap";
-import {SuccessCheckIcon} from "../../components/icons";
+import {Form, Row, Tab, Tabs} from "react-bootstrap";
+import {SearchIcon, SuccessCheckIcon} from "../../components/icons";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {AUTHORIZATION} from "../../services/constants";
@@ -12,6 +12,8 @@ import {genericApiError} from "../../helpers";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import styles from "./AdminWalletControl.module.css"
+import InputGroup from "react-bootstrap/InputGroup";
+import {BUSINESS, USERS} from "./data";
 
 type SuccessModalProps = {
   show?: boolean
@@ -134,5 +136,74 @@ const LinkBankAccountModal: React.FC<SuccessModalProps>  =({ show, onHide }: Suc
   )
 }
 
+const SearchUserModal: React.FC<SuccessModalProps>  =({ show, onHide }: SuccessModalProps) => {
 
-export {LinkBankAccountModal}
+  const Card = (opts:{title:string, subtitle:string})=>{
+    const {title, subtitle} = opts
+    return (
+      <div className={styles.searchBoxCard}>
+        <div className={styles.imageContainer}>
+        </div>
+        <div className={styles.searchBoxCardContent}>
+          <div className={styles.searchBoxCardContentTitle}>{title}</div>
+          <div className={styles.searchBoxCardContentSubTitle}>{subtitle}</div>
+        </div>
+      </div>
+    )
+  }
+   return (
+    <Modal
+      size="lg"
+      show={show}
+      centered
+      onHide={onHide}
+    >
+      <Modal.Header closeButton style={{paddingTop:20, paddingBottom:0, paddingRight:20}}>
+        <Modal.Title className={'d-flex flex-column mb-0'}>
+          <span className={'text-blue mb-2 ms-4 mb-0'} style={{fontSize:24, fontWeight:"600"}}>Select Recipient</span>
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Row className={'ps-3 pe-3'}>
+          <InputGroup className="mb-0 search-button-group">
+            <Button variant="outline-secondary" id="button-addon2" className='search-buttons'>
+              <SearchIcon />
+            </Button>
+            <Form.Control
+              placeholder='Search'
+              type="search" name="search" className='search-button-navbar'
+            />
+          </InputGroup>
+        </Row>
+        <Row className={'ps-3 pe-3 mt-4'}>
+
+          <Tabs
+            defaultActiveKey="people"
+            id="uncontrolled-tab-example"
+            className="mb-3 ms-3 me-3"
+          >
+            <Tab eventKey="people" title="PEOPLE">
+             <Col className={styles.searchBox}>
+               {USERS.map((value:any, index:number)=>{return <Card title={value.name} subtitle={value.username}/>})}
+             </Col>
+            </Tab>
+            <Tab eventKey="businesses" title="BUSINESSES">
+              {BUSINESS.map((value:any, index:number)=>{return <Card title={value.name} subtitle={value.username}/>})}
+
+            </Tab>
+
+          </Tabs>
+
+        </Row>
+
+        <Row className={'mt-5 d-flex flex-row justify-content-center mb-4'}>
+          <Button variant="primary" className={styles.button} type="submit"  >
+            Select
+          </Button>
+        </Row>
+      </Modal.Body>
+    </Modal>)
+}
+
+
+export {LinkBankAccountModal, SearchUserModal}

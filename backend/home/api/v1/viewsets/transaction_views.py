@@ -1,5 +1,5 @@
 from django.db.models import Q
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, mixins
 import json
 import logging
 
@@ -19,7 +19,9 @@ from base import configs
 logger = logging.getLogger('transaction')
 
 
-class TransactionViewSet(viewsets.ModelViewSet):
+class TransactionViewSet(mixins.ListModelMixin,
+                         mixins.RetrieveModelMixin,
+                         viewsets.GenericViewSet):
     queryset = Transaction.objects.filter()
     serializer_class = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated]
