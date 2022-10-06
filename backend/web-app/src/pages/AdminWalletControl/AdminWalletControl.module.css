@@ -35,7 +35,11 @@
     width: 250px;
     height: 40px;
 }
-
+.linkBankAccount{
+   color: var(--green);
+    margin-bottom: 15px;
+    font-weight: bold;
+}
 .buttonSecondary{
     width: 250px;
     margin-bottom: 10px;

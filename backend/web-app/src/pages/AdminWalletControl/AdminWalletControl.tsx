@@ -5,7 +5,7 @@ import {PageWeb} from "../../components/PageWeb/PageWeb";
 import AdminPanelContainer from "../../containers";
 import {Button, Col, Row} from "react-bootstrap";
 import {
-  ArrowBackIcon,
+  ArrowBackIcon, AttachmentIcon,
   FBIcon,
   IncomingIcon,
   InstagramIcon,
@@ -14,9 +14,11 @@ import {
   TwitterIcon
 } from "../../components/icons";
 import styles from "./AdminWalletControl.module.css"
+import {LinkBankAccountModal} from "./modals";
 
 export const AdminWalletControlPage: React.FC = observer((props) => {
   const navigate = useNavigate()
+  const [ShowLinkBankModal, setShowLinkBankModal] = useState(false)
 
   const MoneyBox = (opts:{kind:"in"|"out", amount:number, label:string})=>{
     const {kind, label, amount}  = opts
@@ -105,7 +107,13 @@ export const AdminWalletControlPage: React.FC = observer((props) => {
                 span className={`${styles.money} ${styles.moneyDec}`}>,56$</span></div>
             </div>
 
-            <div className={` d-flex col-4 justify-content-center`}>
+            <div className={` d-flex flex-column col-4 justify-content-center align-items-center`}>
+              <div className={styles.linkBankAccount}
+                   onClick={()=>{
+                     setShowLinkBankModal(true)
+                   }}>
+                <AttachmentIcon color={"var(--green)"}/> Link Bank Account</div>
+
               <Button className={styles.button}>Send /Transfer</Button>
             </div>
           </div>
@@ -121,10 +129,8 @@ export const AdminWalletControlPage: React.FC = observer((props) => {
             </div>
           </div>
         </div>
-
-
-
       </Row>
+      <LinkBankAccountModal show={ShowLinkBankModal} onHide={()=>setShowLinkBankModal(false)} />
     </AdminPanelContainer>
   )
 })
