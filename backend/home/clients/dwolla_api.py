@@ -82,6 +82,11 @@ class DwollaClient:
         funding_source = self.app_token.get(funding_url)
         return funding_source
 
+    def get_account_by_id(self, account_id):
+        account_url = 'accounts/{}/'.format(self.get_base_url(), account_id)
+        account = self.app_token.get(account_url)
+        return account
+
     def get_dwolla_master_account_id(self):
         root = self.app_token(self.get_base_url())
         master_account_id = root.body.get['_links']['account']['href'].split('/')[-1]
@@ -117,3 +122,4 @@ class DwollaClient:
 
     def get_transaction(self, trn_id):
         return self.get_resource('{}/transfers/{}'.format(self.get_base_url(), trn_id))
+
