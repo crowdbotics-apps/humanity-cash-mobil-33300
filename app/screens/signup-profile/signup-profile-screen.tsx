@@ -143,15 +143,13 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	const fetchCity = (data?: string) => {
 		loginStore.environment.api.getCities({ value: data })
 			.then((result: any) => {
-				console.log(' fetchCity ===>>> ', JSON.stringify(result, null, 2))
 				result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
 			})
 	}
 	const fetchState = (data?: string) => {
 		loginStore.environment.api.getStates({ value: data })
 			.then((result: any) => {
-				console.log(' fetchState ===>>> ', JSON.stringify(result, null, 2))
-				result?.data?.results && setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+				result?.data?.results && setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_name })))
 			})
 	}
 
@@ -171,7 +169,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			username: Username,
 			consumer_profile: pic
 		}).then((result: any) => {
-			console.log(' setupConsumer ===>>> ', JSON.stringify(result, null, 2))
 			setLoading(false)
 			if (result.kind === "ok") {
 				setStep("name")
@@ -197,7 +194,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			first_name: Name,
 			last_name: LastName
 		}).then((result: any) => {
-			console.log(' setupConsumerDetail ===>>> ', JSON.stringify(result, null, 2))
 			setLoading(false)
 			if (result.kind === "ok") {
 				setShowThankyouModal(true)
@@ -238,7 +234,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			business_story: BusinessStory
 		})
 			.then((result: any) => {
-				console.log(' setupMerchant ===>>> ', JSON.stringify(result, null, 2))
 				setLoading(false)
 				setStep('business_type')
 				if (result.kind === "ok") {
@@ -259,7 +254,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
 			.then((result: any) => {
-				console.log(' setupMerchantDetail ===>>> ', JSON.stringify(result, null, 2))
 				setLoading(false)
 				if (result.kind === "ok") {
 					setStep('business_exec')
@@ -292,7 +286,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			phone_number: PhoneNumber
 		})
 			.then((result: any) => {
-				console.log(' setupMerchantDetailComplete ===>>> ', JSON.stringify(result, null, 2))
 				setLoading(false)
 				if (result.kind === "ok") {
 					loginStore.setSelectedAccount('merchant')
@@ -491,7 +484,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					multiline
 					numberOfLines={4}
 					scrollEnabled={false}
-					placeholder={'Business name'}
+					placeholder={'Tell the world about your business. What gives you joy as an entrepreneur? What do you love about the Berkshires?'}
 				/>
 			</View>
 		</View>

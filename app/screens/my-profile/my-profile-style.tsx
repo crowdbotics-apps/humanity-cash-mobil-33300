@@ -147,17 +147,16 @@ export default StyleSheet.create({
     marginBottom: 30,
   },
   SELECTS_CONTAINER: {
-    // backgroundColor: 'red'
+    alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: METRICS.screenWidth * 0.95,
-    alignSelf: 'center',
   },
   SELECT_ICON: {
     alignItems: 'center',
     height: 55,
+     justifyContent: 'center',
     marginTop: 10,
-    justifyContent: 'center',
     width: METRICS.screenWidth * 0.95,
   },
   SELECT_INPUT_STYLE_CONTAINER: {

@@ -15,12 +15,10 @@ export const SplashScreen = observer(function SplashScreen() {
   const rootStore = useStores()
   const { loginStore } = rootStore
   const navigation = useNavigation()
-
+  //TODO: ESCONDER VARIABLE
   GoogleSignin.configure({
     webClientId:
-      "639112256214-5g8c5566lc02fl1jd6r68a02o8p0fint.apps.googleusercontent.com", // client ID of type WEB for your server
-    iosClientId:
-      "639112256214-5hrj0igtm2a2pbq6cs9tgj93u80lr57b.apps.googleusercontent.com",
+      "65270403402-0jngo19j7o6t7tsej7qt4qkoq0h8pg5i.apps.googleusercontent.com"
   });
 
   const [Loading, setLoading] = useState(true)

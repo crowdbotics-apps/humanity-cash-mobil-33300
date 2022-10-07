@@ -339,9 +339,4 @@ export class ApiBase {
         }
     }
 
-    // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
-    // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
-    // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
-    // ###### generics / helpers hasta aca, agregar vistas nuevas arriba de esta seccion
-
 }

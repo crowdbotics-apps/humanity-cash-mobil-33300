@@ -159,7 +159,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const getIavToken = () => {
     loginStore.environment.api.getDwollaToken({ "user_type": loginStore.getSelectedAccount })
       .then((result: any) => {
-        console.log(' getIavToken ===>>>  ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             setIavToken(result.response.iav_token)
@@ -168,7 +167,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         } else if (result.kind === "bad-data") {
           const key = Object.keys(result?.errors)[0]
           const msg = `${key}: ${result?.errors?.[key]}`
-          console.log(' aca => ', key, msg)
           notifyMessage(msg)
         } else {
           loginStore.reset()

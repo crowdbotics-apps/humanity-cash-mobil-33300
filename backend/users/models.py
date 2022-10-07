@@ -156,7 +156,7 @@ class Consumer(BaseProfileModel):
 class Merchant(BaseProfileModel):
     background_picture = models.ImageField(upload_to='background-pictures', null=True, blank=True)
     business_name = models.CharField(max_length=50)
-    business_story = models.CharField(max_length=50, null=True, blank=True)
+    business_story = models.CharField(max_length=250, null=True, blank=True)
     type_of_business = models.CharField(max_length=50, null=True, blank=True)
     registered_business_name = models.CharField(max_length=50, null=True, blank=True)
     industry = models.CharField(max_length=50, choices=Industry.choices, null=True, blank=True)

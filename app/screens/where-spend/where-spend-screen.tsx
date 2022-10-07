@@ -1017,7 +1017,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
     </View>
     <TextInputComponent
       label='Distance'
-      onChangeText={t => setDistanceFilterr(t.replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
+      onChangeText={t => setDistanceFilter(t.replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
       value={`${DistanceFilter}`}
       placeholder={"Custom distance"}
       labelContainerStyle={{ display: 'none' }}
@@ -1026,7 +1026,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
       onPress={() => [setShowMap(true), setShowFilter(false)]}
       style={[styles.FIND_MAP, { color: loginStore.getAccountColor }]}
     >Find Location on Google Maps</Text>
-    <Text onPress={() => setDistanceFilter('')} style={styles.CLEAR_FILTERS}>Clear filters</Text>
+    <Text style={styles.CLEAR_FILTERS}>Clear filters</Text>
     <View style={styles.LINE} />
   </View>
 

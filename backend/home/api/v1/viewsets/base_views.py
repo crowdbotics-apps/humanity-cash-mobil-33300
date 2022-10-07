@@ -32,7 +32,7 @@ class CityRetrieveView(AuthenticatedAPIView, RetrieveAPIView):
 class StateListView(AuthenticatedAPIView, ListAPIView):
     queryset = Region.objects.all()
     filter_backends = [filters.SearchFilter]
-    search_fields = ['^geoname_code', ]
+    search_fields = ['^display_name', ]
     serializer_class = StateListSerializer
 
 
