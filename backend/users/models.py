@@ -218,18 +218,61 @@ class InvalidTransferDestinationException(Exception):
 
 
 
+class UserDevice(models.Model):
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='devices')
+    device_id = models.CharField('Device ID', max_length=64)
+    device_token = models.CharField('Device token', max_length=200, null=True, blank=True)
+    active = models.BooleanField(default=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'User device'
+        ordering = ['-id']
+        unique_together = ['user', 'device_id']
+
+    @staticmethod
+    def activate_device(user, device_id, device_token):
+        if not device_id:
+            return
+        try:
+            device = user.devices.get(device_id=device_id)
+            device.active = True
+            device.device_token = device_token
+            device.save()
+        except UserDevice.DoesNotExist:
+            UserDevice.objects.create(
+                user=user,
+                device_id=device_id,
+                device_token=device_token
+            )
+
+    @staticmethod
+    def deactivate_device(user, device_id):
+        if not device_id:
+            return
+        try:
+            device = user.devices.get(device_id=device_id)
+            device.active = False
+            device.save()
+        except UserDevice.DoesNotExist:
+            pass
+
+    @staticmethod
+    def deactivate_all_devices(user):
+        devices = user.devices.all()
+        for device in devices:
+            device.active = False
+            device.save()
+
+    def __str__(self):
+        return "{} - {}".format(self.device_id, self.user.username)
+
+
 
 class Notification(models.Model):
 
-    READ = 10
-    ACCEPT_ACCESS = 20
-    REJECT_ACCESS = 30
 
-    NOTIFICATION_ACTIONS = (
-        (READ, 'Read notification'),
-        (ACCEPT_ACCESS, 'Accept notification'),
-        (REJECT_ACCESS, 'Reject notification'),
-    )
 
     class Actions(models.IntegerChoices):
         READ = 10, 'Read notification'

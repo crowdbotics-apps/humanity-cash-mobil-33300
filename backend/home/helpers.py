@@ -16,7 +16,7 @@ from rest_framework.views import APIView
 from twilio.rest import Client
 import json
 from users.models import UserVerificationCode, Notification
-from onesignal_sdk.client import Client as OneSignalClient
+# from onesignal_sdk.client import Client as OneSignalClient
 
 LOGGER = logging.getLogger('django')
 
