@@ -98,12 +98,12 @@ const AdvancedTable = ({ rows, onPrevious, onClickPage, onNext, deletable , head
 
   return (
     <div style={{height:"100%",display:'flex', flexDirection:'column'}}>
-      <Table responsive className={styles.table}>
+      <Table  className={styles.table}>
         <AdvancedTableHeader headers={headerRow} deletable={deletable}/>
         <AdvancedTableBody rows={rows} deletable={deletable} />
         <tfoot style={{ borderStyle:"none"}}>
           <tr>
-            <td colSpan={headerRow.length}>
+            <td colSpan={10}>
               <BackendPagination
                 resultsQty={rows.length}
                 onPrevious={onPrevious}

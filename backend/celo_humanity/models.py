@@ -111,7 +111,7 @@ class ACHTransaction(models.Model):
 
     transaction_id = models.CharField(max_length=255, null=False, blank=False, db_index=True)
     created_at = models.DateTimeField(null=True)
-    ach_id = models.CharField(max_length=10)
+    ach_id = models.CharField(max_length=10, null=True)
     status = models.CharField(max_length=10, choices=Status.choices)
     type = models.CharField(max_length=255, null=False, blank=True, choices=Type.choices)
     consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL,

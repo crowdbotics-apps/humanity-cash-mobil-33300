@@ -33,6 +33,6 @@ def transfer_completed_listener(event, event_db):
             if have_profile:
                 logger.info(f'transaction {transfer.id} processed, burning done on creation, doing nothing')
             else:
-                logger.warning(f'transfer {transfer.id}, customer {transfer.destination.href} not found')
+                logger.warning(f'transfer {transfer.id}, customer {transfer["_links"].destination.href} not found')
         else:
             logger.warning(f'transfer {transfer.id}, unknown source and destination, ignoring')

@@ -74,7 +74,10 @@ export const AdminWalletControlPage: React.FC = observer((props) => {
             </div>
 
             <div className={` d-flex col-4 justify-content-center`}>
-              <Button  className={`${styles.button} ${styles.buttonSecondary}`}>Select Recipient</Button>
+              <Button  className={`${styles.button} ${styles.buttonSecondary}`}
+                onClick={()=>{
+                  setShowUserModal(true)
+                }}>Select Recipient</Button>
             </div>
           </div>
           <div className={`flex-row d-flex col-12 mt-2 `}>

@@ -13,17 +13,18 @@ def transfer_created_listener(event, event_db):
     logger.warning(f'transfer {transaction}, unknown source and destination, ignoring')
     transfer = munch.munchify(transaction)
 
-    source_founding_source = transaction["source-funding-source"]["href"].split('/')[-1]
+    source_founding_source = transaction["_links"]["source-funding-source"]["href"].split('/')[-1]
     try:
-        dwolla_client.get_funding_source_by_id(source_founding_source)
+        account = dwolla_client.get_funding_source_by_id(source_founding_source)
+        logger.info(f"account {account}")
     except NotFoundError:
         logger.error(f"not found source {source_founding_source}")
 
-    ach_transaction = ACHTransaction(transaction_id=transaction.id,
-                                     amount=transaction.amount.value,
+    ach_transaction = ACHTransaction(transaction_id=transfer.id,
+                                     amount=transfer.amount.value,
                                      status=ACHTransaction.Status.pending,
-                                     ach_id=transaction.individualAchId,
-                                     currency=transaction.amount.currency,
+                                     ach_id=hasattr(transfer, "individualAchId") and transfer.individualAchId or None,
+                                     currency=transfer.amount.currency,
                                      created_at=datetime.strptime(transfer.created, '%Y-%m-%dT%H:%M:%S.%fZ'))
     if transfer.status == 'pending':
 

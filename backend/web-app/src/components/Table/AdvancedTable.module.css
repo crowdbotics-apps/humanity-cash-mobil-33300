@@ -30,7 +30,7 @@
 }
 .table{
     height: 60%;
-    min-height: 600px;
+    /*min-height: 400px;*/
 }
 
 .paginationContainer{

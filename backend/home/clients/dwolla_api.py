@@ -78,7 +78,8 @@ class DwollaClient:
         return transfers
 
     def get_funding_source_by_id(self, funding_source_id):
-        funding_url = 'funding-sources/{}/'.format(self.get_base_url(), funding_source_id)
+        funding_url = '{}/funding-sources/{}/'.format(self.get_base_url(), funding_source_id)
+        logger.info(f"FUNDING URL " + funding_url)
         funding_source = self.app_token.get(funding_url)
         return funding_source
 

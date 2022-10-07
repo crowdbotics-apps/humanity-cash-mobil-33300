@@ -153,7 +153,7 @@ const SearchUserModal: React.FC<SuccessModalProps>  =({ show, onHide }: SuccessM
   }
    return (
     <Modal
-      size="lg"
+      // size="sm"
       show={show}
       centered
       onHide={onHide}
@@ -188,8 +188,9 @@ const SearchUserModal: React.FC<SuccessModalProps>  =({ show, onHide }: SuccessM
              </Col>
             </Tab>
             <Tab eventKey="businesses" title="BUSINESSES">
+              <Col className={styles.searchBox}>
               {BUSINESS.map((value:any, index:number)=>{return <Card title={value.name} subtitle={value.username}/>})}
-
+              </Col>
             </Tab>
 
           </Tabs>

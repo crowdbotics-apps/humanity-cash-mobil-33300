@@ -9,12 +9,14 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import UserModel
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
+from django.db.models import QuerySet
 from django.utils.http import urlsafe_base64_decode
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from twilio.rest import Client
-
-from users.models import UserVerificationCode
+import json
+from users.models import UserVerificationCode, Notification
+from onesignal_sdk.client import Client as OneSignalClient
 
 LOGGER = logging.getLogger('django')
 
@@ -123,3 +125,67 @@ def send_qr_code_email(user, qr_code_image):
 
     except Exception as e:
         LOGGER.exception('QR Code sending failed: {}'.format(e))
+
+
+
+def send_notifications(users, title, message, extra_data, from_user, notification_type, finplan=None, transaction=None):
+    if not isinstance(users, QuerySet) and not isinstance(users, list):
+        push_users = [users]
+    else:
+        push_users = users
+    for user in push_users:
+        notification = Notification.objects.create(
+            target=user,
+            from_user=from_user,
+            title=title,
+            description=message,
+            type=notification_type,
+            extra_data=extra_data,
+            finplan=finplan,
+            transaction=transaction
+        )
+        devices = user.devices.filter(active=True)
+        if not devices.exists():
+            error_message = 'The user {} doesnt have any active devices '.format(user.username)
+            LOGGER.warning(error_message)
+            notification.error_on_send = error_message
+            notification.save()
+            continue
+        send_push(title, message, extra_data, list(devices.values_list('device_id', flat=True)), notification)
+
+
+def send_push(title, message, extra_data, devices_ids=None, notification_object=None):
+    if devices_ids is not None and not len(devices_ids):
+        return
+    osclient = OneSignalClient(
+        rest_api_key=settings.ONESIGNAL_REST_API_KEY,
+        app_id=settings.ONESIGNAL_APP_ID,
+        user_auth_key=settings.ONESIGNAL_USER_AUTH_KEY
+    )
+    notification = {
+        "headings": {"en": title, "es": title},
+        "contents": {"en": message, "es": message},
+        "content_available": True,
+        "data": json.loads(json.dumps(extra_data)) if extra_data != '' else {}
+    }
+    if devices_ids:
+        notification.update({"include_player_ids": devices_ids})
+    else:
+        notification.update({"included_segments": ['Subscribed Users']})
+    LOGGER.info('Sending process start')
+    try:
+        osclient.send_notification(notification)
+        notification_object.sent = True
+        notification_object.save()
+        LOGGER.info('Notification sent. notification: {}'.format(json.dumps(notification)))
+    except Exception as e:
+        print('print Push sending failed: {}'.format(e))
+        LOGGER.info('logger Push sending failed: {}'.format(e))
+        LOGGER.info('logger message Push sending failed: {}'.format(e.message))
+        notification_object.sent = False
+        notification_object.error_on_send = e.message
+        notification_object.save()
+        return False
+    LOGGER.info('Sending process finished')
+    return True
+

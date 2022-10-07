@@ -15,6 +15,9 @@ import {dataCompleted} from "../Dashboard/constants";
 import AdvancedTable from "../../components/Table/AdvancedTable";
 import {UserGroup} from "../../components/Table/constants";
 
+type StatusFieldOpts = {
+  value:"pending"|"confirmed"|"completed"
+}
 
 const wrapHash = (txt:string)=>{
   if (!txt) return ''
@@ -60,6 +63,19 @@ const UserDetailPage: React.FC = observer(() => {
     getUserData()
   },[])
 
+  useEffect(() => {
+    setItems([])
+    if (CurrentTab === Keys.BLOCKCHAIN){
+      setTitle("Blockchain Transactions")
+      getTransactions()
+    }else if (CurrentTab === Keys.ACH){
+      setTitle("ACH Transactions")
+      getACHTransactions()
+    }else{
+      setTitle(User && User.fullName || "")
+    }
+  }, [CurrentTab])
+
 
   const CreatedColumn = (opts:any)=>{
     return  ( opts.created !== null?<div>
@@ -67,6 +83,47 @@ const UserDetailPage: React.FC = observer(() => {
       <br/>
       <span className={styles.createdSubtitle}>{moment(opts.created).format('H:mm a').toUpperCase()}</span>
     </div>: null)
+  }
+
+  const TransactionType = (opts:{value:"deposit"|"withdraw"})=>{
+    const {value} = opts
+    return (
+      <span className={styles.decoratedSpan}
+            style={{backgroundColor:value === "deposit"?"var(--blue)":"var(--pink)"}}>
+       {value?value.toLowerCase():""}
+      </span>
+    )
+  }
+
+  const AmountField = (data:{amount:number, option:string})=>{
+    const  {option, amount} = data
+    return (
+      <span style={{color:option ==="deposit"?"var(--blue)":"var(--pink)"}}>
+        B${amount}
+      </span>
+    )
+  }
+
+  const StatusField = (opts:StatusFieldOpts)=>{
+
+    const {value} = opts
+
+    const getColor = (value:any)=>{
+      let color = ""
+      if(value === "completed"){
+        color = 'var(--green)'
+      }else if(value ==="pending"){
+        color = 'var(--mustard)'
+      }else{
+        color = 'var(--gray)'
+      }
+      return color
+    }
+    return (
+      <span className={styles.decoratedSpan} style={{backgroundColor:getColor(value)}}>
+       {value?value.toLowerCase():""}
+      </span>
+    )
   }
 
 
@@ -96,13 +153,37 @@ const UserDetailPage: React.FC = observer(() => {
     })
   }
 
-  const getItems = ()=>{
-    if (CurrentTab === Keys.BLOCKCHAIN){
-      getTransactions()
-    }
+  const getACHTransactions = ()=>{
+    api.getACHTransactions({user:User.id}).then((response:any)=>{
+      console.log(response.data)
+      if (response.kind === "ok") {
+        setPrevious(response.data.previous)
+        setNext(response.data.next)
+        setTotalItems(response.data.count)
+        const tableRows = []
+        for(let data of response.data.results){
+          let row:any = {
+            id: data.id,
+            ach_id: data.ach_id,
+            type: <TransactionType value={data.type} />,
+            user:"username",
+            createdAt:<CreatedColumn created={data.created_at}/>,
+            confirmedAt:<CreatedColumn created={data.confirmed_at}/>,
+            bank:"Bank name",
+            currentsBank:"Currents Bank",
+            amount: <AmountField  option={data.type} amount={data.amount} /> ,
+            status:<StatusField value={data.status} />
+          }
+          tableRows.push(row)
+        }
+        setItems(tableRows)
+
+      }
+    }).catch((error: any) => {
+      console.log(error)
+      genericApiError()
+    })
   }
-
-
 
   const getTransactions = ()=>{
     api.getBlockchainTransactions({user:User.id}).then((response: any) => {
@@ -116,7 +197,10 @@ const UserDetailPage: React.FC = observer(() => {
             id: data.id,
             hash: wrapHash(data.transaction_id),
             fromUsername: wrapHash(data.from_username) ,
-            toUsername: <div className={styles.toColumn}><div style={{marginRight:8}}> <ArrowRightIcon /> </div> {wrapHash(data.to_username)}</div>,
+            toUsername: (<div className={styles.toColumn}>
+                          <div style={{marginRight:8}}>
+                          <ArrowRightIcon /> </div> {wrapHash(data.to_username)}
+                         </div>),
             fromAddress: wrapHash(data.from_address),
             toAddress: wrapHash(data.to_address),
             type: data.type,
@@ -217,17 +301,9 @@ const UserDetailPage: React.FC = observer(() => {
         <div id='layout'>
           <div id='main' className={`main${LeftOpen ? '' : '-closed'}`}>
             <div className='content'>
-              <Tabs defaultActiveKey={Keys.USER} id="user-detail" className="mb-2 "  onSelect={(k)=>{
-                setCurrentTab(k)
-                if(k === Keys.USER){
-                  setTitle(User.fullName)
-                }else if(k === Keys.ACH){
-                  setTitle("ACH Transactions")
-                }else{
-                  setTitle("Blockchain Transactions")
-                  getTransactions()
-                }
-              }}>
+              <Tabs defaultActiveKey={Keys.USER} id="user-detail"
+                    className="mb-2 "
+                    onSelect={(k)=>setCurrentTab(k)}>
                 <Tab eventKey={Keys.USER} title="USER DETAILS" style={{ color: '#808080' }}>
 
                   <div className={styles.tableContainer}>
@@ -261,7 +337,16 @@ const UserDetailPage: React.FC = observer(() => {
 
                 </Tab>
                 <Tab eventKey={Keys.ACH} title="ACH TRANSACTIONS" style={{ color: '#808080' }} >
-                  <SimpleTable rows={dataCompleted} />
+                  {CurrentTab === Keys.ACH && (
+                    <AdvancedTable
+                      onClickPage={onClickPage}
+                      currentPage={CurrentPage}
+                      totalItems={TotalItems}
+                      headerRow={['ID', 'TYPE', 'USER', 'CREATED AT', 'CONFIRMED AT', 'BANK',<div> HUDSON VALLEY<br/>CURRENTS BANK</div>, 'AMOUNT', 'STATUS']}
+                      deletable={true} paginate={false} rows={Items}
+                      onNext={onNextPage}
+                      onPrevious={onPreviousPage}/>
+                  )}
                 </Tab>
                 <Tab eventKey={Keys.BLOCKCHAIN} title="BLOCKCHAIN TRANSACTIONS" style={{ color: '#808080' }} >
                   {CurrentTab === Keys.BLOCKCHAIN && (

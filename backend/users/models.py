@@ -11,6 +11,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from celo_humanity.humanity_contract_helpers import NoWalletException, get_wallet_balance, transfer_coin, get_wallet, \
     deposit_coin, withdraw_coin, WalletAlreadyCreatedException
 from celo_humanity.web3helpers import get_provider, text2keccak
+from humanity_cash_mobil_33300 import settings
 from users.constants import Industry, UserGroup, UserRole
 
 
@@ -44,6 +45,7 @@ class User(AbstractUser):
     google_id = models.CharField('Google ID', max_length=255, blank=True, null=True)
     google_token = models.TextField('Google Token', blank=True, null=True)
     phone_number = PhoneNumberField('Phone Number', max_length=50, null=True, blank=True)
+    is_admin = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
@@ -213,3 +215,58 @@ class NoMerchantProfileException(Exception):
 class InvalidTransferDestinationException(Exception):
     pass
 
+
+
+
+
+class Notification(models.Model):
+
+    READ = 10
+    ACCEPT_ACCESS = 20
+    REJECT_ACCESS = 30
+
+    NOTIFICATION_ACTIONS = (
+        (READ, 'Read notification'),
+        (ACCEPT_ACCESS, 'Accept notification'),
+        (REJECT_ACCESS, 'Reject notification'),
+    )
+
+    class Actions(models.IntegerChoices):
+        READ = 10, 'Read notification'
+        ACCEPT_ACCESS = 20, 'Accept notification'
+        REJECT_ACCESS = 30, 'Reject notification'
+
+    class Types(models.IntegerChoices):
+        ADMIN = 10, 'Notifications sent by the admin'
+        TRANSACTION = 20, 'Notifications for transactions'
+
+
+
+    target = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications_to_user")
+    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
+                                  related_name="notifications_from_user")
+    title = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+    extra_data = models.TextField(null=True, blank=True)
+    type = models.IntegerField(choices=Types.choices)
+    sent = models.BooleanField(default=False)
+    error_on_send = models.TextField(null=True)
+
+    transaction = models.ForeignKey('celo_humanity.Transaction', on_delete=models.CASCADE,
+                                    related_name='notifications',
+                                    null=True, blank=True)
+
+    ach_transaction = models.ForeignKey('celo_humanity.ACHTransaction', on_delete=models.CASCADE,
+                                        related_name='notifications', null=True, blank=True)
+
+    def __str__(self):
+        from_user = self.from_user.username if self.from_user else ''
+        target = self.target.username if self.target else ''
+        return '{} - {} to {}'.format(self.id, from_user, target)
+
+    class Meta:
+        verbose_name = 'Notification'
+        verbose_name_plural = 'Notifications'
+        ordering = ['-timestamp']

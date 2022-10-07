@@ -11,10 +11,22 @@ logger = logging.getLogger('transaction')
 
 
 class ACHTransactionViewSet(mixins.ListModelMixin,
-                         mixins.RetrieveModelMixin,
-                         viewsets.GenericViewSet):
-    queryset = ACHTransaction.objects.filter()
+                            mixins.RetrieveModelMixin,
+                            viewsets.GenericViewSet):
+    queryset = ACHTransaction.objects.all()
     serializer_class = ACHTransactionSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [SearchFilter]
-    search_fields = ['ach_id', 'transaction_id']
+    search_fields = ['ach_id', 'transaction_id', ]
+
+    def get_queryset(self):
+        """
+        Optionally restricts the returned purchases to a given user,
+        by filtering against a `username` query parameter in the URL.
+        """
+        qs = super(ACHTransactionViewSet, self).get_queryset()
+        status = self.request.query_params.get('status')
+        if status is not None:
+            qs = qs.filter(status=status)
+        return qs
+
