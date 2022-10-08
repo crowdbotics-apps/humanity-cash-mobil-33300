@@ -154,6 +154,7 @@ class Consumer(BaseProfileModel):
         return f'Customer id: {self.id}'
 
 class Merchant(BaseProfileModel):
+    profile_picture = models.ImageField(upload_to='profile-pictures', null=True, blank=True)
     background_picture = models.ImageField(upload_to='background-pictures', null=True, blank=True)
     business_name = models.CharField(max_length=50)
     business_story = models.CharField(max_length=250, null=True, blank=True)
@@ -166,11 +167,11 @@ class Merchant(BaseProfileModel):
     phone_number = PhoneNumberField(null=True, blank=True)
     owner_first_name = models.CharField(max_length=150, null=True, blank=True)
     owner_last_name = models.CharField(max_length=150, null=True, blank=True)
-    owner_address_1 = models.CharField(max_length=150, null=True, blank=True)
-    owner_address_2 = models.CharField(max_length=150, null=True, blank=True)
-    owner_city = models.CharField(max_length=100, null=True, blank=True)
-    owner_state = models.CharField(max_length=2, null=True, blank=True)
-    owner_zip_code = models.CharField(max_length=16, null=True, blank=True)
+    address_1 = models.CharField(max_length=150, null=True, blank=True)
+    address_2 = models.CharField(max_length=150, null=True, blank=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
+    state = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True)
+    zip_code = models.CharField(max_length=16, null=True, blank=True)
     location = models.PointField(null=True, blank=True)
 
     class Meta:

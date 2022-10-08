@@ -190,6 +190,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			first_name: Name,
 			last_name: LastName
 		}).then((result: any) => {
+			console.log(' setupConsumerDetail ===>>> ', JSON.stringify(result, null, 2))
 			setLoading(false)
 			if (result.kind === "ok") {
 				setShowThankyouModal(true)

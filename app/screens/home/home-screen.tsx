@@ -29,6 +29,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
 					})
+					if (loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null) navigation.navigate("setupProfile")
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -108,7 +109,6 @@ export const HomeScreen = observer(function HomeScreen() {
 	}
 
 	useEffect(() => {
-		if (loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null) navigation.navigate("setupProfile")
 		getEvents()
 		getBalanceData()
 		getProfileConsumer()

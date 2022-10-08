@@ -178,8 +178,8 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
         if not self.request.user.merchant.dwolla_id:
             # if dwolla_id is not set yet
             create_dwolla_customer_merchant(instance)
-
-        return Response(serializer.data)
+        # serializer.save()
+        return Response(serializer.initial_data)
 
 
 class SetCashierModeView(AuthenticatedAPIView):

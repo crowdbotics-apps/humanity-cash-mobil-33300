@@ -358,7 +358,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			name: BackBusinessImageSource.fileName
 		}
 		const phoneNumber = PhoneNumber !== ''
-			?  PhoneNumber.includes('+1') ? PhoneNumber : `+1${PhoneNumber}`
+			?  (PhoneNumber && PhoneNumber.includes('+1')) ? PhoneNumber : `+1${PhoneNumber}`
 			: ''
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
@@ -369,8 +369,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					business_story: BusinessStory,
 					address_1: Address1,
 					address_2: Address2,
-					city_id: City?.id,
-					state_id: State?.id,
+					city: City?.id,
+					state: State?.id,
 					zip_code: PostalCode,
 					phone_number: phoneNumber,
 					website: BusinessWebsite,
