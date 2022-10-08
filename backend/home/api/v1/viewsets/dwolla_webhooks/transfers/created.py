@@ -7,6 +7,10 @@ from home.api.v1.viewsets.dwolla_webhooks import get_profile_for_href, logger
 from home.clients.dwolla_api import DwollaClient
 from datetime import datetime
 
+from home.helpers import send_notifications
+from users.models import Notification
+
+
 def transfer_created_listener(event, event_db):
     dwolla_client = DwollaClient()
     transaction = dwolla_client.get_transaction(event_db.resourceId)
@@ -47,4 +51,18 @@ def transfer_created_listener(event, event_db):
             logger.warning(f'transfer {transfer.id}, unknown source and destination, ignoring')
 
         ach_transaction.save()
+
+        if ach_transaction.consumer:
+            target = ach_transaction.consumer.user
+        else:
+            target = ach_transaction.merchant.user
+        if target:
+            send_notifications([target],
+                               'Transaction created',
+                               f'the transaction {ach_transaction.ach_id} was confirmed',
+                               '',
+                               target,
+                               Notification.Types.TRANSACTION,
+                               ach_transaction=ach_transaction)
+
 

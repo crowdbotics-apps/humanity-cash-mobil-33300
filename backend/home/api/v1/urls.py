@@ -12,6 +12,7 @@ from home.api.v1.viewsets import setup_profile_views, base_views, security_views
 from home.api.v1.viewsets.ach_transaction_views import ACHTransactionViewSet
 from home.api.v1.viewsets.dwolla_webhooks import views as dwolla_webhooks_views
 from home.api.v1.viewsets.event_views import EventViewSet
+from home.api.v1.viewsets.notification_views import SetDeviceView, NotificationViewSet
 from home.api.v1.viewsets.signup_signin_views import LoginFacebookView
 from home.api.v1.viewsets.transaction_views import TransactionViewSet
 from home.api.v1.viewsets.user_views import UserViewSet, ConsumerViewSet, DwollaUserView
@@ -24,8 +25,10 @@ router.register("ach_transaction", ACHTransactionViewSet, basename="ach_transact
 router.register("consumer", ConsumerViewSet, basename="consumer")
 router.register("dwolla_user", DwollaUserView, basename="dwolla_user")
 # router.register("signup", SignupViewSet, basename="signup")
+router.register(r'notification', NotificationViewSet, 'notification')
 
 urlpatterns = [
+    path('set-device/', SetDeviceView.as_view(), name='api.set_device'),
     path('registration/', include([
         path('set-password/', signup_signin_views.SetPasswordView.as_view(), name='set_password'),
         path('verify-user-account/', signup_signin_views.VerifyUserAccountAPIView.as_view(), name='verify_user_account'),
@@ -78,4 +81,5 @@ urlpatterns = [
     # path('is-cashier-mode/', setup_profile_views.CashierTestView.as_view(), name='iscashiermode'),
     # path('is-cashier-mode-not/', setup_profile_views.NoCashierTestView.as_view(), name='iscashiermode'),
     path("", include(router.urls))
+
 ]

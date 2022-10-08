@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from home.api.v1.serializers.notification_serializers import UserIdPushTokenSerializer
+from home.api.v1.serializers.notification_serializers import UserIdPushTokenSerializer, NotificationListSerializer
 from home.helpers import send_notifications
 from users.models import UserDevice, Notification
 
@@ -81,21 +81,7 @@ class NotificationViewSet(ModelViewSet):
                 transaction=None
             )
 
-        elif action == Notification.Actions.REJECT_ACCESS:
-            user_requested = instance.from_user
-            finplan = instance.finplan
-            instance.read = True
-            instance.save()
 
-            send_notifications(
-                users=user_requested,
-                from_user=user,
-                title="{} rejected access request".format(user.username),
-                message="Finplan: {} - {} - {}".format(finplan.id, finplan.name, finplan.get_finplan_type_display()),
-                notification_type=Notification.Types.ADMIN,
-                extra_data=None,
-                transaction=None
-            )
 
         else:
             Response({'error': 'invalid action'}, status=status.HTTP_400_BAD_REQUEST)

@@ -11,6 +11,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from celo_humanity.humanity_contract_helpers import NoWalletException, get_wallet_balance, transfer_coin, get_wallet, \
     deposit_coin, withdraw_coin, WalletAlreadyCreatedException
 from celo_humanity.web3helpers import get_provider, text2keccak
+from home.helpers import send_notifications
 from humanity_cash_mobil_33300 import settings
 from users.constants import Industry, UserGroup, UserRole
 
@@ -121,22 +122,49 @@ class BaseProfileModel(models.Model):
             raise InvalidTransferDestinationException()
         # TODO validate ammount or let contract fail and catch?
         # TODO catch contract exceptions
-        transfer_coin(self.crypto_wallet_id,
+        transaction = transfer_coin(self.crypto_wallet_id,
                       other_user.crypto_wallet_id,
                       amount,
                       roundup,
                       profile=self,
                       counterpart_profile=other_user)
+        if transaction:
+            send_notifications([other_user],
+                               'Withdraw',
+                               transaction.method_or_memo,
+                               '',
+                               self.user,
+                               Notification.Types.TRANSACTION,
+                               transaction=transaction)
+
 
     def deposit(self, amount):
         if self.crypto_wallet_id is None:
             self.crypto_wallet_id = self.new_wallet()
-        deposit_coin(self.crypto_wallet_id, amount, profile=self)
+        transaction = deposit_coin(self.crypto_wallet_id, amount, profile=self)
+        if transaction:
+            send_notifications([self.user],
+                               'New Deposit',
+                               f'deposit (mint) {amount} to your wallet {self.crypto_wallet_id}',
+                               '',
+                               self.user,
+                               Notification.Types.TRANSACTION,
+                               transaction=transaction)
+
 
     def withdraw(self, amount):
         if self.crypto_wallet_id is None:
             self.crypto_wallet_id = self.new_wallet()
-        withdraw_coin(self.crypto_wallet_id, amount, profile=self)
+        transaction = withdraw_coin(self.crypto_wallet_id, amount, profile=self)
+        if transaction:
+            send_notifications([self.user],
+                               'Withdraw',
+                               f'withdraw (burn) {amount} from user {self.crypto_wallet_id}',
+                               '',
+                               self.user,
+                               Notification.Types.TRANSACTION,
+                               transaction=transaction)
+
 
 
 class Consumer(BaseProfileModel):
@@ -219,7 +247,7 @@ class InvalidTransferDestinationException(Exception):
 
 
 class UserDevice(models.Model):
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='devices')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='devices')
     device_id = models.CharField('Device ID', max_length=64)
     device_token = models.CharField('Device token', max_length=200, null=True, blank=True)
     active = models.BooleanField(default=True)
@@ -285,8 +313,8 @@ class Notification(models.Model):
 
 
 
-    target = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="notifications_to_user")
-    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
+    target = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications_to_user")
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,
                                   related_name="notifications_from_user")
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=255)

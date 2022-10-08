@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from home.models import Event, DwollaEvent
-from users.models import Consumer, Merchant, DwollaUser
+from users.models import Consumer, Merchant, DwollaUser, Notification, UserDevice
 
 
 @admin.register(Consumer)
@@ -31,3 +31,12 @@ class EventAdmin(admin.ModelAdmin):
 @admin.register(DwollaEvent)
 class DwollaEventAdmin(admin.ModelAdmin):
     ...
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    ...
+
+@admin.register(UserDevice)
+class UserDeviceAdmin(admin.ModelAdmin):
+    ...
+

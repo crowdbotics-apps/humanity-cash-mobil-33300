@@ -16,7 +16,7 @@ from rest_framework.views import APIView
 from twilio.rest import Client
 import json
 from users.models import UserVerificationCode, Notification
-# from onesignal_sdk.client import Client as OneSignalClient
+from onesignal_sdk import Cliente as OneSignalClient
 
 LOGGER = logging.getLogger('django')
 
@@ -128,7 +128,10 @@ def send_qr_code_email(user, qr_code_image):
 
 
 
-def send_notifications(users, title, message, extra_data, from_user, notification_type, finplan=None, transaction=None):
+def send_notifications(users, title, message, extra_data, from_user,
+                       notification_type,
+                       transaction=None,
+                       ach_transaction=None):
     if not isinstance(users, QuerySet) and not isinstance(users, list):
         push_users = [users]
     else:
@@ -141,8 +144,8 @@ def send_notifications(users, title, message, extra_data, from_user, notificatio
             description=message,
             type=notification_type,
             extra_data=extra_data,
-            finplan=finplan,
-            transaction=transaction
+            transaction=transaction,
+            ach_transaction=ach_transaction
         )
         devices = user.devices.filter(active=True)
         if not devices.exists():
