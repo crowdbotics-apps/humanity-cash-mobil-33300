@@ -9,8 +9,8 @@ import Col from 'react-bootstrap/Col';
 
 type Props = {
     children: React.ReactNode;
-    title?:string;
-    navbarTitle?:string;
+    title?:string | React.ReactNode;
+    navbarTitle?:React.ReactNode|string;
     header?: React.ReactNode;
     search?: React.ReactNode;
     filter?: React.ReactNode;

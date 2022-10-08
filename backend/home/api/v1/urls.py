@@ -9,6 +9,7 @@ import home.api.v1.viewsets.signup_signin_views as signup_signin_views
 # )
 from home.api.v1.viewsets import setup_profile_views, base_views, security_views, dwolla_views, transaction_views, \
     user_views
+from home.api.v1.viewsets.ach_transaction_views import ACHTransactionViewSet
 from home.api.v1.viewsets.dwolla_webhooks import views as dwolla_webhooks_views
 from home.api.v1.viewsets.event_views import EventViewSet
 from home.api.v1.viewsets.signup_signin_views import LoginFacebookView
@@ -19,6 +20,7 @@ router = DefaultRouter()
 router.register("event", EventViewSet, basename="event")
 router.register("user", UserViewSet, basename="user")
 router.register("transaction", TransactionViewSet, basename="transaction")
+router.register("ach_transaction", ACHTransactionViewSet, basename="ach_transaction")
 router.register("consumer", ConsumerViewSet, basename="consumer")
 router.register("dwolla_user", DwollaUserView, basename="dwolla_user")
 # router.register("signup", SignupViewSet, basename="signup")

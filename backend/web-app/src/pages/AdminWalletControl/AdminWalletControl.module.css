@@ -1,0 +1,93 @@
+.card{
+    border-radius: 20px;
+    border: var(--headings) solid;
+    border-width: 1px;
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+.cardSubtitle{
+    font-size: 17px;
+    text-transform: uppercase;
+    color: var(--gray)
+}
+.cardTitle{
+    color:var(--dark);
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.title{
+    font-size: 24px;
+    color: var(--blue);
+}
+.money{
+    color:var(--dark);
+    font-weight: bold;
+}
+.moneyInt{
+    font-size: 38px;
+}
+
+.moneyDec{
+    font-size: 28px;
+}
+.button{
+    width: 250px;
+    height: 40px;
+}
+
+.linkBankAccount{
+   color: var(--green);
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+.buttonSecondary{
+    width: 250px;
+    margin-bottom: 10px;
+    background: var(--white);
+    color: var(--blue);
+}
+
+.moneyBox{
+    font-size: 28px;
+    color:#272727;
+    text-align: left;
+}
+.labelBox{
+    font-size: 17px;
+    color:var(--gray)
+}
+
+.searchBox{
+    overflow-y: scroll;
+}
+.searchBoxCard{
+    padding:5px;
+    display: flex;
+    flex-direction: row;
+}
+.searchBoxCardContent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+}
+.searchBoxCardContentTitle{
+ font-size: 16px;
+    color:var(--dark);
+    font-weight: bold;
+}
+.searchBoxCardContentSubTitle{
+    font-size: 14px;
+    color:var(--gray)
+}
+.imageContainer{
+    border-radius: 90px;
+    margin-left: 10px;
+    width: 40px;
+    height: 40px;
+    background: var(--light-grey);
+    border-width: 1px;
+    border: var(--blue) solid 1px;
+}

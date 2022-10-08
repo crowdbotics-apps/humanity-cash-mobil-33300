@@ -8,7 +8,7 @@ import Form from 'react-bootstrap/Form';
 import styles from "./container.module.css"
 type PropsNav = {
     sideBarActions: any;
-    navbarTitle?:string;
+    navbarTitle?:string | React.ReactNode;
     onclickFilter?():void
     filter?: React.ReactNode;
     search?: React.ReactNode;
@@ -18,6 +18,7 @@ type PropsNav = {
 export const TheNav: React.FC<PropsNav> = ({ filter,search, sideBarActions, navbarTitle }) => {
     let location = useLocation();
     // console.log(location, 'location')
+
     return (
 
       <Navbar bg="light" expand="lg" className='mt-3 mb-2'>

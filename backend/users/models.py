@@ -189,17 +189,7 @@ class Merchant(BaseProfileModel):
         return f'Merchant id: {self.id}'
 
 
-"""
 
-  u.name,
-       u.email,
-       m.dwolla_id,
-       u.last_login,
-       m.crypto_wallet_id,
-       m.address_1 as address,
-       'BUSINESS'  as account_type
-
-       """
 
 class DwollaUser(models.Model):
     id = models.BigIntegerField(primary_key=True)

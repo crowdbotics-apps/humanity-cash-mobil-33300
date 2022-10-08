@@ -6,6 +6,18 @@ from django.db import models
 from celo_humanity.web3helpers import get_contract, ContractProxy
 
 
+
+class Account(models.Model):
+
+    name = models.CharField(max_length=70, unique=True)
+    dwolla_id = models.CharField(max_length=255, db_index=True)
+    bank_name = models.CharField(max_length=70, unique=True)
+    created = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Contract(models.Model):
     contract_name = models.CharField(max_length=255, null=False, blank=False)
     description = models.CharField(max_length=255, null=False, blank=False)
@@ -84,3 +96,33 @@ class Transaction(models.Model):
     def counterpart_profile(self, profile):
         self.counterpart_consumer = profile if profile and profile.is_consumer else None
         self.counterpart_merchant = profile if profile and profile.is_merchant else None
+
+
+class ACHTransaction(models.Model):
+    class Type(models.TextChoices):
+        withdraw = 'Withdraw'
+        deposit = 'Deposit'
+
+    class Status(models.TextChoices):
+        pending = "pending"
+        processed = "processed"
+        cancelled = "cancelled"
+        failed = "failed"
+
+    transaction_id = models.CharField(max_length=255, null=False, blank=False, db_index=True)
+    created_at = models.DateTimeField(null=True)
+    ach_id = models.CharField(max_length=10)
+    status = models.CharField(max_length=10, choices=Status.choices)
+    type = models.CharField(max_length=255, null=False, blank=True, choices=Type.choices)
+    consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL,
+                                 related_name='ach_transactions', blank=True)
+    merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL,
+                                 related_name='ach_transactions', blank=True)
+    confirmed_at = models.DateTimeField(null=True, blank=True)
+    amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=14)
+    currency = models.CharField(max_length=5, null=True, blank=True)
+    account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
+
+
+    def __str__(self):
+        return self.ach_id

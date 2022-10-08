@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from home.models import Event
+from home.models import Event, DwollaEvent
 from users.models import Consumer, Merchant, DwollaUser
 
 
@@ -27,3 +27,7 @@ class MerchantAdmin(admin.ModelAdmin):
 class EventAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'description', 'start_date']
     search_fields = ['title']
+
+@admin.register(DwollaEvent)
+class DwollaEventAdmin(admin.ModelAdmin):
+    ...

@@ -1,26 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {observer} from "mobx-react-lite";
 import {PageWeb} from "../../components";
 import logo from '../../assets/images/logo.png';
 import "./Login.css"
-import {FORM_CONTENT} from "./constants";
 import FormContent from "../../components/FormContent/FormContent";
 import {LoginForm} from "./components";
-import {useApi} from "../../utils";
-import {AUTHORIZATION} from "../../services/constants";
 
 
 export const LoginPage: React.FC = observer(() => {
-    const [content, setContent] = useState(FORM_CONTENT.Login)
-   const api = useApi()
 
-   const updateContent = (newContent:FORM_CONTENT)=>{
-      setContent(newContent)
-   }
 
     return (
       <PageWeb header={false}  >
-          <div style={{marginTop:50, marginBottom:20}}>
+          <div style={{marginTop:30, marginBottom:20}}>
               <img src={logo} alt={"logo"} className={"logo img-fluid"} />
           </div>
           <FormContent>
