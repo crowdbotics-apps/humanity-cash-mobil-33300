@@ -153,6 +153,7 @@ class Consumer(BaseProfileModel):
     def __str__(self):
         return f'Customer id: {self.id}'
 
+
 class Merchant(BaseProfileModel):
     profile_picture = models.ImageField(upload_to='profile-pictures', null=True, blank=True)
     background_picture = models.ImageField(upload_to='background-pictures', null=True, blank=True)
@@ -189,8 +190,6 @@ class Merchant(BaseProfileModel):
         return f'Merchant id: {self.id}'
 
 
-
-
 class DwollaUser(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=100, null=True)
@@ -207,19 +206,31 @@ class DwollaUser(models.Model):
         managed = False
 
 
-class Coupons(models.Model): 
-    title = models.CharField(max_length=100, null=True)
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True)
-    type_of_promo = models.CharField(max_length=100, null=True)
-    discount_input = models.CharField(max_length=100, null=True)
-    description = models.CharField(max_length=250, null=True)
+class Coupon(models.Model):
+    title = models.CharField(max_length=100)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    type_of_promo = models.CharField(max_length=100, null=True, blank=True)
+    discount_input = models.CharField(max_length=100, null=True, blank=True)
+    description = models.CharField(max_length=250, null=True, blank=True)
     promo_image = models.ImageField(upload_to='coupons-pictures', null=True, blank=True)
+    merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE, related_name='coupons')
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
 
-    
+
+class ConsumerCoupon(models.Model):
+    consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE, related_name='consumer_coupons')
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, related_name='consumer_coupons')
+    active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
 
 class NoMerchantProfileException(Exception):
     pass
+
 
 class InvalidTransferDestinationException(Exception):
     pass
