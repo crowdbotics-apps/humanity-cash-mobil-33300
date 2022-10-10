@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, ConnectBankModal } from "../../components";
-import { ActivityIndicator, TextInput, TouchableOpacity, View, Image, ScrollView, KeyboardAvoidingView } from "react-native";
+import { Platform, TextInput, TouchableOpacity, View, Image, ScrollView, KeyboardAvoidingView } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import styles from './create-coupons';
 import Icon from "react-native-vector-icons/MaterialIcons"
@@ -11,6 +11,7 @@ import DatePicker from 'react-native-date-picker'
 import Entypo from "react-native-vector-icons/Entypo"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { launchImageLibrary } from 'react-native-image-picker';
+import { notifyMessage } from "../../utils/helpers"
 
 // a) Discount percentage, b) Discount dollar amount, c) Special Offer. 
 // Depending on the pull down choice, this would prompt user to enter either the discount percentage 
@@ -23,6 +24,7 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 
+	const [Loading, setLoading] = useState(false)
 	const [Title, setTitle] = React.useState('');
 	const [DateFrom, setDateFrom] = useState(new Date())
 	const [OpenFrom, setOpenFrom] = useState(false)
@@ -55,6 +57,44 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 			if (type === 'image') setPromoImage(response.assets[0]);
 
 		});
+	}
+
+	const postCoupon = () => {
+		setLoading(true)
+		const promoImage = {
+			uri:
+				Platform.OS === "android"
+					? PromoImage?.uri
+					: PromoImage?.uri.replace("file://", ""),
+			type: PromoImage?.type,
+			name: PromoImage?.fileName
+		}
+		loginStore.environment.api.postCoupons({
+			title: Title,
+			start_date: DateFrom.toISOString().split('T')[0],
+			end_date: DateTo.toISOString().split('T')[0],
+			type_of_promo: TypeOfPromo,
+			discount_input: DiscountInput,
+			descripton: Description,
+			promo_image: promoImage,
+			merchant: loginStore.getAllData.merchant_id
+		})
+			.then((result: any) => {
+				setLoading(false)
+				console.log(' postCoupon ===>>> ', JSON.stringify(result, null, 2), DateFrom, `${DateTo}`.split('T')[0])
+				if (result.kind === "ok") {
+					navigation.navigate("myCoupons")
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else if (result.kind === "unauthorized") {
+					loginStore.reset()
+					navigation.navigate("login")
+				} else {
+					notifyMessage(null)
+				}
+			})
 	}
 
 	const TypeOfPromos = [
@@ -120,6 +160,7 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 									modal
 									open={OpenFrom}
 									date={DateFrom}
+									mode='date'
 									onConfirm={(date) => {
 										setOpenFrom(false)
 										setDateFrom(date)
@@ -140,6 +181,7 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 									modal
 									open={OpenTo}
 									date={DateTo}
+									mode='date'
 									onConfirm={(date) => {
 										setOpenTo(false)
 										setDateTo(date)
@@ -196,7 +238,7 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 							style={[styles.BACK_IMAGE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}
 						>
 							{!PromoImage?.uri
-								? <FontAwesome name={"camera"} size={23} color={'#39534440'} style={{ marginTop: 15, marginRight: 15 }} />
+								? <FontAwesome name={"camera"} size={23} color={COLOR.PALETTE.orange} style={{ marginTop: 15, marginRight: 15 }} />
 								: <Image
 									source={{ uri: PromoImage?.uri }}
 									resizeMode='cover'
@@ -226,10 +268,11 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 			</KeyboardAvoidingView>
 			<Button
 				buttonStyle={{
-					backgroundColor: loginStore.getAccountColor,
+					rbackgroundColor: Loading ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
 					marginTop: 5
 				}}
-				onPress={() => { }}
+				loading={Loading}
+				onPress={() => postCoupon()}
 				buttonLabel={'Add Coupon'}
 			/>
 		</Screen>

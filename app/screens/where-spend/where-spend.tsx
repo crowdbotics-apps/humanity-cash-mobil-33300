@@ -68,13 +68,6 @@ export default StyleSheet.create({
     height: 200,
     width: METRICS.screenWidth * 0.95
   },
-  SEE_ON_MAP_LABEL: {
-    color: COLOR.PALETTE.blue,
-    fontSize: 16,
-    fontWeight: '600',
-    flex: 1,
-    textAlign: 'right'
-  },
   INDUSTRY_TITLE: {
     color: COLOR.PALETTE.orange,
     fontSize: 12,
@@ -168,6 +161,13 @@ export default StyleSheet.create({
     height: 55,
     justifyContent: 'center',
     width: METRICS.screenWidth * 0.75
+  },
+  SEE_ON_MAP_LABEL: {
+    color: COLOR.PALETTE.blue,
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'right'
   },
   STEP_SUB_TITLE: {
     color: COLOR.PALETTE.black,

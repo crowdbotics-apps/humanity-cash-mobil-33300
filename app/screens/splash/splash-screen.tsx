@@ -46,6 +46,7 @@ export const SplashScreen = observer(function SplashScreen() {
       }
       setLoading(false)
     }, 2000)
+    navigation.canGoBack = () => false
   }, [])
 
   const LoadingSetp = () => (

@@ -50,7 +50,8 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
   },
   BACK_IMAGE_CONTAINER: {
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'center',
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.lightGreen,
     borderRadius: 3,

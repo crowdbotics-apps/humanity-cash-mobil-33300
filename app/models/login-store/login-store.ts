@@ -2,6 +2,8 @@ import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment, withRootStore } from ".."
 import { COLOR } from '../../theme'
 
+const coupons = types.frozen()
+
 /**
  * Model description here for TypeScript hints.
  */
@@ -11,6 +13,8 @@ export const LoginStoreModel = types
   .extend(withEnvironment)
   .props({
     id: types.maybeNull(types.number),
+    merchant_id: types.maybeNull(types.number),
+    consumer_id: types.maybeNull(types.number),
     selected_account: types.maybeNull(types.string),
     account_base_color: types.maybeNull(types.string),
     username: types.maybeNull(types.string),
@@ -50,6 +54,8 @@ export const LoginStoreModel = types
     signupData: types.frozen(),
     // setup
     setupData: types.frozen(),
+    // coupon
+    merchant_coupons: types.maybeNull(types.array(coupons)),
   })
   .views(self => ({
     get isLoggedIn() {
@@ -63,6 +69,9 @@ export const LoginStoreModel = types
     },
     get getSetupData() {
       return self.setupData
+    },
+    get getMerchantCoupons() {
+      return self.merchant_coupons || []
     },
     get getSelectedAccount() {
       return self.selected_account || 'consumer'
@@ -89,6 +98,8 @@ export const LoginStoreModel = types
     get getAllData() {
       return {
         id: self.id,
+        merchant_id: self.merchant_id,
+        consumer_id: self.consumer_id,
         selected_account: self.selected_account,
         account_base_color: self.account_base_color,
         username: self.username,
@@ -126,6 +137,7 @@ export const LoginStoreModel = types
     get ProfileData() {
       return {
         id: self.id,
+        consumer_id: self.consumer_id,
         username: self.username,
         first_name: self.first_name,
         last_name: self.last_name,
@@ -137,6 +149,7 @@ export const LoginStoreModel = types
     get ProfileDataBusiness() {
       return {
         id: self.id,
+        merchant_id: self.merchant_id,
         business_name: self.business_name,
         type_of_business: self.type_of_business,
         business_story: self.business_story,
@@ -177,6 +190,9 @@ export const LoginStoreModel = types
         self.account_base_color = COLOR.PALETTE.orange
       }
     },
+    setMerchantCoupons(coupons) {
+      self.merchant_coupons = coupons
+    },
     setUser(user) {
       self.id = user.id
       self.username = user.username
@@ -191,6 +207,8 @@ export const LoginStoreModel = types
       self.random_profile_picture_index = index
     },
     setConsumerUser(user) {
+      if (!user) return
+      self.consumer_id = user.id
       self.id = user.id
       self.profile_picture = user.consumer_profile
       self.username = user.username
@@ -198,6 +216,8 @@ export const LoginStoreModel = types
       self.last_name = user.last_name
     },
     setMerchantUser(user) {
+      if (!user) return
+      self.merchant_id = user.id
       self.business_name = user.business_name
       self.type_of_business = user.type_of_business
       self.business_story = user.business_story
@@ -282,6 +302,7 @@ export const LoginStoreModel = types
       self.consumer_balance = null
       self.access_token = null
       self.currentStep = null
+      self.merchant_coupons = null
     }
   }))
 
