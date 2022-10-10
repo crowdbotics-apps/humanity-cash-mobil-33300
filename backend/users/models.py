@@ -213,6 +213,7 @@ class Coupon(models.Model):
     type_of_promo = models.CharField(max_length=100, null=True, blank=True)
     discount_input = models.CharField(max_length=100, null=True, blank=True)
     description = models.CharField(max_length=250, null=True, blank=True)
+    code = models.CharField(max_length=64, null=True, blank=True)
     promo_image = models.ImageField(upload_to='coupons-pictures', null=True, blank=True)
     merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE, related_name='coupons')
     created_at = models.DateTimeField(auto_now_add=True)
