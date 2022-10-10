@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react"
-import { Text, TouchableOpacity, TextInput, ActivityIndicator, View, Image, Modal } from "react-native"
+import { Text, TouchableOpacity, TextInput, ActivityIndicator, View, Image, Keyboard } from "react-native"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from "./styles"
 import { IMAGES, COLOR } from "../../theme"
 import { useNavigation } from "@react-navigation/native";
-
-import QRCodeScanner from 'react-native-qrcode-scanner';
-import QRCode from 'react-native-qrcode-svg'
-
-import { CustomSwitch } from '../../components'
 
 type ButtonProps = {
   onPress?: any
@@ -27,6 +22,13 @@ type ButtonProps = {
 
 export function Button(props: ButtonProps) {
   const navigation = useNavigation()
+  const [keyboardIsOpen, setKeyboardIsOpen] = React.useState(false);
+  Keyboard.addListener("keyboardDidShow", () => {
+    setKeyboardIsOpen(true);
+  });
+  Keyboard.addListener("keyboardDidHide", () => {
+    setKeyboardIsOpen(false);
+  });
 
   const BottomMenu = () => <View key={"key-for-array"} style={styles.ICONS_CONTAINER}>
     <TouchableOpacity onPress={() => navigation.navigate("home")}>
@@ -76,7 +78,7 @@ export function Button(props: ButtonProps) {
           }
         </TouchableOpacity>
       }
-      {props.showBottonMenu && [
+      {(props.showBottonMenu && !keyboardIsOpen) && [
         <Image
           key='button_img'
           resizeMode='contain'

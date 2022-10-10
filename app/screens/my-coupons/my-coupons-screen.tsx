@@ -2,61 +2,52 @@ import { observer } from "mobx-react-lite";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, TextInputComponent, ConnectBankModal } from "../../components";
-import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
+import { TouchableWithoutFeedback, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
-import styles from './my-transactions-style';
+import styles from './my-coupons-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
 import { CheckBox } from 'react-native-elements'
 import DatePicker from 'react-native-date-picker'
 import Entypo from "react-native-vector-icons/Entypo"
 
-export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
+export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 
 	const transactionTypes = [
-		'Incoming transactions',
-		'Outgoing transactions',
-		'Load ups',
-		'Cash out to USD',
+		'Discount percentage',
+		'Discount dollar amount',
+		'Special Offer',
 	]
 
-	const returns = {
-		TODAY: [
-			{
-				item: 'Customer sale',
-				time: '7 min ago',
-				credit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-			{
-				item: 'Carr Hardware',
-				time: '3:51, Jun 17, 2021',
-				debit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-			{
-				item: 'Cash out',
-				time: '4:51, Jun 17, 2021',
-				cash_out: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-		],
-		YESTERDAY: [
-			{
-				item: 'Customer return',
-				time: '3:51, Jun 16, 2021',
-				debit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-		]
-	}
+	const coupons: any = [
+		{
+			title: 'Super Promo',
+			start_date: '12/31/2022',
+			end_date: '12/31/2023',
+			type_of_promo: 'Discount percentage',
+			discount_input: '10%',
+			image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+		},
+		{
+			title: 'Super Promo 2',
+			start_date: '12/31/2022',
+			end_date: '12/31/2023',
+			type_of_promo: 'Discount dollar amount',
+			discount_input: '$20',
+			image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+		},
+		{
+			title: 'Super Promo 3',
+			start_date: '12/31/2022',
+			end_date: '12/31/2023',
+			type_of_promo: 'Special Offer',
+			discount_input: 'Free Wine',
+			image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+		},
+	]
 
 	const [ShowIndex, setShowIndex] = useState(true)
 
@@ -126,9 +117,8 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 				/>
 			</View>
 		</View>
-
 		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-			<Text style={styles.INPUT_LABEL_STYLE}>TYPE OF TRANSACTIONS</Text>
+			<Text style={styles.INPUT_LABEL_STYLE}>TYPE OF DISCOUNT</Text>
 		</View>
 		<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
 			<TouchableOpacity style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType('')]}>
@@ -146,52 +136,29 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	</View>
 
 	const ReturnDetailModal = () => <Modal transparent visible={DetailModalVisible}>
-		<View style={styles.ROOT_MODAL}>
-			<TouchableOpacity
-				onPress={() => setDetailModalVisible(false)}
-				style={styles.CLOSE_MODAL_BUTTON}
-			>
-				<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-				<Icon name={"close"} size={20} color={'#0D0E21'} />
-			</TouchableOpacity>
-			<View style={styles.MODAL_CONTAINER}>
-				<View style={styles.USER_IMAGE_CONTAINER}>
-					<Image
-						resizeMode="cover"
-						source={{ uri: SelectedReturn.image }}
-						style={styles.USER_IMAGE}
-					/>
+		<TouchableWithoutFeedback onPress={() => setDetailModalVisible(false)}>
+				<View style={styles.ROOT_MODAL}>
+					<View style={styles.MODAL_CONTENT}>
+						<Text style={styles.STEP_TITLE_BLACK}>Are you sure you want to remove this coupon</Text>
+						{/* <Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text> */}
+						<TouchableOpacity
+							style={styles.MODAL_BUTTON}
+							onPress={() => [setDetailModalVisible(false)]}>
+							<Text style={styles.SUBMIT_BUTTON_LABEL}>Remove</Text>
+						</TouchableOpacity>
+					</View>
+
 				</View>
-				<Text style={[styles.RETURN_ITEM_MODAL, { color: loginStore.getAccountColor }]}>{SelectedReturn.item}</Text>
-				<View style={styles.RETURN_CONTAINER}>
-					<Text style={[styles.RETURN_AMOUNT, { color: loginStore.getAccountColor }]}>C$ {SelectedReturn.amount}</Text>
-					<View style={styles.RETURN_DETAIL_CONTAINER}>
-						<Text style={styles.RETURN_DETAIL_LABEL}>TRANSACTION ID</Text>
-						<Text style={styles.RETURN_DETAIL_LABEL}>0567882HDJH2JE20</Text>
-					</View>
-					<View style={styles.RETURN_DETAIL_CONTAINER}>
-						<Text style={styles.RETURN_DETAIL_LABEL}>TYPE</Text>
-						<Text style={styles.RETURN_DETAIL_LABEL}>CUSTOMER SALE</Text>
-					</View>
-					<View style={styles.RETURN_DETAIL_CONTAINER}>
-						<Text style={styles.RETURN_DETAIL_LABEL}>DATE</Text>
-						<Text style={styles.RETURN_DETAIL_LABEL}>4:22 , JUN 17, 2021</Text>
-					</View>
-				</View>
-				<Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor }]}>{loginStore.ProfileData.username}</Text>
-				<Text style={styles.LINK}>I want to make a return</Text>
-			</View>
-			<View />
-		</View>
+			</TouchableWithoutFeedback>
 	</Modal>
 
 	const bankModal = () =>
 		<ConnectBankModal
-	visible={ShowBankModal}
-	buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
-	buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
-	onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
-/>
+			visible={ShowBankModal}
+			buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
+		/>
 
 	return (
 		<Screen
@@ -201,28 +168,23 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 			unsafe={true}
 			style={styles.ROOT}
 		>
-				<View style={styles.HEADER_ACTIONS}>
-								<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-									<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
-									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
+			<View style={styles.HEADER_ACTIONS}>
+				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+					<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
 
-								</TouchableOpacity>
-							</View>
+				</TouchableOpacity>
+			</View>
 			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
-
-						
-
 							<View style={styles.STEP_CONTAINER}>
-
-								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor}]}>My Transactions</Text>
-								<View style={styles.AMOUNT_CONTAINER}>
-									<View style={{ flexDirection: 'row' }}>
-										<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>C$ 0</Text>
-									</View>
-
+							<View style={[styles.CONTAINER, { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>My Coupons</Text>
+								<TouchableOpacity onPress={() => navigation.navigate("createCoupon")}>
+								<Entypo name={'circle-with-plus'} size={40} color={loginStore.getAccountColor} style={styles.ADD_ICON} />
+								</TouchableOpacity>
 								</View>
 								<View style={styles.LINE} />
 								<View style={styles.SEARCH_INPUT_CONTAINER}>
@@ -242,31 +204,58 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 									</TouchableOpacity>
 								</View>
 								{ShowFilter && Filters()}
-								{Object.keys(returns).map((r, key) => ([
-									<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r}</Text>,
-									returns[r].map((i, key2) => (
-										<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
-											<Image
-												source={{ uri: i.image }}
-												resizeMode='cover'
-												style={styles.RETURN_IMAGE}
-											/>
-											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
-											{/* <Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text> */}
+								
+								
+								{coupons.map((i, key) => (
+									<TouchableOpacity onLongPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key + '_values'} style={styles.RETURN_ITEM}>
+										<Image
+											source={{ uri: i.image }}
+											resizeMode='cover'
+											style={styles.RETURN_IMAGE}
+										/>
+										<View style={[styles.CONTAINER, { flex: 1, justifyContent: 'center' }]}>
+											<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{`${i.start_date} - ${i.end_date}`}</Text>
+											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.title}</Text>
+										</View>
+										<View style={styles.CONTAINER}>
+											<Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{i.discount_input}</Text>
+										</View>
+									</TouchableOpacity>
+								))}
 
-											<View style={styles.CONTAINER}>
-												{i.credit
-													? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
-													: i.debit
-														? <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
-														: <Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{`+ C$ ${i.cash_out || ''}`}</Text>
-												}
+{coupons.map((i, key) => (
+									<TouchableOpacity onLongPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key + '_values'} style={styles.RETURN_ITEM}>
+										<Image
+											source={{ uri: i.image }}
+											resizeMode='cover'
+											style={styles.RETURN_IMAGE}
+										/>
+										<View style={[styles.CONTAINER, { flex: 1, justifyContent: 'center' }]}>
+											<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{`${i.start_date} - ${i.end_date}`}</Text>
+											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.title}</Text>
+										</View>
+										<View style={styles.CONTAINER}>
+											<Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{i.discount_input}</Text>
+										</View>
+									</TouchableOpacity>
+								))}
 
-											</View>
-										</TouchableOpacity>
-									))
-								]))}
-								<View style={{ height: 100 }} />
+{coupons.map((i, key) => (
+									<TouchableOpacity onLongPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key + '_values'} style={styles.RETURN_ITEM}>
+										<Image
+											source={{ uri: i.image }}
+											resizeMode='cover'
+											style={styles.RETURN_IMAGE}
+										/>
+										<View style={[styles.CONTAINER, { flex: 1, justifyContent: 'center' }]}>
+											<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{`${i.start_date} - ${i.end_date}`}</Text>
+											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.title}</Text>
+										</View>
+										<View style={styles.CONTAINER}>
+											<Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{i.discount_input}</Text>
+										</View>
+									</TouchableOpacity>
+								))}
 							</View>
 						</View>
 					</View>
@@ -275,14 +264,10 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 				{bankModal()}
 				{ShowIndex &&
 					<Button
-						buttonStyle={{
-							backgroundColor: loginStore.getAccountColor,
-						}}
-						buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
-						onPress={() => setShowIndex(false)}
-						buttonLabel={'Receive or Scan to pay'}
+						buttonStyle={{ backgroundColor: loginStore.getAccountColor, marginTop: 5}}
+						onPress={() => navigation.navigate("createCoupon")}
+						buttonLabel={'Create a coupon'}
 						showBottonMenu
-						hideButton
 						accountType={loginStore.getSelectedAccount}
 					/>
 				}

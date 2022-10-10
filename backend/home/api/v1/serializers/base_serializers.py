@@ -20,11 +20,14 @@ class CityListSerializer(serializers.ModelSerializer):
 
 class StateListSerializer(serializers.ModelSerializer):
     state_id = serializers.IntegerField(source='id')
-    state_code = serializers.CharField(source='geoname_code')
+    state_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Region
-        fields = ('state_id', 'state_code')
+        fields = ('state_id', 'state_name')
+
+    def get_state_name(self, obj):
+        return obj.display_name.rsplit(',', maxsplit=1)[0]
 
 
 class WhereToSpendListSerializer(serializers.ModelSerializer):

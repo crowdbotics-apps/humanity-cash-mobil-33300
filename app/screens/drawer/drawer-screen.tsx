@@ -137,6 +137,14 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         <Text style={styles.MENU_ITEM_LABEL}>Cash out to USD</Text>
       </TouchableOpacity>,
       <View key={'merchant_line'} style={styles.LINE} />,
+    <TouchableOpacity key={'merchant_10'} onPress={() => props.navigation.navigate("myCoupons")} style={styles.MENU_ITEM_CONTAINER}>
+      <Image
+        resizeMode="contain"
+        source={IMAGES.coupon}
+        style={styles.MENU_ITEM_ICON}
+      />
+      <Text style={styles.MENU_ITEM_LABEL}>Manage Coupons</Text>
+    </TouchableOpacity>,
       <TouchableOpacity key={'merchant_5'} onPress={() => props.navigation.navigate("whereSpend")} style={styles.MENU_ITEM_CONTAINER}>
         <Image
           resizeMode="contain"
@@ -292,7 +300,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 </View>
                 <View style={styles.SWITCH_ACCOUNT_CONTAINER}>
                   <Text style={styles.USER_NAME_BLACK}>{loginStore.username}</Text>
-                  {loginStore.ProfileDataBusiness.business_name === '' &&
+                  {loginStore.ProfileDataBusiness.business_name !== '' &&
                     <TouchableOpacity onPress={() => setChangeAccountOpen(!ChangeAccountOpen)}>
                       <Text style={styles.SWITCH_ACCOUNT_LABEL_BLUE}>Switch account</Text>
                     </TouchableOpacity>

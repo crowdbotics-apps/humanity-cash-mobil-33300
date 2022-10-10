@@ -18,9 +18,6 @@ export const HomeScreen = observer(function HomeScreen() {
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 
-	const [ShowBankModal, setShowBankModal] = useState(false)
-	const [ShowBankStepModal, setShowBankStepModal] = useState(false)
-	const [ModalAgree, setModalAgree] = useState(false)
 	const [Events, setEvents] = useState([])
 
 	const getProfileConsumer = () => {
@@ -31,9 +28,8 @@ export const HomeScreen = observer(function HomeScreen() {
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
-						// loginStore.setApiToken(result.response.access_token)
-						// navigation.navigate("home")
 					})
+					if (loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null) navigation.navigate("setupProfile")
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -47,16 +43,14 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
-
 	const getProfileMerchant = () => {
 		loginStore.environment.api
 			.getProfileMerchant()
 			.then((result: any) => {
+				console.log(' getProfileMerchant ===>>>  ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
-						// loginStore.setApiToken(result.response.access_token)
-						// navigation.navigate("home")
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -66,12 +60,10 @@ export const HomeScreen = observer(function HomeScreen() {
 					loginStore.reset()
 					navigation.navigate("login")
 				} else {
-					//   loginStore.reset()
 					notifyMessage(null)
 				}
 			})
 	}
-
 	const getBalanceData = () => {
 		loginStore.environment.api
 			.getBalanceData()
@@ -88,7 +80,6 @@ export const HomeScreen = observer(function HomeScreen() {
 					loginStore.reset()
 					navigation.navigate("login")
 				} else {
-					//   loginStore.reset()
 					notifyMessage(null)
 				}
 			})
@@ -116,60 +107,11 @@ export const HomeScreen = observer(function HomeScreen() {
 	}
 
 	useEffect(() => {
-		if (loginStore.ProfileData.first_name === '') navigation.navigate("setupProfile")
 		getEvents()
 		getBalanceData()
 		getProfileConsumer()
 		getProfileMerchant()
 	}, [])
-
-	const bankModal = () => (
-		<Modal visible={ShowBankModal} transparent>
-			<View style={styles.ROOT_MODAL}>
-				<TouchableOpacity onPress={() => setShowBankModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
-					<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-					<Icon name={"close"} size={20} color={'#8B9555'} />
-				</TouchableOpacity>
-				<View style={styles.MODAL_CONTAINER}>
-					{ShowBankStepModal
-						? <View style={styles.MODAL_CONTENT}>
-							<Text style={styles.STEP_TITLE}>Currents uses Dwolla to link your personal bank account.</Text>
-
-							<View style={styles.AGREE_CONTAINER}>
-								<CheckBox
-									checked={ModalAgree}
-									onPress={() => setModalAgree(!ModalAgree)}
-									checkedColor={COLOR.PALETTE.green}
-								/>
-								<Text style={styles.AGREE_LABEL}>{`By checking this box, you agree to the `}
-									{/* TODO */}
-									<Text style={styles.AGREE_LABEL_LINK} onPress={() => console.log('dwolla')}>
-										{"Dwolla Terms of Service "}
-									</Text>
-									{`and `}
-									{/* TODO */}
-									<Text style={styles.AGREE_LABEL_LINK} onPress={() => console.log('dwolla')}>
-										{"Dwolla Privacy Policy"}
-									</Text>
-								</Text>
-							</View>
-							<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => [setShowBankModal(false), navigation.navigate("linkBank")]}>
-								<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
-							</TouchableOpacity>
-						</View>
-						: <View style={styles.MODAL_CONTENT}>
-							<Text style={styles.STEP_TITLE}>Whoooops. You have to link your bank account first</Text>
-							<Text style={styles.STEP_SUB_TITLE_MODAL}>Before you can load your wallet you have to first link your bank account. </Text>
-							<TouchableOpacity style={styles.MODAL_BUTTON} onPress={() => setShowBankStepModal(true)}>
-								<Text style={styles.SUBMIT_BUTTON_LABEL}>Link my bank account</Text>
-							</TouchableOpacity>
-						</View>
-					}
-				</View>
-				<View />
-			</View>
-		</Modal>
-	)
 
 	function DateFormat(date: string) {
 		const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -225,7 +167,6 @@ export const HomeScreen = observer(function HomeScreen() {
 					{renderNews()}
 					<View style={{ height: 20 }} />
 				</View>
-				{bankModal()}
 			</ScrollView>
 		</View>
 	)

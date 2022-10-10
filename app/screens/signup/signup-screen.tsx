@@ -257,7 +257,6 @@ export const SignupScreen = observer(function SignupScreen() {
         }}
         style={styles.INPUT_STYLE_CONTAINER}
       />
-
     </View>
   )
   const LegalStep = () => (

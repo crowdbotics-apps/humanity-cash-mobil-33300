@@ -26,6 +26,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { IMAGES, METRICS, COLOR } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
+import {Masks} from "react-native-mask-input";
 import { getErrorMessage, getImageFileFromSource, notifyMessage } from "../../utils/helpers"
 
 
@@ -144,15 +145,13 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const fetchCity = (data?: string) => {
 		loginStore.environment.api.getCities({ value: data })
 			.then((result: any) => {
-				console.log(' fetchCity ==>> ', JSON.stringify(result, null, 2))
 				result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
 			})
 	}
 	const fetchState = (data?: string) => {
 		loginStore.environment.api.getStates({ value: data })
 			.then((result: any) => {
-				console.log(' fetchState ==>> ', JSON.stringify(result, null, 2))
-				result?.data?.results && setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+				result?.data?.results && setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_name })))
 			})
 	}
 
@@ -191,6 +190,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			first_name: Name,
 			last_name: LastName
 		}).then((result: any) => {
+			console.log(' setupConsumerDetail ===>>> ', JSON.stringify(result, null, 2))
 			setLoading(false)
 			if (result.kind === "ok") {
 				setShowThankyouModal(true)
@@ -232,7 +232,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		})
 			.then((result: any) => {
 				setLoading(false)
-				setStep('business_type')
 				if (result.kind === "ok") {
 					setStep('business_type')
 				} else if (result.kind === "bad-data") {
@@ -250,7 +249,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const setupMerchantDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
-			.then((result: any) => {
+		.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
 					setStep('business_exec')
@@ -267,6 +266,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			})
 	}
 	const setupMerchantDetailComplete = () => {
+		const phoneNumber = PhoneNumber !== '' ? `+1${PhoneNumber}` : ''
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({
 			registered_business_name: BusinessRegName,
@@ -275,12 +275,12 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			social_security_number: IndentifierType === 'SSN' ? SocialSecurityNumber : '',
 			owner_first_name: BusinessExecName,
 			owner_last_name: BusinessExecLastName,
-			// city: 1988, // TODO: fetch
-			// state: 28, // TODO: fetch
 			address_1: Address1,
 			address_2: Address2,
+			city: City?.id,
+			state: State?.id,
 			zip_code: PostalCode,
-			phone_number: PhoneNumber
+			phone_number: phoneNumber
 		})
 			.then((result: any) => {
 				setLoading(false)
@@ -493,7 +493,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					multiline
 					scrollEnabled={false}
 					numberOfLines={4}
-					placeholder={'Business name'}
+					placeholder={'Tell the world about your business. What gives you joy as an entrepreneur? What do you love about the Berkshires?'}
 				/>
 			</View>
 		</View>
@@ -660,7 +660,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
 					<TouchableOpacity
-						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, justifyContent: 'flex-start' }]}
 						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
 					>
 						<ModalSelector
@@ -722,19 +722,15 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setPhoneNumber(t)}
-					value={PhoneNumber}
-					placeholder={'Phone number'}
-				/>
-			</View>
-
-
-
-
+			<MaskInput
+				value={PhoneNumber}
+				mask={Masks.USA_PHONE}
+				name="ssn"
+				placeholder="(XXX)-XXX-XXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setPhoneNumber(unmasked)}
+				style={styles.INPUT_STYLE_CONTAINER}
+			/>
 		</View>
 	)
 

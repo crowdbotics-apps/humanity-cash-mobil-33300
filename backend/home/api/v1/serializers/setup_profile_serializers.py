@@ -79,9 +79,9 @@ class SetupMerchantProfileDetailSerializer(serializers.ModelSerializer):
         model = Merchant
         fields = ['id', 'business_name', 'type_of_business', 'business_story',
                   'owner_first_name', 'owner_last_name',
-                  'registered_business_name', 'industry',
-                  'employer_identification_number', 'social_security_number',
-                  'address_1', 'address_2', 'city', 'state', 'location', 'zip_code', 'phone_number']
+                  'registered_business_name', 'industry', 'website',
+                  'employer_identification_number', 'social_security_number', 'location'
+                  'address_1', 'address_2', 'city', 'state', 'zip_code', 'phone_number']
 
 
 class ConsumerMyProfileSerializer(serializers.ModelSerializer):
