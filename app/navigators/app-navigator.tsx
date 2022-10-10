@@ -68,10 +68,12 @@ const AppStackDrawer: React.FC = () => {
     <DrawerNav.Navigator
       screenOptions={{
         headerShown: false,
+        swipeEdgeWidth: -200,
         drawerStyle: {
           width: METRICS.screenWidth * 0.9,
         },
       }}
+      
       initialRouteName="splash"
       drawerContent={(props) => <DrawerScreen {...props} />}
     >

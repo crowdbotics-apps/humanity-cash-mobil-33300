@@ -30,11 +30,13 @@ const SETTINGS = require("../../../assets/icons/settings.png")
 const SIGN_UP_YOUR_BUSINESS = require("../../../assets/icons/sign_up_your_business.png")
 const WHERE_TO_SPEND = require("../../../assets/icons/where_to_spend.png")
 const LOGOUT = require("../../../assets/icons/logout.png")
+const LOGOUT_WHITE = require("../../../assets/icons/logout_white.png")
 const COMMUNITY = require("../../../assets/icons/community.png")
 const FAMILY = require("../../../assets/icons/family.png")
 
 const MENU_MERCHANG = require("../../../assets/images/menu_merchant.png")
 const MENU_CONSUMER = require("../../../assets/images/menu_consumer.png")
+const MENU_CASHIER = require("../../../assets/images/menu_cashier.png")
 const lee_bank = require("../../../assets/images/lee_bank.png")
 
 const menu_address_inactive = require("../../../assets/icons/menu_address_inactive.png")
@@ -80,10 +82,12 @@ export const IMAGES = {
   sign_up_your_business: SIGN_UP_YOUR_BUSINESS,
   where_to_spend: WHERE_TO_SPEND,
   logout: LOGOUT,
+  logout_white: LOGOUT_WHITE,
   community: COMMUNITY,
   family: FAMILY,
   menu_merchant: MENU_MERCHANG,
   menu_consumer: MENU_CONSUMER,
+  menu_cashier: MENU_CASHIER,
   menu_address_inactive,
   menu_home_inactive,
   menu_load_wallet_inactive,

@@ -43,7 +43,15 @@ export function Button(props: ButtonProps) {
         style={styles.BOTTON_MENU_ICON_WALLET}
       />
     </TouchableOpacity>
-    <TouchableOpacity style={props.accountType === 'merchant' ? styles.QR_BUTTON_MERCHANT : styles.QR_BUTTON} onPress={() => navigation.navigate("qr")}>
+    <TouchableOpacity 
+      style={props.accountType === 'merchant' 
+        ? styles.QR_BUTTON_MERCHANT 
+        : props.accountType === 'cashier'
+          ? styles.QR_BUTTON_CASHIER
+          : styles.QR_BUTTON
+      } 
+      onPress={() => navigation.navigate("qr")}
+    >
       <Icon key={'button_adornment'} name={"qr-code-2"} size={35} color={'white'} style={{ marginBottom: 3 }} />
     </TouchableOpacity>
     <TouchableOpacity onPress={() => navigation.navigate("whereSpend")}>
@@ -82,7 +90,12 @@ export function Button(props: ButtonProps) {
         <Image
           key='button_img'
           resizeMode='contain'
-          source={props.accountType === 'merchant' ? IMAGES.menu_merchant : IMAGES.menu_consumer}
+          source={props.accountType === 'merchant' 
+            ? IMAGES.menu_merchant 
+            : props.accountType === 'cashier' 
+              ? IMAGES.menu_cashier
+              : IMAGES.menu_consumer
+          }
           style={styles.BOTTON_MENU}
         />,
         BottomMenu()

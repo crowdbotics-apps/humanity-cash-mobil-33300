@@ -101,7 +101,6 @@ export class ApiBase {
             return {kind: "unknown", temporary: true} as T
         }
         const response: ApiResponse<any> = await this.apisauce.get(path, extra_params, axios)
-        console.log(' ======>>>>>>> ', JSON.stringify(response, null, 2))
         if (!response.ok) {
             if (response.status === 400) {
                 return {kind: "bad-data", errors: response.data} as T
