@@ -177,7 +177,82 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         />
         <Text style={styles.MENU_ITEM_LABEL}>Help and Contact</Text>
       </TouchableOpacity>,
-    ]
+    ],
+    cashier: [
+      <TouchableOpacity key={'merchant_1'} onPress={() => props.navigation.navigate("qr")} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.scanToPay}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Receive payment / Scan to pay</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_2'} onPress={() => props.navigation.navigate("myTransactions")} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.receive_payment}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>My Transactions</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_3'} onPress={() => props.navigation.navigate("loadWallet")} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.load_wallet}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Load Wallet</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_4'} onPress={() => props.navigation.navigate("cashOut")} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.cash_out}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Cash out to USD</Text>
+      </TouchableOpacity>,
+      <View key={'merchant_line'} style={styles.LINE} />,
+    <TouchableOpacity key={'merchant_10'} onPress={() => props.navigation.navigate("myCoupons")} style={styles.MENU_ITEM_CONTAINER}>
+      <Image
+        resizeMode="contain"
+        source={IMAGES.coupon}
+        style={styles.MENU_ITEM_ICON}
+      />
+      <Text style={styles.MENU_ITEM_LABEL}>Manage Coupons</Text>
+    </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_5'} onPress={() => props.navigation.navigate("whereSpend")} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.where_to_spend}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Where to spend</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_6'} onPress={() => props.navigation.navigate("makeReport")} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.make_a_report}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Make a report</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_8'} onPress={() => props.navigation.navigate("settings")} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.settings}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Settings</Text>
+      </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_9'} onPress={() => props.navigation.navigate("helpContact")} style={styles.MENU_ITEM_CONTAINER} >
+        <Image
+          resizeMode="contain"
+          source={IMAGES.help_and_contact}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Help and Contact</Text>
+      </TouchableOpacity>,
+    ],
   }
 
   const [ChangeAccountOpen, setChangeAccountOpen] = useState(false)
@@ -334,10 +409,21 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
           <TouchableOpacity onPress={() => [loginStore.reset(), props.navigation.navigate("login")]} style={styles.MENU_ITEM_CONTAINER}>
             <Image
               resizeMode="contain"
-              source={IMAGES.logout}
+              source={loginStore.getSelectedAccount === 'consumer'
+              ? IMAGES.logout
+              : IMAGES.logout_white
+              }
               style={styles.MENU_ITEM_ICON}
             />
-            <Text style={styles.SIGN_OUT}>Sign out</Text>
+            <Text style={[
+              styles.SIGN_OUT,
+              { color: loginStore.getSelectedAccount === 'consumer'
+                ? COLOR.PALETTE.mustard
+                : COLOR.PALETTE.white
+              }
+            ]}>
+              Sign out
+                </Text>
           </TouchableOpacity>
         </View>
       </View>

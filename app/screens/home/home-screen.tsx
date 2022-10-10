@@ -1,17 +1,14 @@
 import { observer } from "mobx-react-lite";
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import { Button, Screen, Text } from "../../components";
-import { Image, TouchableOpacity, View, Modal, KeyboardAvoidingView, ScrollView, Platform } from "react-native";
-import { COLOR, IMAGES, METRICS } from "../../theme";
-import { ButtonIcon } from "../../components/button-icon/button-icon";
+import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, BackHandler } from "react-native";
+import { IMAGES } from "../../theme";
 import styles from "./home-style";
 import { useStores } from "../../models";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { CheckBox } from "react-native-elements";
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
-import { result } from "validate.js";
 
 export const HomeScreen = observer(function HomeScreen() {
 	const navigation = useNavigation()
@@ -112,6 +109,12 @@ export const HomeScreen = observer(function HomeScreen() {
 		getProfileConsumer()
 		getProfileMerchant()
 	}, [])
+
+	useEffect(() => {
+		const backAction = () => true
+		const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+		return () => backHandler.remove();
+	}, []);
 
 	function DateFormat(date: string) {
 		const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']

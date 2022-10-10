@@ -41,6 +41,9 @@ export function getActiveRouteName(state: NavigationState | PartialState<Navigat
 export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
   const canExitRef = useRef(canExit)
 
+  
+  console.log(' navigationRef ===>>> ', JSON.stringify(canExitRef, null, 2))
+
   useEffect(() => {
     canExitRef.current = canExit
   }, [canExit])
@@ -60,7 +63,6 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
         // let the system know we've not handled this event
         return false
       }
-
       // we can't exit, so let's turn this into a back action
       if (navigationRef.canGoBack()) {
         navigationRef.goBack()
