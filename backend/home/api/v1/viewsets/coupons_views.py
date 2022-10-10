@@ -14,7 +14,7 @@ from users.models import Coupon
 logger = logging.getLogger('transaction')
 
 
-class CouponsView(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
+class CouponsView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,  viewsets.GenericViewSet):
     queryset = Coupon.objects.filter(active=True)
     serializer_class = CounponListSerializer
     permission_classes = [permissions.IsAuthenticated]
