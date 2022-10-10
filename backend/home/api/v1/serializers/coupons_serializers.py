@@ -24,8 +24,6 @@ class CounponCreateSerializer(serializers.ModelSerializer):
                   'merchant']
 
     def validate(self, attrs):
-        merchant = attrs['merchant']
-        user = None
         start_date = attrs.get('start_date', None)
         end_date = attrs.get('end_date', None)
         if start_date and end_date and start_date > end_date:
