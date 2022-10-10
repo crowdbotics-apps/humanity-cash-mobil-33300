@@ -12,6 +12,7 @@ export default StyleSheet.create({
         backgroundColor: COLOR.PALETTE.transparent,
         bottom: -1,
         height: METRICS.screenWidth / 4,
+        marginTop: 15,
         width: METRICS.screenWidth,
     },
     BOTTON_MENU_ICON_ADDRESS: {

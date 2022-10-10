@@ -207,6 +207,16 @@ class DwollaUser(models.Model):
         managed = False
 
 
+class Coupons(models.Model): 
+    title = models.CharField(max_length=100, null=True)
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+    type_of_promo = models.CharField(max_length=100, null=True)
+    discount_input = models.CharField(max_length=100, null=True)
+    description = models.CharField(max_length=250, null=True)
+    promo_image = models.ImageField(upload_to='coupons-pictures', null=True, blank=True)
+
+    
 
 class NoMerchantProfileException(Exception):
     pass

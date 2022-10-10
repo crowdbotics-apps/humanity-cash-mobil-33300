@@ -51,8 +51,6 @@ export const HomeScreen = observer(function HomeScreen() {
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
-						// loginStore.setApiToken(result.response.access_token)
-						// navigation.navigate("home")
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]

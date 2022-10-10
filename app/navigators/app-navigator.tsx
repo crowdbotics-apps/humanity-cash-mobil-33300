@@ -28,6 +28,8 @@ import {
   MakeReportScreen,
   MyTransactionsScreen,
   CashOutScreen,
+  MyCouponsScreen,
+  CreateCouponScreen,
   ContactScreen
 } from "../screens";
 
@@ -55,6 +57,8 @@ export type NavigatorParamList = {
   myTransactions: any
   cashOut: any
   contact: any
+  createCoupon: any,
+  myCoupons: any
 }
 
 const DrawerNav = createDrawerNavigator<NavigatorParamList>();
@@ -93,6 +97,8 @@ const AppStackDrawer: React.FC = () => {
       <DrawerNav.Screen name="myTransactions" component={MyTransactionsScreen} />
       <DrawerNav.Screen name="cashOut" component={CashOutScreen} />
       <DrawerNav.Screen name="contact" component={ContactScreen} />
+      <DrawerNav.Screen name="myCoupons" component={MyCouponsScreen} />
+      <DrawerNav.Screen name="createCoupon" component={CreateCouponScreen} />
     </DrawerNav.Navigator>
   )
 }

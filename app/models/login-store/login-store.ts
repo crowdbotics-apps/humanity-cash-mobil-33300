@@ -43,7 +43,6 @@ export const LoginStoreModel = types
     billing_data_added: types.maybeNull(types.boolean),
     merchant_balance: types.maybeNull(types.number),
     consumer_balance: types.maybeNull(types.number),
-
     access_token: types.maybeNull(types.string),
     // currentStep
     currentStep: types.maybeNull(types.string),
@@ -250,18 +249,39 @@ export const LoginStoreModel = types
       api.deleteHeader("Authorization")
       self.id = null
       self.selected_account = null
+      self.account_base_color = null
       self.username = null
       self.first_name = null
       self.last_name = null
+      self.email = null
       self.verified_email = null
       self.allow_touch_id = null
-      self.email = null
-      self.phone_number = null
+      self.password_set = null
+      self.business_name = null
+      self.type_of_business = null
+      self.business_story = null
+      self.random_profile_picture_index = null
       self.profile_picture = null
-      self.access_token = null
+      self.profile_picture_merchant = null
+      self.background_picture = null
+      self.owner_first_name = null
+      self.owner_last_name = null
+      self.registered_business_name = null
+      self.industry = null
+      self.website = null
+      self.employer_identification_number = null
+      self.social_security_number = null
+      self.address_1 = null
+      self.address_2 = null
       self.city = null
       self.state = null
-      self.billing_data_added = false
+      self.zip_code = null
+      self.phone_number = null
+      self.billing_data_added = null
+      self.merchant_balance = null
+      self.consumer_balance = null
+      self.access_token = null
+      self.currentStep = null
     }
   }))
 
