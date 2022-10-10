@@ -10,6 +10,57 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 
+const coupons: any = [
+	{
+		title: 'Super Promo',
+		start_date: '12/31/2022',
+		end_date: '12/31/2023',
+		type_of_promo: 'Discount percentage',
+		discount_input: '10%',
+		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	},
+	{
+		title: 'Super Promo 2',
+		start_date: '12/31/2022',
+		end_date: '12/31/2023',
+		type_of_promo: 'Discount dollar amount',
+		discount_input: '$20',
+		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	},
+	{
+		title: 'Super Promo 3',
+		start_date: '12/31/2022',
+		end_date: '12/31/2023',
+		type_of_promo: 'Special Offer',
+		discount_input: 'Free Wine',
+		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	},
+	{
+		title: 'Super Promo',
+		start_date: '12/31/2022',
+		end_date: '12/31/2023',
+		type_of_promo: 'Discount percentage',
+		discount_input: '10%',
+		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	},
+	{
+		title: 'Super Promo 2',
+		start_date: '12/31/2022',
+		end_date: '12/31/2023',
+		type_of_promo: 'Discount dollar amount',
+		discount_input: '$20',
+		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	},
+	{
+		title: 'Super Promo 3',
+		start_date: '12/31/2022',
+		end_date: '12/31/2023',
+		type_of_promo: 'Special Offer',
+		discount_input: 'Free Wine',
+		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	},
+]
+
 export const HomeScreen = observer(function HomeScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
@@ -97,7 +148,6 @@ export const HomeScreen = observer(function HomeScreen() {
 					loginStore.reset()
 					navigation.navigate("login")
 				} else {
-					//   loginStore.reset()
 					notifyMessage(null)
 				}
 			})
@@ -145,6 +195,7 @@ export const HomeScreen = observer(function HomeScreen() {
 				<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 
 			</TouchableOpacity>
+
 			<ScrollView key="consumer_view" showsVerticalScrollIndicator={false} bounces={false}>
 				<View style={styles.STEP_CONTAINER}>
 					<Image
@@ -161,12 +212,21 @@ export const HomeScreen = observer(function HomeScreen() {
 							/>
 							<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>0</Text>
 						</View>
-						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => navigation.navigate("loadWallet")}> */}
-						{/* <TouchableOpacity style={styles.LOAD_WALLET_CONTAINER} onPress={() => setShowBankModal(true)} >
-							<Text style={styles.LOAD_WALLET_LABEL}>Load Wallet</Text>
-						</TouchableOpacity> */}
 					</View>
 					<View style={styles.LINE} />
+					<Text style={styles.INDUSTRY_TITLE}>MY SAVED COUPONS</Text>
+					<ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginHorizontal: 10}}>
+						{coupons.map((c, key) => (
+							<View key={key} style={styles.COUPON_CONTAINER}>
+								<Image
+									source={{ uri: c.image }}
+									resizeMode='cover'
+									style={styles.RETURN_IMAGE}
+								/>
+								<Text style={styles.COUPON_TITLE} >{c.title}</Text>
+							</View>
+						))}
+					</ScrollView>
 					{renderNews()}
 					<View style={{ height: 20 }} />
 				</View>

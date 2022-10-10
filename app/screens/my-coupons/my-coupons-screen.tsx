@@ -10,6 +10,8 @@ import { useStores } from "../../models";
 import { CheckBox } from 'react-native-elements'
 import DatePicker from 'react-native-date-picker'
 import Entypo from "react-native-vector-icons/Entypo"
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
 
 export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	const navigation = useNavigation()
@@ -65,9 +67,25 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
+	const getCoupons = () => {
+		loginStore.environment.api
+			.getCoupons()
+			.then((result: any) => {
+				console.log(' getCoupons ===>>>  ', JSON.stringify(result, null, 2))
+				if (result.kind === "ok") {
+					runInAction(() => {
+						loginStore.setMerchantCoupons(result?.data?.results)
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				}
+			})
+	}
+
 	useEffect(() => {
-		// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-		// else setShowBankModal(false)
+		getCoupons()
 	}, [])
 
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>
@@ -204,51 +222,20 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 									</TouchableOpacity>
 								</View>
 								{ShowFilter && Filters()}
-								
-								
-								{coupons.map((i, key) => (
+								{loginStore.getMerchantCoupons.map((i, key) => (
 									<TouchableOpacity onLongPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key + '_values'} style={styles.RETURN_ITEM}>
 										<Image
-											source={{ uri: i.image }}
+											source={{ uri: i.promo_image }}
 											resizeMode='cover'
 											style={styles.RETURN_IMAGE}
 										/>
 										<View style={[styles.CONTAINER, { flex: 1, justifyContent: 'center' }]}>
-											<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{`${i.start_date} - ${i.end_date}`}</Text>
-											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.title}</Text>
-										</View>
-										<View style={styles.CONTAINER}>
-											<Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{i.discount_input}</Text>
-										</View>
-									</TouchableOpacity>
-								))}
-
-{coupons.map((i, key) => (
-									<TouchableOpacity onLongPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key + '_values'} style={styles.RETURN_ITEM}>
-										<Image
-											source={{ uri: i.image }}
-											resizeMode='cover'
-											style={styles.RETURN_IMAGE}
-										/>
-										<View style={[styles.CONTAINER, { flex: 1, justifyContent: 'center' }]}>
-											<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{`${i.start_date} - ${i.end_date}`}</Text>
-											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.title}</Text>
-										</View>
-										<View style={styles.CONTAINER}>
-											<Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{i.discount_input}</Text>
-										</View>
-									</TouchableOpacity>
-								))}
-
-{coupons.map((i, key) => (
-									<TouchableOpacity onLongPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key + '_values'} style={styles.RETURN_ITEM}>
-										<Image
-											source={{ uri: i.image }}
-											resizeMode='cover'
-											style={styles.RETURN_IMAGE}
-										/>
-										<View style={[styles.CONTAINER, { flex: 1, justifyContent: 'center' }]}>
-											<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{`${i.start_date} - ${i.end_date}`}</Text>
+										<Text key={key + '_label'} style={styles.RETURNS_LABEL}>
+											{ (i.start_date && i.end_date)
+											 ? `${i.start_date} - ${i.end_date}`
+											: '-'
+											}
+											 </Text>
 											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.title}</Text>
 										</View>
 										<View style={styles.CONTAINER}>

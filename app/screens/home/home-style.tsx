@@ -88,10 +88,28 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     marginRight: 30
   },
+  COUPON_CONTAINER: {
+    marginRight: 10,
+    width: 100
+  },
+  COUPON_TITLE: {
+    color: COLOR.PALETTE.pureblack,
+    fontSize: 12,
+    marginVertical: 3,
+    textAlign: 'center',
+
+  },
   HEADER: {
     flexDirection: 'row',
     marginLeft: 10,
     marginTop: 10,
+  },
+  INDUSTRY_TITLE: {
+    color: COLOR.PALETTE.orange,
+    fontSize: 12,
+    fontWeight: '700',
+    marginBottom: 10,
+    marginLeft: 10
   },
   LINE: {
     alignSelf: 'center',
@@ -161,7 +179,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.lightGray,
     borderRadius: 3,
-    height: 500,
+    height: 400,
     justifyContent: 'space-around',
     marginTop: 15,
     width: METRICS.screenWidth * 0.95
@@ -187,6 +205,10 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 15,
     width: METRICS.screenWidth * 0.80,
+  },
+  RETURN_IMAGE: {
+    height: 130,
+    width: 100,
   },
   ROOT: {
     backgroundColor: COLOR.PALETTE.white,

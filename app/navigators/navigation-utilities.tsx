@@ -41,9 +41,6 @@ export function getActiveRouteName(state: NavigationState | PartialState<Navigat
 export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
   const canExitRef = useRef(canExit)
 
-  
-  console.log(' navigationRef ===>>> ', JSON.stringify(canExitRef, null, 2))
-
   useEffect(() => {
     canExitRef.current = canExit
   }, [canExit])

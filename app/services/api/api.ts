@@ -91,6 +91,14 @@ export class Api extends ApiBase {
     return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
   }
 
+  async getCoupons(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/coupons/")
+  }
+
+  async postCoupons(data: any): Promise<Types.SimplePostResult> {
+    return this.multipart_form_data(apiv1 + "/coupons/", data, ["promo_image"])
+  }
+
   // SECURITY
   async updateSecurity(data: any): Promise<Types.SimplePostResult> {
     return this.simple_patch(apiv1 + "/security/change-password/", data)
