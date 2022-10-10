@@ -11,7 +11,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 from celo_humanity.humanity_contract_helpers import NoWalletException, get_wallet_balance, transfer_coin, get_wallet, \
     deposit_coin, withdraw_coin, WalletAlreadyCreatedException
 from celo_humanity.web3helpers import get_provider, text2keccak
-from home.helpers import send_notifications
 from humanity_cash_mobil_33300 import settings
 from users.constants import Industry, UserGroup, UserRole
 
@@ -129,6 +128,8 @@ class BaseProfileModel(models.Model):
                       profile=self,
                       counterpart_profile=other_user)
         if transaction:
+            from home.helpers import send_notifications
+
             send_notifications([other_user],
                                'Withdraw',
                                transaction.method_or_memo,
@@ -143,6 +144,8 @@ class BaseProfileModel(models.Model):
             self.crypto_wallet_id = self.new_wallet()
         transaction = deposit_coin(self.crypto_wallet_id, amount, profile=self)
         if transaction:
+            from home.helpers import send_notifications
+
             send_notifications([self.user],
                                'New Deposit',
                                f'deposit (mint) {amount} to your wallet {self.crypto_wallet_id}',
@@ -157,6 +160,8 @@ class BaseProfileModel(models.Model):
             self.crypto_wallet_id = self.new_wallet()
         transaction = withdraw_coin(self.crypto_wallet_id, amount, profile=self)
         if transaction:
+            from home.helpers import send_notifications
+
             send_notifications([self.user],
                                'Withdraw',
                                f'withdraw (burn) {amount} from user {self.crypto_wallet_id}',

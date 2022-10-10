@@ -6,7 +6,7 @@ from email.mime.image import MIMEImage
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.backends import UserModel
+# from django.contrib.auth.backends import UserModel
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.db.models import QuerySet
@@ -16,7 +16,7 @@ from rest_framework.views import APIView
 from twilio.rest import Client
 import json
 from users.models import UserVerificationCode, Notification
-from onesignal_sdk import Cliente as OneSignalClient
+from onesignal_sdk.client import Client as OneSignalClient
 
 LOGGER = logging.getLogger('django')
 
@@ -95,7 +95,7 @@ def get_user_by_uidb64(uidb64):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = User._default_manager.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist, ValidationError):
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist, ValidationError):
         user = None
     return user
 
