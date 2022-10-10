@@ -6,13 +6,20 @@ from rest_framework import viewsets, permissions, mixins, status
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
-from home.api.v1.serializers.coupons_serializers import CounponListSerializer, CounponCreateSerializer
-from users.models import Coupon, Merchant
+from home.api.v1.serializers.coupons_serializers import CounponListSerializer, CounponCreateSerializer, \
+    ConsumerCouponListSerializer, ConsumerCouponCreateSerializer, ConsumerUpdateCreateSerializer
+from users.models import Coupon, Merchant, ConsumerCoupon
 
 logger = logging.getLogger('transaction')
 
 
-class CouponsView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin,  viewsets.GenericViewSet):
+class CouponsView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet
+):
     queryset = Coupon.objects.filter(active=True)
     serializer_class = CounponListSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -37,8 +44,7 @@ class CouponsView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.Destroy
     def get_serializer_class(self):
         if self.action == 'create':
             return CounponCreateSerializer
-        else:
-            return CounponListSerializer
+        return CounponListSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -57,3 +63,30 @@ class CouponsView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.Destroy
             return Response(status=status.HTTP_400_BAD_REQUEST)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ConsumerCouponView(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet
+):
+    serializer_class = ConsumerCouponListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = ConsumerCoupon.objects.filter(active=True, coupon__active=True, consumer__user=self.request.user)
+        now = timezone.now()
+        qs = queryset.filter(
+            Q(coupon__start_date__isnull=True) | Q(coupon__start_date__lte=now),
+            Q(coupon__end_date__isnull=True) | Q(coupon__end_date__gte=now)
+        )
+        return qs
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return ConsumerCouponCreateSerializer
+        if self.action == 'update':
+            return ConsumerUpdateCreateSerializer
+        return ConsumerCouponListSerializer
