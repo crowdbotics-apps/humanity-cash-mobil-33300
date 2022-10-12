@@ -42,7 +42,6 @@ export const LoginStoreModel = types
     state: types.maybeNull(types.string),
     zip_code: types.maybeNull(types.string),
     phone_number: types.maybeNull(types.string),
-    billing_data_added: types.maybeNull(types.boolean),
     merchant_balance: types.maybeNull(types.number),
     consumer_balance: types.maybeNull(types.number),
     access_token: types.maybeNull(types.string),
@@ -62,10 +61,18 @@ export const LoginStoreModel = types
     // coupon
     merchant_coupons: types.maybeNull(types.array(types.frozen())),
     consumer_coupons: types.maybeNull(types.array(types.frozen())),
+    // billing
+    billing_data_added: types.maybeNull(types.boolean),
+    funding_sources: types.maybeNull(types.array(types.frozen())),
+    // users
+    users: types.maybeNull(types.frozen()),
   })
   .views(self => ({
     get isLoggedIn() {
       return self.access_token !== null && self.access_token !== undefined
+    },
+    get getFundingSources() {
+      return self.funding_sources || []
     },
     get getStep() {
       return self.currentStep
@@ -99,7 +106,6 @@ export const LoginStoreModel = types
     },
     get getAccountColor() {
       return self.account_base_color || COLOR.PALETTE.blue
-      // return COLOR.PALETTE.blue
     },
     get getBillingData() {
       return {
@@ -194,6 +200,12 @@ export const LoginStoreModel = types
     },
     get getRandomProfilePictureIndex() {
       return self.random_profile_picture_index
+    },
+    get getUsers() {
+      return {
+        consumers: self.users?.consumers || [],
+        merchants: self.users?.merchants || []
+      }
     }
   }))
   .actions(self => ({
@@ -300,6 +312,14 @@ export const LoginStoreModel = types
     setBusinessDetails(businessDetails) {
       self.business_details = businessDetails
     },
+    setFundingSources(data) {
+      if (data === [] || !data) self.billing_data_added = false
+      else self.billing_data_added = true
+      self.funding_sources = data
+    },
+    setUsers(data) {
+      self.users = data || {}
+    },
     reset() {
       const api = self.environment.api.apisauce
       api.deleteHeader("Authorization")
@@ -344,6 +364,9 @@ export const LoginStoreModel = types
       self.events = null
       self.business_details = null
       self.merchant_month = null
+      self.funding_sources = null
+      self.billing_data_added = false
+      self.users = {}
     }
   }))
 

@@ -54,8 +54,8 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 	}
 
 	useEffect(() => {
-		getCommunityChestData()
-	}, [])
+		if (isFocused) getCommunityChestData()
+	}, [isFocused])
 
 	return (
 		<Screen

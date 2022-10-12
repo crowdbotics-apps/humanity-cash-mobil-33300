@@ -149,8 +149,8 @@ class DepositView(AuthenticatedAPIView):
                 if amount > user.balance:
                     return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
 
-                destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
-                origin_source = configs.DWOLLA_ACCOUNT_DESTINATION
+                origin_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
+                destination_source = configs.DWOLLA_ACCOUNT_DESTINATION
 
                 dwolla_client.create_transfer(destination_source, origin_source, amount)
 

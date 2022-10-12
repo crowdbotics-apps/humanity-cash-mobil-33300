@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from home.clients.dwolla_api import DwollaClient
-from home.functions import get_dwolla_id_request
+from home.functions import get_dwolla_id_request, get_dwolla_id_request_user_type
 from home.helpers import AuthenticatedAPIView
 from users.models import Merchant, Consumer
 from django.conf import settings
@@ -18,6 +18,7 @@ logger = logging.getLogger('django')
 class CreateIavTokenView(AuthenticatedAPIView):
 
     def post(self, request):
+
         req_dwolla_id = get_dwolla_id_request(self.request.user, self.request)
 
         if req_dwolla_id.get('error'):
@@ -42,7 +43,9 @@ class DwollaFundingSourcesByCustomerView(AuthenticatedAPIView):
         else:
             user = self.request.user
 
-        req_dwolla_id = get_dwolla_id_request(user, self.request)
+        data = request.query_params
+        user_type = data.get('user_type', None)
+        req_dwolla_id = get_dwolla_id_request_user_type(user, user_type)
         if req_dwolla_id.get('error'):
             return req_dwolla_id.get('response')
 

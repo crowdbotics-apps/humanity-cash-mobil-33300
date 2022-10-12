@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Button, Screen, Text, ModalSelector, MaskInput } from "../../components";
 import { TextInput, TouchableOpacity, View, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
@@ -17,7 +17,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
-
+	const isFocused = useIsFocused();
 	const [Loading, setLoading] = useState(false)
 	const [Email, setEmail] = useState('')
 
@@ -442,27 +442,29 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	}
 
 	useEffect(() => {
-		setImageSource({ uri: loginStore.ProfileData.profile_picture })
-		setUsername(loginStore.ProfileData.username)
-		setName(loginStore.ProfileData.first_name)
-		setLastName(loginStore.ProfileData.last_name)
-		setBusinessImageSource({ uri: loginStore.ProfileDataBusiness.profile_picture_merchant })
-		setBackBusinessImageSource({ uri: loginStore.ProfileDataBusiness.background_picture })
-		setBusinessName(loginStore.ProfileDataBusiness.business_name)
-		setBusinessStory(loginStore.ProfileDataBusiness.business_story)
-		setBusinessCategory(loginStore.ProfileDataBusiness.industry)
-		setBusinessWebsite(loginStore.ProfileDataBusiness.website)
-		setCity(loginStore.ProfileDataBusiness.city)
-		setState(loginStore.ProfileDataBusiness.state)
-		setAddress1(loginStore.ProfileDataBusiness.address_1)
-		setAddress2(loginStore.ProfileDataBusiness.address_2)
-		setPostalCode(loginStore.ProfileDataBusiness.zip_code)
-		setPhoneNumber(loginStore.ProfileDataBusiness.phone_number)
-		setEmail(loginStore.getAllData.email)
+		if (isFocused) {
+			setImageSource({ uri: loginStore.ProfileData.profile_picture })
+			setUsername(loginStore.ProfileData.username)
+			setName(loginStore.ProfileData.first_name)
+			setLastName(loginStore.ProfileData.last_name)
+			setBusinessImageSource({ uri: loginStore.ProfileDataBusiness.profile_picture_merchant })
+			setBackBusinessImageSource({ uri: loginStore.ProfileDataBusiness.background_picture })
+			setBusinessName(loginStore.ProfileDataBusiness.business_name)
+			setBusinessStory(loginStore.ProfileDataBusiness.business_story)
+			setBusinessCategory(loginStore.ProfileDataBusiness.industry)
+			setBusinessWebsite(loginStore.ProfileDataBusiness.website)
+			setCity(loginStore.ProfileDataBusiness.city)
+			setState(loginStore.ProfileDataBusiness.state)
+			setAddress1(loginStore.ProfileDataBusiness.address_1)
+			setAddress2(loginStore.ProfileDataBusiness.address_2)
+			setPostalCode(loginStore.ProfileDataBusiness.zip_code)
+			setPhoneNumber(loginStore.ProfileDataBusiness.phone_number)
+			setEmail(loginStore.getAllData.email)
 
-		fetchCity()
-		fetchState()
-	}, [])
+			fetchCity()
+			fetchState()
+		}
+	}, [isFocused])
 
 	return (
 		<Screen

@@ -1,5 +1,6 @@
+/* eslint-disable prefer-const */
 import { observer } from "mobx-react-lite";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, TextInputComponent } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
@@ -8,14 +9,14 @@ import styles from './contact-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
 import { Tab, TabView } from 'react-native-elements'
-import DatePicker from 'react-native-date-picker'
-import Entypo from "react-native-vector-icons/Entypo"
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
 
 export const ContactScreen = observer(function ContactScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
-
+	const isFocused = useIsFocused();
 	const transactionTypes = [
 		'Incoming transactions',
 		'Outgoing transactions',
@@ -66,21 +67,25 @@ export const ContactScreen = observer(function ContactScreen() {
 	const [DetailModalVisible, setDetailModalVisible] = useState(false)
 	const [TabIndex, setTabIndex] = React.useState(0);
 
-	const ContactList = () => Object.keys(returns).map((r, key) => ([
-		returns[r].map((i, key2) => (
-			<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
+	const ContactList = (data) => 
+		data.map((i, key2) => (
+			<TouchableOpacity key={key2 + '_values'} style={styles.RETURN_ITEM}>
 				<Image
-					source={{ uri: i.image }}
+					source={{ uri: i.profile_picture }}
 					resizeMode='cover'
 					style={styles.RETURN_IMAGE}
 				/>
-				<Text style={styles.RETURN_ITEM_CUSTOMER}>{'Name'}</Text>
-				{/* <Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text> */}
-
+				<Text style={styles.RETURN_ITEM_CUSTOMER}>
+					{console.log(' ===>>> ', i.first_name)}
+					{i.first_name
+						? i.first_name + ' ' + i.last_name
+						: i.business_name
+					}
+				</Text>
 
 			</TouchableOpacity>
 		))
-	]))
+	
 
 	const ReturnDetailModal = () => <Modal transparent visible={DetailModalVisible}>
 		<View style={styles.ROOT_MODAL}>
@@ -121,6 +126,42 @@ export const ContactScreen = observer(function ContactScreen() {
 			<View />
 		</View>
 	</Modal>
+
+const formatUsersData = (users = []) => {
+	let consumers = []
+	let merchants = []
+	users.map(user => {
+		if (user.consumer_data) consumers.push( {...user.consumer_data, first_name: user.first_name, last_name: user.last_name})
+		if (user.merchant_data) merchants.push(user.merchant_data)
+	})
+	return ({ consumers, merchants })
+}
+
+const getUsers = () => {
+	loginStore.environment.api
+		.getUsers()
+		.then((result: any) => {
+			console.log(' Users ===>>>  ', JSON.stringify(result, null, 2))
+			if (result.kind === "ok") {
+				runInAction(() => {
+					loginStore.setUsers(formatUsersData(result.data?.results))
+				})
+			} else if (result.kind === "bad-data") {
+				const key = Object.keys(result?.errors)[0]
+				const msg = `${key}: ${result?.errors?.[key][0]}`
+				notifyMessage(msg)
+			} else if (result.kind === "unauthorized") {
+				loginStore.reset()
+				navigation.navigate("login")
+			} else {
+				notifyMessage(null)
+			}
+		})
+}
+
+useEffect(() => {
+	if (isFocused) getUsers()
+}, [isFocused])
 
 	return (
 		<Screen
@@ -163,7 +204,6 @@ export const ContactScreen = observer(function ContactScreen() {
 										/>
 									</View>
 								</View>
-
 								<View style={{ width: METRICS.screenWidth * 0.95, alignSelf: 'center', marginTop: 10 }}>
 									<Tab
 										value={TabIndex}
@@ -184,20 +224,15 @@ export const ContactScreen = observer(function ContactScreen() {
 									</Tab>
 									<View style={styles.BLUE_LINE} />
 									<TabView value={TabIndex} onChange={setTabIndex} animationType="spring">
-										<TabView.Item style={{ height: 500, width: '100%' }}>
-											<View>{ContactList()}
-											</View>
+										<TabView.Item style={{ height: 500, width: '95%' }}>
+										<View>{ContactList(loginStore.getUsers.consumers)}</View>
 										</TabView.Item>
-										<TabView.Item style={{ height: 500, width: '100%' }}>
-											<View>{ContactList()}
-											</View>
+										<TabView.Item style={{ height: 500, width: '95%' }}>
+										<View>{ContactList(loginStore.getUsers.merchants)}</View>
 										</TabView.Item>
 									</TabView>
 								</View>
-								{/* {ContactList()} */}
 
-
-								<View style={{ height: 100 }} />
 							</View>
 						</View>
 					</View>

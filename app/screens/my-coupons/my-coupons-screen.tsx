@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, TextInputComponent, ConnectBankModal } from "../../components";
 import { TouchableWithoutFeedback, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
@@ -17,7 +17,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
-
+	const isFocused = useIsFocused();
 	const transactionTypes = [
 		'Discount percentage',
 		'Discount dollar amount',
@@ -85,8 +85,8 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	}
 
 	useEffect(() => {
-		getCoupons()
-	}, [])
+		if (isFocused) getCoupons()
+	}, [isFocused])
 
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>
 		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>

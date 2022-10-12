@@ -11,7 +11,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from './qr-style';
 import { COLOR } from '../../theme';
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { getErrorMessage, notifyMessage } from "../../utils/helpers"
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -22,7 +22,7 @@ export const QRScreen = observer(function QRScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
   const { loginStore } = rootStore
-
+  const isFocused = useIsFocused();
   const [ScanQR, setScanQR] = useState(true)
   const [QR, setQR] = useState(null)
   const [ShowQR, setShowQR] = useState(false)
@@ -38,9 +38,11 @@ export const QRScreen = observer(function QRScreen() {
   const [ShowBankModal, setShowBankModal] = useState(false)
 
   useEffect(() => {
-    if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-    else setShowBankModal(false)
-  }, [])
+    if (isFocused) {
+      if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+      else setShowBankModal(false)
+    }
+  }, [isFocused])
 
   const bankModal = () =>
     <ConnectBankModal

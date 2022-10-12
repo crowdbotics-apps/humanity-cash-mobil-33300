@@ -21,7 +21,7 @@ import {
 import Icon from "react-native-vector-icons/MaterialIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import styles from './setup-profile-style';
-import { useNavigation } from "@react-navigation/native"
+import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { launchImageLibrary } from 'react-native-image-picker';
 import { IMAGES, METRICS, COLOR } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
@@ -68,7 +68,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const rootStore = useStores()
 	const navigation = useNavigation()
 	const { loginStore } = rootStore
-
+	const isFocused = useIsFocused();
 	const [Loading, setLoading] = useState(false)
 
 	const [Step, setStep] = useState('profile_type')
@@ -856,41 +856,43 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	}
 
 	useEffect(() => {
-		loginStore.setRandomProfilePictureIndex(RandonPic)
+		if (isFocused) {
+			loginStore.setRandomProfilePictureIndex(RandonPic)
 
-		const data = loginStore.getSetupData
-		if (data?.Username) {
-			setUsername(data.Username)
-			setButtonDisabled(false)
-		}
-		if (data?.imageSource) setImageSource(data.imageSource)
-		if (data?.Name) setName(data.Name)
-		if (data?.LastName) setLastName(data.LastName)
-		if (data?.BusinessName) {
-			setBusinessName(data.BusinessName)
-			setButtonDisabled(false)
-		}
-		if (data?.BusinessStory) setBusinessStory(data.BusinessStory)
-		if (data?.BusinessType) setBusinessType(data.BusinessType)
-		if (data?.BusinessExecName) setBusinessExecName(data.BusinessExecName)
-		if (data?.BusinessExecLastName) setBusinessExecLastName(data.BusinessExecLastName)
-		if (data?.BusinessImageSource) setBusinessImageSource(data.BusinessImageSource)
-		if (data?.BackBusinessImageSource) setBackBusinessImageSource(data.BackBusinessImageSource)
-		if (data?.BusinessRegName) setBusinessRegName(data.BusinessRegName)
-		if (data?.BusinessIndustryType) setBusinessIndustryType(data.BusinessIndustryType)
-		if (data?.IndentifierType) setIndentifierType(data.IndentifierType)
-		if (data?.EmployerId) setEmployerId(data.EmployerId)
-		if (data?.SocialSecurityNumber) setSocialSecurityNumber(data.SocialSecurityNumber)
-		if (data?.Address1) setAddress1(data.Address1)
-		if (data?.Address2) setAddress2(data.Address2)
-		if (data?.City) setCity(data.City)
-		if (data?.State) setState(data.State)
-		if (data?.PostalCode) setPostalCode(data.PostalCode)
-		if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
+			const data = loginStore.getSetupData
+			if (data?.Username) {
+				setUsername(data.Username)
+				setButtonDisabled(false)
+			}
+			if (data?.imageSource) setImageSource(data.imageSource)
+			if (data?.Name) setName(data.Name)
+			if (data?.LastName) setLastName(data.LastName)
+			if (data?.BusinessName) {
+				setBusinessName(data.BusinessName)
+				setButtonDisabled(false)
+			}
+			if (data?.BusinessStory) setBusinessStory(data.BusinessStory)
+			if (data?.BusinessType) setBusinessType(data.BusinessType)
+			if (data?.BusinessExecName) setBusinessExecName(data.BusinessExecName)
+			if (data?.BusinessExecLastName) setBusinessExecLastName(data.BusinessExecLastName)
+			if (data?.BusinessImageSource) setBusinessImageSource(data.BusinessImageSource)
+			if (data?.BackBusinessImageSource) setBackBusinessImageSource(data.BackBusinessImageSource)
+			if (data?.BusinessRegName) setBusinessRegName(data.BusinessRegName)
+			if (data?.BusinessIndustryType) setBusinessIndustryType(data.BusinessIndustryType)
+			if (data?.IndentifierType) setIndentifierType(data.IndentifierType)
+			if (data?.EmployerId) setEmployerId(data.EmployerId)
+			if (data?.SocialSecurityNumber) setSocialSecurityNumber(data.SocialSecurityNumber)
+			if (data?.Address1) setAddress1(data.Address1)
+			if (data?.Address2) setAddress2(data.Address2)
+			if (data?.City) setCity(data.City)
+			if (data?.State) setState(data.State)
+			if (data?.PostalCode) setPostalCode(data.PostalCode)
+			if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
 
-		fetchCity()
-		fetchState()
-	}, [])
+			fetchCity()
+			fetchState()
+		}
+	}, [isFocused])
 
 	return (
 		<Screen

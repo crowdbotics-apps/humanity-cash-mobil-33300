@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 // import styles from "./where-spend-style"
 import styles from "./where-spend"
 import { COLOR, IMAGES, METRICS } from "../../theme"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useStores } from "../../models"
@@ -893,12 +893,12 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   })
   const [Latitud, setLatitud] = useState(null)
   const [Longitud, setLongitud] = useState(null)
+  const isFocused = useIsFocused();
 
   const getBusiness = () => {
     loginStore.environment.api
       .getBusiness()
       .then((result: any) => {
-        console.log(' getBusiness ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setBusiness(result.data?.merchants)
@@ -915,23 +915,25 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   }
 
   useEffect(() => {
-    getBusiness()
-    Geolocation.getCurrentPosition(
-      ({ coords: { latitude, longitude } }) => {
-        const location = {
-          latitude,
-          longitude,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.015,
-        }
-        setRegion(location)
-        setLatitud(location.latitude)
-        setLongitud(location.longitude)
-      },
-      console.warn,
-      { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
-    )
-  }, [])
+    if (isFocused) {
+      getBusiness()
+      Geolocation.getCurrentPosition(
+        ({ coords: { latitude, longitude } }) => {
+          const location = {
+            latitude,
+            longitude,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.015,
+          }
+          setRegion(location)
+          setLatitud(location.latitude)
+          setLongitud(location.longitude)
+        },
+        console.warn,
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
+      )
+    }
+  }, [isFocused])
 
   const RenderTopMonth = () => {
     const merchantOfTheMonth = loginStore.getMerchantOfMonth
@@ -959,7 +961,6 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
     loginStore.environment.api
       .getBusinessDetail(id)
       .then((result: any) => {
-        console.log(' getBusinessDetail ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             let busDet = loginStore.getBusinessDetail
@@ -981,7 +982,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   }
 
   const RenderCategories = () => {
-    console.log(' business => ', JSON.stringify(loginStore.getBusiness, null, 2))
+    if (!loginStore?.getBusiness?.[0]) return
     return (
       Object.keys(loginStore.getBusiness[0]).map((i, key) => (
         <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
@@ -1117,7 +1118,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
               <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
               <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
             </TouchableOpacity>
-            : <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home")}>
+            : <TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
               <Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
               <Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
             </TouchableOpacity>
@@ -1136,7 +1137,6 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                     style={styles.NEWS_IMAGE}
                   />
                   <View style={styles.DETAIL_LINKS}>
-                    {console.log(' selected detail => ', SelectedDetail)}
                     {SelectedDetail.website &&
                       <MaterialCommunityIcons
                         name={"web"}
@@ -1209,10 +1209,6 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                 </View>
                 {ShowFilter && Filters()}
                 {RenderTopMonth()}
-                {RenderCategories()}
-                {RenderCategories()}
-                {RenderCategories()}
-                {RenderCategories()}
                 {RenderCategories()}
               </View>
             }

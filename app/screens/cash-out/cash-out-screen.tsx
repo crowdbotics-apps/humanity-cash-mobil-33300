@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, ConnectBankModal } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView } from "react-native";
@@ -16,7 +16,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
-
+	const isFocused = useIsFocused();
 	const [CheckMaxAmount, setCheckMaxAmount] = useState(false)
 	const [Amount, setAmount] = useState('0')
 	const [Fee, setFee] = useState(0.50)
@@ -27,12 +27,14 @@ export const CashOutScreen = observer(function CashOutScreen() {
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
 	useEffect(() => {
-		if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-		else setShowBankModal(false)
+		if (isFocused) {
+			if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+			else setShowBankModal(false)
 
-		if (loginStore.getSelectedAccount === 'consumer') setCheckMaxAmount(true)
-		else setCheckMaxAmount(false)
-	}, [])
+			if (loginStore.getSelectedAccount === 'consumer') setCheckMaxAmount(true)
+			else setCheckMaxAmount(false)
+		}
+	}, [isFocused])
 
 	const ConfirmModal = () => (
 		<Modal transparent visible={ShowModal}>

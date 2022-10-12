@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, ConnectBankModal } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
@@ -13,7 +13,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
-
+	const isFocused = useIsFocused();
 	const returns = {
 		TODAY: [
 			{
@@ -48,9 +48,11 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
 	useEffect(() => {
-	  if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-	  else setShowBankModal(false)
-	}, [])
+		if (isFocused) {
+			if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+			else setShowBankModal(false)
+		}
+	}, [isFocused])
   
 	const bankModal = () =>
 		<ConnectBankModal

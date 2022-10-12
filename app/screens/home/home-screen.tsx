@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Button, Screen, Text } from "../../components";
 import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, BackHandler } from "react-native";
@@ -10,62 +10,12 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 
-const coupons: any = [
-	{
-		title: 'Super Promo',
-		start_date: '12/31/2022',
-		end_date: '12/31/2023',
-		type_of_promo: 'Discount percentage',
-		discount_input: '10%',
-		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-	},
-	{
-		title: 'Super Promo 2',
-		start_date: '12/31/2022',
-		end_date: '12/31/2023',
-		type_of_promo: 'Discount dollar amount',
-		discount_input: '$20',
-		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-	},
-	{
-		title: 'Super Promo 3',
-		start_date: '12/31/2022',
-		end_date: '12/31/2023',
-		type_of_promo: 'Special Offer',
-		discount_input: 'Free Wine',
-		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-	},
-	{
-		title: 'Super Promo',
-		start_date: '12/31/2022',
-		end_date: '12/31/2023',
-		type_of_promo: 'Discount percentage',
-		discount_input: '10%',
-		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-	},
-	{
-		title: 'Super Promo 2',
-		start_date: '12/31/2022',
-		end_date: '12/31/2023',
-		type_of_promo: 'Discount dollar amount',
-		discount_input: '$20',
-		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-	},
-	{
-		title: 'Super Promo 3',
-		start_date: '12/31/2022',
-		end_date: '12/31/2023',
-		type_of_promo: 'Special Offer',
-		discount_input: 'Free Wine',
-		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-	},
-]
-
 export const HomeScreen = observer(function HomeScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 
+	const isFocused = useIsFocused();
 	const [Events, setEvents] = useState([])
 
 	const getProfileConsumer = () => {
@@ -171,13 +121,35 @@ export const HomeScreen = observer(function HomeScreen() {
 			})
 	}
 
+	const getFundingSources = () => {
+		loginStore.environment.api
+			.getFundingSources({"user_type": loginStore.getSelectedAccount})
+			.then((result: any) => {
+				console.log(' getFundingSources ===>>> ', loginStore.getSelectedAccount, JSON.stringify(result, null, 2))
+				if (result.kind === "ok") {
+					runInAction(() => {
+						loginStore.setFundingSources(result.data)
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
 	useEffect(() => {
-		getEvents()
-		getBalanceData()
-		getConsumerCoupons()
-		getProfileConsumer()
-		getProfileMerchant()
-	}, [])
+		if (isFocused) {
+			getEvents()
+			getBalanceData()
+			getConsumerCoupons()
+			getProfileConsumer()
+			getProfileMerchant()
+			getFundingSources()
+		}
+	}, [isFocused])
 
 	useEffect(() => {
 		const backAction = () => true

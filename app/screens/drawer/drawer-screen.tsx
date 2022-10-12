@@ -137,14 +137,14 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         <Text style={styles.MENU_ITEM_LABEL}>Cash out to USD</Text>
       </TouchableOpacity>,
       <View key={'merchant_line'} style={styles.LINE} />,
-    <TouchableOpacity key={'merchant_10'} onPress={() => props.navigation.navigate("myCoupons")} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.coupon}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Manage Coupons</Text>
-    </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_10'} onPress={() => props.navigation.navigate("myCoupons")} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.coupon}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Manage Coupons</Text>
+      </TouchableOpacity>,
       <TouchableOpacity key={'merchant_5'} onPress={() => props.navigation.navigate("whereSpend")} style={styles.MENU_ITEM_CONTAINER}>
         <Image
           resizeMode="contain"
@@ -212,14 +212,14 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         <Text style={styles.MENU_ITEM_LABEL}>Cash out to USD</Text>
       </TouchableOpacity>,
       <View key={'merchant_line'} style={styles.LINE} />,
-    <TouchableOpacity key={'merchant_10'} onPress={() => props.navigation.navigate("myCoupons")} style={styles.MENU_ITEM_CONTAINER}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.coupon}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Manage Coupons</Text>
-    </TouchableOpacity>,
+      <TouchableOpacity key={'merchant_10'} onPress={() => props.navigation.navigate("myCoupons")} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.coupon}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Manage Coupons</Text>
+      </TouchableOpacity>,
       <TouchableOpacity key={'merchant_5'} onPress={() => props.navigation.navigate("whereSpend")} style={styles.MENU_ITEM_CONTAINER}>
         <Image
           resizeMode="contain"
@@ -410,20 +410,21 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
             <Image
               resizeMode="contain"
               source={loginStore.getSelectedAccount === 'consumer'
-              ? IMAGES.logout
-              : IMAGES.logout_white
+                ? IMAGES.logout
+                : IMAGES.logout_white
               }
               style={styles.MENU_ITEM_ICON}
             />
             <Text style={[
               styles.SIGN_OUT,
-              { color: loginStore.getSelectedAccount === 'consumer'
-                ? COLOR.PALETTE.mustard
-                : COLOR.PALETTE.white
+              {
+                color: loginStore.getSelectedAccount === 'consumer'
+                  ? COLOR.PALETTE.mustard
+                  : COLOR.PALETTE.white
               }
             ]}>
               Sign out
-                </Text>
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
