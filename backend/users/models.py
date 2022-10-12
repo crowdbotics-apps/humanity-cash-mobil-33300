@@ -209,6 +209,10 @@ class Merchant(BaseProfileModel):
     state = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True)
     zip_code = models.CharField(max_length=16, null=True, blank=True)
     location = models.PointField(null=True, blank=True)
+    instagram = models.CharField(max_length=250, null=True, blank=True)
+    facebook = models.CharField(max_length=250, null=True, blank=True)
+    twitter = models.CharField(max_length=250, null=True, blank=True)
+
 
     class Meta:
         db_table = 'merchant'

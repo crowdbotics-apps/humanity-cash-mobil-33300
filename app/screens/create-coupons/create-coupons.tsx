@@ -51,11 +51,11 @@ export default StyleSheet.create({
   },
   BACK_IMAGE_CONTAINER: {
     alignItems: 'center',
-    justifyContent: 'center',
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.lightGreen,
     borderRadius: 3,
     height: 150,
+    justifyContent: 'center',
     marginTop: 15,
     width: METRICS.screenWidth * 0.95,
   },

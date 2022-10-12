@@ -139,14 +139,32 @@ export const HomeScreen = observer(function HomeScreen() {
 			.then((result: any) => {
 				console.log(' getEvents ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
-					setEvents(result?.data?.results || [])
+					runInAction(() => {
+						loginStore.setEvents(result.data?.results)
+					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
-				} else if (result.kind === "unauthorized") {
-					loginStore.reset()
-					navigation.navigate("login")
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const getConsumerCoupons = () => {
+		loginStore.environment.api
+			.getConsumerCoupons()
+			.then((result: any) => {
+				console.log(' getConsumerCoupons ===>>> ', JSON.stringify(result, null, 2))
+				if (result.kind === "ok") {
+					runInAction(() => {
+						loginStore.setConsumerCoupons(result.data?.results)
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
 				} else {
 					notifyMessage(null)
 				}
@@ -156,6 +174,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	useEffect(() => {
 		getEvents()
 		getBalanceData()
+		getConsumerCoupons()
 		getProfileConsumer()
 		getProfileMerchant()
 	}, [])
@@ -172,7 +191,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	}
 
 	const renderNews = () => (
-		Events.map((n, key) => <View key={key + '_new'} style={styles.NEWS_CONTAINER}>
+		loginStore.getEvents.map((n, key) => <View key={key + '_new'} style={styles.NEWS_CONTAINER}>
 			<View style={styles.NEWS_HEADER_CONTAINER}>
 				<Text style={styles.NEWS_TAG}>{n.tag}</Text>
 				<Text style={styles.NEWS_TAG}>{DateFormat(n.start_date)}</Text>
@@ -215,11 +234,11 @@ export const HomeScreen = observer(function HomeScreen() {
 					</View>
 					<View style={styles.LINE} />
 					<Text style={styles.INDUSTRY_TITLE}>MY SAVED COUPONS</Text>
-					<ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginHorizontal: 10}}>
-						{coupons.map((c, key) => (
+					<ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginHorizontal: 10 }}>
+						{loginStore.getConsumerCoupons.map((c, key) => (
 							<View key={key} style={styles.COUPON_CONTAINER}>
 								<Image
-									source={{ uri: c.image }}
+									source={{ uri: c.promo_image }}
 									resizeMode='cover'
 									style={styles.RETURN_IMAGE}
 								/>

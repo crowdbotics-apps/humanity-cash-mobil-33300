@@ -10,7 +10,7 @@ export default StyleSheet.create({
     marginRight: 15
   },
   BUSINESS_CONTAINER: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   BUSINESS_IMAGE: {
     height: 130,
@@ -66,6 +66,7 @@ export default StyleSheet.create({
   INDUSTRY_CONTAINER: {
     alignSelf: 'center',
     height: 200,
+    marginBottom: 10,
     width: METRICS.screenWidth * 0.95
   },
   INDUSTRY_TITLE: {
@@ -97,7 +98,7 @@ export default StyleSheet.create({
   NEWS_BODY: {
     color: COLOR.PALETTE.black,
     fontSize: 16,
-    marginTop: 10,
+    marginVertical: 10,
     width: METRICS.screenWidth * 0.80,
   },
   NEWS_CONTAINER: {
@@ -112,7 +113,7 @@ export default StyleSheet.create({
   },
   NEWS_IMAGE: {
     flex: 1,
-    height: null,
+    height: 400,
     width: METRICS.screenWidth * 0.80,
   },
   NEWS_TITLE: {

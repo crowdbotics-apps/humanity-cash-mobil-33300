@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 
 from base import configs
 from base.models import Configuration
-from users.models import Coupon
+from users.models import Coupon, ConsumerCoupon
 
 
 @admin.register(Configuration)
@@ -23,5 +23,10 @@ class ConfigAdmin(admin.ModelAdmin):
 
 @admin.register(Coupon)
 class CouponAdmin(admin.ModelAdmin):
+    ...
+
+
+@admin.register(ConsumerCoupon)
+class ConsumerCouponAdmin(admin.ModelAdmin):
     ...
 

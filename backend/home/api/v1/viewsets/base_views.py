@@ -7,14 +7,15 @@ from cities_light.models import City, Region
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from django.db.models import Q
+from django.utils import timezone
 from base import configs
 from celo_humanity.humanity_contract_helpers import get_community_balance
 from home.api.v1.serializers.base_serializers import CityListSerializer, StateListSerializer, \
     WhereToSpendListSerializer, BusinessDetailsSerializer, SendQrCodeSerializer
 from home.helpers import AuthenticatedAPIView, send_qr_code_email
 from users.constants import Industry
-from users.models import Merchant
+from users.models import Merchant, Coupon
 
 
 class CityListView(AuthenticatedAPIView, ListAPIView):
@@ -63,7 +64,8 @@ class WhereToSpendView(ListAPIView):
         merchant_month = {
             'id': merchant.id,
             'business_name': merchant.business_name,
-            'business_story': merchant.business_story
+            'business_story': merchant.business_story,
+            'profile_picture': merchant.profile_picture.url
         }
 
         result = {

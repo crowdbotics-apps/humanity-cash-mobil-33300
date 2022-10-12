@@ -99,6 +99,10 @@ export class Api extends ApiBase {
     return this.multipart_form_data(apiv1 + "/coupons/", data, ["promo_image"])
   }
 
+  async getConsumerCoupons(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/consumer-coupons/")
+  }
+
   // SECURITY
   async updateSecurity(data: any): Promise<Types.SimplePostResult> {
     return this.simple_patch(apiv1 + "/security/change-password/", data)
@@ -119,6 +123,14 @@ export class Api extends ApiBase {
 
   async getEvents(): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/event/")
+  }
+
+  async getBusiness(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/where-to-spend/")
+  }
+
+  async getBusinessDetail(id: number): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/business-details/" + id + "/")
   }
 
   // DWOLLA

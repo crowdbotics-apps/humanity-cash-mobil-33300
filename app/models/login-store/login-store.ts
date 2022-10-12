@@ -2,8 +2,6 @@ import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment, withRootStore } from ".."
 import { COLOR } from '../../theme'
 
-const coupons = types.frozen()
-
 /**
  * Model description here for TypeScript hints.
  */
@@ -54,8 +52,16 @@ export const LoginStoreModel = types
     signupData: types.frozen(),
     // setup
     setupData: types.frozen(),
+    // events
+    events: types.maybeNull(types.array(types.frozen())),
+    // business
+    business: types.maybeNull(types.array(types.frozen())),
+    business_details: types.maybeNull(types.frozen()),
+    // merchant of the month
+    merchant_month: types.maybeNull(types.frozen()),
     // coupon
-    merchant_coupons: types.maybeNull(types.array(coupons)),
+    merchant_coupons: types.maybeNull(types.array(types.frozen())),
+    consumer_coupons: types.maybeNull(types.array(types.frozen())),
   })
   .views(self => ({
     get isLoggedIn() {
@@ -69,6 +75,21 @@ export const LoginStoreModel = types
     },
     get getSetupData() {
       return self.setupData
+    },
+    get getEvents() {
+      return self.events || []
+    },
+    get getBusiness() {
+      return self.business || []
+    },
+    get getBusinessDetail() {
+      return self.business_details || {}
+    },
+    get getMerchantOfMonth() {
+      return self.merchant_month || {}
+    },
+    get getConsumerCoupons() {
+      return self.consumer_coupons || []
     },
     get getMerchantCoupons() {
       return self.merchant_coupons || []
@@ -190,6 +211,9 @@ export const LoginStoreModel = types
         self.account_base_color = COLOR.PALETTE.orange
       }
     },
+    setConsumerCoupons(coupons) {
+      self.consumer_coupons = coupons
+    },
     setMerchantCoupons(coupons) {
       self.merchant_coupons = coupons
     },
@@ -264,6 +288,18 @@ export const LoginStoreModel = types
         api.deleteHeader("Authorization")
       }
     },
+    setEvents(events) {
+      self.events = events
+    },
+    setMerchantMonth(merchantMonth) {
+      self.merchant_month = merchantMonth
+    },
+    setBusiness(business) {
+      self.business = business
+    },
+    setBusinessDetails(businessDetails) {
+      self.business_details = businessDetails
+    },
     reset() {
       const api = self.environment.api.apisauce
       api.deleteHeader("Authorization")
@@ -303,6 +339,11 @@ export const LoginStoreModel = types
       self.access_token = null
       self.currentStep = null
       self.merchant_coupons = null
+      self.consumer_coupons = null
+      self.business = null
+      self.events = null
+      self.business_details = null
+      self.merchant_month = null
     }
   }))
 
