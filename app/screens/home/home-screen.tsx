@@ -22,7 +22,6 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getProfileConsumer()
 			.then((result: any) => {
-				console.log(' getProfileConsumer ===>>>  ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
@@ -45,7 +44,6 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getProfileMerchant()
 			.then((result: any) => {
-				console.log(' getProfileMerchant ===>>>  ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
@@ -87,7 +85,6 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getEvents()
 			.then((result: any) => {
-				console.log(' getEvents ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setEvents(result.data?.results)
@@ -106,7 +103,6 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getConsumerCoupons()
 			.then((result: any) => {
-				console.log(' getConsumerCoupons ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setConsumerCoupons(result.data?.results)
@@ -123,9 +119,8 @@ export const HomeScreen = observer(function HomeScreen() {
 
 	const getFundingSources = () => {
 		loginStore.environment.api
-			.getFundingSources({"user_type": loginStore.getSelectedAccount})
+			.getFundingSources({ "user_type": loginStore.getSelectedAccount })
 			.then((result: any) => {
-				console.log(' getFundingSources ===>>> ', loginStore.getSelectedAccount, JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setFundingSources(result.data)

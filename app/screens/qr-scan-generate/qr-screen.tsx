@@ -110,7 +110,6 @@ export const QRScreen = observer(function QRScreen() {
     </Modal>
   )
 
-
   const transferCurrency = () => {
     if (!QR) return
     const qrData = JSON.parse(QR)

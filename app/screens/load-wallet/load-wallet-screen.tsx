@@ -8,6 +8,9 @@ import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from './load-wallet-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const navigation = useNavigation()
@@ -22,12 +25,93 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
+	const [ShowPassModal, setShowPassModal] = useState(false)
+	const [Pass, setPass] = useState('')
+	const [HidePass, setHidePass] = useState(true)
+	const [Sucess, setSucess] = useState(true)
+	const [ResponseMenssage, setResponseMenssage] = useState('')
+
 	useEffect(() => {
 		if (isFocused) {
 			if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
 			else setShowBankModal(false)
 		}
 	}, [isFocused])
+
+	const postDeposit = () => {
+		setTransactionConfirm(true)
+		setTransactionFinished(false)
+		const data = {
+			"user": loginStore.getSelectedAccount === 'consumer' ? loginStore.getAllData.consumer_id : loginStore.getAllData.merchant_id,
+			"user_as_consumer":  loginStore.getSelectedAccount === 'consumer',
+			"password": Pass,
+			"amount": Amount
+		}
+		loginStore.environment.api
+			.postDeposit(data)
+			.then((result: any) => {
+				setTransactionFinished(true)
+				console.log(' postDeposit ===>>> ', JSON.stringify(result, null, 2))
+				if (result.kind === "ok") {
+					setSucess(true)
+					// runInAction(() => {
+					// 	loginStore.setConsumerUser(result.data)
+					// })
+					if (loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null) navigation.navigate("setupProfile")
+				} else if (result.kind === "bad-data") {
+					setSucess(false)
+					const msg = result?.errors
+					setResponseMenssage(msg)
+					notifyMessage(msg)
+				} else {
+					setSucess(false)
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const passModal = () => (
+		<Modal visible={ShowPassModal} transparent>
+			<View style={styles.ROOT_MODAL_PASS}>
+				<View style={styles.CONTAINER}>
+					<TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
+						<Icon name={"close"} size={23} color={COLOR.PALETTE.black} />
+						<Text style={styles.BACK_BUTON_LABEL}>{` Close`}</Text>
+					</TouchableOpacity>
+					<View style={styles.STEP_CONTAINER}>
+						<Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor }]}>Verify with password</Text>
+
+						<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+							<Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
+						</View>
+						<View style={styles.INPUT_STYLE_CONTAINER}>
+							<TextInput
+								placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+								style={styles.PASS_INPUT_STYLE}
+								onChangeText={t => [setPass(t)]}
+								value={Pass}
+								secureTextEntry={HidePass}
+								placeholder={"*********"}
+							/>
+							<TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
+								<Ionicons name="eye" color={"#39534480"} size={20} />
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
+				<View style={styles.CONTAINER}>
+					<Button
+						buttonStyle={{
+							backgroundColor: !Pass || Pass === '' ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
+						}}
+						disabled={!Pass || Pass === ''}
+						onPress={() => [setShowModal(true), setPass('')]}
+						buttonLabel={'Confirm'}
+					/>
+				</View>
+			</View>
+		</Modal>
+	)
 
 	const bankModal = () =>
 		<ConnectBankModal
@@ -38,56 +122,67 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 		/>
 
 	const ConfirmModal = () => (
-		<Modal visible={ShowModal}>
+		<Modal visible={ShowModal} transparent>
+			{(TransactionConfirm) &&
+				TransactionFinished
+				? <View style={styles.HEADER_ACTIONS}>
+					<View style={styles.CLOSE_MODAL_BUTTON} />
+					<TouchableOpacity onPress={() => [setShowPassModal(false), setShowModal(false)]} style={styles.CLOSE_MODAL_BUTTON}>
+						<Text style={[styles.BACK_BUTON_LABEL_MODAL, { color: COLOR.PALETTE.pureblack }]}>{`Close `}</Text>
+						<Icon name={"close"} size={23} color={COLOR.PALETTE.pureblack} />
+					</TouchableOpacity>
+				</View>
+				: <View style={styles.HEADER_ACTIONS} />
+			}
 			{TransactionConfirm
 				? <View style={styles.LOADING_RETURN}>
+
 					{TransactionFinished
 						? [
-							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Congratulations! You 
-have topped up 
-C$ ${Amount}`}
-							</Text>,
-							<Text key={'congrat_sub_title'} style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>,
-							<Button
+							Sucess
+								? <View style={styles.CONTAINER} key={'congrat_title'} >
+									<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Congratulations! You  have topped up C$ ${Amount}`}</Text>
+									<Text style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>
+								</View>
+								: <View style={styles.CONTAINER} key={'congrat_title'} >
+									<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Whoops, something went wrong.</Text>
+									<Text style={styles.SUB_TITLE}>{ResponseMenssage}</Text>
+								</View>
+							, <Button
 								key={'congrat_button'}
 								buttonStyle={{
 									backgroundColor: loginStore.getAccountColor,
-									marginTop: METRICS.screenHeight * 0.6,
-									position: 'absolute'
 								}}
-								onPress={() => [
-									setTransactionConfirm(false),
-									setShowModal(false),
-									setTransactionFinished(false),
-									setAmount('0'),
-									navigation.navigate("home")
-								]}
-								buttonLabel={'Explore your community'}
+								onPress={() => {
+									if (Sucess) {
+										setTransactionConfirm(false)
+										setShowModal(false)
+										setTransactionFinished(false)
+										setAmount('0')
+										navigation.navigate("home")
+									} else postDeposit()
+
+								}}
+								buttonLabel={Sucess ? 'Explore your community' : 'Try again'}
 							/>
 						]
 						: [
-							<Text key={'pending_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Pending...</Text>,
-							<Text key={'pending_sub_title'} style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>,
+							<View style={styles.CONTAINER} key={'pending_title'}>
+								<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Pending...</Text>
+								<Text style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>
+							</View>,
 							<ActivityIndicator key={'pending_ind'} style={styles.ACTIVITY} size="large" color={'black'} />
 						]
 					}
 
 				</View>
-				: <View style={[
-					styles.ROOT_MODAL,
-					{
-						backgroundColor:
-							loginStore.getSelectedAccount === 'merchant'
-								? 'rgba(157, 165, 111, 0.50)'
-								: 'rgba(59, 136, 182, 0.50)'
-					}
-				]}>
+				: <View style={styles.ROOT_MODAL}>
 					<View style={styles.HEADER_ACTIONS}>
 						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.white} style={{ marginLeft: 10 }} />
 							<Text style={styles.BACK_BUTON_LABEL_MODAL}>{` Back`}</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
+						<TouchableOpacity onPress={() => [setShowPassModal(false), setShowModal(false)]} style={styles.CLOSE_MODAL_BUTTON}>
 							<Text style={styles.BACK_BUTON_LABEL_MODAL}>{`Close `}</Text>
 							<Icon name={"close"} size={23} color={COLOR.PALETTE.white} />
 						</TouchableOpacity>
@@ -98,12 +193,7 @@ C$ ${Amount}`}
 							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will load up C$ ${Amount} to your wallet.`}</Text>
 							<TouchableOpacity
 								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
-								onPress={() => {
-									setTransactionConfirm(true)
-									setTimeout(function () {
-										setTransactionFinished(true)
-									}, 5000)
-								}}
+								onPress={() => [postDeposit(), setShowPassModal(false)]}
 							>
 								<Text style={styles.SUBMIT_BUTTON_LABEL}>Confirm</Text>
 							</TouchableOpacity>
@@ -117,7 +207,7 @@ C$ ${Amount}`}
 
 	useEffect(() => {
 		setButtonDisabled(!(Number(Amount) > 0));
-	  }, [Amount]);
+	}, [Amount]);
 
 	return (
 		<Screen
@@ -190,8 +280,8 @@ C$ ${Amount}`}
 								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
 								temp = temp.replace(",", ".")
 								setAmount(temp)
-							  }}
-							  value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
+							}}
+							value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
 							placeholder={`Amount`}
 							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 						/>
@@ -203,11 +293,12 @@ C$ ${Amount}`}
 				</View>
 				{ConfirmModal()}
 				{bankModal()}
+				{passModal()}
 			</KeyboardAvoidingView>
 			<Button
-				buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor, bottom: 5 }}
+				buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
 				disabled={ButtonDisabled}
-				onPress={() => setShowModal(true)}
+				onPress={() => setShowPassModal(true)}
 				buttonLabel={'Load up'}
 			/>
 		</Screen>

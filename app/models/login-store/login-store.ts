@@ -274,8 +274,8 @@ export const LoginStoreModel = types
       self.phone_number = user.phone_number
     },
     setBalanceData(data) {
-      self.consumer_balance = data.consumer
-      self.merchant_balance = data.merchant
+      self.consumer_balance = data?.consumer
+      self.merchant_balance = data?.merchant
     },
     setAllowTouchId(user){
       self.allow_touch_id = user.allow_touch_id

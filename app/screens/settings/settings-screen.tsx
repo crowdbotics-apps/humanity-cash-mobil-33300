@@ -185,7 +185,7 @@ you back soon. `}
             <Button
               buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
-              onPress={() => { }}
+              onPress={() => navigation.navigate("linkBank")}
               buttonLabel={'Bank account'}
             />
             <Button

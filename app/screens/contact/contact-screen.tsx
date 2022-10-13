@@ -76,7 +76,6 @@ export const ContactScreen = observer(function ContactScreen() {
 					style={styles.RETURN_IMAGE}
 				/>
 				<Text style={styles.RETURN_ITEM_CUSTOMER}>
-					{console.log(' ===>>> ', i.first_name)}
 					{i.first_name
 						? i.first_name + ' ' + i.last_name
 						: i.business_name
@@ -141,7 +140,7 @@ const getUsers = () => {
 	loginStore.environment.api
 		.getUsers()
 		.then((result: any) => {
-			console.log(' Users ===>>>  ', JSON.stringify(result, null, 2))
+			console.log(' getUsers ===>>> ', JSON.stringify(result, null, 2))
 			if (result.kind === "ok") {
 				runInAction(() => {
 					loginStore.setUsers(formatUsersData(result.data?.results))

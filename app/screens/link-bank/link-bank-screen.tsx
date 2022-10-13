@@ -50,7 +50,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
         <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
       </TouchableOpacity>
-      <Text style={styles.STEP_TITLE}>{' Link Bank'}</Text>
+      <Text style={styles.STEP_TITLE}>Select you bank</Text>
       <View style={styles.LINE} />
       <View style={styles.SEARCH_INPUT_CONTAINER}>
         <View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
