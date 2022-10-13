@@ -172,4 +172,8 @@ export class Api extends ApiBase {
   async postDeposit(data?: any): Promise<Types.SimplePostResult> {
     return this.simple_post(apiv1 + "/deposit/", data)
   }
+
+  async postCashOut(data?: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/deposit/", data)
+  }
 }

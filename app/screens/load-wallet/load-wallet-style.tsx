@@ -281,7 +281,7 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.white,
 		flex: 1,
 		justifyContent: 'space-between',
-		marginTop: 35
+		marginTop: 15
 	},
   SEARCH_INPUT_ADJUSTMENTS: {
     alignItems: 'center',

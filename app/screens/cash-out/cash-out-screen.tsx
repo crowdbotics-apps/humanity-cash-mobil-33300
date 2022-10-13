@@ -8,6 +8,9 @@ import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from './cash-out-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 const maxAmount = 5000
 const feePercentage = 1.5
@@ -26,6 +29,12 @@ export const CashOutScreen = observer(function CashOutScreen() {
 	const [TransactionFinished, setTransactionFinished] = useState(false)
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
+	const [ShowPassModal, setShowPassModal] = useState(false)
+	const [Pass, setPass] = useState('')
+	const [HidePass, setHidePass] = useState(true)
+	const [Sucess, setSucess] = useState(true)
+	const [ResponseMenssage, setResponseMenssage] = useState('')
+
 	useEffect(() => {
 		if (isFocused) {
 			if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
@@ -36,47 +45,147 @@ export const CashOutScreen = observer(function CashOutScreen() {
 		}
 	}, [isFocused])
 
+	const postCashOut = () => {
+		setTransactionConfirm(true)
+		setTransactionFinished(false)
+		const data = {
+			"user": loginStore.getSelectedAccount === 'consumer' ? loginStore.getAllData.consumer_id : loginStore.getAllData.merchant_id,
+			"user_as_consumer": loginStore.getSelectedAccount === 'consumer',
+			"password": Pass,
+			"amount": Amount
+		}
+		loginStore.environment.api
+			.postCashOut(data)
+			.then((result: any) => {
+				setTransactionFinished(true)
+				console.log(' postCashOut ===>>> ', JSON.stringify(result, null, 2))
+				if (result.kind === "ok") {
+					setSucess(true)
+					// runInAction(() => {
+					// 	loginStore.setConsumerUser(result.data)
+					// })
+				} else if (result.kind === "bad-data") {
+					setSucess(false)
+					const msg = result?.errors
+					setResponseMenssage(msg)
+					notifyMessage(msg)
+				} else {
+					setSucess(false)
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const passModal = () => (
+		<Modal visible={ShowPassModal} transparent>
+			<View style={styles.ROOT_MODAL_PASS}>
+				<View style={styles.CONTAINER}>
+					<TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
+						<Icon name={"close"} size={23} color={COLOR.PALETTE.black} />
+						<Text style={styles.BACK_BUTON_LABEL}>{` Close`}</Text>
+					</TouchableOpacity>
+					<View style={styles.STEP_CONTAINER}>
+						<Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor }]}>Verify with password</Text>
+
+						<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+							<Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
+						</View>
+						<View style={styles.INPUT_STYLE_CONTAINER}>
+							<TextInput
+								placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+								style={styles.PASS_INPUT_STYLE}
+								onChangeText={t => [setPass(t)]}
+								value={Pass}
+								secureTextEntry={HidePass}
+								placeholder={"*********"}
+							/>
+							<TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
+								<Ionicons name="eye" color={"#39534480"} size={20} />
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
+				<View style={styles.CONTAINER}>
+					<Button
+						buttonStyle={{
+							backgroundColor: !Pass || Pass === '' ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
+						}}
+						disabled={!Pass || Pass === ''}
+						onPress={() => [setShowModal(true), setPass('')]}
+						buttonLabel={'Confirm'}
+					/>
+				</View>
+			</View>
+		</Modal>
+	)
+
 	const ConfirmModal = () => (
 		<Modal transparent visible={ShowModal}>
 			{TransactionConfirm
-				? <View style={styles.LOADING_RETURN}>
+				? [TransactionFinished
+					? <View key={'confirm_header'} style={styles.HEADER_ACTIONS}>
+						<View style={styles.CLOSE_MODAL_BUTTON} />
+						<TouchableOpacity
+							onPress={() => [
+								setShowPassModal(false),
+								setShowModal(false),
+								setTransactionConfirm(false),
+								setAmount('0')
+							]}
+							style={styles.CLOSE_MODAL_BUTTON}
+						>
+							<Text style={[styles.BACK_BUTON_LABEL_MODAL, { color: COLOR.PALETTE.pureblack }]}>{`Close `}</Text>
+							<Icon name={"close"} size={23} color={COLOR.PALETTE.pureblack} />
+						</TouchableOpacity>
+					</View>
+					: <View key={'confirm_header'} style={styles.HEADER_ACTIONS} />,
+				<View key={'confirm_content'} style={styles.LOADING_RETURN}>
 					{TransactionFinished
 						? [
-							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Your redemption is in process!
-							`}</Text>,
-							<Text key={'congrat_sub_title'} style={styles.SUB_TITLE}>You’ll get an email once your funds are available in your bank account. This should take 5 business days.</Text>,
-							<Button
+							Sucess
+								? <View style={styles.CONTAINER} key={'congrat_title'} >
+									<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Your redemption is in process!`}</Text>
+									<Text style={styles.SUB_TITLE}>You’ll get an email once your funds are available in your bank account. This should take 5 business days.</Text>
+								</View>
+								: <View style={styles.CONTAINER} key={'congrat_title'} >
+									<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Whoops, something went wrong.</Text>
+									<Text style={[styles.SUB_TITLE, { color: COLOR.PALETTE.red }]}>{ResponseMenssage}</Text>
+								</View>
+							, <Button
 								key={'congrat_button'}
 								buttonStyle={{
 									backgroundColor: loginStore.getAccountColor,
-									marginTop: METRICS.screenHeight * 0.6,
-									position: 'absolute'
 								}}
-								onPress={() => [
-									setTransactionConfirm(false),
-									setShowModal(false),
-									setTransactionFinished(false),
-									setAmount(''),
-									navigation.navigate("home")
-								]}
-								buttonLabel={'Go back to home'}
+								onPress={() => {
+									if (Sucess) {
+										setTransactionConfirm(false)
+										setShowModal(false)
+										setTransactionFinished(false)
+										setAmount('0')
+										navigation.navigate("home")
+									} else postCashOut()
+
+								}}
+								buttonLabel={Sucess ? 'Go back to home' : 'Try again'}
 							/>
 						]
 						: [
-							<Text key={'pending_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Pending...</Text>,
-							<Text key={'pending_sub_title'} style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>,
+							<View style={styles.CONTAINER} key={'pending_title'}>
+								<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Pending...</Text>
+								<Text style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>
+							</View>,
 							<ActivityIndicator key={'pending_ind'} style={styles.ACTIVITY} size="large" color={'black'} />
 						]
 					}
 
-				</View>
-				: <View style={styles.ROOT_MODAL}>
+				</View>,
+				]: <View style={styles.ROOT_MODAL}>
 					<View style={styles.HEADER_ACTIONS}>
 						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.white} style={{ marginLeft: 10 }} />
 							<Text style={styles.BACK_BUTON_LABEL_MODAL}>{` Back`}</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
+						<TouchableOpacity onPress={() => [setShowPassModal(false), setShowModal(false)]} style={styles.CLOSE_MODAL_BUTTON}>
 							<Text style={styles.BACK_BUTON_LABEL_MODAL}>{`Close `}</Text>
 							<Icon name={"close"} size={23} color={COLOR.PALETTE.white} />
 						</TouchableOpacity>
@@ -87,12 +196,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will redeem C$ ${Amount} for USD $${(parseFloat(Amount) - Fee).toFixed(2)} after a $${Fee.toFixed(2)} fee.`}</Text>
 							<TouchableOpacity
 								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
-								onPress={() => {
-									setTransactionConfirm(true)
-									setTimeout(function () {
-										setTransactionFinished(true)
-									}, 5000)
-								}}
+								onPress={() => [postCashOut(), setShowPassModal(false)]}
 							>
 								<Text style={styles.SUBMIT_BUTTON_LABEL}>Cash out to USD</Text>
 							</TouchableOpacity>
@@ -156,13 +260,15 @@ export const CashOutScreen = observer(function CashOutScreen() {
 							keyboardType='numeric'
 							onChangeText={t => {
 								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-								// temp = temp.replace(/[^0-9]/g, '')
+								temp = temp.replace(",", ".")
+								// review max amount
 								if (CheckMaxAmount && parseInt(temp) > maxAmount) setAmountError(true)
 								else setAmountError(false)
-								temp = temp.replace(",", ".")
+								// calculate fee
 								const tempFee = (parseFloat(temp) * feePercentage) / 100
 								if (tempFee > 0.50) setFee(tempFee)
 								else setFee(0.50)
+
 								setAmount(temp)
 							}}
 							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
@@ -186,15 +292,12 @@ export const CashOutScreen = observer(function CashOutScreen() {
 				</View>
 				{ConfirmModal()}
 				{bankModal()}
+				{passModal()}
 			</KeyboardAvoidingView>
 			<Button
-				buttonStyle={{
-					backgroundColor: (AmountError || !Amount || Number(Amount) === 0) ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor,
-					bottom: 5,
-					position: 'absolute'
-				}}
+				buttonStyle={{ backgroundColor: (AmountError || !Amount || Number(Amount) === 0) ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor }}
 				disabled={(AmountError || !Amount || Number(Amount) === 0)}
-				onPress={() => setShowModal(true)}
+				onPress={() => setShowPassModal(true)}
 				buttonLabel={'Confirm'}
 			/>
 		</Screen>

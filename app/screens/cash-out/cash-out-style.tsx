@@ -67,6 +67,7 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     marginRight: 30
   },
+  CONTAINER: {},
   COSTS_FEE_LABEL: {
     color: COLOR.PALETTE.black,
     fontSize: 16,
@@ -152,7 +153,8 @@ export default StyleSheet.create({
   },
   LOADING_RETURN: {
     backgroundColor: COLOR.PALETTE.white,
-    height: METRICS.screenHeight
+    flex: 1,
+    justifyContent: 'space-between'
   },
   LOGO_STYLE: {
     alignSelf: 'center',
@@ -180,6 +182,11 @@ export default StyleSheet.create({
     height: 330,
     justifyContent: 'space-evenly',
     width: METRICS.screenWidth * 0.70
+  },
+  PASS_INPUT_STYLE: {
+    alignSelf: 'center',
+    height: 55,
+    width: METRICS.screenWidth * 0.80,
   },
   PENDING_TITLE: {
     color: COLOR.PALETTE.orange,
@@ -266,10 +273,16 @@ export default StyleSheet.create({
   },
   ROOT_MODAL: {
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.80)',
+    backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
     flex: 1,
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-between'
   },
+  ROOT_MODAL_PASS: {
+    backgroundColor: COLOR.PALETTE.white,
+		flex: 1,
+		justifyContent: 'space-between',
+		marginTop: 15
+	},
   SEARCH_INPUT_ADJUSTMENTS: {
     alignItems: 'center',
     backgroundColor: `${COLOR.PALETTE.green}25`,
@@ -298,6 +311,12 @@ export default StyleSheet.create({
     justifyContent: 'center',
     width: METRICS.screenWidth * 0.75
   },
+  SHOW_PASS_CONTAINER: {
+    alignItems: 'center',
+    height: 50,
+    justifyContent: 'center',
+    width: 50
+  },
   STEP_CONTAINER: {},
   STEP_SUB_TITLE_MODAL: {
     color: COLOR.PALETTE.black,
@@ -315,6 +334,12 @@ export default StyleSheet.create({
     fontSize: 32,
     marginLeft: 10,
     width: METRICS.screenWidth * 0.7,
+  },
+  STEP_TITLE_PASS: {
+    color: COLOR.PALETTE.orange,
+    fontSize: 32,
+    marginBottom: 20,
+    marginLeft: 10
   },
   SUBMIT_BUTTON_LABEL: {
     color: COLOR.PALETTE.white,

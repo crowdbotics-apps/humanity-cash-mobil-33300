@@ -88,9 +88,6 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
-				} else if (result.kind === "unauthorized") {
-					loginStore.reset()
-					navigation.navigate("login")
 				} else {
 					notifyMessage(null)
 				}

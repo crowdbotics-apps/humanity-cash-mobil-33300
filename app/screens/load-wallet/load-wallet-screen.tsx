@@ -43,7 +43,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 		setTransactionFinished(false)
 		const data = {
 			"user": loginStore.getSelectedAccount === 'consumer' ? loginStore.getAllData.consumer_id : loginStore.getAllData.merchant_id,
-			"user_as_consumer":  loginStore.getSelectedAccount === 'consumer',
+			"user_as_consumer": loginStore.getSelectedAccount === 'consumer',
 			"password": Pass,
 			"amount": Amount
 		}
@@ -57,7 +57,6 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 					// runInAction(() => {
 					// 	loginStore.setConsumerUser(result.data)
 					// })
-					if (loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null) navigation.navigate("setupProfile")
 				} else if (result.kind === "bad-data") {
 					setSucess(false)
 					const msg = result?.errors
@@ -123,20 +122,25 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 
 	const ConfirmModal = () => (
 		<Modal visible={ShowModal} transparent>
-			{(TransactionConfirm) &&
-				TransactionFinished
-				? <View style={styles.HEADER_ACTIONS}>
-					<View style={styles.CLOSE_MODAL_BUTTON} />
-					<TouchableOpacity onPress={() => [setShowPassModal(false), setShowModal(false)]} style={styles.CLOSE_MODAL_BUTTON}>
-						<Text style={[styles.BACK_BUTON_LABEL_MODAL, { color: COLOR.PALETTE.pureblack }]}>{`Close `}</Text>
-						<Icon name={"close"} size={23} color={COLOR.PALETTE.pureblack} />
-					</TouchableOpacity>
-				</View>
-				: <View style={styles.HEADER_ACTIONS} />
-			}
 			{TransactionConfirm
-				? <View style={styles.LOADING_RETURN}>
-
+				? [TransactionFinished
+					? <View key={'confirm_header'} style={styles.HEADER_ACTIONS}>
+						<View style={styles.CLOSE_MODAL_BUTTON} />
+						<TouchableOpacity
+							onPress={() => [
+								setShowPassModal(false),
+								setShowModal(false),
+								setTransactionConfirm(false),
+								setAmount('0')
+							]}
+							style={styles.CLOSE_MODAL_BUTTON}
+						>
+							<Text style={[styles.BACK_BUTON_LABEL_MODAL, { color: COLOR.PALETTE.pureblack }]}>{`Close `}</Text>
+							<Icon name={"close"} size={23} color={COLOR.PALETTE.pureblack} />
+						</TouchableOpacity>
+					</View>
+					: <View key={'confirm_header'} style={styles.HEADER_ACTIONS} />,
+				<View key={'confirm_content'} style={styles.LOADING_RETURN}>
 					{TransactionFinished
 						? [
 							Sucess
@@ -146,7 +150,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 								</View>
 								: <View style={styles.CONTAINER} key={'congrat_title'} >
 									<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Whoops, something went wrong.</Text>
-									<Text style={styles.SUB_TITLE}>{ResponseMenssage}</Text>
+									<Text style={[styles.SUB_TITLE, { color: COLOR.PALETTE.red }]}>{ResponseMenssage}</Text>
 								</View>
 							, <Button
 								key={'congrat_button'}
@@ -175,8 +179,8 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 						]
 					}
 
-				</View>
-				: <View style={styles.ROOT_MODAL}>
+				</View>,
+				] : <View style={styles.ROOT_MODAL}>
 					<View style={styles.HEADER_ACTIONS}>
 						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.white} style={{ marginLeft: 10 }} />

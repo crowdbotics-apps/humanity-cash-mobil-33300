@@ -15,7 +15,7 @@ export const PALETTE = {
   gradientPrimary: "#d75935",
   gradientSecondary: "#e48f41",
   gold: "#B56A3C",
-  red: "#E9E9E9",
+  red: "#A13B5F",
   warning: "#ffc107",
   lighterGreen: "#F8FAF6",
   marina_dark: "#30343F",
