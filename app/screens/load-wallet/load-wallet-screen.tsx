@@ -98,16 +98,16 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 						</View>
 					</View>
 				</View>
-				<View style={styles.CONTAINER}>
+				<KeyboardAvoidingView style={styles.CONTAINER}>
 					<Button
 						buttonStyle={{
 							backgroundColor: !Pass || Pass === '' ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
 						}}
 						disabled={!Pass || Pass === ''}
-						onPress={() => [setShowModal(true), setPass('')]}
+						onPress={() => [setShowModal(true), setPass(''), setShowPassModal(false)]} 
 						buttonLabel={'Confirm'}
 					/>
-				</View>
+				</KeyboardAvoidingView>
 			</View>
 		</Modal>
 	)
@@ -124,7 +124,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 		<Modal visible={ShowModal} transparent>
 			{TransactionConfirm
 				? [TransactionFinished
-					? <View key={'confirm_header'} style={styles.HEADER_ACTIONS}>
+					? <View key={'confirm_header'} style={[styles.HEADER_ACTIONS, { marginTop: 20 }]}>
 						<View style={styles.CLOSE_MODAL_BUTTON} />
 						<TouchableOpacity
 							onPress={() => [
@@ -181,8 +181,8 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 
 				</View>,
 				] : <View style={styles.ROOT_MODAL}>
-					<View style={styles.HEADER_ACTIONS}>
-						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
+					<View style={[styles.HEADER_ACTIONS, { marginTop: 35 }]}>
+						<TouchableOpacity onPress={() => [setShowModal(false), setShowPassModal(true)]} style={styles.CLOSE_MODAL_BUTTON}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.white} style={{ marginLeft: 10 }} />
 							<Text style={styles.BACK_BUTON_LABEL_MODAL}>{` Back`}</Text>
 						</TouchableOpacity>
@@ -221,15 +221,15 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 			unsafe={true}
 			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<View style={styles.HEADER_ACTIONS}>
 					{!ShowModal &&
-						<TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
-							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-							<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+						<TouchableOpacity onPress={() => navigation.navigate('home')} style={[styles.BACK_BUTON_CONTAINER, { marginTop: 10 }]}>
+							<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
+							<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 						</TouchableOpacity>
 					}
 				</View>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<View style={styles.STEP_CONTAINER}>
 					<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Load Wallet</Text>
 					<Text style={styles.LINE} />

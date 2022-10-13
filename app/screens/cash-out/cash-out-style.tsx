@@ -3,7 +3,7 @@ import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
   ACTIVITY: {
-    marginTop: METRICS.screenHeight - 250
+    marginBottom: 35
   },
   AGREE_CONTAINER: {
     alignSelf: 'center',
@@ -32,8 +32,9 @@ export default StyleSheet.create({
     flexDirection: 'row',
     height: 30,
     justifyContent: 'flex-start',
+    marginBottom: 10,
     marginLeft: 10,
-    marginVertical: 10,
+    marginTop: 45,
     width: 80
   },
   BACK_BUTON_LABEL: {
@@ -338,8 +339,8 @@ export default StyleSheet.create({
   STEP_TITLE_PASS: {
     color: COLOR.PALETTE.orange,
     fontSize: 32,
-    marginBottom: 20,
-    marginLeft: 10
+    marginLeft: 10,
+    marginVertical: 20
   },
   SUBMIT_BUTTON_LABEL: {
     color: COLOR.PALETTE.white,

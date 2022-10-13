@@ -101,6 +101,7 @@ export default StyleSheet.create({
   },
   HEADER: {
     flexDirection: 'row',
+    height: 50,
     marginLeft: 10,
     marginTop: 10,
   },

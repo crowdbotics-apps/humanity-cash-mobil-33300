@@ -202,7 +202,9 @@ export const HomeScreen = observer(function HomeScreen() {
 						{loginStore.getConsumerCoupons.map((c, key) => (
 							<View key={key} style={styles.COUPON_CONTAINER}>
 								<Image
-									source={{ uri: c.promo_image }}
+									// source={{ uri: c.promo_image }}
+									source={{ uri: 'http://192.168.183.155:8000/mediafiles/coupons-pictures/rn_image_picker_lib_temp_a15bad5a-147f-43aa-89ef-cab52793e680_89hmvqs.jpg' }}
+									
 									resizeMode='cover'
 									style={styles.RETURN_IMAGE}
 								/>

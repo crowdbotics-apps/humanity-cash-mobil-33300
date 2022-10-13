@@ -71,7 +71,7 @@ export const ContactScreen = observer(function ContactScreen() {
 		data.map((i, key2) => (
 			<TouchableOpacity key={key2 + '_values'} style={styles.RETURN_ITEM}>
 				<Image
-					source={{ uri: i.profile_picture }}
+					source={{ uri: `http://192.168.183.155:8000${i.profile_picture}` }}
 					resizeMode='cover'
 					style={styles.RETURN_IMAGE}
 				/>

@@ -79,6 +79,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 	const passModal = () => (
 		<Modal visible={ShowPassModal} transparent>
 			<View style={styles.ROOT_MODAL_PASS}>
+				
 				<View style={styles.CONTAINER}>
 					<TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
 						<Icon name={"close"} size={23} color={COLOR.PALETTE.black} />
@@ -98,23 +99,23 @@ export const CashOutScreen = observer(function CashOutScreen() {
 								value={Pass}
 								secureTextEntry={HidePass}
 								placeholder={"*********"}
-							/>
+								/>
 							<TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
 								<Ionicons name="eye" color={"#39534480"} size={20} />
 							</TouchableOpacity>
 						</View>
 					</View>
-				</View>
-				<View style={styles.CONTAINER}>
+				</View>	
+				<KeyboardAvoidingView style={styles.CONTAINER}>
 					<Button
 						buttonStyle={{
 							backgroundColor: !Pass || Pass === '' ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
 						}}
 						disabled={!Pass || Pass === ''}
-						onPress={() => [setShowModal(true), setPass('')]}
+						onPress={() => [setShowModal(true), setPass(''), setShowPassModal(false)]} 
 						buttonLabel={'Confirm'}
 					/>
-				</View>
+				</KeyboardAvoidingView>
 			</View>
 		</Modal>
 	)
@@ -123,7 +124,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 		<Modal transparent visible={ShowModal}>
 			{TransactionConfirm
 				? [TransactionFinished
-					? <View key={'confirm_header'} style={styles.HEADER_ACTIONS}>
+					? <View key={'confirm_header'} style={[styles.HEADER_ACTIONS, { marginTop: 20 }]}>
 						<View style={styles.CLOSE_MODAL_BUTTON} />
 						<TouchableOpacity
 							onPress={() => [
@@ -180,7 +181,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 
 				</View>,
 				]: <View style={styles.ROOT_MODAL}>
-					<View style={styles.HEADER_ACTIONS}>
+					<View style={[styles.HEADER_ACTIONS, { marginTop: 35 }]}>
 						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.white} style={{ marginLeft: 10 }} />
 							<Text style={styles.BACK_BUTON_LABEL_MODAL}>{` Back`}</Text>
@@ -234,9 +235,9 @@ export const CashOutScreen = observer(function CashOutScreen() {
 			>
 				<View style={styles.HEADER_ACTIONS}>
 					{!ShowModal &&
-						<TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
-							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-							<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+						<TouchableOpacity onPress={() => navigation.navigate("home")} style={[styles.BACK_BUTON_CONTAINER, { marginTop: 10 }]}>
+							<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
+							<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor}]}>{` Home`}</Text>
 						</TouchableOpacity>
 					}
 				</View>
