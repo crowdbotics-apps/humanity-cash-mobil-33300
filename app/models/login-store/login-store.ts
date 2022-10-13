@@ -64,6 +64,7 @@ export const LoginStoreModel = types
     // billing
     billing_data_added: types.maybeNull(types.boolean),
     funding_sources: types.maybeNull(types.array(types.frozen())),
+    transactions: types.maybeNull(types.array(types.frozen())),
     // users
     users: types.maybeNull(types.frozen()),
   })
@@ -73,6 +74,9 @@ export const LoginStoreModel = types
     },
     get getFundingSources() {
       return self.funding_sources || []
+    },
+    get getTransactions() {
+      return self.transactions || []
     },
     get getStep() {
       return self.currentStep
@@ -320,6 +324,9 @@ export const LoginStoreModel = types
     setUsers(data) {
       self.users = data || {}
     },
+    setTransactions(data) {
+      self.transactions = data || []
+    },
     reset() {
       const api = self.environment.api.apisauce
       api.deleteHeader("Authorization")
@@ -367,6 +374,7 @@ export const LoginStoreModel = types
       self.funding_sources = null
       self.billing_data_added = false
       self.users = {}
+      self.transactions = null
     }
   }))
 

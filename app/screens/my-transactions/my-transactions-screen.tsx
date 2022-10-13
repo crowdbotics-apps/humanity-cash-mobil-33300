@@ -1,5 +1,7 @@
+/* eslint-disable prefer-const */
+/* eslint-disable array-callback-return */
 import { observer } from "mobx-react-lite";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, TextInputComponent, ConnectBankModal } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
@@ -10,6 +12,8 @@ import { useStores } from "../../models";
 import { CheckBox } from 'react-native-elements'
 import DatePicker from 'react-native-date-picker'
 import Entypo from "react-native-vector-icons/Entypo"
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
 
 export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const navigation = useNavigation()
@@ -23,42 +27,8 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		'Cash out to USD',
 	]
 
-	const returns = {
-		TODAY: [
-			{
-				item: 'Customer sale',
-				time: '7 min ago',
-				credit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-			{
-				item: 'Carr Hardware',
-				time: '3:51, Jun 17, 2021',
-				debit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-			{
-				item: 'Cash out',
-				time: '4:51, Jun 17, 2021',
-				cash_out: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-		],
-		YESTERDAY: [
-			{
-				item: 'Customer return',
-				time: '3:51, Jun 16, 2021',
-				debit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-		]
-	}
-
 	const [ShowIndex, setShowIndex] = useState(true)
+	const isFocused = useIsFocused();
 
 	const [Search, setSearch] = useState('')
 	const [ShowFilter, setShowFilter] = useState(false)
@@ -78,6 +48,79 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
 		// else setShowBankModal(false)
 	}, [])
+
+	useEffect(() => {
+		if (isFocused) {
+			getTransactions()
+			getACHTransactions()
+		}
+	}, [isFocused])
+
+	const getACHTransactions = () => {
+		loginStore.environment.api
+			.getACHTransactions({status:'processed'})
+			.then((result: any) => {
+				if (result.kind === "ok") {
+					runInAction(() => {
+						let temp = loginStore.getTransactions
+						result?.data?.results.map((r: any) => {
+							if (!temp.includes(r)) {
+								r.ach = true
+								temp.push(r) 
+							} 
+						})
+						loginStore.setTransactions(temp)
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const getTransactions = () => {
+		loginStore.environment.api
+			.getTransactions({status:'processed'})
+			.then((result: any) => {
+				if (result.kind === "ok") {
+					runInAction(() => {
+						let temp = loginStore.getTransactions
+						result?.data?.results.map((r: any) => {
+							if (!temp.includes(r)) {
+								r.ach = false
+								temp.push(r) 
+							} 
+						})
+						loginStore.setTransactions(temp)
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const getFormatedTransactions = () => {
+		let data: any = {}
+		loginStore.getTransactions.map(r => {
+			const date = r.created_at.split('T')[0]
+			if (data.date) {
+				data.date.data.push(r)
+			} else {
+				data.date = {
+					label: date,
+					data: [r]
+				}
+			}
+		})
+		return data
+	}
 
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>
 		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
@@ -242,26 +285,26 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 									</TouchableOpacity>
 								</View>
 								{ShowFilter && Filters()}
-								{Object.keys(returns).map((r, key) => ([
-									<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r}</Text>,
-									returns[r].map((i, key2) => (
+								{Object.values(getFormatedTransactions()).map((r, key) => ([
+									<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r.label}</Text>,
+									r.data.map((i, key2) => (
 										<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
 											<Image
 												source={{ uri: i.image }}
 												resizeMode='cover'
 												style={styles.RETURN_IMAGE}
 											/>
-											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
+											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.type}</Text>
 											{/* <Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text> */}
 
 											<View style={styles.CONTAINER}>
-												{i.credit
+												{/* {i.credit
 													? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
 													: i.debit
 														? <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
 														: <Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{`+ C$ ${i.cash_out || ''}`}</Text>
-												}
-
+												} */}
+													<Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.amount}`}</Text>
 											</View>
 										</TouchableOpacity>
 									))

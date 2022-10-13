@@ -5,7 +5,7 @@ import { Text, Button, Screen } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from "./link-bank-style"
 import { COLOR, IMAGES } from "../../theme"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { WebView } from 'react-native-webview'
 import { useStores } from "../../models"
 
@@ -18,7 +18,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
   const { loginStore } = rootStore
-
+  const isFocused = useIsFocused();
   const [Step, setStep] = useState('banks')
   const [AccountName, setAccountName] = useState("")
   const [Pass, setPass] = useState("")
@@ -40,6 +40,10 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         })
     }
   }, [CustomerDwollaId]);
+
+  useEffect(() => {
+		if (isFocused) getFundingSourcesList()
+	}, [isFocused])
 
   const [iavToken, setIavToken] = useState('')
   const [fundingSources, setFundingSources] = useState([])
@@ -65,13 +69,16 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         </View>
       </View>
       <View style={styles.BANKS_ICON_CONTAINER}>
-        {[].map((temp, key) => (
+        {console.log(' loginStore.getFundingSources => ', JSON.stringify(loginStore.getFundingSources, null, 2))}
+        {loginStore.getFundingSources.map((bank, key) => (
           <TouchableOpacity onPress={() => setStep('bankLogin')} key={key} style={styles.BANK_ICON_CONTAINER}>
-            <Image
+            {/* <Image
               resizeMode="contain"
               source={IMAGES.lee_bank}
               style={styles.BANK_ICON}
-            />
+            /> */}
+            <Text style={styles.BANK_NAME}>{bank.bankName}</Text>
+            <Text style={styles.BANK_ACC_NAME}>{bank.name}</Text>
           </TouchableOpacity>
         ))}
         {/* <TouchableOpacity onPress={() => setStep('bankLoginDwolla')} style={styles.BANK_ICON_CONTAINER}> */}

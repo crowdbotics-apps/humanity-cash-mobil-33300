@@ -13,6 +13,14 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     width: METRICS.screenWidth * 0.95
   },
+  BANK_ACC_NAME: {
+    alignSelf: 'center',
+    color: COLOR.PALETTE.pureblack,
+    fontSize: 13,
+        marginTop: 10,
+        textAlign: 'center',
+        width: METRICS.screenWidth * 0.46,
+  },
   BANK_ICON: {
     height: 80,
     width: 80
@@ -33,6 +41,15 @@ export default StyleSheet.create({
     justifyContent: 'center',
     marginTop: 30,
     width: METRICS.screenWidth * 0.46
+  },
+  BANK_NAME: {
+    alignSelf: 'center',
+    color: COLOR.PALETTE.pureblack,
+    fontSize: 13,
+    fontWeight: '700',
+        marginTop: 10,
+        textAlign: 'center',
+        width: METRICS.screenWidth * 0.46,
   },
   CONTAINER: {},
   HEADER: {
@@ -104,6 +121,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     width: METRICS.screenWidth * 0.15
   },
+
   SEARCH_INPUT_CONTAINER: {
     alignSelf: 'center',
     flexDirection: 'row',
@@ -117,7 +135,6 @@ export default StyleSheet.create({
     height: 55,
     width: METRICS.screenWidth * 0.85,
   },
-
   SEARCH_INPUT_STYLE_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
