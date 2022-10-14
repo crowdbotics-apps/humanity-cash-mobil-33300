@@ -177,11 +177,11 @@ export class Api extends ApiBase {
     return this.simple_post(apiv1 + "/deposit/", data)
   }
 
-  async getACHTransactions(data: any): Promise<Types.SimpleGetResult> {
+  async getACHTransactions(data?: any): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/ach_transaction/", data)
   }
 
-  async getTransactions(data: any): Promise<Types.SimpleGetResult> {
+  async getTransactions(data?: any): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/transaction/", data)
   }
 }

@@ -58,8 +58,9 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 
 	const getACHTransactions = () => {
 		loginStore.environment.api
-			.getACHTransactions({status:'processed'})
+			.getACHTransactions()
 			.then((result: any) => {
+				console.log(' getACHTransactions ===>>>  ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						let temp = loginStore.getTransactions
@@ -83,8 +84,9 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 
 	const getTransactions = () => {
 		loginStore.environment.api
-			.getTransactions({status:'processed'})
+			.getTransactions()
 			.then((result: any) => {
+				console.log(' getTransactions ===>>>  ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						let temp = loginStore.getTransactions

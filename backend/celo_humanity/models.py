@@ -97,6 +97,16 @@ class Transaction(models.Model):
         self.counterpart_consumer = profile if profile and profile.is_consumer else None
         self.counterpart_merchant = profile if profile and profile.is_merchant else None
 
+    @property
+    def get_consumer_data(self):
+        if hasattr(self, 'consumer'):
+            return self.consumer
+
+    @property
+    def get_merchant_data(self):
+        if hasattr(self, 'merchant'):
+            return self.merchant
+
 
 class ACHTransaction(models.Model):
     class Type(models.TextChoices):
@@ -126,3 +136,14 @@ class ACHTransaction(models.Model):
 
     def __str__(self):
         return self.ach_id
+
+    @property
+    def get_consumer_data(self):
+        if hasattr(self, 'consumer'):
+            return self.consumer
+
+    @property
+    def get_merchant_data(self):
+        if hasattr(self, 'merchant'):
+            return self.merchant
+
