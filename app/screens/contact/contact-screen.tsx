@@ -136,6 +136,20 @@ const formatUsersData = (users = []) => {
 	return ({ consumers, merchants })
 }
 
+const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
+	if (initialData === [] || !initialData) return []
+	if (keys === [] || !keys) return initialData
+	if (filter === '' || !filter) return initialData
+	let data = []
+	initialData.map(d => {
+		keys.map(k => {
+			try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
+			catch {}
+		})
+	})
+	return data
+}
+
 const getUsers = () => {
 	loginStore.environment.api
 		.getUsers()
@@ -221,10 +235,10 @@ useEffect(() => {
 									<View style={styles.BLUE_LINE} />
 									<TabView value={TabIndex} onChange={setTabIndex} animationType="spring">
 										<TabView.Item style={{ height: 500, width: '95%' }}>
-										<View>{ContactList(loginStore.getUsers.consumers)}</View>
+										<View>{ContactList(getDataFiltered(loginStore.getUsers.consumers, ['first_name', 'last_name', 'business_name'], Search))}</View>
 										</TabView.Item>
 										<TabView.Item style={{ height: 500, width: '95%' }}>
-										<View>{ContactList(loginStore.getUsers.merchants)}</View>
+										<View>{ContactList(getDataFiltered(loginStore.getUsers.merchants, ['first_name', 'last_name', 'business_name'], Search))}</View>
 										</TabView.Item>
 									</TabView>
 								</View>

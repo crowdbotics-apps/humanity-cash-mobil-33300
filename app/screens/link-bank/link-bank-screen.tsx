@@ -48,6 +48,20 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const [iavToken, setIavToken] = useState('')
   const [fundingSources, setFundingSources] = useState([])
 
+  const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
+    if (initialData === [] || !initialData) return []
+    if (keys === [] || !keys) return initialData
+    if (filter === '' || !filter) return initialData
+    let data = []
+    initialData.map(d => {
+      keys.map(k => {
+        try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
+        catch {}
+      })
+    })
+    return data
+  }
+
   const RenderBanks = () => (
     <View style={styles.CONTAINER}>
       <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home")}>
@@ -70,7 +84,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
       </View>
       <View style={styles.BANKS_ICON_CONTAINER}>
         {console.log(' loginStore.getFundingSources => ', JSON.stringify(loginStore.getFundingSources, null, 2))}
-        {loginStore.getFundingSources.map((bank, key) => (
+        {getDataFiltered(loginStore.getFundingSources, ['bankName', 'name'], Search).map((bank, key) => (
           <TouchableOpacity onPress={() => setStep('bankLogin')} key={key} style={styles.BANK_ICON_CONTAINER}>
             {/* <Image
               resizeMode="contain"

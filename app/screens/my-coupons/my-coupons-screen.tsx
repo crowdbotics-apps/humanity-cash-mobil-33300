@@ -19,6 +19,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	const { loginStore } = rootStore
 	const isFocused = useIsFocused();
 	const transactionTypes = [
+		'All',
 		'Discount percentage',
 		'Discount dollar amount',
 		'Special Offer',
@@ -60,9 +61,9 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	const [DistanceFilter, setDistanceFilter] = useState('')
 	const [SelectOpen, setSelectOpen] = useState(false)
 	const [TransactionType, setTransactionType] = React.useState('All');
-	const [DateFrom, setDateFrom] = useState(new Date())
+	const [DateFrom, setDateFrom] = useState(new Date(new Date().getFullYear(), 0, 1))
 	const [OpenFrom, setOpenFrom] = useState(false)
-	const [DateTo, setDateTo] = useState(new Date())
+	const [DateTo, setDateTo] = useState(new Date(new Date().getFullYear(), 11, 31))
 	const [OpenTo, setOpenTo] = useState(false)
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
@@ -88,6 +89,29 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		if (isFocused) getCoupons()
 	}, [isFocused])
 
+	const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
+		if (initialData === [] || !initialData) return []
+		if (keys === [] || !keys) return initialData
+		let data = []
+		initialData.map(d => {
+			keys.map(k => {
+				try {
+					if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) {
+						if (!data.includes(d)) data.push(d)
+					}
+				}
+				catch { }
+			})
+		})
+		// added
+		if (TransactionType !== 'All' && TransactionType !== '')
+			data = data.filter(d => d.type_of_promo === TransactionType)
+		if (DateFrom && DateTo) 
+			data = data.filter(d => (DateFrom <= new Date(d.start_date) && new Date(d.end_date) <= DateTo))
+		
+		return data
+	}
+
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>
 		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 			<Text style={styles.INPUT_LABEL_STYLE}>START DATE</Text>
@@ -105,6 +129,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 				/>
 				<DatePicker
 					modal
+					mode={'date'}
 					open={OpenFrom}
 					date={DateFrom}
 					onConfirm={(date) => {
@@ -125,6 +150,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 				/>
 				<DatePicker
 					modal
+					mode={'date'}
 					open={OpenTo}
 					date={DateTo}
 					onConfirm={(date) => {
@@ -139,12 +165,12 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 			<Text style={styles.INPUT_LABEL_STYLE}>TYPE OF DISCOUNT</Text>
 		</View>
 		<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
-			<TouchableOpacity style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType('')]}>
+			<TouchableOpacity style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen)]}>
 				<Text style={styles.SELECT_LABEL}>{TransactionType || 'All'}</Text>
 				<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
 			</TouchableOpacity>
-			{SelectOpen && transactionTypes.map((t, key) => (
-				<TouchableOpacity key={key + 'btype'} style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType(t)]}>
+			{transactionTypes.map((t, key) => (
+				<TouchableOpacity key={key + 'btype'} style={[styles.SELECT_ICON, { display: SelectOpen ? 'flex' : 'none' }]} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType(t), setSearch(Search)]}>
 					<Text style={styles.SELECT_LABEL}>{t}</Text>
 				</TouchableOpacity>
 			))}
@@ -155,19 +181,19 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 
 	const ReturnDetailModal = () => <Modal transparent visible={DetailModalVisible}>
 		<TouchableWithoutFeedback onPress={() => setDetailModalVisible(false)}>
-				<View style={styles.ROOT_MODAL}>
-					<View style={styles.MODAL_CONTENT}>
-						<Text style={styles.STEP_TITLE_BLACK}>Are you sure you want to remove this coupon</Text>
-						{/* <Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text> */}
-						<TouchableOpacity
-							style={styles.MODAL_BUTTON}
-							onPress={() => [setDetailModalVisible(false)]}>
-							<Text style={styles.SUBMIT_BUTTON_LABEL}>Remove</Text>
-						</TouchableOpacity>
-					</View>
-
+			<View style={styles.ROOT_MODAL}>
+				<View style={styles.MODAL_CONTENT}>
+					<Text style={styles.STEP_TITLE_BLACK}>Are you sure you want to remove this coupon</Text>
+					{/* <Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text> */}
+					<TouchableOpacity
+						style={styles.MODAL_BUTTON}
+						onPress={() => [setDetailModalVisible(false)]}>
+						<Text style={styles.SUBMIT_BUTTON_LABEL}>Remove</Text>
+					</TouchableOpacity>
 				</View>
-			</TouchableWithoutFeedback>
+
+			</View>
+		</TouchableWithoutFeedback>
 	</Modal>
 
 	const bankModal = () =>
@@ -198,11 +224,8 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
 							<View style={styles.STEP_CONTAINER}>
-							<View style={[styles.CONTAINER, { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
-								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>My Coupons</Text>
-								<TouchableOpacity onPress={() => navigation.navigate("createCoupon")}>
-								<Entypo name={'circle-with-plus'} size={40} color={loginStore.getAccountColor} style={styles.ADD_ICON} />
-								</TouchableOpacity>
+								<View style={[styles.CONTAINER, { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+									<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>My Coupons</Text>
 								</View>
 								<View style={styles.LINE} />
 								<View style={styles.SEARCH_INPUT_CONTAINER}>
@@ -222,7 +245,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 									</TouchableOpacity>
 								</View>
 								{ShowFilter && Filters()}
-								{loginStore.getMerchantCoupons.map((i, key) => (
+								{getDataFiltered(loginStore.getMerchantCoupons, ['title', 'description', 'discount_input'], Search).map((i, key) => (
 									<TouchableOpacity onLongPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key + '_values'} style={styles.RETURN_ITEM}>
 										<Image
 											source={{ uri: i.promo_image }}
@@ -230,12 +253,12 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 											style={styles.RETURN_IMAGE}
 										/>
 										<View style={[styles.CONTAINER, { flex: 1, justifyContent: 'center' }]}>
-										<Text key={key + '_label'} style={styles.RETURNS_LABEL}>
-											{ (i.start_date && i.end_date)
-											 ? `${i.start_date} - ${i.end_date}`
-											: '-'
-											}
-											 </Text>
+											<Text key={key + '_label'} style={styles.RETURNS_LABEL}>
+												{(i.start_date && i.end_date)
+													? `${i.start_date} - ${i.end_date}`
+													: '-'
+												}
+											</Text>
 											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.title}</Text>
 										</View>
 										<View style={styles.CONTAINER}>
@@ -251,7 +274,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 				{bankModal()}
 				{ShowIndex &&
 					<Button
-						buttonStyle={{ backgroundColor: loginStore.getAccountColor, marginTop: 5}}
+						buttonStyle={{ backgroundColor: loginStore.getAccountColor, marginTop: 5 }}
 						onPress={() => navigation.navigate("createCoupon")}
 						buttonLabel={'Create a coupon'}
 						showBottonMenu

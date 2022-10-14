@@ -108,14 +108,28 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 			})
 	}
 
+	const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
+		if (initialData === [] || !initialData) return []
+		if (keys === [] || !keys) return initialData
+		if (filter === '' || !filter) return initialData
+		let data = []
+		initialData.map(d => {
+			keys.map(k => {
+				try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
+				catch {}
+			})
+		})
+		return data
+	}
+
 	const getFormatedTransactions = () => {
 		let data: any = {}
 		loginStore.getTransactions.map(r => {
 			const date = r.created_at.split('T')[0]
-			if (data.date) {
-				data.date.data.push(r)
+			if (data[date]) {
+				data[date].data.push(r)
 			} else {
-				data.date = {
+				data[date] = {
 					label: date,
 					data: [r]
 				}
