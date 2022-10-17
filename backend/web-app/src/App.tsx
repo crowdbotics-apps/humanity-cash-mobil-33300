@@ -28,6 +28,7 @@ import UsersPage from "./pages/Users";
 import UserDetailPage from "./pages/UserDetail";
 import {SocialMediaPage} from "./pages/SocialMedia/SocialMedia";
 import {AdminWalletControlPage} from "./pages/AdminWalletControl/AdminWalletControl";
+import SmartContracts from "./pages/SmartContracts";
 
 
 // @ts-ignore
@@ -100,6 +101,7 @@ function App() {
             <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
             <Route element={<ProtectedRoute isAllowed={rootStore && rootStore.userStore.isLoggedIn} />} >
                   <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
+                  <Route path={ROUTES.CONTRACTS} element={<SmartContracts />} />
                   <Route path={ROUTES.SOCIAL} element={<SocialMediaPage />} />
                   <Route path={ROUTES.WALLET} element={<AdminWalletControlPage />} />
                   <Route path={ROUTES.EMPLOYEES} element={<EmployeesPage />} />

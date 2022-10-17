@@ -3,6 +3,8 @@ from django.db import models
 
 
 # Create your models here.
+from django.utils.timezone import now
+
 from celo_humanity.web3helpers import get_contract, ContractProxy
 
 

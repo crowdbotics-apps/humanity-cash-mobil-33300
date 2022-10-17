@@ -21,7 +21,7 @@
     border-bottom: 2px solid #3B88B6;
 }
 .tableData {
-    /*vertical-align: middle;*/
+    vertical-align: middle;
 }
 .tableRow {
     align-items: center;
@@ -29,7 +29,7 @@
     height: 55px !important;
 }
 .table{
-    height: 60%;
+    /*height: 60%;*/
     /*min-height: 400px;*/
 }
 

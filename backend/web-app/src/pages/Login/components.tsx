@@ -52,9 +52,9 @@ export const LoginForm = ()=> {
         if (result.kind === "ok") {
           userStore.setUser(result.response.user)
           userStore.setApiToken(result.response.access_token, result.response.refresh_token)
-          // toast.success('Welcome', {
-          //   position: toast.POSITION.TOP_CENTER
-          // });
+          toast.success('Welcome', {
+            position: toast.POSITION.TOP_CENTER
+          });
           navigate(ROUTES.DASHBOARD, {replace:true})
         } else {
           toast.error(getErrorMessages(result.errors), {

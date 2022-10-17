@@ -11,6 +11,7 @@ export const ROUTES = {
   BLOCKCHAIN_TRANSACTIONS: '/blockchain-transactions',
   CONTENTS: '/content',
   SOCIAL: '/social',
+  CONTRACTS: '/contracts',
   WALLET: '/wallet',
   EMPLOYEES: '/employees',
   SYNTHESIS_EXPLORER: (params: any) => `/synthesis-explorer/${params}` ,
