@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
-import { observer } from "mobx-react-lite";
+import React, {useState} from 'react';
+import {observer} from "mobx-react-lite";
 import styles from './Dashboard.module.css';
-import { Tab, Tabs, Col } from "react-bootstrap";
-import SimpleTable from '../../components/Table'
-import { dataCompleted } from './constants'
 import AdminPanelContainer from "../../containers";
+import {ArcElement, Chart as ChartJS, Legend, Tooltip} from 'chart.js';
+import {Pie} from 'react-chartjs-2';
 
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export const data = {
@@ -169,8 +166,6 @@ export const Dashboard: React.FC = observer(() => {
                         label={"TOTAL PENDING DEPOSITS"}
                         color={"var(--green)"}
                       />
-
-
                   </div>
                   <div className={'col-md-3 col-sm-6 d-flex flex-column  justify-content-between'}>
 
