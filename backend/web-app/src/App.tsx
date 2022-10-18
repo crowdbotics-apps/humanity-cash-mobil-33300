@@ -57,8 +57,6 @@ function App() {
   useEffect(() => {
 
     if(rootStore){
-      console.log("reiniciando", rootStore)
-
       rootStore.userStore.setUp()
     }
   },[rootStore])
