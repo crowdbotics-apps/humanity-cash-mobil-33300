@@ -60,8 +60,9 @@ class SignupSerializer(serializers.ModelSerializer):
         user.save()
 
         code = setup_verification_code(user)
-        if phone_number:
-            send_verification_phone(user, code, phone_number)
+        # TODO: AGREGAR NUEVAS CLAVES DE TWILIO PARA PODER USAR ESTO O SI NO SE ROMPE
+        # if phone_number:
+        #     send_verification_phone(user, code, phone_number)
 
         send_verification_email(user, code)
 
