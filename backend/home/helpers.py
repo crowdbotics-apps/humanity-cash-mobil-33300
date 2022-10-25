@@ -78,11 +78,9 @@ def send_sms(message, to):
 
 
 def send_verification_phone(user, code, phone_number):
-    message = f"""Verification code. 
-    Hello!
-    Please use the Verification code bellow to complete the verification process
-    {code}
-    Thank you."""
+    message = "Hello from Humanity Cash! This is your Verification Code to complete your verification process. " \
+              "{} " \
+              "Thank you.".format(code)
 
     send_sms(message, phone_number)
 
