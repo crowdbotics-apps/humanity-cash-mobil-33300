@@ -60,7 +60,7 @@ export function ModalCameraImagePicker(props: ModalCodeInputProps) {
         {response?.assets ? (
           response?.assets.map(({ uri }) => (
             <View
-              key={uri}
+              key={uri + '_asset'}
               style={{
                 marginVertical: 24,
                 alignItems: "center"

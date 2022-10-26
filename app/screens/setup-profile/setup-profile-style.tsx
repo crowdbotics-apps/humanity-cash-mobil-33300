@@ -351,7 +351,7 @@ export default StyleSheet.create({
   STEP_TITLE: {
     color: COLOR.PALETTE.orange,
     fontSize: 32,
-    marginLeft: 10
+    marginLeft: 10,
   },
   STEP_TITLE_BLACK: {
     color: COLOR.PALETTE.black,

@@ -56,9 +56,6 @@ export const SecurityScreen = observer(function SecurityScreen() {
           const key = Object.keys(result?.errors)[0]
           const msg = `${key}: ${result?.errors?.[key][0]}`
           notifyMessage(msg)
-        } else {
-          loginStore.reset()
-          notifyMessage(null)
         }
       })
   }

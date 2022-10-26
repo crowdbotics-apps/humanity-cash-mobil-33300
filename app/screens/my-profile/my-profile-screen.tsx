@@ -404,9 +404,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						const key = Object.keys(result?.errors)[0]
 						const msg = `${key}: ${result?.errors?.[key][0]}`
 						notifyMessage(msg)
-					} else {
-						loginStore.reset()
-						notifyMessage(null)
 					}
 				})
 			: loginStore.environment.api
@@ -431,9 +428,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					} else if (result.kind === "unauthorized") {
 						loginStore.reset()
 						navigation.navigate("login")
-					} else {
-						loginStore.reset()
-						notifyMessage(null)
 					}
 				})
 	}

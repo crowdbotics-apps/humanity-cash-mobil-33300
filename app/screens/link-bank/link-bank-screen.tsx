@@ -85,7 +85,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
       <View style={styles.BANKS_ICON_CONTAINER}>
         {console.log(' loginStore.getFundingSources => ', JSON.stringify(loginStore.getFundingSources, null, 2))}
         {getDataFiltered(loginStore.getFundingSources, ['bankName', 'name'], Search).map((bank, key) => (
-          <TouchableOpacity onPress={() => setStep('bankLogin')} key={key} style={styles.BANK_ICON_CONTAINER}>
+          <TouchableOpacity onPress={() => setStep('bankLogin')} key={key + '_bank'} style={styles.BANK_ICON_CONTAINER}>
             {/* <Image
               resizeMode="contain"
               source={IMAGES.lee_bank}
@@ -163,13 +163,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           runInAction(() => {
             setFundingSources(result.data)
           })
-        } else if (result.kind === "bad-data") {
-          const key = Object.keys(result?.errors)[0]
-          const msg = `${key}: ${result?.errors?.[key][0]}`
-          notifyMessage(msg)
-        } else {
-          loginStore.reset()
-          notifyMessage(null)
         }
       })
   }
@@ -177,6 +170,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const getIavToken = () => {
     loginStore.environment.api.getDwollaToken({ "user_type": loginStore.getSelectedAccount })
       .then((result: any) => {
+        console.log(' getIavToken ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             setIavToken(result.response.iav_token)
@@ -186,9 +180,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           const key = Object.keys(result?.errors)[0]
           const msg = `${key}: ${result?.errors?.[key]}`
           notifyMessage(msg)
-        } else {
-          loginStore.reset()
-          notifyMessage(null)
         }
       })
   }

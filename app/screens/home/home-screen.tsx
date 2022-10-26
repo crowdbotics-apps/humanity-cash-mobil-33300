@@ -35,9 +35,6 @@ export const HomeScreen = observer(function HomeScreen() {
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
 					navigation.navigate("login")
-				} else {
-					//   loginStore.reset()
-					notifyMessage(null)
 				}
 			})
 	}
@@ -124,12 +121,6 @@ export const HomeScreen = observer(function HomeScreen() {
 					runInAction(() => {
 						loginStore.setFundingSources(result.data)
 					})
-				} else if (result.kind === "bad-data") {
-					const key = Object.keys(result?.errors)[0]
-					const msg = `${key}: ${result?.errors?.[key]}`
-					notifyMessage(msg)
-				} else {
-					notifyMessage(null)
 				}
 			})
 	}
@@ -202,7 +193,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					<Text style={styles.INDUSTRY_TITLE}>MY SAVED COUPONS</Text>
 					<ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginHorizontal: 10 }}>
 						{loginStore.getConsumerCoupons.map((c, key) => (
-							<View key={key} style={styles.COUPON_CONTAINER}>
+							<View key={key + '_coupon'} style={styles.COUPON_CONTAINER}>
 								<Image
 									source={{ uri: c.promo_image }}
 									resizeMode='cover'

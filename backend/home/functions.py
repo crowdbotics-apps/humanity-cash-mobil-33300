@@ -14,12 +14,25 @@ def get_dwolla_id_request(user, request):
         if user.consumer.dwolla_id:
             dwolla_id = user.consumer.dwolla_id
             return {"dwolla_id": dwolla_id, "error": None, "response": None}
-        return {"dwolla_id": None, "error": True, "response": Response({"error": "Consumer has no dwolla_id"}, status=status.HTTP_400_BAD_REQUEST)}
+        else:
+            try:
+                create_dwolla_customer_consumer(user)
+                dwolla_id = user.consumer.dwolla_id
+                return {"dwolla_id": dwolla_id, "error": None, "response": None}
+            except:
+                return {"dwolla_id": None, "error": True, "response": Response({"error": "Consumer has no dwolla_id"},
+                                                                               status=status.HTTP_400_BAD_REQUEST)}
     elif user_type == 'merchant' and hasattr(user, 'merchant'):
         if user.merchant.dwolla_id:
             dwolla_id = user.merchant.dwolla_id
             return {"dwolla_id": dwolla_id, "error": None, "response": None}
-        return {"dwolla_id": None, "error": True, "response": Response({"error": "Merchant has no dwolla_id"}, status=status.HTTP_400_BAD_REQUEST)}
+        else:
+            try:
+                create_dwolla_customer_merchant(user)
+                dwolla_id = user.merchant.dwolla_id
+                return {"dwolla_id": dwolla_id, "error": None, "response": None}
+            except:
+                return {"dwolla_id": None, "error": True, "response": Response({"error": "Merchant has no dwolla_id"}, status=status.HTTP_400_BAD_REQUEST)}
     return {"dwolla_id": None, "error": True,
             "response": Response({"error": "User has no dwolla_id"}, status=status.HTTP_400_BAD_REQUEST)}
 
@@ -43,7 +56,7 @@ def create_dwolla_customer_consumer(instance):
     try:
         dwolla_client = DwollaClient()
         if instance.first_name and instance.last_name and instance.email:
-            if instance.get_merchant_data:
+            if instance.get_merchant_data.dwolla_id:
                 instance.consumer.dwolla_id = instance.merchant.dwolla_id
                 instance.consumer.save()
             else:
@@ -67,7 +80,7 @@ def create_dwolla_customer_merchant(instance):
         dwolla_client = DwollaClient()
         if instance.owner_first_name and instance.owner_last_name and instance.user.email and instance.business_name:
             user_instance = instance.user
-            if user_instance.get_consumer_data:
+            if user_instance.get_consumer_data.dwolla_id:
                 instance.dwolla_id = user_instance.consumer.dwolla_id
                 instance.save()
             else:

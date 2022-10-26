@@ -143,9 +143,6 @@ export const SignupScreen = observer(function SignupScreen() {
           setPhoneNumberErrorMessage(result.errors.phone_number[0])
         }
         notifyMessage("Please correct the errors and try again")
-      } else {
-        loginStore.reset()
-        notifyMessage(null)
       }
     })
   }
@@ -195,9 +192,6 @@ export const SignupScreen = observer(function SignupScreen() {
           })
         } else if (result.kind === "bad-data") {
           notifyMessage(result.errors.password.shift())
-        } else {
-          loginStore.reset()
-          notifyMessage(null)
         }
       })
   }

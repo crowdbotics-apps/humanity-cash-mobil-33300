@@ -21,6 +21,8 @@ class CreateIavTokenView(AuthenticatedAPIView):
 
         req_dwolla_id = get_dwolla_id_request(self.request.user, self.request)
 
+
+
         if req_dwolla_id.get('error'):
             return req_dwolla_id.get('response')
 
