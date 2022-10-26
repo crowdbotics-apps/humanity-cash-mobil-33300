@@ -7,4 +7,4 @@ build:
 release:
   image: web
   command:
-    - python3 manage.py migrate && python3 manage.py cities_light && python3 manage.py clean_blockchain_data
+    - python3 manage.py migrate && python3 manage.py cities_light && python3 manage.py loaddata celo_humanity/contract.json
