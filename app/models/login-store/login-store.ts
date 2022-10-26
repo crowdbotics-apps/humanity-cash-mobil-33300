@@ -123,7 +123,13 @@ export const LoginStoreModel = types
     get balance() {
       return {
         merchant: self.merchant_balance || 0,
-        consumer: self.merchant_balance || 0
+        consumer: self.consumer_balance || 0
+      }
+    },
+    get getProfilesId() {
+      return {
+        merchant: self.merchant_id,
+        consumer: self.consumer_id
       }
     },
     get getAllData() {
@@ -248,7 +254,8 @@ export const LoginStoreModel = types
     },
     setConsumerUser(user) {
       if (!user) return
-      self.consumer_id = user.id
+      console.log(' ===>>> ', user)
+      self.consumer_id = user.consumer
       self.id = user.id
       self.profile_picture = user.consumer_profile
       self.username = user.username

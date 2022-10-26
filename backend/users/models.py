@@ -122,22 +122,23 @@ class BaseProfileModel(models.Model):
         # TODO validate ammount or let contract fail and catch?
         # TODO catch contract exceptions
         transaction = transfer_coin(self.crypto_wallet_id,
-                      other_user.crypto_wallet_id,
-                      amount,
-                      roundup,
-                      profile=self,
-                      counterpart_profile=other_user)
+                                    other_user.crypto_wallet_id,
+                                    amount,
+                                    roundup,
+                                    profile=self,
+                                    counterpart_profile=other_user)
         if transaction:
             from home.helpers import send_notifications
-
-            send_notifications([other_user],
-                               'Withdraw',
-                               transaction.method_or_memo,
-                               '',
-                               self.user,
-                               Notification.Types.TRANSACTION,
-                               transaction=transaction)
-
+            try:
+                send_notifications([other_user],
+                                   'Withdraw',
+                                   transaction.method_or_memo,
+                                   '',
+                                   self.user,
+                                   Notification.Types.TRANSACTION,
+                                   transaction=transaction)
+            except: print(' User has no devices')
+    
 
     def deposit(self, amount):
         if self.crypto_wallet_id is None:

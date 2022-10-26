@@ -401,7 +401,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 </View>
               </View>
           }
-          <Text style={styles.TOTAL_CURRENCY}>C$ 0</Text>
+          <Text style={styles.TOTAL_CURRENCY}>C$ {loginStore?.balance?.[loginStore.getSelectedAccount] || 0}</Text>
 
           {drawerRouter[loginStore.getSelectedAccount]}
 

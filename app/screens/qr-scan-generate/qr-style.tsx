@@ -131,6 +131,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     height: 55,
     width: METRICS.screenWidth * 0.80,
+    color: COLOR.PALETTE.pureblack
   },
   PASS_REQUIREMENTS: {
     color: COLOR.PALETTE.strongGreen,

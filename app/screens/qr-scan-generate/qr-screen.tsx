@@ -30,11 +30,13 @@ export const QRScreen = observer(function QRScreen() {
   const [ShowPassModal, setShowPassModal] = useState(false)
   const [Pass, setPass] = useState('')
   const [HidePass, setHidePass] = useState(true)
+  const [TransactionSucceed, setTransactionSucceed] = useState(true)
+  const [ShowFinishModal, setShowFinishModal] = useState(true)
   const [PayerSetAmount, setPayerSetAmount] = useState(true)
   const toggleSwitch = () => setScanQR(previousState => !previousState)
 
   const [Amount, setAmount] = useState('0')
-
+  const [Loading, setLoading] = useState(false)
   const [ShowBankModal, setShowBankModal] = useState(false)
 
   useEffect(() => {
@@ -66,7 +68,7 @@ export const QRScreen = observer(function QRScreen() {
   };
 
   const passModal = () => (
-    <Modal visible={ShowPassModal} transparent>
+    <Modal visible={ShowPassModal}>
       <View style={styles.ROOT_MODAL_PASS}>
         <View style={styles.CONTAINER}>
           <TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
@@ -95,13 +97,11 @@ export const QRScreen = observer(function QRScreen() {
           </View>
         </View>
         <View style={styles.CONTAINER}>
-          <TouchableOpacity onPress={() => { }} style={styles.FORGOT_PASSWORD_CONTAINER}>
-            <Text style={styles.NEED_HELP_LINK}>Forgot password</Text>
-          </TouchableOpacity>
           <Button
             buttonStyle={{
               backgroundColor: loginStore.getAccountColor,
             }}
+            loading={Loading}
             onPress={() => transferCurrency()}
             buttonLabel={'Confirm'}
           />
@@ -110,11 +110,41 @@ export const QRScreen = observer(function QRScreen() {
     </Modal>
   )
 
+  const FinishReturn = () => <Modal visible={ShowFinishModal}>
+  <View style={styles.ROOT_MODAL_PASS}>
+    <View style={styles.CONTAINER}>
+      <View style={styles.BACK_BUTON_CONTAINER} />
+        
+      <View style={styles.STEP_CONTAINER}>
+        <Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor }]}>
+          {TransactionSucceed
+            ? 'Succeeded'
+            : 'Whoops, something went wrong.'
+            }
+          </Text>
+      </View>
+    </View>
+    <View style={styles.CONTAINER}>
+      <Button
+        buttonStyle={{
+          backgroundColor: loginStore.getAccountColor,
+        }}
+        loading={Loading}
+        onPress={() =>  TransactionSucceed ? setShowFinishModal(false) : transferCurrency() }
+        buttonLabel={TransactionSucceed
+          ? 'Confirm'
+          : 'Try again'}
+      />
+    </View>
+  </View>
+</Modal>
+
   const transferCurrency = () => {
     if (!QR) return
+    setLoading(true)
     const qrData = JSON.parse(QR)
     const data = {
-      "from": loginStore.getAllData.id,
+      "from": loginStore?.getProfilesId[loginStore.getSelectedAccount],
       "to": qrData.to,
       "from_is_consumer": loginStore.getSelectedAccount === 'consumer',
       "to_is_consumer": qrData.to_is_consumer,
@@ -122,20 +152,23 @@ export const QRScreen = observer(function QRScreen() {
       "amount": qrData.amount,
       "roundup": 0,
     }
+
     loginStore.environment.api
       .sendMoney(data)
       .then((result: any) => {
         console.log(' result ===>>> ', JSON.stringify(result, null, 2))
+        setLoading(false)
         if (result.kind === "ok") {
-          console.log(' result ok')
+          setTransactionSucceed(true)
+          setShowFinishModal(true)
+          setShowPassModal(false)
         } else if (result.kind === "bad-data") {
+          setTransactionSucceed(false)
+          setShowFinishModal(true)
           const errors = result.errors
-          notifyMessage(getErrorMessage(errors))
-        } else {
-          loginStore.reset()
-          notifyMessage(null)
+          notifyMessage(errors)
         }
-      }).catch((err) => notifyMessage(getErrorMessage(err)))
+      }).catch((err) => notifyMessage(err))
   }
 
   const inputQR = () => <View style={{ flex: 1, justifyContent: 'space-between' }}>
@@ -151,7 +184,6 @@ export const QRScreen = observer(function QRScreen() {
           keyboardType='numeric'
           onChangeText={t => {
             let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-            // temp = temp.replace(/[^0-9]/g, '')
             temp = temp.replace(",", ".")
             setAmount(temp)
           }}
@@ -175,9 +207,9 @@ export const QRScreen = observer(function QRScreen() {
     </View>
   </View>
 
-useEffect(() => {
-  setButtonDisabled(!(Number(Amount) > 0));
-}, [Amount]);
+  useEffect(() => {
+    setButtonDisabled(!(Number(Amount) > 0));
+  }, [Amount]);
 
   const viewQR = () => <Modal transparent visible={ShowQR}>
     <View style={styles.ROOT_MODAL}>
@@ -200,7 +232,7 @@ useEffect(() => {
         <QRCode
           value={
             JSON.stringify({
-              to: loginStore.getAllData.id,
+              to: loginStore?.getProfilesId[loginStore.getSelectedAccount],
               to_is_consumer: loginStore.getSelectedAccount === 'consumer',
               amount: Amount
             })
@@ -244,12 +276,13 @@ useEffect(() => {
           </View>
         </View>
         {ScanQR
-          ? <QRCodeScanner onRead={e => setQR(e)} /> // TODO: action when read
+          ? <QRCodeScanner onRead={e => [setQR(e.data), setShowPassModal(true), console.log(' read ===>>> ', JSON.stringify(e, null, 2))]} /> // TODO: action when read
           : inputQR()
         }
         {viewQR()}
         {bankModal()}
         {passModal()}
+        {FinishReturn()}
       </View>
     </Screen>
   )
