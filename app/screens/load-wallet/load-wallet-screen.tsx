@@ -1,91 +1,205 @@
 import { observer } from "mobx-react-lite";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Screen, Text } from "../../components";
+import { Button, Screen, Text, ConnectBankModal } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from './load-wallet-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
-
-	const [Amount, setAmount] = useState('')
+	const isFocused = useIsFocused();
+	const [ButtonDisabled, setButtonDisabled] = useState(false)
+	const [Amount, setAmount] = useState('0')
 	const [ShowModal, setShowModal] = useState(false)
 	const [TransactionConfirm, setTransactionConfirm] = useState(false)
 	const [TransactionFinished, setTransactionFinished] = useState(false)
 
+	const [ShowBankModal, setShowBankModal] = useState(false)
+
+	const [ShowPassModal, setShowPassModal] = useState(false)
+	const [Pass, setPass] = useState('')
+	const [HidePass, setHidePass] = useState(true)
+	const [Sucess, setSucess] = useState(true)
+	const [ResponseMenssage, setResponseMenssage] = useState('')
+
+	useEffect(() => {
+		if (isFocused) {
+			if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+			else setShowBankModal(false)
+		}
+	}, [isFocused])
+
+	const postDeposit = () => {
+		setTransactionConfirm(true)
+		setTransactionFinished(false)
+		const data = {
+			"user": loginStore.getSelectedAccount === 'consumer' ? loginStore.getAllData.consumer_id : loginStore.getAllData.merchant_id,
+			"user_as_consumer": loginStore.getSelectedAccount === 'consumer',
+			"password": Pass,
+			"amount": Amount
+		}
+        console.log(' data ===>>> ', JSON.stringify(data, null, 2))
+		loginStore.environment.api
+			.postDeposit(data)
+			.then((result: any) => {
+				setTransactionFinished(true)
+				console.log(' postDeposit ===>>> ', JSON.stringify(result, null, 2))
+				if (result.kind === "ok") {
+					setSucess(true)
+					// runInAction(() => {
+					// 	loginStore.setConsumerUser(result.data)
+					// })
+				} else if (result.kind === "bad-data") {
+					setSucess(false)
+					const msg = result?.errors
+					setResponseMenssage(msg)
+				} else {
+					setSucess(false)
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const passModal = () => (
+		<Modal visible={ShowPassModal} transparent>
+			<View style={styles.ROOT_MODAL_PASS}>
+				<View style={styles.CONTAINER}>
+					<TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
+						<Icon name={"close"} size={23} color={COLOR.PALETTE.black} />
+						<Text style={styles.BACK_BUTON_LABEL}>{` Close`}</Text>
+					</TouchableOpacity>
+					<View style={styles.STEP_CONTAINER}>
+						<Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor }]}>Verify with password</Text>
+
+						<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+							<Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
+						</View>
+						<View style={styles.INPUT_STYLE_CONTAINER}>
+							<TextInput
+								placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+								style={styles.PASS_INPUT_STYLE}
+								onChangeText={t => [setPass(t)]}
+								value={Pass}
+								secureTextEntry={HidePass}
+								placeholder={"*********"}
+							/>
+							<TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
+								<Ionicons name="eye" color={"#39534480"} size={20} />
+							</TouchableOpacity>
+						</View>
+					</View>
+				</View>
+				<KeyboardAvoidingView style={styles.CONTAINER}>
+					<Button
+						buttonStyle={{
+							backgroundColor: !Pass || Pass === '' ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
+						}}
+						disabled={!Pass || Pass === ''}
+						onPress={() => [setShowModal(true), setShowPassModal(false), setHidePass(true)]} 
+						buttonLabel={'Confirm'}
+					/>
+				</KeyboardAvoidingView>
+			</View>
+		</Modal>
+	)
+
+	const bankModal = () =>
+		<ConnectBankModal
+			visible={ShowBankModal}
+			buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
+		/>
+
 	const ConfirmModal = () => (
-		<Modal visible={ShowModal}>
+		<Modal visible={ShowModal} transparent>
 			{TransactionConfirm
-				? <View style={styles.LOADING_RETURN}>
+				? [TransactionFinished
+					? <View key={'confirm_header'} style={[styles.HEADER_ACTIONS, { marginTop: 20 }]}>
+						<View style={styles.CLOSE_MODAL_BUTTON} />
+						<TouchableOpacity
+							onPress={() => [
+								setShowPassModal(false),
+								setShowModal(false),
+								setTransactionConfirm(false),
+								setAmount('0'),
+								setPass(''),
+							]}
+							style={styles.CLOSE_MODAL_BUTTON}
+						>
+							<Text style={[styles.BACK_BUTON_LABEL_MODAL, { color: COLOR.PALETTE.pureblack }]}>{`Close `}</Text>
+							<Icon name={"close"} size={23} color={COLOR.PALETTE.pureblack} />
+						</TouchableOpacity>
+					</View>
+					: <View key={'confirm_header'} style={styles.HEADER_ACTIONS} />,
+				<View key={'confirm_content'} style={styles.LOADING_RETURN}>
 					{TransactionFinished
 						? [
-							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>{`Congratulations! You 
-have topped up 
-C$ ${Amount}`}
-							</Text>,
-							<Text key={'congrat_sub_title'} style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>,
-							<Button
+							Sucess
+								? <View style={styles.CONTAINER} key={'congrat_title'} >
+									<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Congratulations! You  have topped up C$ ${Amount}`}</Text>
+									<Text style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>
+								</View>
+								: <View style={styles.CONTAINER} key={'congrat_title'} >
+									<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Whoops, something went wrong.</Text>
+									<Text style={[styles.SUB_TITLE, { color: COLOR.PALETTE.red }]}>{ResponseMenssage}</Text>
+								</View>
+							, <Button
 								key={'congrat_button'}
 								buttonStyle={{
 									backgroundColor: loginStore.getAccountColor,
-									marginTop: METRICS.screenHeight * 0.6,
-									position: 'absolute'
 								}}
-								onPress={() => [
-									setTransactionConfirm(false),
-									setShowModal(false),
-									setTransactionFinished(false),
-									setAmount(''),
-									navigation.navigate("home", {})
-								]}
-								buttonLabel={'Explore your community'}
+								onPress={() => {
+									if (Sucess) {
+										setTransactionConfirm(false)
+										setShowModal(false)
+										setTransactionFinished(false)
+										setAmount('0')
+										setPass('')
+										navigation.navigate("home")
+									} else postDeposit()
+
+								}}
+								buttonLabel={Sucess ? 'Explore your community' : 'Try again'}
 							/>
 						]
 						: [
-							<Text key={'pending_title'} style={[styles.PENDING_TITLE, {color: loginStore.getAccountColor}]}>Pending...</Text>,
-							<Text key={'pending_sub_title'} style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>,
+							<View style={styles.CONTAINER} key={'pending_title'}>
+								<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Pending...</Text>
+								<Text style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>
+							</View>,
 							<ActivityIndicator key={'pending_ind'} style={styles.ACTIVITY} size="large" color={'black'} />
 						]
 					}
 
-				</View>
-				: <View style={[
-					styles.ROOT_MODAL,
-					{
-						backgroundColor:
-							loginStore.getSelectedAccount === 'merchant'
-								? 'rgba(157, 165, 111, 0.50)'
-								: 'rgba(59, 136, 182, 0.50)'
-					}
-				]}>
-					<View style={styles.HEADER_ACTIONS}>
-						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
+				</View>,
+				] : <View style={styles.ROOT_MODAL}>
+					<View style={[styles.HEADER_ACTIONS, { marginTop: 35 }]}>
+						<TouchableOpacity onPress={() => [setShowModal(false), setShowPassModal(true)]} style={styles.CLOSE_MODAL_BUTTON}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.white} style={{ marginLeft: 10 }} />
 							<Text style={styles.BACK_BUTON_LABEL_MODAL}>{` Back`}</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
+						<TouchableOpacity onPress={() => [setShowPassModal(false), setShowModal(false)]} style={styles.CLOSE_MODAL_BUTTON}>
 							<Text style={styles.BACK_BUTON_LABEL_MODAL}>{`Close `}</Text>
 							<Icon name={"close"} size={23} color={COLOR.PALETTE.white} />
 						</TouchableOpacity>
 					</View>
 					<View style={styles.MODAL_CONTAINER}>
 						<View style={styles.MODAL_CONTENT}>
-							<Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Please confirm your transaction.</Text>
+							<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Please confirm your transaction.</Text>
 							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will load up C$ ${Amount} to your wallet.`}</Text>
 							<TouchableOpacity
-								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor}]}
-								onPress={() => {
-									setTransactionConfirm(true)
-									setTimeout(function () {
-										setTransactionFinished(true)
-									}, 5000)
-								}}
+								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
+								onPress={() => [postDeposit(), setShowPassModal(false)]}
 							>
 								<Text style={styles.SUBMIT_BUTTON_LABEL}>Confirm</Text>
 							</TouchableOpacity>
@@ -94,10 +208,12 @@ C$ ${Amount}`}
 					<View />
 				</View>
 			}
-
-
 		</Modal>
 	)
+
+	useEffect(() => {
+		setButtonDisabled(!(Number(Amount) > 0));
+	}, [Amount]);
 
 	return (
 		<Screen
@@ -105,21 +221,17 @@ C$ ${Amount}`}
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
 				<View style={styles.HEADER_ACTIONS}>
 					{!ShowModal &&
-						<TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
-							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-							<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+						<TouchableOpacity onPress={() => navigation.navigate('home')} style={[styles.BACK_BUTON_CONTAINER, { marginTop: 10 }]}>
+							<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
+							<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 						</TouchableOpacity>
 					}
 				</View>
-
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<View style={styles.STEP_CONTAINER}>
 					<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Load Wallet</Text>
 					<Text style={styles.LINE} />
@@ -127,78 +239,74 @@ C$ ${Amount}`}
 						{`Specify the amount of Currents 
 (C$ 1 = USD 1) you would like to load up. `}
 					</Text>
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 					</View>
-
 					<View style={styles.INPUT_AMOUNT_STYLE_CONTAINER}>
 						<Button
 							buttonStyle={
-								(Amount === '50' || Amount === '50.00')
-									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
-									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+								(Number(Amount) === 50)
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
-							buttonLabelStyle={{ color: (Amount === '50' || Amount === '50.00') ? COLOR.PALETTE.white : loginStore.getAccountColor }}
+							buttonLabelStyle={{ color: (Number(Amount) === 50) ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => setAmount('50.00')}
 							buttonLabel={'C$ 50'}
 						/>
 						<Button
 							buttonStyle={
-								(Amount === '100' || Amount === '100.00')
-									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
-									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+								(Number(Amount) === 100)
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
-							buttonLabelStyle={{ color: (Amount === '100' || Amount === '100.00') ? COLOR.PALETTE.white : loginStore.getAccountColor }}
+							buttonLabelStyle={{ color: (Number(Amount) === 100) ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => setAmount('100.00')}
 							buttonLabel={'C$ 100'}
 						/>
 						<Button
 							buttonStyle={
-								(Amount === '200' || Amount === '200.00')
-									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor}]
-									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor}]
+								(Number(Amount) === 200)
+									? [styles.BUTTON_AMOUNT_ACTIVE, { backgroundColor: loginStore.getAccountColor }]
+									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
-							buttonLabelStyle={(Amount === '200' || Amount === '200.00') ? { color: COLOR.PALETTE.white } : { color: loginStore.getAccountColor }}
+							buttonLabelStyle={(Number(Amount) === 200) ? { color: COLOR.PALETTE.white } : { color: loginStore.getAccountColor }}
 							onPress={() => setAmount('200.00')}
 							buttonLabel={'C$ 200'}
 						/>
 					</View>
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 						<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
 					</View>
-					<View style={[styles.INPUT_STYLE_CONTAINER]}>
+					<View style={styles.INPUT_STYLE_CONTAINER}>
 						<TextInput
 							style={styles.INPUT_STYLE}
 							keyboardType='numeric'
 							onChangeText={t => {
-								const temp = t.replace('C', '').replace('$', '').replace(' ', '')
-								setAmount(temp.replace(",", "."))
+								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
+								temp = temp.replace(",", ".")
+								setAmount(temp)
 							}}
-							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
+							value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
 							placeholder={`Amount`}
+							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 						/>
 					</View>
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.COSTS_LABEL}>Total costs</Text>
 						<Text style={styles.COSTS_LABEL}>{`$ ${Amount}`}</Text>
 					</View>
-
 				</View>
 				{ConfirmModal()}
+				{bankModal()}
+				{passModal()}
 			</KeyboardAvoidingView>
-				<Button
-					buttonStyle={{
-						backgroundColor: loginStore.getAccountColor,
-						bottom: 5,
-						position: 'absolute'
-					}}
-					onPress={() => setShowModal(true)}
-					buttonLabel={'Load up'}
-				/>
+			<Button
+				buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
+				disabled={ButtonDisabled}
+				onPress={() => setShowPassModal(true)}
+				buttonLabel={'Load up'}
+			/>
 		</Screen>
 	)
 })

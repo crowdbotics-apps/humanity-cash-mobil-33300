@@ -50,6 +50,17 @@ export class Api extends ApiBase {
     async getConsumers(data: any): Promise<Types.SimpleGetResult> {
         return this.simple_get(API_VERSION_PREFIX+"/consumer/", data)
     }
+    async getDwollaUsers(data: any): Promise<Types.SimpleGetResult> {
+        return this.simple_get(API_VERSION_PREFIX+"/dwolla_user/", data)
+    }
+
+    async getUser(id: any): Promise<Types.SimpleGetResult> {
+        return this.simple_get(API_VERSION_PREFIX+`/user/${id}/`,{})
+    }
+
+    async getDwollaUser(id: any): Promise<Types.SimpleGetResult> {
+        return this.simple_get(API_VERSION_PREFIX+`/dwolla_user/${id}/`,{})
+    }
 
     async createUser(data: any): Promise<Types.SimplePostResult> {
         return this.simple_post(API_VERSION_PREFIX+"/user/", data)
@@ -86,6 +97,14 @@ export class Api extends ApiBase {
 
     async getBlockchainTransactions(data: any): Promise<Types.SimpleGetResult> {
         return this.simple_get(API_VERSION_PREFIX+"/transaction/", data)
+    }
+
+    async getACHTransactions(data: any): Promise<Types.SimpleGetResult> {
+        return this.simple_get(API_VERSION_PREFIX+"/ach_transaction/", data)
+    }
+
+    async getContracts(data: any): Promise<Types.SimpleGetResult> {
+        return this.simple_get(API_VERSION_PREFIX+"/contract/", data)
     }
 
     async getBlockchainTransaction(id:number, data: any): Promise<Types.SimpleGetResult> {

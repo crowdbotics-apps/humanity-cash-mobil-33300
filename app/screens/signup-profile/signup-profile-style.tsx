@@ -307,6 +307,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
   },
   ROOT: {
+    backgroundColor: COLOR.PALETTE.white,
     flex: 1,
   },
   ROOT_CONTAINER: {
@@ -392,27 +393,14 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.7,
   },
   SUBMIT_BUTTON: {
-    // width: METRICS.screenWidth * 0.95,
-    // height: 55,
     backgroundColor: COLOR.PALETTE.green,
     bottom: 5,
     marginTop: 10,
-    // position: 'absolute',
-    // justifyContent: 'center',
-    // alignSelf: 'center',
-    // borderRadius: 27.5,
-    // marginBottom: 30
   },
   SUBMIT_BUTTON_DISABLED: {
-    // width: METRICS.screenWidth * 0.95,
-    // height: 55,
     backgroundColor: `${COLOR.PALETTE.green}40`,
     bottom: 5,
-    position: 'absolute',
-    // justifyContent: 'center',
-    // alignSelf: 'center',
-    // borderRadius: 27.5,
-    // marginBottom: 30
+    marginTop: 10,
   },
   SUBMIT_BUTTON_LABEL: {
     color: COLOR.PALETTE.white,

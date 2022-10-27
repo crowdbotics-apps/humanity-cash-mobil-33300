@@ -15,17 +15,19 @@ import {
 	Text,
 	Button,
 	Screen,
-	ModalSelector
+	ModalSelector,
+	MaskInput
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import styles from './setup-profile-style';
-import { useNavigation } from "@react-navigation/native"
+import { useIsFocused, useNavigation } from "@react-navigation/native"
 import { launchImageLibrary } from 'react-native-image-picker';
-import { IMAGES, METRICS } from "../../theme"
+import { IMAGES, METRICS, COLOR } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
-import { notifyMessage } from "../../utils/helpers"
+import {Masks} from "react-native-mask-input";
+import { getErrorMessage, getImageFileFromSource, notifyMessage } from "../../utils/helpers"
 
 
 // const steps_user = ['pic_username', 'name']
@@ -66,7 +68,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const rootStore = useStores()
 	const navigation = useNavigation()
 	const { loginStore } = rootStore
-
+	const isFocused = useIsFocused();
 	const [Loading, setLoading] = useState(false)
 
 	const [Step, setStep] = useState('profile_type')
@@ -141,60 +143,54 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	}
 
 	const fetchCity = (data?: string) => {
-		loginStore.environment.api.getCities({ value: data})
+		loginStore.environment.api.getCities({ value: data })
 			.then((result: any) => {
-				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name})))
+				result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
 			})
 	}
 	const fetchState = (data?: string) => {
-		loginStore.environment.api.getStates({ value: data})
-		.then((result: any) => {
-			setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
-		})
+		loginStore.environment.api.getStates({ value: data })
+			.then((result: any) => {
+				result?.data?.results && setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_name })))
+			})
 	}
 
 	const setupConsumer = () => {
 		setLoading(true)
 		setUsernameErrorMsg("")
 		setUsernameError(false)
-		const pic = {
-			uri:
-				Platform.OS === "android"
-					? imageSource?.uri
-					: imageSource?.uri.replace("file://", ""),
-			type: imageSource?.type,
-			name: imageSource?.fileName
-		}
-		loginStore.environment.api.setupConsumer({
-			username: Username,
-			consumer_profile: pic
-		}).then((result:any) => {
+		const pic = getImageFileFromSource(imageSource)
+		const keys = imageSource === null ? [] : ["consumer_profile"]
+		const data = imageSource === null ? { username: Username } : { username: Username, consumer_profile: pic }
+		loginStore.environment.api.setupConsumerFirstStep(data, keys).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setStep("name")
 			} else if (result.kind === "bad-data") {
-				const key = Object.keys(result?.errors)[0]
-				const msg = `${key}: ${result?.errors?.[key][0]}`
-				if (key === 'username') {
+				const errors = result?.errors
+				if (errors?.username) {
 					setUsernameError(true)
-					setUsernameErrorMsg(result?.errors?.[key][0])
+					setUsernameErrorMsg(errors?.username)
 				}
-				notifyMessage(msg)
+				notifyMessage(getErrorMessage(errors))
 			} else if (result.kind === "unauthorized") {
-					loginStore.reset()
-					navigation.navigate("login", {})
-				} else {
+				loginStore.reset()
+				navigation.navigate("login")
+			} else {
 				notifyMessage(null)
 			}
+		}).catch((error) => {
+			console.log(error)
+			notifyMessage(null)
 		})
 	}
-
 	const setupConsumerDetail = () => {
 		setLoading(true)
-		loginStore.environment.api.setupConsumerDetail({
+		loginStore.environment.api.setupConsumerSecondStep({
 			first_name: Name,
 			last_name: LastName
-		}).then((result:any) => {
+		}).then((result: any) => {
+			console.log(' setupConsumerDetail ===>>> ', JSON.stringify(result, null, 2))
 			setLoading(false)
 			if (result.kind === "ok") {
 				setShowThankyouModal(true)
@@ -203,14 +199,13 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				const msg = `${key}: ${result?.errors?.[key][0]}`
 				notifyMessage(msg)
 			} else if (result.kind === "unauthorized") {
-					loginStore.reset()
-					navigation.navigate("login", {})
-				} else {
+				loginStore.reset()
+				navigation.navigate("login")
+			} else {
 				notifyMessage(null)
 			}
 		})
 	}
-
 	const setupMerchant = () => {
 		setLoading(true)
 		const profPic = {
@@ -235,9 +230,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			background_picture: backPic,
 			business_story: BusinessStory
 		})
-			.then((result:any) => {
+			.then((result: any) => {
 				setLoading(false)
-				setStep('business_type')
 				if (result.kind === "ok") {
 					setStep('business_type')
 				} else if (result.kind === "bad-data") {
@@ -246,17 +240,16 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					notifyMessage(null)
 				}
 			})
 	}
-
 	const setupMerchantDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
-			.then((result:any) => {
+		.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
 					setStep('business_exec')
@@ -266,13 +259,14 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					notifyMessage(null)
 				}
 			})
 	}
 	const setupMerchantDetailComplete = () => {
+		const phoneNumber = PhoneNumber !== '' ? `+1${PhoneNumber}` : ''
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({
 			registered_business_name: BusinessRegName,
@@ -281,16 +275,17 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			social_security_number: IndentifierType === 'SSN' ? SocialSecurityNumber : '',
 			owner_first_name: BusinessExecName,
 			owner_last_name: BusinessExecLastName,
-			// city: 1988, // TODO: fetch
-			// state: 28, // TODO: fetch
 			address_1: Address1,
 			address_2: Address2,
+			city: City?.id,
+			state: State?.id,
 			zip_code: PostalCode,
-			phone_number: PhoneNumber
+			phone_number: phoneNumber
 		})
-			.then((result:any) => {
+			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
+					loginStore.setSelectedAccount('merchant')
 					setShowThankyouModal(true)
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -298,12 +293,13 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					notifyMessage(null)
 				}
 			})
 	}
+
 	const renderStep = () => {
 		let render
 		switch (Step) {
@@ -332,19 +328,24 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				break;
 			default:
 				render = renderSelectBusinessType()
+				break;
 		}
 		return render
 	}
+
 	const renderSelectBusinessType = () => (
 		<View style={styles.STEP_CONTAINER}>
 			<Text style={styles.STEP_TITLE}>Hi</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>Select the profile you’d like to create. If you’re a business owner, you can automatically set up a personal profile. You can have one account login with two profiles.</Text>
-			{profileTypes.map((t, key) => (
-				<TouchableOpacity key={key + '_ptype'} style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(t.value), setStep(t.first_step)]}>
-					<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{t.label}</Text>
-				</TouchableOpacity>
-			))}
+			{profileTypes.map((t, key) => {
+				console.log(' ginStore.ProfileDataBusiness.business_name -> ', t.value)
+				return (loginStore.ProfileDataBusiness.business_name !== '' && loginStore.ProfileDataBusiness.business_name !== null && t.value === 'business_personal')
+					? null
+					: <TouchableOpacity key={key + '_ptype'} style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(t.value), setStep(t.first_step)]}>
+						<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{t.label}</Text>
+					</TouchableOpacity>
+			})}
 		</View>
 	)
 	const renderPicUsername = () => (
@@ -378,6 +379,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setUsername(t)}
 					value={Username?.charAt(0) === '@' ? Username : '@' + (Username || '')}
@@ -396,6 +398,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setName(t)}
 					value={Name}
@@ -407,6 +410,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setLastName(t)}
 					value={LastName}
@@ -467,6 +471,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
 						setBusinessName(t)
@@ -482,13 +487,14 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.BIG_INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.BIG_INPUT_STYLE}
 					onChangeText={t => setBusinessStory(t)}
 					value={BusinessStory}
 					multiline
 					scrollEnabled={false}
 					numberOfLines={4}
-					placeholder={'Business name'}
+					placeholder={'Tell the world about your business. What gives you joy as an entrepreneur? What do you love about the Berkshires?'}
 				/>
 			</View>
 		</View>
@@ -527,6 +533,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessExecName(t)}
 					value={BusinessExecName}
@@ -538,6 +545,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessExecLastName(t)}
 					value={BusinessExecLastName}
@@ -555,6 +563,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessRegName(t)}
 					value={BusinessRegName}
@@ -588,30 +597,32 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					{IndentifierType === 'EIN' && <View style={styles.CHECK_INSIDE} />}
 				</TouchableOpacity>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					editable={IndentifierType === 'EIN'}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setEmployerId(t)}
-					value={EmployerId}
-					placeholder={'XX-XXXXXXX'}
-				/>
-			</View>
+			<MaskInput
+				value={EmployerId}
+				mask={[/\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+				name="ein"
+				placeholder="XX-XXXXXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setEmployerId(unmasked)}
+				style={styles.INPUT_STYLE_CONTAINER}
+				editable={IndentifierType === 'EIN'}
+			/>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>{'Social Security Number (SSN)'}</Text>
 				<TouchableOpacity style={styles.CHECK_OUTSIDE} onPress={() => setIndentifierType('SSN')}>
 					{IndentifierType === 'SSN' && <View style={styles.CHECK_INSIDE} />}
 				</TouchableOpacity>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					editable={IndentifierType === 'SSN'}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setSocialSecurityNumber(t)}
-					value={SocialSecurityNumber}
-					placeholder={'XXX-XX-XXXX'}
-				/>
-			</View>
+			<MaskInput
+				value={SocialSecurityNumber}
+				mask={[/\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/]}
+				name="ssn"
+				placeholder="XXX-XX-XXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setSocialSecurityNumber(unmasked)}
+				style={styles.INPUT_STYLE_CONTAINER}
+				editable={IndentifierType === 'SSN'}
+			/>
 		</View>
 	)
 	const renderbusinessAddresss = () => (
@@ -624,6 +635,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress1(t)}
 					value={Address1}
@@ -635,6 +647,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress2(t)}
 					value={Address2}
@@ -648,7 +661,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
 					<TouchableOpacity
-						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, justifyContent: 'flex-start' }]}
 						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
 					>
 						<ModalSelector
@@ -699,6 +712,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPostalCode(t)}
 					value={PostalCode}
@@ -709,18 +723,15 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setPhoneNumber(t)}
-					value={PhoneNumber}
-					placeholder={'Phone number'}
-				/>
-			</View>
-
-
-
-
+			<MaskInput
+				value={PhoneNumber}
+				mask={Masks.USA_PHONE}
+				name="ssn"
+				placeholder="(XXX)-XXX-XXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setPhoneNumber(unmasked)}
+				style={styles.INPUT_STYLE_CONTAINER}
+			/>
 		</View>
 	)
 
@@ -733,7 +744,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text>
 						<TouchableOpacity
 							style={styles.MODAL_BUTTON}
-							onPress={() => [navigation.navigate("splash", {}), loginStore.setApiToken(null), setShowConfirmLogoutModal(false)]}>
+							onPress={() => [navigation.navigate("splash"), loginStore.setApiToken(null), setShowConfirmLogoutModal(false)]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
 					</View>
@@ -748,7 +759,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Thank you! Welcome to the Currents App. Now it is time to add some Currents to your wallet!</Text>
 				<View style={styles.CONTAINER}>
-					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home", {})]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
+					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
 					<Button
 						// onPress={() => nextButtonHandler()}
 						buttonLabel={'Link my personal bank account'}
@@ -763,9 +774,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		switch (Step) {
 			case 'profile_type':
 				if (loginStore.isLoggedIn) {
-					navigation.navigate("home", {})
+					navigation.navigate("home")
 				} else {
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				}
 				break;
 			case 'pic_username':
@@ -840,48 +851,49 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				break;
 			case 'business_addresss':
 				setupMerchantDetailComplete()
-
 				break;
 
 		}
 	}
 
 	useEffect(() => {
-		loginStore.setRandomProfilePictureIndex(RandonPic)
+		if (isFocused) {
+			loginStore.setRandomProfilePictureIndex(RandonPic)
 
-		const data = loginStore.getSetupData
-		if (data?.Username) {
-			setUsername(data.Username)
-			setButtonDisabled(false)
-		}
-		if (data?.imageSource) setImageSource(data.imageSource)
-		if (data?.Name) setName(data.Name)
-		if (data?.LastName) setLastName(data.LastName)
-		if (data?.BusinessName) {
-			setBusinessName(data.BusinessName)
-			setButtonDisabled(false)
-		}
-		if (data?.BusinessStory) setBusinessStory(data.BusinessStory)
-		if (data?.BusinessType) setBusinessType(data.BusinessType)
-		if (data?.BusinessExecName) setBusinessExecName(data.BusinessExecName)
-		if (data?.BusinessExecLastName) setBusinessExecLastName(data.BusinessExecLastName)
-		if (data?.BusinessImageSource) setBusinessImageSource(data.BusinessImageSource)
-		if (data?.BackBusinessImageSource) setBackBusinessImageSource(data.BackBusinessImageSource)
-		if (data?.BusinessRegName) setBusinessRegName(data.BusinessRegName)
-		if (data?.BusinessIndustryType) setBusinessIndustryType(data.BusinessIndustryType)
-		if (data?.IndentifierType) setIndentifierType(data.IndentifierType)
-		if (data?.EmployerId) setEmployerId(data.EmployerId)
-		if (data?.SocialSecurityNumber) setSocialSecurityNumber(data.SocialSecurityNumber)
-		if (data?.Address1) setAddress1(data.Address1)
-		if (data?.Address2) setAddress2(data.Address2)
-		if (data?.City) setCity(data.City)
-		if (data?.State) setState(data.State)
-		if (data?.PostalCode) setPostalCode(data.PostalCode)
-		if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
+			const data = loginStore.getSetupData
+			if (data?.Username) {
+				setUsername(data.Username)
+				setButtonDisabled(false)
+			}
+			if (data?.imageSource) setImageSource(data.imageSource)
+			if (data?.Name) setName(data.Name)
+			if (data?.LastName) setLastName(data.LastName)
+			if (data?.BusinessName) {
+				setBusinessName(data.BusinessName)
+				setButtonDisabled(false)
+			}
+			if (data?.BusinessStory) setBusinessStory(data.BusinessStory)
+			if (data?.BusinessType) setBusinessType(data.BusinessType)
+			if (data?.BusinessExecName) setBusinessExecName(data.BusinessExecName)
+			if (data?.BusinessExecLastName) setBusinessExecLastName(data.BusinessExecLastName)
+			if (data?.BusinessImageSource) setBusinessImageSource(data.BusinessImageSource)
+			if (data?.BackBusinessImageSource) setBackBusinessImageSource(data.BackBusinessImageSource)
+			if (data?.BusinessRegName) setBusinessRegName(data.BusinessRegName)
+			if (data?.BusinessIndustryType) setBusinessIndustryType(data.BusinessIndustryType)
+			if (data?.IndentifierType) setIndentifierType(data.IndentifierType)
+			if (data?.EmployerId) setEmployerId(data.EmployerId)
+			if (data?.SocialSecurityNumber) setSocialSecurityNumber(data.SocialSecurityNumber)
+			if (data?.Address1) setAddress1(data.Address1)
+			if (data?.Address2) setAddress2(data.Address2)
+			if (data?.City) setCity(data.City)
+			if (data?.State) setState(data.State)
+			if (data?.PostalCode) setPostalCode(data.PostalCode)
+			if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
 
-		fetchCity()
-		fetchState()
-	}, [])
+			fetchCity()
+			fetchState()
+		}
+	}, [isFocused])
 
 	return (
 		<Screen
@@ -889,24 +901,24 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
+			<View style={styles.HEADER_ACTIONS}>
+				{Step !== 'profile_type'
+					? <TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
+						<Icon name={"arrow-back"} size={23} color={'black'} />
+						<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+					</TouchableOpacity>
+					: <View style={styles.BACK_BUTON_CONTAINER} />
+				}
+				<TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
+					<Text style={styles.BACK_BUTON_LABEL}>{`Log out`}</Text>
+				</TouchableOpacity>
+			</View>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
-							<View style={styles.HEADER_ACTIONS}>
-								<TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
-									<Icon name={"arrow-back"} size={23} color={'black'} />
-									<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
-									<Text style={styles.BACK_BUTON_LABEL}>{`Log out`}</Text>
-								</TouchableOpacity>
-							</View>
 							{renderStep()}
 						</View>
 					</View>

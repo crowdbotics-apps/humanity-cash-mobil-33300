@@ -45,7 +45,12 @@ export const UserStoreModel = types
     }))
     .actions(self => ({
         setUp(){
-          self.environment.api.apisauce?.setHeader(AUTHORIZATION, 'Bearer ' + self.access_token)
+          if(self.access_token){
+            self.environment.api.apisauce?.setHeader(AUTHORIZATION, 'Bearer ' + self.access_token)
+          }else{
+            self.environment.api.apisauce?.deleteHeader(AUTHORIZATION)
+          }
+
         },
         setUser (user:any) {
             self.id = user.id

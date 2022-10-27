@@ -3,7 +3,7 @@ import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
   ACTIVITY: {
-    marginTop: METRICS.screenHeight - 250
+    marginBottom: 35
   },
   AGREE_CONTAINER: {
     alignSelf: 'center',
@@ -32,8 +32,9 @@ export default StyleSheet.create({
     flexDirection: 'row',
     height: 30,
     justifyContent: 'flex-start',
+    marginBottom: 10,
     marginLeft: 10,
-    marginVertical: 10,
+    marginTop: 45,
     width: 80
   },
   BACK_BUTON_LABEL: {
@@ -67,9 +68,15 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     marginRight: 30
   },
+  CONTAINER: {},
   COSTS_LABEL: {
     color: COLOR.PALETTE.blue,
     fontSize: 16,
+  },
+  FORGOT_PASSWORD_CONTAINER: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 25
   },
   HEADER: {
     flexDirection: 'row',
@@ -141,7 +148,8 @@ export default StyleSheet.create({
   },
   LOADING_RETURN: {
     backgroundColor: COLOR.PALETTE.white,
-    height: METRICS.screenHeight
+    flex: 1,
+    justifyContent: 'space-between'
   },
   LOGO_STYLE: {
     alignSelf: 'center',
@@ -169,6 +177,17 @@ export default StyleSheet.create({
     height: 330,
     justifyContent: 'space-evenly',
     width: METRICS.screenWidth * 0.70
+  },
+  NEED_HELP_LINK: {
+    color: COLOR.PALETTE.darkYellow,
+    fontSize: 16,
+    textAlign: 'center',
+    textDecorationLine: 'underline'
+  },
+  PASS_INPUT_STYLE: {
+    alignSelf: 'center',
+    height: 55,
+    width: METRICS.screenWidth * 0.80,
   },
   PENDING_TITLE: {
     color: COLOR.PALETTE.orange,
@@ -255,10 +274,16 @@ export default StyleSheet.create({
   },
   ROOT_MODAL: {
     alignItems: 'center',
-    backgroundColor: 'rgba(157, 165, 111, 0.90)',
+    backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
     flex: 1,
     justifyContent: 'space-between'
   },
+  ROOT_MODAL_PASS: {
+    backgroundColor: COLOR.PALETTE.white,
+		flex: 1,
+		justifyContent: 'space-between',
+		marginTop: 15
+	},
   SEARCH_INPUT_ADJUSTMENTS: {
     alignItems: 'center',
     backgroundColor: `${COLOR.PALETTE.green}25`,
@@ -287,6 +312,12 @@ export default StyleSheet.create({
     justifyContent: 'center',
     width: METRICS.screenWidth * 0.75
   },
+  SHOW_PASS_CONTAINER: {
+    alignItems: 'center',
+    height: 50,
+    justifyContent: 'center',
+    width: 50
+  },
   STEP_CONTAINER: {},
   STEP_SUB_TITLE_MODAL: {
     color: COLOR.PALETTE.black,
@@ -305,6 +336,12 @@ export default StyleSheet.create({
     marginLeft: 10,
     width: METRICS.screenWidth * 0.7,
   },
+  STEP_TITLE_PASS: {
+    color: COLOR.PALETTE.orange,
+    fontSize: 32,
+    marginLeft: 10,
+    marginVertical: 20
+  },
   SUBMIT_BUTTON_LABEL: {
     color: COLOR.PALETTE.white,
     fontSize: 16,
@@ -315,6 +352,7 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.black,
     fontSize: 16,
     marginLeft: 10,
+    marginTop: 10,
     width: METRICS.screenWidth * 0.90,
   },
 })

@@ -36,9 +36,7 @@ export default StyleSheet.create({
     marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },
-  BUSINESS_IMAGES_CONTAINER: {
-
-  },
+  BUSINESS_IMAGES_CONTAINER: {},
   CONTAINER: {},
   EDIT_CONTAINER: {
     marginBottom: 80
@@ -147,19 +145,18 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     marginBottom: 30,
-    minHeight: METRICS.screenHeight,
   },
   SELECTS_CONTAINER: {
-    // backgroundColor: 'red'
+    alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: METRICS.screenWidth * 0.95,
-    alignSelf: 'center',
   },
   SELECT_ICON: {
     alignItems: 'center',
     height: 55,
-    justifyContent: 'center',
+     justifyContent: 'center',
+    marginTop: 10,
     width: METRICS.screenWidth * 0.95,
   },
   SELECT_INPUT_STYLE_CONTAINER: {

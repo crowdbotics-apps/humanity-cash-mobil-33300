@@ -60,7 +60,6 @@ export function useBackButtonHandler(canExit: (routeName: string) => boolean) {
         // let the system know we've not handled this event
         return false
       }
-
       // we can't exit, so let's turn this into a back action
       if (navigationRef.canGoBack()) {
         navigationRef.goBack()

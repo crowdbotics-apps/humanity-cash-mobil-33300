@@ -9,21 +9,32 @@ import home.api.v1.viewsets.signup_signin_views as signup_signin_views
 # )
 from home.api.v1.viewsets import setup_profile_views, base_views, security_views, dwolla_views, transaction_views, \
     user_views
+from home.api.v1.viewsets.ach_transaction_views import ACHTransactionViewSet
+from home.api.v1.viewsets.contract_views import ContractViewSet
+from home.api.v1.viewsets.coupons_views import CouponsView, ConsumerCouponView
 from home.api.v1.viewsets.compliance_and_dashboard_views import DashboardDataView
 from home.api.v1.viewsets.dwolla_webhooks import views as dwolla_webhooks_views
 from home.api.v1.viewsets.event_views import EventViewSet
+from home.api.v1.viewsets.notification_views import SetDeviceView, NotificationViewSet
 from home.api.v1.viewsets.signup_signin_views import LoginFacebookView
 from home.api.v1.viewsets.transaction_views import TransactionViewSet
-from home.api.v1.viewsets.user_views import UserViewSet, ConsumerViewSet
+from home.api.v1.viewsets.user_views import UserViewSet, ConsumerViewSet, DwollaUserView
 
 router = DefaultRouter()
 router.register("event", EventViewSet, basename="event")
 router.register("user", UserViewSet, basename="user")
 router.register("transaction", TransactionViewSet, basename="transaction")
+router.register("contract", ContractViewSet, basename="contract")
+router.register("ach_transaction", ACHTransactionViewSet, basename="ach_transaction")
 router.register("consumer", ConsumerViewSet, basename="consumer")
+router.register("dwolla_user", DwollaUserView, basename="dwolla_user")
+router.register("coupons", CouponsView, basename="coupons")
+router.register("consumer-coupons", ConsumerCouponView, basename="consumer_coupons")
 # router.register("signup", SignupViewSet, basename="signup")
+router.register(r'notification', NotificationViewSet, 'notification')
 
 urlpatterns = [
+    path('set-device/', SetDeviceView.as_view(), name='api.set_device'),
     path('registration/', include([
         path('set-password/', signup_signin_views.SetPasswordView.as_view(), name='set_password'),
         path('verify-user-account/', signup_signin_views.VerifyUserAccountAPIView.as_view(), name='verify_user_account'),
@@ -35,6 +46,8 @@ urlpatterns = [
         path('google-login/', signup_signin_views.LoginGoogleView.as_view()),
     ])),
     path('set-up-profile/', include([
+        path('consumer/first-step/', setup_profile_views.SetupConsumerProfileFirstStepAPIView.as_view(), name='setup_consumer_profile_first_name'),
+        path('consumer/second-step/', setup_profile_views.SetupConsumerProfileSecondStepAPIView.as_view(), name='setup_consumer_profile_second_name'),
         path('consumer/', setup_profile_views.SetupConsumerProfileAPIView.as_view(), name='setup_consumer_profile'),
         path('consumer-detail/', setup_profile_views.SetupConsumerProfileDetailAPIView.as_view(), name='setup_consumer_profile_detail'),
         path('merchant/', setup_profile_views.SetupMerchantProfileAPIView.as_view(), name='setup_merchant_profile'),
@@ -69,8 +82,11 @@ urlpatterns = [
     path('community-chest/', base_views.CommunityChestView.as_view(), name='communitychest_info'),
     path('cashier-mode/', setup_profile_views.SetCashierModeView.as_view(), name='cashiermode'),
     path('send-money/', transaction_views.SendMoneyView.as_view(), name='send_money'),
+    path('withdraw/', transaction_views.WithdrawView.as_view(), name='withdraw'),
+    path('deposit/', transaction_views.DepositView.as_view(), name='deposit'),
     path('compliance/dashboard', DashboardDataView.as_view(), name='compliance_dashboard'),
     # path('is-cashier-mode/', setup_profile_views.CashierTestView.as_view(), name='iscashiermode'),
     # path('is-cashier-mode-not/', setup_profile_views.NoCashierTestView.as_view(), name='iscashiermode'),
     path("", include(router.urls))
+
 ]

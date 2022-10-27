@@ -11,6 +11,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from celo_humanity.humanity_contract_helpers import NoWalletException, get_wallet_balance, transfer_coin, get_wallet, \
     deposit_coin, withdraw_coin, WalletAlreadyCreatedException
 from celo_humanity.web3helpers import get_provider, text2keccak
+from humanity_cash_mobil_33300 import settings
 from users.constants import Industry, UserGroup, UserRole
 
 
@@ -43,6 +44,8 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=UserRole.choices, null=True)
     google_id = models.CharField('Google ID', max_length=255, blank=True, null=True)
     google_token = models.TextField('Google Token', blank=True, null=True)
+    phone_number = PhoneNumberField('Phone Number', max_length=50, null=True, blank=True)
+    is_admin = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
@@ -118,22 +121,56 @@ class BaseProfileModel(models.Model):
             raise InvalidTransferDestinationException()
         # TODO validate ammount or let contract fail and catch?
         # TODO catch contract exceptions
-        transfer_coin(self.crypto_wallet_id,
-                      other_user.crypto_wallet_id,
-                      amount,
-                      roundup,
-                      profile=self,
-                      counterpart_profile=other_user)
+        transaction = transfer_coin(self.crypto_wallet_id,
+                                    other_user.crypto_wallet_id,
+                                    amount,
+                                    roundup,
+                                    profile=self,
+                                    counterpart_profile=other_user)
+        if transaction:
+            from home.helpers import send_notifications
+            try:
+                send_notifications([other_user],
+                                   'Withdraw',
+                                   transaction.method_or_memo,
+                                   '',
+                                   self.user,
+                                   Notification.Types.TRANSACTION,
+                                   transaction=transaction)
+            except: print(' User has no devices')
+    
 
     def deposit(self, amount):
         if self.crypto_wallet_id is None:
             self.crypto_wallet_id = self.new_wallet()
-        deposit_coin(self.crypto_wallet_id, amount, profile=self)
+        transaction = deposit_coin(self.crypto_wallet_id, amount, profile=self)
+        if transaction:
+            from home.helpers import send_notifications
+
+            send_notifications([self.user],
+                               'New Deposit',
+                               f'deposit (mint) {amount} to your wallet {self.crypto_wallet_id}',
+                               '',
+                               self.user,
+                               Notification.Types.TRANSACTION,
+                               transaction=transaction)
+
 
     def withdraw(self, amount):
         if self.crypto_wallet_id is None:
             self.crypto_wallet_id = self.new_wallet()
-        withdraw_coin(self.crypto_wallet_id, amount, profile=self)
+        transaction = withdraw_coin(self.crypto_wallet_id, amount, profile=self)
+        if transaction:
+            from home.helpers import send_notifications
+
+            send_notifications([self.user],
+                               'Withdraw',
+                               f'withdraw (burn) {amount} from user {self.crypto_wallet_id}',
+                               '',
+                               self.user,
+                               Notification.Types.TRANSACTION,
+                               transaction=transaction)
+
 
 
 class Consumer(BaseProfileModel):
@@ -152,10 +189,12 @@ class Consumer(BaseProfileModel):
     def __str__(self):
         return f'Customer id: {self.id}'
 
+
 class Merchant(BaseProfileModel):
+    profile_picture = models.ImageField(upload_to='profile-pictures', null=True, blank=True)
     background_picture = models.ImageField(upload_to='background-pictures', null=True, blank=True)
     business_name = models.CharField(max_length=50)
-    business_story = models.CharField(max_length=50, null=True, blank=True)
+    business_story = models.CharField(max_length=250, null=True, blank=True)
     type_of_business = models.CharField(max_length=50, null=True, blank=True)
     registered_business_name = models.CharField(max_length=50, null=True, blank=True)
     industry = models.CharField(max_length=50, choices=Industry.choices, null=True, blank=True)
@@ -165,12 +204,16 @@ class Merchant(BaseProfileModel):
     phone_number = PhoneNumberField(null=True, blank=True)
     owner_first_name = models.CharField(max_length=150, null=True, blank=True)
     owner_last_name = models.CharField(max_length=150, null=True, blank=True)
-    owner_address_1 = models.CharField(max_length=150, null=True, blank=True)
-    owner_address_2 = models.CharField(max_length=150, null=True, blank=True)
-    owner_city = models.CharField(max_length=100, null=True, blank=True)
-    owner_state = models.CharField(max_length=2, null=True, blank=True)
-    owner_zip_code = models.CharField(max_length=16, null=True, blank=True)
+    address_1 = models.CharField(max_length=150, null=True, blank=True)
+    address_2 = models.CharField(max_length=150, null=True, blank=True)
+    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
+    state = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True)
+    zip_code = models.CharField(max_length=16, null=True, blank=True)
     location = models.PointField(null=True, blank=True)
+    instagram = models.CharField(max_length=250, null=True, blank=True)
+    facebook = models.CharField(max_length=250, null=True, blank=True)
+    twitter = models.CharField(max_length=250, null=True, blank=True)
+
 
     class Meta:
         db_table = 'merchant'
@@ -186,8 +229,148 @@ class Merchant(BaseProfileModel):
     def __str__(self):
         return f'Merchant id: {self.id}'
 
+
+class DwollaUser(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    name = models.CharField(max_length=100, null=True)
+    email = models.CharField(max_length=100, null=True)
+    last_login = models.DateTimeField(null=True)
+    date_joined = models.DateTimeField(null=True)
+    dwolla_id = models.CharField(max_length=50, null=True, blank=True)
+    crypto_wallet_id = models.CharField(max_length=128, blank=True, null=True)
+    account_type = models.CharField(max_length=100, null=True)
+    address = models.CharField(max_length=150, null=True, blank=True)
+
+    class Meta:
+        db_table = "dwolla_user"
+        managed = False
+
+
+class Coupon(models.Model):
+    title = models.CharField(max_length=100)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    type_of_promo = models.CharField(max_length=100, null=True, blank=True)
+    discount_input = models.CharField(max_length=100, null=True, blank=True)
+    description = models.CharField(max_length=250, null=True, blank=True)
+    code = models.CharField(max_length=64, null=True, blank=True)
+    promo_image = models.ImageField(upload_to='coupons-pictures', null=True, blank=True)
+    merchant = models.ForeignKey(Merchant, on_delete=models.CASCADE, related_name='coupons')
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+
+class ConsumerCoupon(models.Model):
+    consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE, related_name='consumer_coupons')
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, related_name='consumer_coupons')
+    active = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+
 class NoMerchantProfileException(Exception):
     pass
 
+
 class InvalidTransferDestinationException(Exception):
     pass
+
+
+
+
+class UserDevice(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='devices')
+    device_id = models.CharField('Device ID', max_length=64)
+    device_token = models.CharField('Device token', max_length=200, null=True, blank=True)
+    active = models.BooleanField(default=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'User device'
+        ordering = ['-id']
+        unique_together = ['user', 'device_id']
+
+    @staticmethod
+    def activate_device(user, device_id, device_token):
+        if not device_id:
+            return
+        try:
+            device = user.devices.get(device_id=device_id)
+            device.active = True
+            device.device_token = device_token
+            device.save()
+        except UserDevice.DoesNotExist:
+            UserDevice.objects.create(
+                user=user,
+                device_id=device_id,
+                device_token=device_token
+            )
+
+    @staticmethod
+    def deactivate_device(user, device_id):
+        if not device_id:
+            return
+        try:
+            device = user.devices.get(device_id=device_id)
+            device.active = False
+            device.save()
+        except UserDevice.DoesNotExist:
+            pass
+
+    @staticmethod
+    def deactivate_all_devices(user):
+        devices = user.devices.all()
+        for device in devices:
+            device.active = False
+            device.save()
+
+    def __str__(self):
+        return "{} - {}".format(self.device_id, self.user.username)
+
+
+
+class Notification(models.Model):
+
+
+
+    class Actions(models.IntegerChoices):
+        READ = 10, 'Read notification'
+        ACCEPT_ACCESS = 20, 'Accept notification'
+        REJECT_ACCESS = 30, 'Reject notification'
+
+    class Types(models.IntegerChoices):
+        ADMIN = 10, 'Notifications sent by the admin'
+        TRANSACTION = 20, 'Notifications for transactions'
+
+
+
+    target = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications_to_user")
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,
+                                  related_name="notifications_from_user")
+    title = models.CharField(max_length=255)
+    description = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+    extra_data = models.TextField(null=True, blank=True)
+    type = models.IntegerField(choices=Types.choices)
+    sent = models.BooleanField(default=False)
+    error_on_send = models.TextField(null=True)
+
+    transaction = models.ForeignKey('celo_humanity.Transaction', on_delete=models.CASCADE,
+                                    related_name='notifications',
+                                    null=True, blank=True)
+
+    ach_transaction = models.ForeignKey('celo_humanity.ACHTransaction', on_delete=models.CASCADE,
+                                        related_name='notifications', null=True, blank=True)
+
+    def __str__(self):
+        from_user = self.from_user.username if self.from_user else ''
+        target = self.target.username if self.target else ''
+        return '{} - {} to {}'.format(self.id, from_user, target)
+
+    class Meta:
+        verbose_name = 'Notification'
+        verbose_name_plural = 'Notifications'
+        ordering = ['-timestamp']

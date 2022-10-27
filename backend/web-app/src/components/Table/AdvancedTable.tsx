@@ -97,22 +97,31 @@ type AdvancedTableProps = {
 const AdvancedTable = ({ rows, onPrevious, onClickPage, onNext, deletable , headerRow, totalItems, currentPage}: AdvancedTableProps) => {
 
   return (
-    <div style={{height:"100%",display:'flex', flexDirection:'column'}}>
-      <Table responsive className={styles.table}>
+    <div>
+
+
+    <div style={{minHeight:"500px", display:'flex', flexDirection:'column'}}>
+      <Table  className={styles.table}>
         <AdvancedTableHeader headers={headerRow} deletable={deletable}/>
         <AdvancedTableBody rows={rows} deletable={deletable} />
       </Table>
-      <BackendPagination
-        resultsQty={rows.length}
-        onPrevious={onPrevious}
-        onNext={onNext}
-        allPerPage={PAGE_SIZE}
-        currentPage={currentPage}
-        onClickPage={onClickPage}
-        countDataAll={totalItems}
-        disabledPaginate={false}
-      />
+
+
     </div>
+      <div>
+        <BackendPagination
+          resultsQty={rows.length}
+          onPrevious={onPrevious}
+          onNext={onNext}
+          allPerPage={PAGE_SIZE}
+          currentPage={currentPage}
+          onClickPage={onClickPage}
+          countDataAll={totalItems}
+          disabledPaginate={false}
+        />
+      </div>
+    </div>
+
   )
 }
 

@@ -5,14 +5,15 @@ import {
 	Text,
 	Button,
 	Screen,
-	ModalSelector
+	ModalSelector,
+	MaskInput
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import styles from './signup-profile-style';
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { launchImageLibrary } from 'react-native-image-picker';
-import { IMAGES, METRICS } from "../../theme"
+import { IMAGES, METRICS, COLOR } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
 import { notifyMessage } from "../../utils/helpers"
@@ -57,7 +58,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	const { loginStore } = rootStore
 
 	const [Loading, setLoading] = useState(false)
-
+	const isFocused = useIsFocused();
 	const [Step, setStep] = useState('profile_type')
 	const [ButtonDisabled, setButtonDisabled] = useState(false)
 	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false)
@@ -120,8 +121,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
-
-
 	function selectImage(type: string) {
 		const options: any = {
 			mediaType: "photo",
@@ -129,17 +128,11 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			maxWidth: 512,
 			maxHeight: 512
 		};
-
 		launchImageLibrary(options, (response: any) => {
-			if (response.didCancel) {
-				return;
-			} else if (response.errorCode === 'camera_unavailable') {
-				return;
-			} else if (response.errorCode === 'permission') {
-				return;
-			} else if (response.errorCode === 'others') {
-				return;
-			}
+			if (response.didCancel) return
+			else if (response.errorCode === 'camera_unavailable') return
+			else if (response.errorCode === 'permission') return
+			else if (response.errorCode === 'others') return
 			if (type === 'user_image') setImageSource(response.assets[0]);
 			if (type === 'business') setBusinessImageSource(response.assets[0]);
 			if (type === 'business_back') setBackBusinessImageSource(response.assets[0]);
@@ -150,13 +143,13 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	const fetchCity = (data?: string) => {
 		loginStore.environment.api.getCities({ value: data })
 			.then((result: any) => {
-				setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
+				result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
 			})
 	}
 	const fetchState = (data?: string) => {
 		loginStore.environment.api.getStates({ value: data })
 			.then((result: any) => {
-				setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_code })))
+				result?.data?.results && setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_name })))
 			})
 	}
 
@@ -189,13 +182,12 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				notifyMessage(msg)
 			} else if (result.kind === "unauthorized") {
 				loginStore.reset()
-				navigation.navigate("login", {})
+				navigation.navigate("login")
 			} else {
 				notifyMessage(null)
 			}
 		})
 	}
-
 	const setupConsumerDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupConsumerDetail({
@@ -211,13 +203,12 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				notifyMessage(msg)
 			} else if (result.kind === "unauthorized") {
 				loginStore.reset()
-				navigation.navigate("login", {})
+				navigation.navigate("login")
 			} else {
 				notifyMessage(null)
 			}
 		})
 	}
-
 	const setupMerchant = () => {
 		setLoading(true)
 		const profPic = {
@@ -253,13 +244,12 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					notifyMessage(null)
 				}
 			})
 	}
-
 	const setupMerchantDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
@@ -273,7 +263,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					notifyMessage(null)
 				}
@@ -298,6 +288,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
+					loginStore.setSelectedAccount('merchant')
 					setShowThankyouModal(true)
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -305,14 +296,14 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
-					navigation.navigate("login", {})
+					navigation.navigate("login")
 				} else {
 					notifyMessage(null)
 				}
 			})
 	}
 	const renderStep = () => {
-		let render
+		let render: any
 		switch (Step) {
 			// consumer
 			case 'pic_username':
@@ -339,6 +330,8 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				break;
 			default:
 				render = renderSelectBusinessType()
+				render = renderPicUsername()
+				break;
 		}
 		return render
 	}
@@ -347,14 +340,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			<Text style={styles.STEP_TITLE}>{ProfileType.label} account</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.SIGNUP_PROFILE_SUB_TITLE}>You do not have a business account linked. If you do have a business that accepts BerkShares you can sign up and link your business!</Text>
-			{/* {profileTypes.map((t, key) => (
-				<TouchableOpacity key={key + '_ptype'} style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(t.value), setStep(t.first_step)]}>
-					<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{t.label}</Text>
-				</TouchableOpacity>
-			))} */}
-			{/* <TouchableOpacity style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(ProfileType.value), setStep(ProfileType.first_step)]}>
-					<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>{ProfileType.label}</Text>
-				</TouchableOpacity> */}
 		</View>
 	)
 	const renderPicUsername = () => (
@@ -362,7 +347,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			<Text style={styles.STEP_TITLE}>Set up your profile</Text>
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>*Required fields</Text>
-
 			<TouchableOpacity
 				onPress={() => selectImage('user_image')}
 				style={styles.IMAGE_CONTAINER}
@@ -388,6 +372,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setUsername(t)}
 					value={Username?.charAt(0) === '@' ? Username : '@' + (Username || '')}
@@ -406,6 +391,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setName(t)}
 					value={Name}
@@ -417,6 +403,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setLastName(t)}
 					value={LastName}
@@ -470,13 +457,12 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<Text style={styles.IMAGE_BOX_LABEL}>Upload profile picture</Text>
 			<Text style={styles.IMAGE_BOX_VALIDATION}>(Max 200 MB / .jpeg, .jpg, .png)</Text>
-
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS NAME - THIS NAME WILL BE PUBLIC*</Text>
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => {
 						setBusinessName(t)
@@ -486,19 +472,19 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					placeholder={'Business name'}
 				/>
 			</View>
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>TELL US YOUR STORY (50 WORDS MAX)</Text>
 			</View>
 			<View style={styles.BIG_INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.BIG_INPUT_STYLE}
 					onChangeText={t => setBusinessStory(t)}
 					value={BusinessStory}
 					multiline
 					numberOfLines={4}
 					scrollEnabled={false}
-					placeholder={'Business name'}
+					placeholder={'Tell the world about your business. What gives you joy as an entrepreneur? What do you love about the Berkshires?'}
 				/>
 			</View>
 		</View>
@@ -523,12 +509,12 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					</TouchableOpacity>
 				))}
 			</View>
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>INSTAGRAM LINK</Text>
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setInstagramLink(t)}
 					value={InstagramLink}
@@ -540,6 +526,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setFacebookLink(t)}
 					value={FacebookLink}
@@ -551,6 +538,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setTwitterLink(t)}
 					value={TwitterLink}
@@ -569,6 +557,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessExecName(t)}
 					value={BusinessExecName}
@@ -580,6 +569,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessExecLastName(t)}
 					value={BusinessExecLastName}
@@ -597,6 +587,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessRegName(t)}
 					value={BusinessRegName}
@@ -630,30 +621,32 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					{IndentifierType === 'EIN' && <View style={styles.CHECK_INSIDE} />}
 				</TouchableOpacity>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					editable={IndentifierType === 'EIN'}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setEmployerId(t)}
-					value={EmployerId}
-					placeholder={'XX-XXXXXXX'}
-				/>
-			</View>
+			<MaskInput
+				value={EmployerId}
+				mask={[/\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]}
+				name="ein"
+				placeholder="XX-XXXXXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setEmployerId(unmasked)}
+				style={styles.INPUT_STYLE_CONTAINER}
+				editable={IndentifierType === 'EIN'}
+			/>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>{'Social Security Number (SSN)'}</Text>
 				<TouchableOpacity style={styles.CHECK_OUTSIDE} onPress={() => setIndentifierType('SSN')}>
 					{IndentifierType === 'SSN' && <View style={styles.CHECK_INSIDE} />}
 				</TouchableOpacity>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					editable={IndentifierType === 'SSN'}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setSocialSecurityNumber(t)}
-					value={SocialSecurityNumber}
-					placeholder={'XXX-XX-XXXX'}
-				/>
-			</View>
+			<MaskInput
+				value={SocialSecurityNumber}
+				mask={[/\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/]}
+				name="ssn"
+				placeholder="XXX-XX-XXXX"
+				keyboardType="number-pad"
+				onChange={(masked, unmasked) => setSocialSecurityNumber(unmasked)}
+				style={styles.INPUT_STYLE_CONTAINER}
+				editable={IndentifierType === 'SSN'}
+			/>
 		</View>
 	)
 	const renderbusinessAddresss = () => (
@@ -666,6 +659,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress1(t)}
 					value={Address1}
@@ -675,13 +669,12 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			<TouchableOpacity onPress={() => [setShowMapInputModal(true), setMapInputAddress(1)]} style={styles.INPUT_LABEL_BOTTON_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_LINK_STYLE}>SET ON MAP</Text>
 			</TouchableOpacity>
-
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>ADDRESS 2</Text>
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setAddress2(t)}
 					value={Address2}
@@ -691,7 +684,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			<TouchableOpacity onPress={() => [setShowMapInputModal(true), setMapInputAddress(2)]} style={styles.INPUT_LABEL_BOTTON_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_LINK_STYLE}>SET ON MAP</Text>
 			</TouchableOpacity>
-
 			<View style={styles.SELECTS_CONTAINER}>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
@@ -741,37 +733,30 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					</View>
 				</View>
 			</View>
-
-
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>POSTAL CODE</Text>
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPostalCode(t)}
 					value={PostalCode}
-					placeholderTextColor='gray'
 					placeholder={'xxxxxxxxx'}
 				/>
 			</View>
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setPhoneNumber(t)}
 					value={PhoneNumber}
 					placeholder={'Phone number'}
 				/>
 			</View>
-
-
-
-
 		</View>
 	)
 
@@ -781,6 +766,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				{MapInputAddress === 1
 					? <View style={styles.INPUT_STYLE_CONTAINER}>
 						<TextInput
+							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 							style={styles.INPUT_STYLE}
 							onChangeText={t => setAddress1(t)}
 							value={Address1}
@@ -789,6 +775,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					</View>
 					: <View style={styles.INPUT_STYLE_CONTAINER}>
 						<TextInput
+							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 							style={styles.INPUT_STYLE}
 							onChangeText={t => setAddress2(t)}
 							value={Address2}
@@ -810,17 +797,17 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					zoomControlEnabled
 					initialRegion={Region}
 				>
-						<Marker 
+					<Marker
 						draggable
 						onDragEnd={e => {
 							setLatitud(e?.nativeEvent?.coordinate?.latitude)
 							setLongitud(e?.nativeEvent?.coordinate?.longitude)
 							MapInputAddress === 1
 								? setAddress1(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)
-								:setAddress2(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)
+								: setAddress2(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)
 						}}
 						coordinate={{ latitude: Latitud, longitude: Longitud }}
-						/>
+					/>
 				</MapView>
 			</View>
 		</Modal>
@@ -834,7 +821,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text>
 						<TouchableOpacity
 							style={styles.MODAL_BUTTON}
-							onPress={() => [navigation.navigate("splash", {}), loginStore.setApiToken(null), setShowConfirmLogoutModal(false)]}>
+							onPress={() => [navigation.navigate("splash"), loginStore.setApiToken(null), setShowConfirmLogoutModal(false)]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
 					</View>
@@ -846,10 +833,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	const thankyouModal = () => (
 		<Modal visible={ShowThankyouModal} transparent>
 			<View style={styles.THANK_MODAL}>
-
 				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Thank you! Welcome to the Currents App. Now it is time to add some Currents to your wallet!</Text>
 				<View style={styles.CONTAINER}>
-					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home", {})]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
+					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
 					<Button
 						// onPress={() => nextButtonHandler()}
 						buttonLabel={'Link my personal bank account'}
@@ -863,7 +849,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	const backButtonHandler = () => {
 		switch (Step) {
 			case 'profile_type':
-				navigation.navigate("home", {})
+				navigation.navigate("home")
 				break;
 			case 'pic_username':
 				setStep('profile_type')
@@ -913,7 +899,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			PostalCode,
 			PhoneNumber,
 		}
-		// city and state picker || map
 		loginStore.setSetupData(setupData)
 		switch (Step) {
 			case 'profile_type':
@@ -926,12 +911,10 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				setupConsumerDetail()
 				break;
 			case 'pic_bname':
-				setupMerchant() // TODO: uncomment 
-				// setStep('business_type') // TODO: comment
+				setupMerchant()
 				break;
 			case 'business_type':
-				setupMerchantDetail() // TODO: uncomment 
-				// setStep('business_exec') // TODO: comment
+				setupMerchantDetail()
 				break;
 			case 'business_exec':
 				setStep('business_data')
@@ -942,105 +925,90 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			case 'business_addresss':
 				setupMerchantDetailComplete()
 				break;
-
 		}
 	}
 
 	useEffect(() => {
-		loginStore.setRandomProfilePictureIndex(RandonPic)
+		if (isFocused) {
+			loginStore.setRandomProfilePictureIndex(RandonPic)
+			Geolocation.getCurrentPosition(
+				({ coords: { latitude, longitude } }) => {
+					const location = {
+						latitude,
+						longitude,
+						latitudeDelta: 0.1,
+						longitudeDelta: 0.09,
+					}
+					setRegion(location)
+					setLatitud(location.latitude)
+					setLongitud(location.longitude)
+				},
+				console.log,
+				{ enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
+			)
 
-		Geolocation.getCurrentPosition(
-			({ coords: { latitude, longitude } }) => {
-				const location = {
-					latitude,
-					longitude,
-					latitudeDelta: 0.1,
-					longitudeDelta: 0.09,
-				}
-				setRegion(location)
-				setLatitud(location.latitude)
-				setLongitud(location.longitude)
-			},
-			console.warn,
-			{ enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
-		)
+			const data = loginStore.getSetupData
+			setProfileType(props?.params?.profile_type || profileTypes[1])
+			if (data?.Username) {
+				setUsername(data.Username)
+				setButtonDisabled(false)
+			}
+			if (data?.imageSource) setImageSource(data.imageSource)
+			if (data?.Name) setName(data.Name)
+			if (data?.LastName) setLastName(data.LastName)
+			if (data?.BusinessName) {
+				setBusinessName(data.BusinessName)
+				setButtonDisabled(false)
+			}
+			if (data?.BusinessStory) setBusinessStory(data.BusinessStory)
+			if (data?.BusinessType) setBusinessType(data.BusinessType)
+			if (data?.BusinessExecName) setBusinessExecName(data.BusinessExecName)
+			if (data?.BusinessExecLastName) setBusinessExecLastName(data.BusinessExecLastName)
+			if (data?.BusinessImageSource) setBusinessImageSource(data.BusinessImageSource)
+			if (data?.BackBusinessImageSource) setBackBusinessImageSource(data.BackBusinessImageSource)
+			if (data?.BusinessRegName) setBusinessRegName(data.BusinessRegName)
+			if (data?.BusinessIndustryType) setBusinessIndustryType(data.BusinessIndustryType)
+			if (data?.IndentifierType) setIndentifierType(data.IndentifierType)
+			if (data?.EmployerId) setEmployerId(data.EmployerId)
+			if (data?.SocialSecurityNumber) setSocialSecurityNumber(data.SocialSecurityNumber)
+			if (data?.Address1) setAddress1(data.Address1)
+			if (data?.Address2) setAddress2(data.Address2)
+			if (data?.City) setCity(data.City)
+			if (data?.State) setState(data.State)
+			if (data?.PostalCode) setPostalCode(data.PostalCode)
+			if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
 
-		const data = loginStore.getSetupData
-
-		console.log(' useEffect ===>>>> ', JSON.stringify(props, null, 2), JSON.stringify(data, null, 2))
-		setProfileType(props?.params?.profile_type || profileTypes[1])
-		if (data?.Username) {
-			setUsername(data.Username)
-			setButtonDisabled(false)
+			fetchCity()
+			fetchState()
 		}
-		if (data?.imageSource) setImageSource(data.imageSource)
-		if (data?.Name) setName(data.Name)
-		if (data?.LastName) setLastName(data.LastName)
-		if (data?.BusinessName) {
-			setBusinessName(data.BusinessName)
-			setButtonDisabled(false)
-		}
-		if (data?.BusinessStory) setBusinessStory(data.BusinessStory)
-		if (data?.BusinessType) setBusinessType(data.BusinessType)
-		if (data?.BusinessExecName) setBusinessExecName(data.BusinessExecName)
-		if (data?.BusinessExecLastName) setBusinessExecLastName(data.BusinessExecLastName)
-		if (data?.BusinessImageSource) setBusinessImageSource(data.BusinessImageSource)
-		if (data?.BackBusinessImageSource) setBackBusinessImageSource(data.BackBusinessImageSource)
-		if (data?.BusinessRegName) setBusinessRegName(data.BusinessRegName)
-		if (data?.BusinessIndustryType) setBusinessIndustryType(data.BusinessIndustryType)
-		if (data?.IndentifierType) setIndentifierType(data.IndentifierType)
-		if (data?.EmployerId) setEmployerId(data.EmployerId)
-		if (data?.SocialSecurityNumber) setSocialSecurityNumber(data.SocialSecurityNumber)
-		if (data?.Address1) setAddress1(data.Address1)
-		if (data?.Address2) setAddress2(data.Address2)
-		if (data?.City) setCity(data.City)
-		if (data?.State) setState(data.State)
-		if (data?.PostalCode) setPostalCode(data.PostalCode)
-		if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
-
-		fetchCity()
-		fetchState()
-	}, [])
-
-	// useEffect(() => {
-	// 	Geolocation.getCurrentPosition(
-	// 		({ coords: { latitude, longitude } }) => {
-	// 			const location = {
-	// 				latitude,
-	// 				longitude,
-	// 				latitudeDelta: 0.1,
-	// 				longitudeDelta: 0.09,
-	// 			}
-	// 			setRegion(location)
-	// 			setLatitud(location.latitude)
-	// 			setLongitud(location.longitude)
-	// 		},
-	// 		console.warn,
-	// 		{ enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
-	// 	)
-	// })
+	}, [isFocused])
 
 	return (
 		<Screen
 			showHeader
-			preset="scroll"
+			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			style={styles.ROOT}
 		>
-			<View style={styles.ROOT_CONTAINER}>
-				<View style={styles.CONTAINER}>
-					<View style={styles.HEADER_ACTIONS}>
-						<TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
-							<Icon name={"arrow-back"} size={23} color={'black'} />
-							<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
-							<Text style={styles.BACK_BUTON_LABEL}>{`Log out`}</Text>
-						</TouchableOpacity>
-					</View>
+			<View style={styles.HEADER_ACTIONS}>
+				<TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
+					<Icon name={"arrow-back"} size={23} color={'black'} />
+					<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={() => setShowConfirmLogoutModal(true)} style={styles.BACK_BUTON_CONTAINER}>
+					<Text style={styles.BACK_BUTON_LABEL}>{`Log out`}</Text>
+				</TouchableOpacity>
+			</View>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
+				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+					<View style={styles.ROOT_CONTAINER}>
+						<View style={styles.CONTAINER}>
 					{renderStep()}
 				</View>
 			</View>
+			</ScrollView>
+			</KeyboardAvoidingView>
 			{mapInputModal()}
 			{confirmLogoutModal()}
 			{thankyouModal()}

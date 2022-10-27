@@ -1,7 +1,9 @@
+/* eslint-disable prefer-const */
+/* eslint-disable array-callback-return */
 import { observer } from "mobx-react-lite";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Screen, Text, TextInputComponent } from "../../components";
+import { Button, Screen, Text, TextInputComponent, ConnectBankModal } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import styles from './my-transactions-style';
@@ -10,6 +12,8 @@ import { useStores } from "../../models";
 import { CheckBox } from 'react-native-elements'
 import DatePicker from 'react-native-date-picker'
 import Entypo from "react-native-vector-icons/Entypo"
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
 
 export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const navigation = useNavigation()
@@ -23,42 +27,8 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		'Cash out to USD',
 	]
 
-	const returns = {
-		TODAY: [
-			{
-				item: 'Customer sale',
-				time: '7 min ago',
-				credit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-			{
-				item: 'Carr Hardware',
-				time: '3:51, Jun 17, 2021',
-				debit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-			{
-				item: 'Cash out',
-				time: '4:51, Jun 17, 2021',
-				cash_out: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-		],
-		YESTERDAY: [
-			{
-				item: 'Customer return',
-				time: '3:51, Jun 16, 2021',
-				debit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-		]
-	}
-
 	const [ShowIndex, setShowIndex] = useState(true)
+	const isFocused = useIsFocused();
 
 	const [Search, setSearch] = useState('')
 	const [ShowFilter, setShowFilter] = useState(false)
@@ -72,6 +42,102 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const [DateTo, setDateTo] = useState(new Date())
 	const [OpenTo, setOpenTo] = useState(false)
 
+	const [ShowBankModal, setShowBankModal] = useState(false)
+
+	useEffect(() => {
+		// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+		// else setShowBankModal(false)
+	}, [])
+
+	useEffect(() => {
+		if (isFocused) {
+			getTransactions()
+			getACHTransactions()
+		}
+	}, [isFocused])
+
+	const getACHTransactions = () => {
+		loginStore.environment.api
+			.getACHTransactions()
+			.then((result: any) => {
+				console.log(' getACHTransactions ===>>>  ', JSON.stringify(result, null, 2))
+				if (result.kind === "ok") {
+					runInAction(() => {
+						let temp = loginStore.getTransactions
+						result?.data?.results.map((r: any) => {
+							if (!temp.includes(r)) {
+								r.ach = true
+								temp.push(r) 
+							} 
+						})
+						loginStore.setTransactions(temp)
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const getTransactions = () => {
+		loginStore.environment.api
+			.getTransactions()
+			.then((result: any) => {
+				console.log(' getTransactions ===>>>  ', JSON.stringify(result, null, 2))
+				if (result.kind === "ok") {
+					runInAction(() => {
+						let temp = loginStore.getTransactions
+						result?.data?.results.map((r: any) => {
+							if (!temp.includes(r)) {
+								r.ach = false
+								temp.push(r) 
+							} 
+						})
+						loginStore.setTransactions(temp)
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
+		if (initialData === [] || !initialData) return []
+		if (keys === [] || !keys) return initialData
+		if (filter === '' || !filter) return initialData
+		let data = []
+		initialData.map(d => {
+			keys.map(k => {
+				try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
+				catch {}
+			})
+		})
+		return data
+	}
+
+	const getFormatedTransactions = () => {
+		let data: any = {}
+		loginStore.getTransactions.map(r => {
+			const date = r.created_at.split('T')[0]
+			if (data[date]) {
+				data[date].data.push(r)
+			} else {
+				data[date] = {
+					label: date,
+					data: [r]
+				}
+			}
+		})
+		return data
+	}
+
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>
 		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 			<Text style={styles.INPUT_LABEL_STYLE}>START DATE</Text>
@@ -80,6 +146,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 			<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					onFocus={() => setOpenFrom(true)}
 					style={styles.SMALL_INPUT_STYLE}
 					keyboardType='numeric'
@@ -99,6 +166,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 			</View>
 			<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
 				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.SMALL_INPUT_STYLE}
 					onFocus={() => setOpenTo(true)}
 					keyboardType='numeric'
@@ -176,41 +244,42 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		</View>
 	</Modal>
 
+	const bankModal = () =>
+		<ConnectBankModal
+	visible={ShowBankModal}
+	buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+	buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+	onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
+/>
+
 	return (
 		<Screen
 			showHeader
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
-				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-					<View style={styles.ROOT_CONTAINER}>
-						<View style={styles.CONTAINER}>
-
-							<View style={styles.HEADER_ACTIONS}>
+				<View style={styles.HEADER_ACTIONS}>
 								<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
 									<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
 									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
 
 								</TouchableOpacity>
 							</View>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
+				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+					<View style={styles.ROOT_CONTAINER}>
+						<View style={styles.CONTAINER}>
+
+						
 
 							<View style={styles.STEP_CONTAINER}>
 
-								<Text style={styles.STEP_TITLE}>My Transactions</Text>
+								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor}]}>My Transactions</Text>
 								<View style={styles.AMOUNT_CONTAINER}>
 									<View style={{ flexDirection: 'row' }}>
-										<Image
-											resizeMode="contain"
-											source={IMAGES.currentDollarIcon}
-											style={styles.AMOUNT_ICON}
-										/>
-										<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>0</Text>
+										<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>C$ 0</Text>
 									</View>
 
 								</View>
@@ -219,6 +288,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 									<View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
 										<Icon name={"search"} size={25} color={COLOR.PALETTE.black} />
 										<TextInput
+											placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 											style={styles.SEARCH_INPUT_STYLE}
 											onChangeText={t => setSearch(t)}
 											value={Search}
@@ -231,26 +301,26 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 									</TouchableOpacity>
 								</View>
 								{ShowFilter && Filters()}
-								{Object.keys(returns).map((r, key) => ([
-									<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r}</Text>,
-									returns[r].map((i, key2) => (
+								{Object.values(getFormatedTransactions()).map((r, key) => ([
+									<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r.label}</Text>,
+									r.data.map((i, key2) => (
 										<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
 											<Image
 												source={{ uri: i.image }}
 												resizeMode='cover'
 												style={styles.RETURN_IMAGE}
 											/>
-											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
+											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.type}</Text>
 											{/* <Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text> */}
 
 											<View style={styles.CONTAINER}>
-												{i.credit
+												{/* {i.credit
 													? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
 													: i.debit
 														? <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
 														: <Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{`+ C$ ${i.cash_out || ''}`}</Text>
-												}
-
+												} */}
+													<Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.amount}`}</Text>
 											</View>
 										</TouchableOpacity>
 									))
@@ -261,6 +331,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 					</View>
 				</ScrollView>
 				{ReturnDetailModal()}
+				{bankModal()}
 				{ShowIndex &&
 					<Button
 						buttonStyle={{
@@ -271,6 +342,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 						buttonLabel={'Receive or Scan to pay'}
 						showBottonMenu
 						hideButton
+						accountType={loginStore.getSelectedAccount}
 					/>
 				}
 			</KeyboardAvoidingView>

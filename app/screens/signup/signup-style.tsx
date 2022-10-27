@@ -85,7 +85,7 @@ export default StyleSheet.create({
   INPUT_STYLE_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
-    backgroundColor: `${COLOR.PALETTE.green}25`,
+    backgroundColor: `${COLOR.PALETTE.gray}25`,
     borderRadius: 5,
     flexDirection: 'row',
     height: 55,
@@ -106,6 +106,21 @@ export default StyleSheet.create({
     marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },
+  LABEL: {
+    color: COLOR.PALETTE.black,
+    fontSize: 10,
+  },
+  LABEL_CONTAINER: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 30,
+    width: METRICS.screenWidth * 0.95
+  },
+  LABEL_ERROR: {
+    color: COLOR.PALETTE.pink,
+    fontSize: 10,
+  },
   LINE: {
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.strongGreen,
@@ -116,8 +131,10 @@ export default StyleSheet.create({
   NEED_HELP_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
+    flex: 0.9,
+    justifyContent: 'flex-end',
     marginBottom: 20,
-    width: METRICS.screenWidth * 0.80
+    width: METRICS.screenWidth * 0.80,
   },
   NEED_HELP_LINK: {
     color: COLOR.PALETTE.darkYellow,
@@ -127,7 +144,7 @@ export default StyleSheet.create({
   },
   PASS_INPUT_STYLE: {
     alignSelf: 'center',
-    color: `${COLOR.PALETTE.pureblack}66`,
+    color: `${COLOR.PALETTE.pureblack}`,
     height: 55,
     width: METRICS.screenWidth * 0.80
   },
@@ -165,6 +182,12 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.black,
     height: 2,
     width: 10
+  },
+  SHOW_PASS_CONTAINER: {
+    alignItems: 'center',
+    height: 50,
+    justifyContent: 'center',
+    width: 50
   },
   STEP_CONTAINER: {
     width: METRICS.screenWidth,

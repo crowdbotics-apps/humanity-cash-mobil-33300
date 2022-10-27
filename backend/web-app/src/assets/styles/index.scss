@@ -64,6 +64,7 @@ body {
     padding-block-end: 35px;
     margin-left: auto;
     margin-right: auto;
+    width: 350px;
 }
 
 .line-primary {
@@ -80,7 +81,7 @@ body {
 .content-children {
     padding-left: 50px;
     padding-right: 30px;
-    height: 100vh;
+    min-height: 100vh;
     background: white;
     padding-bottom: 20px;
 }
@@ -127,3 +128,8 @@ body{
     height: 1px;
     border: blue;
 }
+
+#user-detail-tab-blockchain_transactions{
+    width: 300px !important;
+}
+

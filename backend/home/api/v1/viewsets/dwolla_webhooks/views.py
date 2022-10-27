@@ -34,6 +34,8 @@ class DwollaWebhooksView(APIView):
                 resourceLink=event['_links'].resource.href,
                 customerLink=event['_links'].customer.href if 'customer' in event['_links'] else None,
             )
+            logger.info(f'dwolla event {event} ')
+
             logger.info(f'dwolla event {event_id}  [  {event.topic}  ] created')
             if event.topic in self.listeners:
                 try:

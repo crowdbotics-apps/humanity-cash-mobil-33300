@@ -75,7 +75,7 @@ def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart
                                                  )
     rcp = get_txn_receipt(txn)
 
-    Transaction.objects.create(
+    transaction = Transaction.objects.create(
         contract=get_humanity_contract(),
         transaction_id=txn.hex(),
         method_or_memo=f'transfer {amount} from user {from_uid} to user {to_uid}, roundup {roundup_amount}',
@@ -88,7 +88,7 @@ def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart
     )
 
     # TODO wrap exceptions
-    return True
+    return transaction
 
 
 def withdraw_coin(from_uid, amount, profile=None):
@@ -98,7 +98,7 @@ def withdraw_coin(from_uid, amount, profile=None):
                                                  )
     rcp = get_txn_receipt(txn)
 
-    Transaction.objects.create(
+    transaction = Transaction.objects.create(
         contract=get_humanity_contract(),
         transaction_id=txn.hex(),
         method_or_memo=f'withdraw (burn) {amount} from user {from_uid}',
@@ -108,7 +108,7 @@ def withdraw_coin(from_uid, amount, profile=None):
         **fromandto_to_kwargs(profile)
     )
     # TODO wrap exceptions
-    return True
+    return transaction
 
 
 def deposit_coin(to_uid, amount, profile=None):
@@ -118,7 +118,7 @@ def deposit_coin(to_uid, amount, profile=None):
                                                 )
     rcp = get_txn_receipt(txn)
 
-    Transaction.objects.create(
+    transaction = Transaction.objects.create(
         contract=get_humanity_contract(),
         transaction_id=txn.hex(),
         method_or_memo=f'deposit (mint) {amount} to user {to_uid}',
@@ -128,7 +128,7 @@ def deposit_coin(to_uid, amount, profile=None):
         **fromandto_to_kwargs(counterpart_profile=profile)
     )
     # TODO wrap exceptions
-    return True
+    return transaction
 
 
 def get_humanity_balance():

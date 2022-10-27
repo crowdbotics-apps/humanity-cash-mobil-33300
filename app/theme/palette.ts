@@ -15,7 +15,7 @@ export const PALETTE = {
   gradientPrimary: "#d75935",
   gradientSecondary: "#e48f41",
   gold: "#B56A3C",
-  red: "#E9E9E9",
+  red: "#A13B5F",
   warning: "#ffc107",
   lighterGreen: "#F8FAF6",
   marina_dark: "#30343F",
@@ -36,7 +36,8 @@ export const PALETTE = {
   primaryDisabled: "#A6D4DD",
   angry: "#B00020",
   activeBlue: "#3D88B6",
-  modalBackgroundColor: "rgba(246, 246, 241, 0.90)",
+  modalBackgroundColor: "rgba(246, 246, 241, 0.80)",
+  modalBackgroundDarkColor: "rgba(0, 0, 0, 0.80)",
   ligthGray: "#F6F5F0",
   background: "#F7F5F0",
   lightGray: "#F5F5F0",
@@ -44,10 +45,11 @@ export const PALETTE = {
   yellow: "#F7BE00",
   darkYellow: "#D2A824",
   lightGreen: "#D1D5BE",
-  green: "#8D955D",
+  green: "#9DA56F",
   strongGreen: "#395344",
   pink: "#DF9BB9",
   orange: "#D59B76",
   purple: "#442E88",
-  mustard: "#D2A824"
+  mustard: "#D2A824",
+  placeholderTextColor:"#00000066"
 }

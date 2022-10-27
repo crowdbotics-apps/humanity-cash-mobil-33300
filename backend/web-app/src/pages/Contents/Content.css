@@ -40,7 +40,7 @@
     margin-right: 15px;
     font-size: 20px !important;
     font-weight: 700;
-    font-family: Gotham;
+    font-family: Gotham, Helvetica, sans-serif;
     color: var(--blue);
     text-transform: uppercase;
 }

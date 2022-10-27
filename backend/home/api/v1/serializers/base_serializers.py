@@ -3,6 +3,7 @@ from rest_framework import serializers
 from cities_light.models import City, Region
 from rest_framework.generics import RetrieveAPIView
 
+from home.api.v1.serializers.coupons_serializers import CounponCreateSerializer
 from users.models import Merchant
 
 
@@ -20,11 +21,14 @@ class CityListSerializer(serializers.ModelSerializer):
 
 class StateListSerializer(serializers.ModelSerializer):
     state_id = serializers.IntegerField(source='id')
-    state_code = serializers.CharField(source='geoname_code')
+    state_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Region
-        fields = ('state_id', 'state_code')
+        fields = ('state_id', 'state_name')
+
+    def get_state_name(self, obj):
+        return obj.display_name.rsplit(',', maxsplit=1)[0]
 
 
 class WhereToSpendListSerializer(serializers.ModelSerializer):
@@ -41,11 +45,13 @@ class WhereToSpendListSerializer(serializers.ModelSerializer):
 
 
 class BusinessDetailsSerializer(serializers.ModelSerializer):
+    coupons = CounponCreateSerializer(many=True)
 
     class Meta:
         model = Merchant
         fields = ['id', 'business_name', 'business_story', 'background_picture',
-                  'address_1', 'address_2', 'zip_code', 'city', 'state', 'website']
+                  'address_1', 'address_2', 'zip_code', 'city', 'state', 'website',
+                  'instagram', 'facebook', 'twitter', 'coupons']
 
 
 class SendQrCodeSerializer(serializers.Serializer):

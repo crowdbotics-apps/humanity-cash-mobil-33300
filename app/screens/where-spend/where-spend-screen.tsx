@@ -6,13 +6,15 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 // import styles from "./where-spend-style"
 import styles from "./where-spend"
 import { COLOR, IMAGES, METRICS } from "../../theme"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useStores } from "../../models"
 import { CheckBox } from 'react-native-elements'
 import MapView, { Marker, Circle } from 'react-native-maps'
 import Geolocation from '@react-native-community/geolocation';
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
 
 const industryTypes = [
   {
@@ -872,48 +874,6 @@ const industryTypes = [
   },
 ]
 
-const merchantOfTheMonth = {
-  name: 'DORY & GINGER',
-  image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-  description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-  location: '',
-  website: 'link',
-  facebook: 'link',
-  instagram: 'link',
-  twitter: 'link',
-  active_cupons: [
-    {
-      image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-      label: 'cupom exaple'
-    },
-    {
-      image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-      label: 'cupom exaple'
-    },
-    {
-      image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-      label: 'cupom exaple'
-    },
-    {
-      image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-      label: 'cupom exaple'
-    },
-    {
-      image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-      label: 'cupom exaple'
-    },
-    {
-      image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-      label: 'cupom exaple'
-    },
-
-    {
-      image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-      label: 'cupom exaple'
-    },
-  ]
-}
-
 export const WhereSpendScreen = observer(function WhereSpendScreen() {
   const rootStore = useStores()
   const navigation = useNavigation()
@@ -933,58 +893,110 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   })
   const [Latitud, setLatitud] = useState(null)
   const [Longitud, setLongitud] = useState(null)
+  const isFocused = useIsFocused();
+
+  const getBusiness = () => {
+    loginStore.environment.api
+      .getBusiness()
+      .then((result: any) => {
+        if (result.kind === "ok") {
+          runInAction(() => {
+            loginStore.setBusiness(result.data?.merchants)
+            loginStore.setMerchantMonth(result.data?.merchant_month)
+          })
+        } else if (result.kind === "bad-data") {
+          const key = Object.keys(result?.errors)[0]
+          const msg = `${key}: ${result?.errors?.[key][0]}`
+          notifyMessage(msg)
+        } else {
+          notifyMessage(null)
+        }
+      })
+  }
 
   useEffect(() => {
-    Geolocation.getCurrentPosition(
-      ({ coords: { latitude, longitude } }) => {
-        const location = {
-          latitude,
-          longitude,
-          latitudeDelta: 0.015,
-          longitudeDelta: 0.015,
-        }
-        setRegion(location)
-        setLatitud(location.latitude)
-        setLongitud(location.longitude)
-      },
-      console.warn,
-      { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
-    )
-  })
+    if (isFocused) {
+      getBusiness()
+      Geolocation.getCurrentPosition(
+        ({ coords: { latitude, longitude } }) => {
+          const location = {
+            latitude,
+            longitude,
+            latitudeDelta: 0.015,
+            longitudeDelta: 0.015,
+          }
+          setRegion(location)
+          setLatitud(location.latitude)
+          setLongitud(location.longitude)
+        },
+        console.warn,
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
+      )
+    }
+  }, [isFocused])
 
-  const RenderTopMonth = () => (
-    <View style={styles.INDUSTRY_CONTAINER}>
-      <Text style={styles.INDUSTRY_TITLE}>MERCHANT OF THE MONTH</Text>
-      <View style={styles.LINE} />
-      <TouchableOpacity onPress={() => [setShowDetail(true), setSelectedDetail(merchantOfTheMonth)]} style={styles.BUSINESS_CONTAINER}>
-        <View style={styles.TOP_MONTH}>
-          <Text style={styles.MONTH_BUSINESS_NAME}>{merchantOfTheMonth.name}</Text>
-          <Text style={styles.MONTH_BUSINESS_ABOUT}>{merchantOfTheMonth.description}</Text>
-        </View>
-        <Image
-          source={{ uri: merchantOfTheMonth.image }}
-          resizeMode='cover'
-          style={styles.MONTH_BUSINESS_IMAGE}
-        />
-      </TouchableOpacity>
-    </View>
-  )
+  const RenderTopMonth = () => {
+    const merchantOfTheMonth = loginStore.getMerchantOfMonth
+    return (
+      <View style={styles.INDUSTRY_CONTAINER}>
+        <Text style={styles.INDUSTRY_TITLE}>MERCHANT OF THE MONTH</Text>
+        <View style={styles.LINE} />
+        <TouchableOpacity onPress={() => [setShowDetail(true), setSelectedDetail(merchantOfTheMonth)]} style={styles.BUSINESS_CONTAINER}>
+          <View style={styles.TOP_MONTH}>
+            <Text style={styles.MONTH_BUSINESS_NAME}>{merchantOfTheMonth.business_name}</Text>
+            <Text style={styles.MONTH_BUSINESS_ABOUT}>{merchantOfTheMonth.business_story}</Text>
+          </View>
+          <Image
+            source={{ uri: merchantOfTheMonth.image }}
+            resizeMode='cover'
+            style={styles.MONTH_BUSINESS_IMAGE}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  const getBusinessDetail = (id) => {
+    setShowDetail(true)
+    loginStore.environment.api
+      .getBusinessDetail(id)
+      .then((result: any) => {
+        if (result.kind === "ok") {
+          runInAction(() => {
+            let busDet = loginStore.getBusinessDetail
+            busDet[id] = result.data
+            loginStore.setBusinessDetails(busDet)
+            setSelectedDetail(result.data)
+          })
+        } else if (result.kind === "bad-data") {
+          const key = Object.keys(result?.errors)[0]
+          const msg = `${key}: ${result?.errors?.[key][0]}`
+          setShowDetail(false)
+          notifyMessage(msg)
+        } else {
+          setShowDetail(false)
+          notifyMessage(null)
+        }
+      })
+
+  }
 
   const RenderCategories = () => {
+    if (!loginStore?.getBusiness?.[0]) return
     return (
-      industryTypes.map((i, key) => (
+      Object.keys(loginStore.getBusiness[0]).map((i, key) => (
         <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
-          <Text style={styles.INDUSTRY_TITLE}>{i.type}</Text>
+          <Text style={styles.INDUSTRY_TITLE}>{i}</Text>
           <View style={styles.LINE} />
           <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
-            {i.business.map((b, key2) => (
-              <TouchableOpacity onPress={() => [setShowDetail(true), setSelectedDetail(b)]} style={styles.BUSINESS} key={key + '' + key2}>
+            {loginStore.getBusiness[0][i].map((b, key2) => (
+              <TouchableOpacity onPress={() => getBusinessDetail(b.id)} style={styles.BUSINESS} key={key + '' + key2}>
                 <Image
-                  source={{ uri: b.image }}
+                  source={{ uri: b.background_picture }}
                   resizeMode='cover'
                   style={styles.BUSINESS_IMAGE}
                 />
-                <Text style={styles.BUSINESS_NAME}>{b.name}</Text>
+                <Text style={styles.BUSINESS_NAME}>{b.business_name}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -1017,7 +1029,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
     </View>
     <TextInputComponent
       label='Distance'
-      onChangeText={t => setDistanceFilterr(t.replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
+      onChangeText={t => setDistanceFilter(t.replace(/\B(?=(\d{3})+(?!\d))/g, ","))}
       value={`${DistanceFilter}`}
       placeholder={"Custom distance"}
       labelContainerStyle={{ display: 'none' }}
@@ -1026,7 +1038,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
       onPress={() => [setShowMap(true), setShowFilter(false)]}
       style={[styles.FIND_MAP, { color: loginStore.getAccountColor }]}
     >Find Location on Google Maps</Text>
-    <Text onPress={() => setDistanceFilter('')} style={styles.CLEAR_FILTERS}>Clear filters</Text>
+    <Text style={styles.CLEAR_FILTERS}>Clear filters</Text>
     <View style={styles.LINE} />
   </View>
 
@@ -1099,75 +1111,85 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
     >
       {ShowMap
         ? MapContainer()
-        : <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
-          <View style={styles.ROOT_CONTAINER}>
+        :
+        <View style={styles.ROOT_CONTAINER}>
+          {ShowDetail
+            ? <TouchableOpacity style={styles.HEADER} onPress={() => [setShowDetail(false), setSelectedDetail({})]}>
+              <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+              <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+            </TouchableOpacity>
+            : <TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+              <Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+              <Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
+            </TouchableOpacity>
+          }
+          <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
             {ShowDetail
               ? <View style={styles.CONTAINER}>
-                <TouchableOpacity style={styles.HEADER} onPress={() => [setShowDetail(false), setSelectedDetail({})]}>
-                  <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-                  <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-                </TouchableOpacity>
-                <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>{SelectedDetail.name}</Text>
+                <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>{SelectedDetail?.business_name}</Text>
                 <View style={styles.LINE} />
-
                 <View style={styles.NEWS_CONTAINER}>
-                  <Text style={styles.NEWS_TITLE}>{SelectedDetail.name}</Text>
-                  <Text style={styles.NEWS_BODY}>{SelectedDetail.description}</Text>
+                  <Text style={styles.NEWS_TITLE}>{SelectedDetail?.business_name}</Text>
+                  <Text style={styles.NEWS_BODY}>{SelectedDetail?.business_story}</Text>
                   <Image
-                    source={{ uri: SelectedDetail.image }}
-                    resizeMode="contain"
+                    source={{ uri: SelectedDetail?.background_picture }}
+                    resizeMode='cover'
                     style={styles.NEWS_IMAGE}
                   />
                   <View style={styles.DETAIL_LINKS}>
-                    <MaterialCommunityIcons
-                      name={"web"}
-                      size={25}
-                      color={"black"}
-                      style={{ marginRight: 8 }}
-                    />
-                    <FontAwesome
-                      name={"facebook"}
-                      size={25}
-                      color={"black"}
-                      style={{ marginRight: 8 }}
-                    />
-                    <FontAwesome
-                      name={"twitter"}
-                      size={25}
-                      color={"black"}
-                      style={{ marginRight: 8 }}
-                    />
-                    <FontAwesome
-                      name={"instagram"}
-                      size={25}
-                      color={"black"}
-                      style={{ marginRight: 8 }}
-                    />
+                    {SelectedDetail.website &&
+                      <MaterialCommunityIcons
+                        name={"web"}
+                        size={25}
+                        color={"black"}
+                        style={{ marginRight: 8 }}
+                      />
+                    }
+                    {SelectedDetail.facebook &&
+                      <FontAwesome
+                        name={"facebook"}
+                        size={25}
+                        color={"black"}
+                        style={{ marginRight: 8 }}
+                      />
+                    }
+                    {SelectedDetail.twitter &&
+                      <FontAwesome
+                        name={"twitter"}
+                        size={25}
+                        color={"black"}
+                        style={{ marginRight: 8 }}
+                      />
+                    }
+                    {SelectedDetail.instagram &&
+                      <FontAwesome
+                        name={"instagram"}
+                        size={25}
+                        color={"black"}
+                        style={{ marginRight: 8 }}
+                      />
+                    }
                     <Text style={styles.SEE_ON_MAP_LABEL}>SHOW ON MAP</Text>
                   </View>
                 </View>
                 <View style={styles.INDUSTRY_CONTAINER}>
-          <Text style={styles.INDUSTRY_TITLE}>ALL ACTIVE COUPONS</Text>
-          <View style={styles.LINE} />
-          <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
-            {SelectedDetail.active_cupons.map((b, key2) => (
-              <View style={styles.BUSINESS} key={key2 + '_coupon'}>
-                <Image
-                  source={{ uri: b.image }}
-                  resizeMode='cover'
-                  style={styles.BUSINESS_IMAGE}
-                />
-                <Text style={styles.BUSINESS_NAME}>{b.label}</Text>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
+                  <Text style={styles.INDUSTRY_TITLE}>ALL ACTIVE COUPONS</Text>
+                  <View style={styles.LINE} />
+                  <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
+                    {SelectedDetail?.coupons && SelectedDetail?.coupons.map((b, key2) => (
+                      <View style={styles.BUSINESS} key={key2 + '_coupon'}>
+                        <Image
+                          source={{ uri: b.promo_image }}
+                          resizeMode='cover'
+                          style={styles.BUSINESS_IMAGE}
+                        />
+                        <Text style={styles.BUSINESS_NAME}>{b.title}</Text>
+                      </View>
+                    ))}
+                  </ScrollView>
+                </View>
               </View>
               : <View style={styles.CONTAINER}>
-                <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home", {})}>
-                  <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-                  <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
-                </TouchableOpacity>
                 <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>{'Where to spend'}</Text>
                 <View style={styles.LINE} />
                 <Text style={styles.STEP_SUB_TITLE}>We are here to help you with anything and everything on the Currents app.</Text>
@@ -1190,10 +1212,8 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                 {RenderCategories()}
               </View>
             }
-
-
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
       }
       <Button
         // onPress={() => {}}

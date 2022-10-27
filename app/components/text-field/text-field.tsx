@@ -1,6 +1,6 @@
-import React, {useEffect, useRef, useState} from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Icon from "react-native-vector-icons/Ionicons"
-import {COLOR, TYPOGRAPHY} from "../../theme"
+import { COLOR, TYPOGRAPHY } from "../../theme"
 import {
   Text,
   TextInput,
@@ -51,11 +51,11 @@ export const TextField: React.FC<Props> = (props) => {
   return (
     <View style={[style]}>
       <TextInput
-        placeholderTextColor={COLOR.PALETTE.lightGrey}
+        placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         placeholder={label}
         style={[
           styles.input,
-          {borderColor: borderColor}, textInputStyle
+          { borderColor: borderColor }, textInputStyle
         ]}
         ref={forwardedRef}
         {...restOfProps}
@@ -74,7 +74,7 @@ export const TextField: React.FC<Props> = (props) => {
       {secureTextEntry && (
         <TouchableOpacity
           onPress={() => setToggleShow(!ToggleShow)}
-          style={{position: "absolute", right: 0, paddingRight:10, top: 20}}
+          style={{ position: "absolute", right: 0, paddingRight: 10, top: 20 }}
         >
           <Icon
             name={ToggleShow ? "eye-outline" : "eye-off-outline"}

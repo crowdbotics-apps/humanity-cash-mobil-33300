@@ -5,16 +5,49 @@ from rest_framework import status
 from rest_framework.generics import UpdateAPIView, CreateAPIView, RetrieveUpdateAPIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers import setup_profile_serializers
 from home.clients.dwolla_api import DwollaClient
 from home.functions import create_dwolla_customer_consumer, create_dwolla_customer_merchant
 from home.helpers import AuthenticatedAPIView
-from users.models import Merchant, NoMerchantProfileException
+from users.models import Merchant, NoMerchantProfileException, Consumer
 
 User = get_user_model()
 logger = logging.getLogger('django')
+
+
+class SetupConsumerProfileFirstStepAPIView(AuthenticatedAPIView):
+
+    def post(self, request):
+        user = self.request.user
+        data = request.data
+        username = data.get('username')
+        user_exists = User.objects.filter(username=username).exclude(id=user.id).first()
+        if user_exists:
+            return Response({'username': 'Username already registered'}, status=status.HTTP_400_BAD_REQUEST)
+        profile_image = data.get('consumer_profile', None)
+        consumer, _ = Consumer.objects.get_or_create(user=user)
+        if profile_image:
+            consumer.profile_picture = profile_image
+            consumer.save()
+        user.username = username
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+
+
+class SetupConsumerProfileSecondStepAPIView(AuthenticatedAPIView):
+
+    def post(self, request):
+        user = self.request.user
+        data = request.data
+        first_name = data.get('first_name', '')
+        last_name = data.get('last_name', '')
+        user.first_name = first_name
+        user.last_name = last_name
+        user.save()
+        return Response(status=status.HTTP_200_OK)
 
 
 class SetupConsumerProfileAPIView(AuthenticatedAPIView, UpdateAPIView):
@@ -98,7 +131,11 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
     queryset = User.objects.all()
 
     def get_object(self):
-        return self.request.user
+        user = self.request.user
+        if not user.consumer.dwolla_id:
+            # if dwolla_id is not set yet
+            create_dwolla_customer_consumer(user)
+        return user
 
     def update(self, request, *args, **kwargs):
         super(ConsumerMyProfileAPIView, self).update(request, *args, **kwargs)
@@ -128,7 +165,7 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
         try:
             return self.request.user.merchant
         except ObjectDoesNotExist:
-            raise NoMerchantProfileException()
+            return None
 
 
     def update(self, request, *args, **kwargs):
@@ -141,8 +178,8 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
         if not self.request.user.merchant.dwolla_id:
             # if dwolla_id is not set yet
             create_dwolla_customer_merchant(instance)
-
-        return Response(serializer.data)
+        # serializer.save()
+        return Response(serializer.initial_data)
 
 
 class SetCashierModeView(AuthenticatedAPIView):

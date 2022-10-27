@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TextInput, View, TouchableOpacity, Image, Keyboard, Alert } from "react-native"
-import { Text, Button, Screen, Checkbox } from "../../components"
+import {TextInput, View, TouchableOpacity, Image, ScrollView, Alert, Platform} from "react-native"
+import { Text, Button, Screen, Checkbox, TextInputComponent } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from "./login-style"
@@ -9,7 +9,7 @@ import { COLOR, IMAGES } from "../../theme"
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
-import {getErrorMessage, notifyMessage} from "../../utils/helpers"
+import { getErrorMessage, notifyMessage } from "../../utils/helpers"
 import {
   GoogleSignin,
   statusCodes,
@@ -32,21 +32,44 @@ export const LoginScreen = observer(function LoginScreen() {
   const [HidePass, setHidePass] = useState(true)
   const [Loading, setLoading] = useState(false)
 
+  const [UsernameError, setUsernameError] = useState(false)
+  const [UsernameErrorMessage, setUsernameErrorMessage] = useState("")
+  const [PassError, setPassError] = useState(false)
+  const [PassErrorMessage, setPassErrorMessage] = useState("")
+
   const login = () => {
     setLoading(true)
     loginStore.environment.api
       .login({ email: Username, password: Pass })
       .then((result: any) => {
         setLoading(false)
+        console.log(' login ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home", {})
+            loginStore.setMerchantUser(result?.response?.user?.merchant_data)
+            loginStore.setConsumerUser(result?.response?.user)
+            if (result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) navigation.navigate("setupProfile")
+            else navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors
+          if (result?.errors?.password) {
+            setPassError(true)
+            setPassErrorMessage(result?.errors?.password?.[0])
+          } else {
+            setPassError(false)
+            setPassErrorMessage('')
+          }
+          if (result?.errors?.email) {
+            setUsernameError(true)
+            setUsernameErrorMessage(result?.errors?.email?.[0])
+          } else {
+            setUsernameError(false)
+            setUsernameErrorMessage('')
+          }
           notifyMessage(getErrorMessage(errors))
         } else {
           loginStore.reset()
@@ -62,14 +85,14 @@ export const LoginScreen = observer(function LoginScreen() {
       const user = await GoogleSignin.getCurrentUser();
       console.log('user ', user)
       loginStore.environment.api.loginGoogle(user.user, user.idToken).then((result) => {
-        __DEV__ && console.tron.log('loginGoogle', result)
+
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home", {})
+            navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors
@@ -80,7 +103,7 @@ export const LoginScreen = observer(function LoginScreen() {
         }
       })
     } catch (error) {
-      __DEV__ && console.tron.log('error', error)
+      console.log('error ', error)
       setLoading(false)
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // errorMessage("Login con Google cancelado")
@@ -93,7 +116,7 @@ export const LoginScreen = observer(function LoginScreen() {
   const loginFacebook = () => {
     setLoading(true)
     LoginManager.logInWithPermissions(["public_profile", "email"]).then(
-      function(result) {
+      function (result) {
         if (result.isCancelled) {
           setLoading(false)
         } else {
@@ -103,7 +126,7 @@ export const LoginScreen = observer(function LoginScreen() {
               if (result.kind === "ok") {
                 runInAction(() => {
                   loginStore.setUser(result.response)
-                  loginStore.setApiToken(result.response.access_token)
+                  loginStore.setApiToken(result.response.token.access)
                   loginStore.setSelectedAccount('consumer')
                   navigation.navigate("home")
                 })
@@ -132,7 +155,7 @@ export const LoginScreen = observer(function LoginScreen() {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
-            navigation.navigate("home", {})
+            navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors
@@ -187,88 +210,84 @@ export const LoginScreen = observer(function LoginScreen() {
 
   return (
     <Screen
-      preset="scroll"
+      preset="fixed"
       statusBar={"dark-content"}
       style={styles.ROOT}
       showHeader
     >
-      <View style={styles.STEP_CONTAINER}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("splash", {})}
-          style={styles.BACK_BUTON_CONTAINER}
-        >
-          <Icon name={"arrow-back"} size={23} color={"#8B9555"} />
-          <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
-        </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("splash")}
+        style={styles.BACK_BUTON_CONTAINER}
+      >
+        <Icon name={"arrow-back"} size={23} color={"#8B9555"} />
+        <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
+      </TouchableOpacity>
+      <ScrollView bounces={false}>
         <View style={styles.STEP_CONTAINER}>
-          <Text style={styles.STEP_TITLE}>Log in</Text>
-          <Text style={styles.STEP_SUB_TITLE}>{"Welcome back"}</Text>
-        </View>
-        <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-          <Text style={styles.INPUT_LABEL_STYLE}>
-            EMAIL ADDRESS OR USER NAME
-          </Text>
-        </View>
-        <View style={styles.INPUT_STYLE_CONTAINER}>
-          <TextInput
-            style={styles.INPUT_STYLE}
+          <View style={styles.STEP_CONTAINER}>
+            <Text style={styles.STEP_TITLE}>Log in</Text>
+            <Text style={styles.STEP_SUB_TITLE}>{"Welcome back"}</Text>
+          </View>
+          <TextInputComponent
+            label='EMAIL ADDRESS OR USER NAME'
+            errorLabel={UsernameError
+              ? UsernameErrorMessage === ""
+                ? "ENTER EMAIL ADDRESS OR USER NAME"
+                : UsernameErrorMessage
+              : ""}
+            error={UsernameError}
             onChangeText={t => setUsername(t)}
             value={Username}
             placeholder={"EMAIL ADDRESS OR USER NAME"}
           />
-        </View>
-        <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-          <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
-          {/* <Text style={styles.PASS_REQUIREMENTS}>AT LEAST 12 CHARACTERS LONG,  1 NUMBER AND 1 SYMBOL</Text> */}
-        </View>
-        <View style={styles.INPUT_STYLE_CONTAINER}>
-          <TextInput
-            // ref={ref => EmailInput = ref}
-            style={styles.PASS_INPUT_STYLE}
-            onChangeText={t => [setPass(t)]}
+          <TextInputComponent
+            label='PASSWORD'
+            errorLabel={PassError ? PassErrorMessage : ""}
+            error={PassError}
+            onChangeText={t => setPass(t)}
             value={Pass}
-            secureTextEntry={HidePass}
             placeholder={"*********"}
+            secureTextEntry={HidePass}
+            inputStyle={styles.PASS_INPUT_STYLE}
+            inputDecoration={<TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
+              <Ionicons name="eye" color={"#39534440"} size={20} />
+            </TouchableOpacity>}
           />
-          <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
-            <Ionicons name="eye" color={"#39534440"} size={20} />
-          </TouchableOpacity>
         </View>
-      </View>
-      {/* <TouchableOpacity onPress={() => pressHandler()}>
-        <Text style={styles.LOGIN_TYPES_LABEL}>Authenticate with Touch ID</Text>
-        </TouchableOpacity> */}
-      <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
-      <View style={styles.STEP_CONTAINER}>
-        <View style={styles.LOGIN_TYPES_CONTAINER}>
-          <TouchableOpacity onPress={() => onAppleButtonPress()}>
-            <Image
-              source={IMAGES.appleIcon}
-              resizeMode="contain"
-              style={styles.LOGIN_TYPE}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => loginGoogle()}>
-            <Image
-              source={IMAGES.googleIcon}
-              resizeMode="contain"
-              style={styles.LOGIN_TYPE}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => loginFacebook()}>
-            <Image
-              source={IMAGES.facebookIcon}
-              resizeMode="contain"
-              style={styles.LOGIN_TYPE}
-            />
-          </TouchableOpacity>
+        <View style={styles.LOGIN_OPTIONS_CONTAINER}>
+          <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
+          <View style={styles.STEP_CONTAINER}>
+            <View style={styles.LOGIN_TYPES_CONTAINER}>
+              {Platform.OS === 'ios' && <TouchableOpacity onPress={() => onAppleButtonPress()}>
+                <Image
+                  source={IMAGES.appleIcon}
+                  resizeMode="contain"
+                  style={styles.LOGIN_TYPE}
+                />
+              </TouchableOpacity>}
+              <TouchableOpacity onPress={() => loginGoogle()}>
+                <Image
+                  source={IMAGES.googleIcon}
+                  resizeMode="contain"
+                  style={styles.LOGIN_TYPE}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => loginFacebook()}>
+                <Image
+                  source={IMAGES.facebookIcon}
+                  resizeMode="contain"
+                  style={styles.LOGIN_TYPE}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.NEED_HELP_CONTAINER}>
+            <Text style={styles.NEED_HELP_LINK}>
+              Forgot password
+            </Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.NEED_HELP_CONTAINER}>
-        <Text style={styles.NEED_HELP_LINK}>
-          Forgot password
-        </Text>
-      </View>
+      </ScrollView>
       <Button
         buttonStyle={{
           backgroundColor: Loading ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green

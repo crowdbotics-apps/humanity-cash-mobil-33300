@@ -281,12 +281,12 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
   },
   ROOT: {
+    backgroundColor: COLOR.PALETTE.white,
     flex: 1,
   },
   ROOT_CONTAINER: {
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
-    height: METRICS.screenHeight,
     justifyContent: 'space-between',
   },
   ROOT_MODAL: {
@@ -351,7 +351,7 @@ export default StyleSheet.create({
   STEP_TITLE: {
     color: COLOR.PALETTE.orange,
     fontSize: 32,
-    marginLeft: 10
+    marginLeft: 10,
   },
   STEP_TITLE_BLACK: {
     color: COLOR.PALETTE.black,

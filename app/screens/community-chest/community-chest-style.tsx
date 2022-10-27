@@ -56,8 +56,9 @@ export default StyleSheet.create({
   },
   HEADER: {
     flexDirection: 'row',
+    marginBottom: 10,
     marginLeft: 10,
-    marginTop: 10,
+    marginTop: 10
   },
   INPUT_LABEL_STYLE: {
     color: COLOR.PALETTE.black,

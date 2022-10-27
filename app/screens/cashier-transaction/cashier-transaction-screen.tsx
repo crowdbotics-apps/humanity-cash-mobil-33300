@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Screen, Text, TextInputComponent } from "../../components";
+import { Button, Screen, Text, ConnectBankModal } from "../../components";
 import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import styles from './cashier-transaction';
@@ -13,7 +13,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
-
+	const isFocused = useIsFocused();
 	const returns = {
 		TODAY: [
 			{
@@ -42,26 +42,33 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 	}
 
 	const [ShowIndex, setShowIndex] = useState(true)
-	const [ShowScanModal, setShowScanModal] = useState(false)
 	const [Search, setSearch] = useState('')
 	const [ShowFilter, setShowFilter] = useState(false)
-	const [DistanceFilter, setDistanceFilter] = useState('')
 
+	const [ShowBankModal, setShowBankModal] = useState(false)
+
+	useEffect(() => {
+		if (isFocused) {
+			if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+			else setShowBankModal(false)
+		}
+	}, [isFocused])
+  
+	const bankModal = () =>
+		<ConnectBankModal
+			visible={ShowBankModal}
+			buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
+		/>
+	
 	const Filters = () => <View style={styles.FILTER_CONTAINER}>
-
-		<Text onPress={() => setDistanceFilter('')} style={styles.CLEAR_FILTERS}>Clear filters</Text>
+		<Text style={styles.CLEAR_FILTERS}>Clear filters</Text>
 		<View style={styles.LINE} />
 	</View>
 
 	const ReturnIndex = () =>
 		<View style={styles.CONTAINER}>
-			<View style={styles.HEADER_ACTIONS}>
-				<View />
-				<TouchableOpacity style={styles.BACK_BUTON_CONTAINER} onPress={() => navigation.navigate("home", {})}>
-					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Close `}</Text>
-					<Icon name={"close"} size={23} color={loginStore.getAccountColor} />
-				</TouchableOpacity>
-			</View>
 			<View style={styles.STEP_CONTAINER}>
 				<Text style={styles.STEP_TITLE}>Transactions</Text>
 			</View>
@@ -76,6 +83,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 						onChangeText={t => setSearch(t)}
 						value={Search}
 						placeholder={`Search`}
+						placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					/>
 				</View>
 			</View>
@@ -107,39 +115,38 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
+			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
+<View style={styles.HEADER_ACTIONS}>
+				<View />
+				<TouchableOpacity style={styles.BACK_BUTON_CONTAINER} onPress={() => navigation.navigate("home")}>
+					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Close `}</Text>
+					<Icon name={"close"} size={23} color={loginStore.getAccountColor} />
+				</TouchableOpacity>
+			</View>
+			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
-
 							{ReturnIndex()}
-							{/* {ShowIndex && ReturnIndex()}
-							{SendingReturn && SendReturn()}
-							{Loading && LoadingReturn()}
-							{Finish && FinishReturn()} */}
 						</View>
 					</View>
 				</ScrollView>
-				{/* {ShowIndex &&
+			</KeyboardAvoidingView>
+			{bankModal()}
+			{ShowIndex &&
 					<Button
 						buttonStyle={{
 							backgroundColor: loginStore.getAccountColor,
-							// bottom: 125,
-							// position: 'absolute'
 						}}
 						buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
-						onPress={() => [setShowIndex(false), setShowScanModal(true)]}
+						onPress={() => setShowIndex(false)}
 						buttonLabel={'Receive or Scan to pay'}
 						showBottonMenu
 						hideButton
+						accountType={loginStore.getSelectedAccount}
 					/>
-				} */}
-			</KeyboardAvoidingView>
+				}
 		</Screen>
 	)
 })

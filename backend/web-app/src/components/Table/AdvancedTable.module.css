@@ -29,11 +29,12 @@
     height: 55px !important;
 }
 .table{
-    height: 60%;
+    /*height: 60%;*/
+    /*min-height: 400px;*/
 }
 
 .paginationContainer{
-    position: fixed;
-    bottom:0px;
-    width: 90%;
+    /*position: fixed;*/
+    /*bottom:0px;*/
+    /*width: 90%;*/
 }

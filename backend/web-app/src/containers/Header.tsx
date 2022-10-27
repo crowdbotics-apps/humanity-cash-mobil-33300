@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from "react-router-dom";
 
 type Props = {
-    title?:string
+    title?:string | React.ReactNode
 }
 const Header: React.FC<Props>  =  ({ title }) => {
 
@@ -10,7 +10,12 @@ const Header: React.FC<Props>  =  ({ title }) => {
 
     return (
         <header>
-            <h4 className='title-h4'>{title} </h4>
+            {typeof title === "string" && (
+              <div className='title-h4'>{title} </div>
+            )||(
+              title
+            )}
+
         </header>
     )
 

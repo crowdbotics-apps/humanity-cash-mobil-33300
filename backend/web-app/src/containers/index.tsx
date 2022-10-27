@@ -9,8 +9,8 @@ import Col from 'react-bootstrap/Col';
 
 type Props = {
     children: React.ReactNode;
-    title?:string;
-    navbarTitle?:string;
+    title?:string | React.ReactNode;
+    navbarTitle?:React.ReactNode|string;
     header?: React.ReactNode;
     search?: React.ReactNode;
     filter?: React.ReactNode;
@@ -37,7 +37,7 @@ const AdminPanelContainer: React.FC<Props> = ({ children,search,filter, onclickF
                         {/* divider */}
                         <Col><div className='line-primary'></div></Col>
                         {/* header */}
-                        <Col className={'mt-3'}>
+                        <Col className={'mt-0'}>
                             {header !== null && (header)||(
                               <Header title={title} />
                             )}

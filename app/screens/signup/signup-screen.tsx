@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { TextInput, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from "react-native"
-import { Text, Screen, Button, TextInputComponent } from "../../components"
+import {Text, Screen, Button, TextInputComponent, MaskInput} from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -13,6 +13,7 @@ import { notifyMessage } from "../../utils/helpers"
 import { COLOR } from '../../theme';
 import { CheckBox } from 'react-native-elements'
 import TouchID from 'react-native-touch-id'
+import {Masks} from "react-native-mask-input";
 
 const steps = [
   "email",
@@ -38,12 +39,14 @@ export const SignupScreen = observer(function SignupScreen() {
   const [Phone, setPhone] = useState("")
   const [EmailError, setEmailError] = useState(false)
   const [EmailErrorMessage, setEmailErrorMessage] = useState("")
+  const [PhoneNumberError, setPhoneNumberError] = useState(false)
+  const [PhoneNumberErrorMessage, setPhoneNumberErrorMessage] = useState("")
   const [Agree, setAgree] = useState(false)
 
   const [ShowTerms, setShowTerms] = useState(false)
   const [ShowPolicy, setShowPolicy] = useState(false)
 
-  let CodeInp1, CodeInp2, CodeInp3, CodeInp4, CodeInp5, CodeInp6
+  let CodeInp2, CodeInp3, CodeInp4, CodeInp5, CodeInp6
   const [Code1, setCode1] = useState("")
   const [Code2, setCode2] = useState("")
   const [Code3, setCode3] = useState("")
@@ -102,7 +105,6 @@ export const SignupScreen = observer(function SignupScreen() {
         Alert.alert('Authentication Failed');
       });
   }
-
   const validateEmail = (email, agree) => {
     const valid = String(email)
       .toLowerCase()
@@ -117,10 +119,12 @@ export const SignupScreen = observer(function SignupScreen() {
       return false
     }
   }
-
   const register = () => {
     setLoading(true)
-    loginStore.environment.api.userRegister({ email: Email }).then(result => {
+    const phoneNumber = Phone !== '' ? `+1${Phone}` : ''
+    loginStore.environment.api.userRegister({ email: Email, phone_number: phoneNumber }).then(result => {
+      setPhoneNumberError(false)
+      setEmailError(false)
       setLoading(false)
       if (result.kind === "ok") {
         runInAction(() => {
@@ -130,23 +134,24 @@ export const SignupScreen = observer(function SignupScreen() {
         setStep("verify_email")
       } else if (result.kind === "bad-data") {
         console.log(' result => ', result)
+        if (result.errors.email) {
+          setEmailError(true)
+          setEmailErrorMessage(result.errors.email[0])
+        }
+        if (result.errors.phone_number) {
+          setPhoneNumberError(true)
+          setPhoneNumberErrorMessage(result.errors.phone_number[0])
+        }
         notifyMessage("Please correct the errors and try again")
-        setEmailError(true)
-        setEmailErrorMessage(result.errors.email[0])
-      } else {
-        loginStore.reset()
-        notifyMessage(null)
       }
     })
   }
-
   const sendVerificationCode = () => {
     setLoading(true)
     loginStore.environment.api.sendVerificaitonCode().then(() => {
       setLoading(false)
     })
   }
-
   const verifyUserAuthenticationCode = () => {
     const code = Code1 + Code2 + Code3 + Code4 + Code5 + Code6
     setLoading(true)
@@ -159,39 +164,40 @@ export const SignupScreen = observer(function SignupScreen() {
           setStep("email_confirmed")
         } else if (result.kind === "bad-data") {
           notifyMessage(result.errors.verification_code[0])
-          setStep("email_confirmed")
+          setCode1('')
+          setCode2('')
+          setCode3('')
+          setCode4('')
+          setCode5('')
+          setCode6('')
         } else {
           notifyMessage(null)
         }
       })
   }
-
   const setPassword = () => {
     setLoading(true)
     loginStore.environment.api
       .setUserPassword({ password: Pass, password_confirm: PassConfirm })
       .then(result => {
+        console.log(' result ===>>> ', JSON.stringify(result, null, 2))
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
             // loginStore.setUser(result.response.user)
             // loginStore.setApiToken(result.response.access_token)
-            navigation.navigate("setupProfile", {})
+
+            navigation.navigate("setupProfile")
             resetData()
           })
         } else if (result.kind === "bad-data") {
           notifyMessage(result.errors.password.shift())
-        } else {
-          loginStore.reset()
-          notifyMessage(null)
         }
       })
   }
-
   const resetData = () => {
     loginStore.setStep('')
     loginStore.setSignupData({})
-
     setStep('email')
     setEmail('')
     setPhone('')
@@ -210,7 +216,6 @@ export const SignupScreen = observer(function SignupScreen() {
         Hello! Tell us how to reach you. We will send a verification code to
         your email.
       </Text>
-
       <TextInputComponent
         label='EMAIL ADDRESS'
         errorLabel={EmailError
@@ -219,20 +224,39 @@ export const SignupScreen = observer(function SignupScreen() {
             : EmailErrorMessage
           : ""}
         error={EmailError}
-        onChangeText={t => [
-          setEmail(t),
+        onChangeText={t => {
+          setEmail(t)
           setEmailError(!validateEmail(t, Agree))
-        ]}
+        }}
         value={Email}
         placeholder={"myname@mail.com"}
       />
-      {/* <TextInputComponent
-        label='PHONE NUMBER'
-        onChangeText={t => setPhone(t)}
+      <View style={styles.LABEL_CONTAINER}>
+        <Text style={styles.LABEL}>PHONE NUMBER</Text>
+        {(PhoneNumberErrorMessage !== '') &&
+          <Text style={styles.LABEL_ERROR}>
+            {PhoneNumberError ? PhoneNumberErrorMessage : ''}
+          </Text>
+        }
+      </View>
+      {/*<TextInputComponent*/}
+      {/*  label='PHONE NUMBER'*/}
+      {/*  onChangeText={t => setPhone(t)}*/}
+      {/*  value={Phone}*/}
+      {/*  placeholder={"(555) 555-1234"}*/}
+      {/*/>*/}
+      <MaskInput
         value={Phone}
-        placeholder={"(555) 555-1234"}
-      /> */}
-
+        mask={Masks.USA_PHONE}
+        name="ssn"
+        placeholder="(XXX)-XXX-XXXX"
+        keyboardType="number-pad"
+        onChange={(masked, unmasked) => {
+          setPhoneNumberError(false)
+          setPhone(unmasked)
+        }}
+        style={styles.INPUT_STYLE_CONTAINER}
+      />
     </View>
   )
   const LegalStep = () => (
@@ -330,15 +354,15 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const VerifyEmailStep = () => (
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Verify your email</Text>
-      <Text
-        style={styles.STEP_SUB_TITLE}
-      >{`We have sent an email with a verification code to ${Email}. Please check your spam if you haven’t received it.`}</Text>
+      <Text style={styles.STEP_SUB_TITLE}>
+        {`We have sent an email with a verification code to ${Email}. Please check your spam if you haven’t received it.`}
+      </Text>
       <View style={styles.CODE_CONFIRMATION_CONTAINER}>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
-            ref={ref => (CodeInp1 = ref)}
             onFocus={() => setCode1("")}
             onChangeText={t => [setCode1(t), CodeInp2.focus()]}
             value={Code1}
@@ -346,6 +370,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp2 = ref)}
@@ -356,6 +381,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp3 = ref)}
@@ -367,6 +393,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         <View style={styles.SHORT_LINE} />
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp4 = ref)}
@@ -377,6 +404,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp5 = ref)}
@@ -387,6 +415,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         </View>
         <View style={styles.CODE_CONFIRMATION_INPUT_CONTAINER}>
           <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             keyboardType="numeric"
             style={styles.CODE_CONFIRMATION_INPUT}
             ref={ref => (CodeInp6 = ref)}
@@ -402,9 +431,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     <View style={styles.STEP_CONTAINER}>
       <Text style={styles.STEP_TITLE}>Need help?</Text>
       <Text style={styles.STEP_SUB_TITLE}>
-        {
-          "If you need help, have questions, complaints, remarks, or just like to chat, please send an email to berkshares@humanitycash.com"
-        }
+        If you need help, have questions, complaints, remarks, or just like to chat, please send an email to berkshares@humanitycash.com
       </Text>
     </View>
   )
@@ -435,9 +462,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           value={Pass}
           secureTextEntry={HidePass}
           placeholder={"*********"}
-          placeholderTextColor="#00000066"
+          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         />
-        <TouchableOpacity onPress={() => setHidePass(!HidePass)}>
+        <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
           <Ionicons name="eye" color={"#39534440"} size={20} />
         </TouchableOpacity>
       </View>
@@ -460,8 +487,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
           value={PassConfirm}
           placeholder={"*********"}
           secureTextEntry={HidePassConfirm}
+          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
         />
-        <TouchableOpacity onPress={() => setHidePassConfirm(!HidePassConfirm)}>
+        <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePassConfirm(!HidePassConfirm)}>
           <Ionicons name="eye" color={"#39534440"} size={20} />
         </TouchableOpacity>
       </View>
@@ -471,7 +499,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   const backButtonHandler = () => {
     switch (Step) {
       case "email":
-        navigation.navigate("splash", {})
+        navigation.navigate("splash")
         break
       case "legal":
         setStep("email")
@@ -499,13 +527,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     switch (Step) {
       case "email":
         register()
-        // loginStore.setStep('signup')
-        // setStep("verify_email")
         break
       case "verify_email":
         if (Code1 && Code2 && Code3 && Code4 && Code5 && Code6) {
           verifyUserAuthenticationCode()
-          // setStep("email_confirmed")
         }
         break
       case "email_confirmed":
@@ -517,12 +542,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         } else {
           setPassword()
           setMatchPassword(true)
-          pressHandler()
-          setStep('touch_id')
         }
         break;
       case "touch_id":
-        navigation.navigate("setupProfile", {})
+        navigation.navigate("setupProfile")
         loginStore.setStep('')
         break;
     }
@@ -544,68 +567,65 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
   return (
     <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>
-      {/* <View style={styles.ROOT}> */}
       <View style={styles.ROOT}>
-          <View style={styles.STEP_CONTAINER}>
-            <TouchableOpacity
-              onPress={() => backButtonHandler()}
-              style={styles.BACK_BUTON_CONTAINER}
-              >
-              <Icon name={"arrow-back"} size={23} color={"black"} />
-              <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
-            </TouchableOpacity>
-              <ScrollView>
+        <View style={styles.STEP_CONTAINER}>
+          <TouchableOpacity
+            onPress={() => backButtonHandler()}
+            style={styles.BACK_BUTON_CONTAINER}
+          >
+            <Icon name={"arrow-back"} size={23} color={"black"} />
+            <Text style={styles.BACK_BUTON_LABEL}>{" Back"}</Text>
+          </TouchableOpacity>
+          <ScrollView>
             {renderStep()}
-        </ScrollView>
+          </ScrollView>
+        </View>
+        {Step === "email" && (
+          <View style={styles.AGREE_CONTAINER}>
+            <CheckBox
+              checked={Agree}
+              onPress={() => [
+                setAgree(!Agree),
+                validateEmail(Email, !Agree)
+              ]}
+              checkedColor={COLOR.PALETTE.green}
+            />
+            <Text style={styles.AGREE_LABEL}>
+              {"By checking this box, you agree to our partner Humanity Cash's "}
+              <Text
+                style={styles.AGREE_LABEL_LINK}
+                onPress={() => setStep("legal")}
+              >
+                {"Terms & Conditions"}
+              </Text>
+              {" "}and{" "}
+              <Text
+                style={styles.AGREE_LABEL_LINK}
+                onPress={() => setStep("legal")}
+              >
+                {"Privacy Policy"}
+              </Text>
+            </Text>
           </View>
-      {Step === "email" && (
-              <View style={styles.AGREE_CONTAINER}>
-                <CheckBox
-                  checked={Agree}
-                  onPress={() => [
-                    setAgree(!Agree),
-                    validateEmail(Email, !Agree)
-                  ]}
-                  checkedColor={COLOR.PALETTE.green}
-                />
-                <Text style={styles.AGREE_LABEL}>
-                  {
-                    "By checking this box, you agree to our partner Humanity Cash's "
-                  }
-                  <Text
-                    style={styles.AGREE_LABEL_LINK}
-                    onPress={() => setStep("legal")}
-                  >
-                    {"Terms & Conditions"}
-                  </Text>
-                  {" "}and{" "}
-                  <Text
-                    style={styles.AGREE_LABEL_LINK}
-                    onPress={() => setStep("legal")}
-                  >
-                    {"Privacy Policy"}
-                  </Text>
-                </Text>
-              </View>
-            )}
-              {Step === "verify_email" && (
-              <View style={styles.NEED_HELP_CONTAINER}>
-                <Text onPress={() => sendCodeAgainHandler()} style={styles.NEED_HELP_LINK}>
-                  Send code again
-                </Text>
-              </View>
-            )}
-            {Step !== "legal" && (
-              <Button
-                buttonStyle={{
-                  backgroundColor: (ButtonDisabled || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green,
-                }}
-                onPress={() => nextButtonHandler()}
-                buttonLabel={'Next'}
-                disabled={ButtonDisabled || Loading}
-                loading={Loading}
-              />
-            )}
+        )}
+        {Step === "verify_email" && (
+          <View style={styles.NEED_HELP_CONTAINER}>
+            <Text onPress={() => sendCodeAgainHandler()} style={styles.NEED_HELP_LINK}>
+              Send code again
+            </Text>
+          </View>
+        )}
+        {Step !== "legal" && (
+          <Button
+            buttonStyle={{
+              backgroundColor: (ButtonDisabled || Loading) ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green,
+            }}
+            onPress={() => nextButtonHandler()}
+            buttonLabel={'Next'}
+            disabled={ButtonDisabled || Loading}
+            loading={Loading}
+          />
+        )}
       </View>
     </Screen>
   )

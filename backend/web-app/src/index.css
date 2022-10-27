@@ -414,3 +414,162 @@ min-height: 200px;
 .logout-buttons{
   cursor: pointer;
 }
+
+
+#user-detail-tab-blockchain_transactions{
+  width: 300px !important;
+}
+input{
+  font-family: Helvetica;
+}
+
+
+
+#main .header {
+  width: 95%;
+  margin: auto;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+}
+
+@media (orientation: landscape) {
+  #main .header .title {
+    transition: left var(--secs), right var(--secs);
+  }
+
+  #main .header .title.left-closed {
+    left: var(--header-height);
+  }
+
+  #main .header .title.right-closed {
+    right: var(--header-height);
+  }
+}
+
+#left {
+  transition: width var(--secs);
+  width: 0;
+}
+
+@media (orientation: landscape) {
+  #left.open {
+    width: calc(1% * var(--landscape-width));
+  }
+}
+
+#left .icon {
+  position: fixed;
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 50px;
+  left: 12px;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+  justify-content: center;
+  display: flex;
+  justify-content: center;
+  /* background: red; */
+}
+
+#left .sidebar {
+  transition: transform var(--secs);
+}
+
+@media (orientation: portrait) {
+  #left .sidebar {
+    width: var(--portrait-width);
+  }
+}
+
+@media (orientation: landscape) {
+  #left .sidebar {
+    width: calc(1vw * var(--landscape-width));
+  }
+}
+
+#left .sidebar .header {
+  width: calc(100% - var(--header-height));
+}
+
+#left {
+  z-index: 5;
+}
+
+#left .sidebar {
+  background: var(--bg-left);
+}
+
+#left .sidebar.closed {
+  transform: translateX(-80%);
+}
+
+#left .sidebar .header {
+  left: var(--header-height);
+}
+
+.sidebar-content {
+  height: 100%;
+  justify-content: flex-start;
+  flex-direction: column;
+  display: flex;
+  height: 70%;
+  padding-top: 50px;
+}
+
+.main-content {
+  margin-left: 50px;
+  margin-top: 30px;
+}
+
+
+.table-row {
+  height: 66px;
+  align-items: center;
+}
+
+
+.table-header {
+  height: 80px;
+  border-bottom: 2px solid #3B88B6;
+}
+
+.table-body {
+  border-top: none;
+}
+
+.custom-tabs {
+  border-bottom: 2px solid #3B88B6;
+
+  height: 66px;
+  vertical-align: middle;
+}
+
+.custom-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  color: #3B88B6;
+  border: none;
+  border-bottom: 3px solid #3B88B6;
+  font-family: Gotham, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 14px;
+  width: 200px;
+}
+
+.custom-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link {
+  color: #808080;
+  border: none;
+  font-family: Gotham, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 14px;
+  width: 200px;
+}

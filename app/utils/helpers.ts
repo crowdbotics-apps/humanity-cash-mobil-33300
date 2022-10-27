@@ -3,6 +3,7 @@
 import Toast from "react-native-toast-message"
 import { Platform, ToastAndroid, Alert } from "react-native"
 import { checkMultiple, requestMultiple, PERMISSIONS } from "react-native-permissions"
+import numeral from "numeral";
 
 export const notifyMessage = (msg: any, type = "error") => {
   if (msg === null) {
@@ -13,10 +14,12 @@ export const notifyMessage = (msg: any, type = "error") => {
   } else {
     Alert.alert(msg);
   }
+  const time = 5000
   Toast.show({
     type: type,
     text1: msg,
-    // topOffset: Platform.OS === "ios" ? 50 : 50
+    autoHide: false,
+    visibilityTime: time
   })
 }
 
@@ -75,7 +78,6 @@ export const checkPermissions = async () => {
         PERMISSIONS.IOS.PHOTO_LIBRARY_ADD_ONLY
       ])
     }
-    __DEV__ && console.tron.log("===Ios====", res)
   } else {
     const res = await checkMultiple([
       PERMISSIONS.ANDROID.CAMERA,
@@ -200,4 +202,20 @@ export const processApiResult = (result:any, onSuccess:any, onBadData:any, onErr
     onError(null)
   }
 
+}
+
+export const moneyFormat = (monto, dollar = false) => {
+  const formatedNumber = numeral(monto).format('0,0.00')
+  if (dollar) {
+    return '$ ' + formatedNumber
+  }
+  return 'C$ ' + formatedNumber
+}
+
+export const getImageFileFromSource = (imageSource) => {
+  return  {
+    uri: Platform.OS === "android" ? imageSource?.uri : imageSource?.uri.replace("file://", ""),
+    type: imageSource?.type,
+    name: imageSource?.fileName
+  }
 }

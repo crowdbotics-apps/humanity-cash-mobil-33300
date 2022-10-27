@@ -59,7 +59,7 @@ export const Sidebar: React.FC<PropsSide> = ({ sideBarStatus, sideBarActions }) 
             style: 'pt-3'
         },
         {
-            path: "/smart_contracts",
+            path: ROUTES.CONTRACTS,
             name: "Smart Contracts",
             icons: <NoteIcon />,
             style: 'pt-3'
@@ -77,7 +77,7 @@ export const Sidebar: React.FC<PropsSide> = ({ sideBarStatus, sideBarActions }) 
             style: 'pt-3'
         },
         {
-            path: "/admin_wallet",
+            path: ROUTES.WALLET,
             name: "Admin Wallet Control",
             icons: <WalletIcon />,
             style: 'pt-3'

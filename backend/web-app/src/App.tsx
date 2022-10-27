@@ -8,14 +8,11 @@ import {
   Navigate,
   Outlet
 } from "react-router-dom";
-import { NotFound, SynthesisExplorer, LoginPage, ResetPasswordPage, Splash, Dashboard } from "./pages";
+import { NotFound, LoginPage, ResetPasswordPage, Dashboard } from "./pages";
 import AchTransactions from './pages/AchTransactions'
 import AchTransactionsDetail from './pages/AchTransactions/Details'
 import { title_pag } from "./helpers";
 import { ROUTES } from "./constants";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { TouchBackend } from 'react-dnd-touch-backend'
-import { DndProvider } from "react-dnd";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { RootStore, setupRootStore } from "./models";
@@ -26,6 +23,9 @@ import {ForgotPasswordPage} from "./pages/ForgotPassword/ForgotPassword";
 import BlockTransactionsPage from "./pages/BlockchainTransactions";
 import UsersPage from "./pages/Users";
 import UserDetailPage from "./pages/UserDetail";
+import {SocialMediaPage} from "./pages/SocialMedia/SocialMedia";
+import {AdminWalletControlPage} from "./pages/AdminWalletControl/AdminWalletControl";
+import SmartContracts from "./pages/SmartContracts";
 
 
 // @ts-ignore
@@ -54,8 +54,6 @@ function App() {
   useEffect(() => {
 
     if(rootStore){
-      console.log("reiniciando", rootStore)
-
       rootStore.userStore.setUp()
     }
   },[rootStore])
@@ -87,17 +85,18 @@ function App() {
 
   return (
     <RootStoreProvider value={rootStore}>
-      <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
         <BrowserRouter>
-
           <Routes>
-            {route(ROUTES.SPLASH, "", <Splash />)}
+            {route(ROUTES.SPLASH, "", <Navigate to={ROUTES.CONTENTS}/>)}
 
             <Route path={ROUTES.LOGIN} element={<LoginPage />} />
             <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
             <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
             <Route element={<ProtectedRoute isAllowed={rootStore && rootStore.userStore.isLoggedIn} />} >
                   <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
+                  <Route path={ROUTES.CONTRACTS} element={<SmartContracts />} />
+                  <Route path={ROUTES.SOCIAL} element={<SocialMediaPage />} />
+                  <Route path={ROUTES.WALLET} element={<AdminWalletControlPage />} />
                   <Route path={ROUTES.EMPLOYEES} element={<EmployeesPage />} />
                   <Route path={ROUTES.USERS} element={<UsersPage />} />
                   <Route path={ROUTES.USERS_DETAIL(":id")} element={<UserDetailPage />} />
@@ -105,15 +104,11 @@ function App() {
                   <Route path={ROUTES.TRANSACTIONS} element={<AchTransactions />} />
                   <Route path={ROUTES.BLOCKCHAIN_TRANSACTIONS} element={<BlockTransactionsPage />} />
                   <Route path={ROUTES.TRANSACTIONS_DETAIL(":id")} element={<AchTransactionsDetail />} />
-
             </Route>
-
-            <Route path={ROUTES.SYNTHESIS_EXPLORER(":id")} element={<SynthesisExplorer />} />
             <Route path={'*'} element={<NotFound />} />
           </Routes>
         </BrowserRouter>
         <ToastContainer />
-      </DndProvider>
     </RootStoreProvider>
   );
 }

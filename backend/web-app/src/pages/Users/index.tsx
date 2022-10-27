@@ -44,7 +44,7 @@ const UsersPage: React.FC = observer(() => {
   const [ShowPasswordModal, setShowPasswordModal] = useState<boolean>(false)
   const [CurrentIndex, setCurrentIndex] = useState<number|null>(null)
   const [CurrentItem, setCurrentItem] = useState<any|null>(null)
-  const [Password, setPassword] = useState<string>("holamundo")
+  const [Password, setPassword] = useState<string>("")
   const [Title, setTitle] = useState<string>("Users")
   const [ColumnsTitles, setColumnsTitles] = useState(COLUMN_TITLES)
   const api = useApi()
@@ -78,9 +78,7 @@ const UsersPage: React.FC = observer(() => {
 
 
   const getItem = ()=>{
-    navigate(ROUTES.USERS_DETAIL(3), {state:{user:CurrentItem}})
-
-
+    navigate(ROUTES.USERS_DETAIL(CurrentItem.id), {state:{user:CurrentItem}})
   }
 
 
@@ -93,8 +91,8 @@ const UsersPage: React.FC = observer(() => {
     //   params["show_username"] = true
     //   params["password"] = Password
     // }
-    api.getConsumers(params).then((response: any) => {
-      console.log("cosumers", response.data)
+    api.getDwollaUsers(params).then((response: any) => {
+      console.log("dwolla users", response.data)
       if (response.kind === "ok") {
         setPrevious(response.data.previous)
         setNext(response.data.next)
@@ -104,14 +102,14 @@ const UsersPage: React.FC = observer(() => {
         for(let data of response.data.results){
           let row:any = {
             id: data.id,
-            fullName: data.full_name,
+            fullName: data.name,
             email: data.email,
             userDwollaId: wrapHash(data.dwolla_id),
             balance: data.balance,
             lastLogin:<CreatedColumn created={data.last_login}/>,
             walletAddress: wrapHash(data.crypto_wallet_id),
-            address: data.address_1,
-            accountType: "Personal",
+            address: data.address,
+            accountType: data.account_type,
             show:  (<div >
               <Button type={"button"} onClick={()=>{
                 setShowUsername(true)

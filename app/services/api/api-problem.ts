@@ -29,6 +29,8 @@ export type GeneralApiProblem =
    * All other 4xx series errors.
    */
   | { kind: "rejected" }
+
+  | { kind: "method-not-allowed" }
   /**
    * Something truly unexpected happened. Most likely can try again. This is a catch all.
    */
@@ -63,6 +65,8 @@ export function getGeneralApiProblem(response: ApiResponse<any>): GeneralApiProb
           return { kind: "forbidden" }
         case 404:
           return { kind: "not-found" }
+        case 405:
+          return { kind: "method-not-allowed" }
         default:
           return { kind: "rejected" }
       }

@@ -6,85 +6,214 @@ import {
   Button,
   CustomSwitch,
   Screen,
+  ConnectBankModal
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from './qr-style';
 import { COLOR } from '../../theme';
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { useStores } from "../../models"
-
+import { getErrorMessage, notifyMessage } from "../../utils/helpers"
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import QRCode from 'react-native-qrcode-svg'
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 export const QRScreen = observer(function QRScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
   const { loginStore } = rootStore
-
+  const isFocused = useIsFocused();
   const [ScanQR, setScanQR] = useState(true)
+  const [QR, setQR] = useState(null)
   const [ShowQR, setShowQR] = useState(false)
+  const [ButtonDisabled, setButtonDisabled] = useState(false)
+  const [ShowPassModal, setShowPassModal] = useState(false)
+  const [Pass, setPass] = useState('')
+  const [HidePass, setHidePass] = useState(true)
+  const [TransactionSucceed, setTransactionSucceed] = useState(true)
+  const [ShowFinishModal, setShowFinishModal] = useState(true)
+  const [PayerSetAmount, setPayerSetAmount] = useState(true)
   const toggleSwitch = () => setScanQR(previousState => !previousState)
 
-  const [Amount, setAmount] = useState('')
+  const [Amount, setAmount] = useState('0')
+  const [Loading, setLoading] = useState(false)
+  const [ShowBankModal, setShowBankModal] = useState(false)
+
+  useEffect(() => {
+    if (isFocused) {
+      if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+      else setShowBankModal(false)
+    }
+  }, [isFocused])
+
+  const bankModal = () =>
+    <ConnectBankModal
+      visible={ShowBankModal}
+      buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+      buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+		  onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
+    />
 
   const generateQR = () => {
     setShowQR(true)
   }
 
-  useEffect(() => {
-    // TODO: redirect on acc connect if necessary
-    console.log(' ===>>> entre aca ', JSON.stringify(loginStore.getBillingData, null, 2)) // TODO: send to add account if false
-  })
-
   const formatValue = value => {
     const strFormat = parseFloat(value).toFixed(2);
     const [firstPart, secondPart] = strFormat.split(".");
     return (
-        firstPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-            (secondPart ? "." + secondPart : "")
+      firstPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
+      (secondPart ? "." + secondPart : "")
     );
-};
+  };
+
+  const passModal = () => (
+    <Modal visible={ShowPassModal}>
+      <View style={styles.ROOT_MODAL_PASS}>
+        <View style={styles.CONTAINER}>
+          <TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
+            <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+            <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+          </TouchableOpacity>
+          <View style={styles.STEP_CONTAINER}>
+            <Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor }]}>Verify with password</Text>
+
+            <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+              <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
+            </View>
+            <View style={styles.INPUT_STYLE_CONTAINER}>
+              <TextInput
+                placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+                style={styles.PASS_INPUT_STYLE}
+                onChangeText={t => [setPass(t)]}
+                value={Pass}
+                secureTextEntry={HidePass}
+                placeholder={"*********"}
+              />
+              <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
+                <Ionicons name="eye" color={"#39534480"} size={20} />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+        <View style={styles.CONTAINER}>
+          <Button
+            buttonStyle={{
+              backgroundColor: loginStore.getAccountColor,
+            }}
+            loading={Loading}
+            onPress={() => transferCurrency()}
+            buttonLabel={'Confirm'}
+          />
+        </View>
+      </View>
+    </Modal>
+  )
+
+  const FinishReturn = () => <Modal visible={ShowFinishModal}>
+  <View style={styles.ROOT_MODAL_PASS}>
+    <View style={styles.CONTAINER}>
+      <View style={styles.BACK_BUTON_CONTAINER} />
+        
+      <View style={styles.STEP_CONTAINER}>
+        <Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor }]}>
+          {TransactionSucceed
+            ? 'Succeeded'
+            : 'Whoops, something went wrong.'
+            }
+          </Text>
+      </View>
+    </View>
+    <View style={styles.CONTAINER}>
+      <Button
+        buttonStyle={{
+          backgroundColor: loginStore.getAccountColor,
+        }}
+        loading={Loading}
+        onPress={() =>  TransactionSucceed ? setShowFinishModal(false) : transferCurrency() }
+        buttonLabel={TransactionSucceed
+          ? 'Confirm'
+          : 'Try again'}
+      />
+    </View>
+  </View>
+</Modal>
+
+  const transferCurrency = () => {
+    if (!QR) return
+    setLoading(true)
+    const qrData = JSON.parse(QR)
+    const data = {
+      "from": loginStore?.getProfilesId[loginStore.getSelectedAccount],
+      "to": qrData.to,
+      "from_is_consumer": loginStore.getSelectedAccount === 'consumer',
+      "to_is_consumer": qrData.to_is_consumer,
+      "password": Pass,
+      "amount": qrData.amount,
+      "roundup": 0,
+    }
+
+    loginStore.environment.api
+      .sendMoney(data)
+      .then((result: any) => {
+        setLoading(false)
+        if (result.kind === "ok") {
+          setTransactionSucceed(true)
+          setShowFinishModal(true)
+          setShowPassModal(false)
+        } else if (result.kind === "bad-data") {
+          setTransactionSucceed(false)
+          setShowFinishModal(true)
+          const errors = result.errors
+          notifyMessage(errors)
+        }
+      }).catch((err) => notifyMessage(err))
+  }
 
   const inputQR = () => <View style={{ flex: 1, justifyContent: 'space-between' }}>
     <View>
       <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
         <Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
-        <Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
       </View>
-      <View style={[styles.INPUT_STYLE_CONTAINER]}>
-      <Text style={styles.INPUT_LABEL_STYLE}> C$</Text>
+      <View style={styles.INPUT_STYLE_CONTAINER}>
+        {/* <Text style={styles.INPUT_LABEL_STYLE}> C$</Text> */}
         <TextInput
+          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
           style={styles.INPUT_STYLE}
           keyboardType='numeric'
           onChangeText={t => {
-            t.replace(",", ".")
-            setAmount(t)
+            let temp = t.replace('C', '').replace('$', '').replace(' ', '')
+            temp = temp.replace(",", ".")
+            setAmount(temp)
           }}
-          // value={`C$ ` + Amount}
-          value={Amount}
+          value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
           placeholder={`Amount`}
         />
       </View>
     </View>
     <View>
-      <TouchableOpacity style={styles.NEED_HELP_CONTAINER} onPress={() => setShowQR(true)}>
+      <TouchableOpacity style={styles.NEED_HELP_CONTAINER} onPress={() => [setShowQR(true), setPayerSetAmount(true)]}>
         <Text style={styles.NEED_HELP_LINK}>Let the payer choose the amount</Text>
       </TouchableOpacity>
       <Button
         buttonStyle={{
-          // backgroundColor: 'red'
-          backgroundColor: loginStore.getAccountColor,
+          backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
         }}
         onPress={() => setShowQR(true)}
         buttonLabel={'Next'}
+        disabled={ButtonDisabled}
       />
     </View>
   </View>
 
+  useEffect(() => {
+    setButtonDisabled(!(Number(Amount) > 0));
+  }, [Amount]);
+
   const viewQR = () => <Modal transparent visible={ShowQR}>
     <View style={styles.ROOT_MODAL}>
       <TouchableOpacity
-        onPress={() => setShowQR(false)}
+        onPress={() => [setShowQR(false), setPayerSetAmount(false)]}
         style={styles.CLOSE_MODAL_BUTTON}
       >
         <Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
@@ -100,12 +229,22 @@ export const QRScreen = observer(function QRScreen() {
         </View>
         <Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor }]}>{loginStore.ProfileData.username}</Text>
         <QRCode
-          value="http://awesome.link.qr"
+          value={
+            JSON.stringify({
+              to: loginStore?.getProfilesId[loginStore.getSelectedAccount],
+              to_is_consumer: loginStore.getSelectedAccount === 'consumer',
+              amount: Amount
+            })
+          }
           size={200}
         />
-        <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>C$ {Amount}</Text>
+        <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>
+        { !PayerSetAmount &&
+          `C$ ${Amount}`
+        }
+          </Text>
       </View>
-    <View />
+      <View />
     </View>
   </Modal>
 
@@ -118,7 +257,7 @@ export const QRScreen = observer(function QRScreen() {
     >
       <View style={[styles.ROOT, { backgroundColor: ScanQR ? '#000' : '#FFF' }]}>
         <View style={styles.CONTAINER}>
-          <TouchableOpacity onPress={() => navigation.navigate("home", {})} style={styles.BACK_BUTON_CONTAINER}>
+          <TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
             <Icon name={"arrow-back"} size={23} color={!ScanQR ? '#000' : '#FFF'} />
             <Text style={[styles.BACK_BUTON_LABEL, { color: !ScanQR ? '#000' : '#FFF' }]}>{` Home`}</Text>
           </TouchableOpacity>
@@ -136,10 +275,13 @@ export const QRScreen = observer(function QRScreen() {
           </View>
         </View>
         {ScanQR
-          ? <QRCodeScanner onRead={e => console.warn(' ===>>>>> ', e)} /> // TODO: action when read
+          ? <QRCodeScanner onRead={e => [setQR(e.data), setShowPassModal(true), console.log(' read ===>>> ', JSON.stringify(e, null, 2))]} /> // TODO: action when read
           : inputQR()
         }
         {viewQR()}
+        {bankModal()}
+        {passModal()}
+        {FinishReturn()}
       </View>
     </Screen>
   )

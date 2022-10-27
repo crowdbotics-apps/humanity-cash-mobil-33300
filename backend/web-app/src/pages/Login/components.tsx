@@ -16,6 +16,7 @@ import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../constants";
 import {FORM_CONTENT} from "./constants";
 import FormContent from "../../components/FormContent/FormContent";
+import {AUTHORIZATION} from "../../services/constants";
 
 
 
@@ -43,14 +44,17 @@ export const LoginForm = ()=> {
       // alert(JSON.stringify(values, null, 2));
       let data = {username:values.email, email:values.email, password:values.password}
 
+      // @ts-ignore
+      api.apisauce.deleteHeader(AUTHORIZATION)
+
       api.login(data).then((result: any) => {
         console.log(result)
         if (result.kind === "ok") {
           userStore.setUser(result.response.user)
           userStore.setApiToken(result.response.access_token, result.response.refresh_token)
-          // toast.success('Welcome', {
-          //   position: toast.POSITION.TOP_CENTER
-          // });
+          toast.success('Welcome', {
+            position: toast.POSITION.TOP_CENTER
+          });
           navigate(ROUTES.DASHBOARD, {replace:true})
         } else {
           toast.error(getErrorMessages(result.errors), {
@@ -109,10 +113,10 @@ export const LoginForm = ()=> {
               name="password"
               className={'input-large input-password'}
               type={PasswordType}
-              onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={!!formik.errors.password && !!formik.touched.password}
               value={formik.values.password}
+              onChange={formik.handleChange}
             />
             <Button type={"button"} variant="outline-secondary"
                     onClick={event => {
@@ -128,9 +132,12 @@ export const LoginForm = ()=> {
         </Form.Group>
         <Form.Group className="mb-3" >
           <div className="forgot-password">
-            <a href="#"
-               onClick={()=>navigate(ROUTES.FORGOT_PASSWORD, {replace:false})}
-               className='link-primary'>Forgot password?</a>
+            <div
+               onClick={()=>{
+                 console.log("onclick ", ROUTES.FORGOT_PASSWORD)
+                 navigate(ROUTES.FORGOT_PASSWORD, {replace:false})
+               }}
+               className='link-primary'>Forgot password?</div>
           </div>
         </Form.Group>
       </Row>

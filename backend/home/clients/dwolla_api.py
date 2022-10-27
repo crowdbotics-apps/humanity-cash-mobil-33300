@@ -53,15 +53,40 @@ class DwollaClient:
         funding_sources = self.app_token.get(funding_url).body.get('_embedded').get('funding-sources')
         return funding_sources
 
+    def create_transfer(self, source, destination, amount):
+        request_body = {
+            '_links': {
+                'source': {
+                    'href': source
+                },
+                'destination': {
+                    'href': destination
+                }
+            },
+            'amount': {
+                'currency': 'USD',
+                'value': amount
+            },
+        }
+        resource_url = '{}/transfers'.format(self.get_base_url())
+        transfer = self.app_token.post(resource_url, request_body)
+        return transfer
+
     def get_transfers_by_customer(self, dwolla_customer_id):
         transfers_url = '{}/customers/{}/transfers'.format(self.get_base_url(), dwolla_customer_id)
         transfers = self.app_token.get(transfers_url).body.get('_embedded').get('transfers')
         return transfers
 
     def get_funding_source_by_id(self, funding_source_id):
-        funding_url = 'funding-sources/{}/'.format(self.get_base_url(), funding_source_id)
+        funding_url = '{}/funding-sources/{}/'.format(self.get_base_url(), funding_source_id)
+        logger.info(f"FUNDING URL " + funding_url)
         funding_source = self.app_token.get(funding_url)
         return funding_source
+
+    def get_account_by_id(self, account_id):
+        account_url = 'accounts/{}/'.format(self.get_base_url(), account_id)
+        account = self.app_token.get(account_url)
+        return account
 
     def get_dwolla_master_account_id(self):
         root = self.app_token(self.get_base_url())
@@ -98,3 +123,4 @@ class DwollaClient:
 
     def get_transaction(self, trn_id):
         return self.get_resource('{}/transfers/{}'.format(self.get_base_url(), trn_id))
+

@@ -10,7 +10,7 @@ export default StyleSheet.create({
     marginRight: 15
   },
   BUSINESS_CONTAINER: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   BUSINESS_IMAGE: {
     height: 130,
@@ -66,14 +66,8 @@ export default StyleSheet.create({
   INDUSTRY_CONTAINER: {
     alignSelf: 'center',
     height: 200,
+    marginBottom: 10,
     width: METRICS.screenWidth * 0.95
-  },
-  SEE_ON_MAP_LABEL: {
-    color: COLOR.PALETTE.blue,
-    fontSize: 16,
-    fontWeight: '600',
-    flex: 1,
-    textAlign: 'right'
   },
   INDUSTRY_TITLE: {
     color: COLOR.PALETTE.orange,
@@ -104,7 +98,7 @@ export default StyleSheet.create({
   NEWS_BODY: {
     color: COLOR.PALETTE.black,
     fontSize: 16,
-    marginTop: 10,
+    marginVertical: 10,
     width: METRICS.screenWidth * 0.80,
   },
   NEWS_CONTAINER: {
@@ -119,7 +113,7 @@ export default StyleSheet.create({
   },
   NEWS_IMAGE: {
     flex: 1,
-    height: null,
+    height: 400,
     width: METRICS.screenWidth * 0.80,
   },
   NEWS_TITLE: {
@@ -168,6 +162,13 @@ export default StyleSheet.create({
     height: 55,
     justifyContent: 'center',
     width: METRICS.screenWidth * 0.75
+  },
+  SEE_ON_MAP_LABEL: {
+    color: COLOR.PALETTE.blue,
+    flex: 1,
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'right'
   },
   STEP_SUB_TITLE: {
     color: COLOR.PALETTE.black,
