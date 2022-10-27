@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { observer } from "mobx-react-lite"
-import { View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Linking, Image } from "react-native"
+import { View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, ActivityIndicator, Linking, Image } from "react-native"
 import { Text, Button, Screen } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from "./link-bank-style"
@@ -23,6 +23,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const [AccountName, setAccountName] = useState("")
   const [Pass, setPass] = useState("")
   const [HidePass, setHidePass] = useState(true)
+  const [Loading, setLoading] = useState(false)
 
   const [Search, setSearch] = useState('')
 
@@ -46,7 +47,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 	}, [isFocused])
 
   const [iavToken, setIavToken] = useState('')
-  const [fundingSources, setFundingSources] = useState([])
 
   const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
     if (initialData === [] || !initialData) return []
@@ -96,8 +96,21 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           </TouchableOpacity>
         ))}
         {/* <TouchableOpacity onPress={() => setStep('bankLoginDwolla')} style={styles.BANK_ICON_CONTAINER}> */}
-        <TouchableOpacity onPress={() => getDwollaIav()} style={styles.BANK_ICON_CONTAINER}>
-          <Icon name={"add"} size={50} color={COLOR.PALETTE.gray} />
+        <TouchableOpacity onPress={() => {
+          getDwollaIav()
+          setLoading(true)
+          setTimeout(() => { 
+            setLoading(false)
+           }, 3000);
+        }}
+          style={styles.BANK_ICON_CONTAINER}
+          >
+          {Loading
+            ?<ActivityIndicator size="small" color={'black'} />
+          :<Icon name={"add"} size={50} color={COLOR.PALETTE.gray} />
+          }
+          
+          
         </TouchableOpacity>
       </View>
     </View>
@@ -157,11 +170,12 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   const getFundingSourcesList = async () => {
     // TODO: change user_type argument with the one selected at that moment, consumer o merchant
-    loginStore.environment.api.getFundingSources({ "user_type": "consumer" })
+    loginStore.environment.api.getFundingSources({ "user_type": loginStore.getSelectedAccount })
       .then((result: any) => {
+        console.log(' getFundingSourcesList ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
-            setFundingSources(result.data)
+            loginStore.setFundingSources(result.data)
           })
         }
       })
@@ -170,7 +184,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   const getIavToken = () => {
     loginStore.environment.api.getDwollaToken({ "user_type": loginStore.getSelectedAccount })
       .then((result: any) => {
-        console.log(' getIavToken ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             setIavToken(result.response.iav_token)
@@ -202,9 +215,13 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     `;
 
   function onMessage(event) {
+    console.log('event => ', event)
     if (event.nativeEvent.data !== "undefined") {
       if (event.nativeEvent.data === 'SuccessIAV') {
-        setTimeout(() => { setStep('banks') }, 3000);
+        setTimeout(() => { 
+          setStep('banks')
+          getFundingSourcesList()
+         }, 3000);
       }
 
     }

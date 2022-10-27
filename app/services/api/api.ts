@@ -152,16 +152,6 @@ export class Api extends ApiBase {
 
   // BILLING
   async sendMoney(data?: any): Promise<Types.SimplePostResult> {
-  // data example
-  //   {
-  //     "from" : 1,
-  //     "to": 2,
-  //     "from_is_consumer": true,
-  //     "to_is_consumer": false,
-  //     "password" : "pass2022",
-  //     "amount" : 13.40,
-  //     "roundup" : 0.60,
-  // }
     return this.simple_post(apiv1 + "/send-money/", data)
   }
 

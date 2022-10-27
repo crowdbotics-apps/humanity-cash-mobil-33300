@@ -156,7 +156,6 @@ export const QRScreen = observer(function QRScreen() {
     loginStore.environment.api
       .sendMoney(data)
       .then((result: any) => {
-        console.log(' result ===>>> ', JSON.stringify(result, null, 2))
         setLoading(false)
         if (result.kind === "ok") {
           setTransactionSucceed(true)

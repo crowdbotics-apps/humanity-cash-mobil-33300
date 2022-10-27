@@ -47,6 +47,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 			"password": Pass,
 			"amount": Amount
 		}
+        console.log(' data ===>>> ', JSON.stringify(data, null, 2))
 		loginStore.environment.api
 			.postDeposit(data)
 			.then((result: any) => {
@@ -61,7 +62,6 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 					setSucess(false)
 					const msg = result?.errors
 					setResponseMenssage(msg)
-					notifyMessage(msg)
 				} else {
 					setSucess(false)
 					notifyMessage(null)
@@ -104,7 +104,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 							backgroundColor: !Pass || Pass === '' ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
 						}}
 						disabled={!Pass || Pass === ''}
-						onPress={() => [setShowModal(true), setPass(''), setShowPassModal(false)]} 
+						onPress={() => [setShowModal(true), setShowPassModal(false), setHidePass(true)]} 
 						buttonLabel={'Confirm'}
 					/>
 				</KeyboardAvoidingView>
@@ -131,7 +131,8 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 								setShowPassModal(false),
 								setShowModal(false),
 								setTransactionConfirm(false),
-								setAmount('0')
+								setAmount('0'),
+								setPass(''),
 							]}
 							style={styles.CLOSE_MODAL_BUTTON}
 						>
@@ -163,6 +164,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 										setShowModal(false)
 										setTransactionFinished(false)
 										setAmount('0')
+										setPass('')
 										navigation.navigate("home")
 									} else postDeposit()
 

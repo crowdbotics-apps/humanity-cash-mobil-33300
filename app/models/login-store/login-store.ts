@@ -324,7 +324,8 @@ export const LoginStoreModel = types
       self.business_details = businessDetails
     },
     setFundingSources(data) {
-      if (data === [] || !data) self.billing_data_added = false
+      if (!data) self.billing_data_added = false
+      if (Array.isArray(data) && data.length === 0) self.billing_data_added = false
       else self.billing_data_added = true
       self.funding_sources = data
     },

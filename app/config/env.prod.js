@@ -1,3 +1,3 @@
 module.exports = {
-  API_URL: "https://humanity-cash-mobil-33300.botics.co",
+  API_URL: "https://humanity-cash-mobil-33-staging.botics.co/",
 }

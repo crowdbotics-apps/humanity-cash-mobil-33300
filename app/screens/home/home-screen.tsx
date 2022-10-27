@@ -117,6 +117,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getFundingSources({ "user_type": loginStore.getSelectedAccount })
 			.then((result: any) => {
+				console.log(' result ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setFundingSources(result.data)
