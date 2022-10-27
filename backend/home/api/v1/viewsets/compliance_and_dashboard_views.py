@@ -1,43 +1,45 @@
 import traceback
 
 from django.db.models import Sum
+from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from celo_humanity.models import Transaction
 from home.helpers import AuthenticatedAPIView
 from home.models.dwolla import DwollaOperation
 
 
-class DashboardDataView(AuthenticatedAPIView):
+class DashboardDataView(APIView): #AuthenticatedAPIView):
     # TODO if admin (permission)
     # permission_classes = [IsAuthenticated & IsNotCashier]
 
     def get(self, request, *args, **kwargs):
         try:
             tokens_minted = Transaction.objects.filter(type=Transaction.Type.deposit).aggregate(
-                Sum('amount'))['amount__sum']
+                Sum('amount'))['amount__sum'] or 0.0
             tokens_burned = Transaction.objects.filter(type=Transaction.Type.withdraw).aggregate(
-                Sum('amount'))['amount__sum']
+                Sum('amount'))['amount__sum'] or 0.0
 
             deposits_settled = DwollaOperation.objects.filter(
                 type=DwollaOperation.Type.DEPOSIT,
                 status=DwollaOperation.Status.COMPLETED
-            ).aggregate(Sum('amount'))['amount__sum']
+            ).aggregate(Sum('amount'))['amount__sum'] or 0.0
             withdrawals_settled = DwollaOperation.objects.filter(
                 type=DwollaOperation.Type.WITHDRAW,
                 status=DwollaOperation.Status.COMPLETED
-            ).aggregate(Sum('amount'))['amount__sum']
+            ).aggregate(Sum('amount'))['amount__sum'] or 0.0
 
             deposits_pending = DwollaOperation.objects.filter(
                 type=DwollaOperation.Type.DEPOSIT,
                 status=DwollaOperation.Status.PENDING
-            ).aggregate(Sum('amount'))['amount__sum']
+            ).aggregate(Sum('amount'))['amount__sum'] or 0.0
             withdrawals_pending = DwollaOperation.objects.filter(
                 type=DwollaOperation.Type.WITHDRAW,
                 status=DwollaOperation.Status.PENDING
-            ).aggregate(Sum('amount'))['amount__sum']
+            ).aggregate(Sum('amount'))['amount__sum'] or 0.0
 
             return JsonResponse(
                 dict(
