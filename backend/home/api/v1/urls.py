@@ -12,6 +12,7 @@ from home.api.v1.viewsets import setup_profile_views, base_views, security_views
 from home.api.v1.viewsets.ach_transaction_views import ACHTransactionViewSet
 from home.api.v1.viewsets.contract_views import ContractViewSet
 from home.api.v1.viewsets.coupons_views import CouponsView, ConsumerCouponView
+from home.api.v1.viewsets.compliance_and_dashboard_views import DashboardDataView
 from home.api.v1.viewsets.dwolla_webhooks import views as dwolla_webhooks_views
 from home.api.v1.viewsets.event_views import EventViewSet
 from home.api.v1.viewsets.notification_views import SetDeviceView, NotificationViewSet
@@ -83,6 +84,7 @@ urlpatterns = [
     path('send-money/', transaction_views.SendMoneyView.as_view(), name='send_money'),
     path('withdraw/', transaction_views.WithdrawView.as_view(), name='withdraw'),
     path('deposit/', transaction_views.DepositView.as_view(), name='deposit'),
+    path('compliance/dashboard/', DashboardDataView.as_view(), name='compliance_dashboard'),
     # path('is-cashier-mode/', setup_profile_views.CashierTestView.as_view(), name='iscashiermode'),
     # path('is-cashier-mode-not/', setup_profile_views.NoCashierTestView.as_view(), name='iscashiermode'),
     path("", include(router.urls))

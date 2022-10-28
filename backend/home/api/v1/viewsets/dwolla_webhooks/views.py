@@ -10,7 +10,7 @@ from home.api.v1.viewsets.dwolla_webhooks import DwollaSignatureIsValid, logger
 from home.api.v1.viewsets.dwolla_webhooks.transfers.created import transfer_created_listener
 from home.api.v1.viewsets.dwolla_webhooks.transfers.failed_cancelled import transfer_cancelled_or_failed_listener
 from home.api.v1.viewsets.dwolla_webhooks.transfers.processed import transfer_completed_listener
-from home.models import DwollaEvent
+from home.models.dwolla import DwollaEvent
 
 
 class DwollaWebhooksView(APIView):

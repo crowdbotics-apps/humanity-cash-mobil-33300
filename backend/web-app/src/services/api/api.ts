@@ -98,6 +98,9 @@ export class Api extends ApiBase {
     async getBlockchainTransactions(data: any): Promise<Types.SimpleGetResult> {
         return this.simple_get(API_VERSION_PREFIX+"/transaction/", data)
     }
+    async getDashboardInfo(): Promise<Types.SimpleGetResult> {
+        return this.simple_get(API_VERSION_PREFIX+"/compliance/dashboard/")
+    }
 
     async getACHTransactions(data: any): Promise<Types.SimpleGetResult> {
         return this.simple_get(API_VERSION_PREFIX+"/ach_transaction/", data)
