@@ -17,7 +17,7 @@ export const LoginPage: React.FC = observer(() => {
           </div>
           <FormContent>
               <div>
-                <LoginForm />
+                {LoginForm()}
               </div>
           </FormContent>
       </PageWeb>

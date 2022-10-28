@@ -53,6 +53,8 @@ class DashboardDataView(APIView): #AuthenticatedAPIView):
 
                     deposits_pending=deposits_pending,
                     withdrawals_pending=withdrawals_pending,
+
+                diff_net_outstanding=deposits_settled - withdrawals_settled + tokens_minted - tokens_burned
                 ),
                 status=status.HTTP_200_OK)
         except:
