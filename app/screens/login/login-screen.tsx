@@ -260,7 +260,7 @@ export const LoginScreen = observer(function LoginScreen() {
             <View style={styles.LOGIN_TYPES_CONTAINER}>
               {Platform.OS === 'ios' && <TouchableOpacity onPress={() => onAppleButtonPress()}>
                 <Image
-                  source={IMAGES.appleIcon}
+                  source={IMAGES.apple_icon}
                   resizeMode="contain"
                   style={styles.LOGIN_TYPE}
                 />
