@@ -16,7 +16,6 @@ import Button from "react-bootstrap/Button";
 import {ROUTES} from "../../constants";
 import {PageWeb} from "../../components/PageWeb/PageWeb";
 import logo from "../../assets/images/logo.png";
-import {LoginForm} from "../Login/components";
 
 export const ForgotPasswordPage: React.FC = observer((props) => {
   const [Loading, setLoading] = useState(false)
