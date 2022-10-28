@@ -56,7 +56,7 @@ def create_dwolla_customer_consumer(instance):
     try:
         dwolla_client = DwollaClient()
         if instance.first_name and instance.last_name and instance.email:
-            if instance.get_merchant_data.dwolla_id:
+            if instance.get_merchant_data and instance.get_merchant_data.dwolla_id:
                 instance.consumer.dwolla_id = instance.merchant.dwolla_id
                 instance.consumer.save()
             else:
@@ -80,7 +80,7 @@ def create_dwolla_customer_merchant(instance):
         dwolla_client = DwollaClient()
         if instance.owner_first_name and instance.owner_last_name and instance.user.email and instance.business_name:
             user_instance = instance.user
-            if user_instance.get_consumer_data.dwolla_id:
+            if user_instance.get_consumer_data and user_instance.get_consumer_data.dwolla_id:
                 instance.dwolla_id = user_instance.consumer.dwolla_id
                 instance.save()
             else:

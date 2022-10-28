@@ -47,6 +47,7 @@ const menu_where_spend_inactive = require("../../../assets/icons/menu_where_spen
 const transactions_cashier = require("../../../assets/icons/transactions_cashier.png")
 const return_cashier = require("../../../assets/icons/return_cashier.png")
 const report_cashier = require("../../../assets/icons/report_cashier.png")
+const apple_icon = require("../../../assets/icons/apple_icon.png")
 
 
 
@@ -95,5 +96,6 @@ export const IMAGES = {
   transactions_cashier,
   return_cashier,
   report_cashier,
-  lee_bank
+  lee_bank,
+  apple_icon
 }

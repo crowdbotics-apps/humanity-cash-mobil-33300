@@ -31,7 +31,7 @@ export const QRScreen = observer(function QRScreen() {
   const [Pass, setPass] = useState('')
   const [HidePass, setHidePass] = useState(true)
   const [TransactionSucceed, setTransactionSucceed] = useState(true)
-  const [ShowFinishModal, setShowFinishModal] = useState(true)
+  const [ShowFinishModal, setShowFinishModal] = useState(false)
   const [PayerSetAmount, setPayerSetAmount] = useState(true)
   const toggleSwitch = () => setScanQR(previousState => !previousState)
 
@@ -164,6 +164,7 @@ export const QRScreen = observer(function QRScreen() {
         } else if (result.kind === "bad-data") {
           setTransactionSucceed(false)
           setShowFinishModal(true)
+          setShowPassModal(false)
           const errors = result.errors
           notifyMessage(errors)
         }
