@@ -20,18 +20,3 @@ class DwollaSignatureIsValid(BasePermission):
         return hmacsig == request.headers['x-request-signature-sha-256']
 
 
-def get_profile_for_href(transfer, href):
-    id_customer = href.split('/')[-1]
-    customer = Consumer.objects.filter(dwolla_id=id_customer).first()
-    merchant = Merchant.objects.filter(dwolla_id=id_customer).first()
-    if customer and merchant:
-        logger.error(
-            f'Have both customer id {customer.id} and merchant id {merchant.id} for the same dwolla id {id_customer}, check database and run transaction manually, ignoring transfer {transfer.id}')
-        return False, None
-
-    if not customer and not merchant:
-        logger.error(
-            f'Didnt find customer or merchant for dwolla id {id_customer}, check database and run transaction manually, ignoring transfer {transfer.id}')
-        return False, None
-
-    return True, customer if customer else merchant
