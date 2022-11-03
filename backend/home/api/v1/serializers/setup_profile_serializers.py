@@ -80,7 +80,7 @@ class SetupMerchantProfileDetailSerializer(serializers.ModelSerializer):
         fields = ['id', 'business_name', 'type_of_business', 'business_story',
                   'owner_first_name', 'owner_last_name',
                   'registered_business_name', 'industry', 'website',
-                  'employer_identification_number', 'social_security_number', 'location'
+                  'employer_identification_number', 'social_security_number', 'location',
                   'address_1', 'address_2', 'city', 'state', 'zip_code', 'phone_number',
                   'instagram', 'facebook', 'twitter']
 
