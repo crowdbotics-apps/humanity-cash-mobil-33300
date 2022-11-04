@@ -28,7 +28,7 @@ def get_dwolla_id_request(user, request):
             return {"dwolla_id": dwolla_id, "error": None, "response": None}
         else:
             try:
-                create_dwolla_customer_merchant(user)
+                create_dwolla_customer_merchant(user.merchant)
                 dwolla_id = user.merchant.dwolla_id
                 return {"dwolla_id": dwolla_id, "error": None, "response": None}
             except:
