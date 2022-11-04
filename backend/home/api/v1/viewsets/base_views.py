@@ -65,7 +65,7 @@ class WhereToSpendView(ListAPIView):
             'id': merchant.id,
             'business_name': merchant.business_name,
             'business_story': merchant.business_story,
-            'profile_picture': merchant.profile_picture.url
+            'profile_picture': merchant.profile_picture.url if merchant.profile_picture else None
         }
 
         result = {
