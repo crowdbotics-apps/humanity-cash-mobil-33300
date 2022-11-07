@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform } from "react-native"
+import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Linking } from "react-native"
 import { Text, Button, Screen } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from "./legal-style"
@@ -38,7 +38,8 @@ export const LegalScreen = observer(function LegalScreen() {
               <View style={styles.LINE} />
               {!ShowTerms ? (
                 <TouchableOpacity
-                  onPress={() => setShowTerms(!ShowTerms)}
+                  // onPress={() => setShowTerms(!ShowTerms)}
+                  onPress={() => Linking.openURL('https://berkshares.org/about/terms-and-conditions/')}
                   style={styles.TERMS_CLOSE_CONTAINER}
                 >
                   <Text style={styles.TERMS_TITLE}>{"Terms & Conditions"}</Text>
@@ -50,7 +51,7 @@ export const LegalScreen = observer(function LegalScreen() {
                   />
                 </TouchableOpacity>
               ) : (
-                <View style={styles.TERMS_OPEN_CONTAINER}>
+                <View style={styles.TERMS_OPEN_CONTAINER}>x
                   <TouchableOpacity
                     onPress={() => setShowTerms(!ShowTerms)}
                     style={styles.TERMS_OPEN_TITLE_CONTAINER}
@@ -86,7 +87,8 @@ Section 1: General Membership - The membership of BerkShares, Inc. will be open 
               )}
               {!ShowPolicy ? (
                 <TouchableOpacity
-                  onPress={() => setShowPolicy(!ShowPolicy)}
+                  // onPress={() => setShowPolicy(!ShowPolicy)}
+                  onPress={() => Linking.openURL('https://berkshares.org/about/privacy-policy/')}
                   style={styles.TERMS_CLOSE_CONTAINER}
                 >
                   <Text style={styles.TERMS_TITLE}>{"Privacy Policy"}</Text>
@@ -265,3 +267,4 @@ If you wish to close your account or request that we no longer use your informat
     </Screen>
   )
 })
+ 

@@ -65,8 +65,8 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 			showHeader
 			style={styles.ROOT}
 		>
-			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-				<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate('home')}>
+				<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
 				<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 			</TouchableOpacity>
 			<KeyboardAvoidingView enabled style={styles.ROOT}>
@@ -125,10 +125,14 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 					</View>
 				</ScrollView>
 				<Button
-					buttonStyle={{ backgroundColor: loginStore.getAccountColor, marginTop: 10 }}
+					buttonStyle={{
+						backgroundColor: loginStore.getAccountColor,
+					}}
 					buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
 					onPress={() => navigation.navigate("return", {})}
 					buttonLabel={'Scan to Pay or Receive'}
+					showBottonMenu
+					hideButton
 				/>
 			</KeyboardAvoidingView>
 		</Screen>

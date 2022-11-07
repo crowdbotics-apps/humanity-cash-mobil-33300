@@ -43,8 +43,8 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
   }, [CustomerDwollaId]);
 
   useEffect(() => {
-		if (isFocused) getFundingSourcesList()
-	}, [isFocused])
+    if (isFocused) getFundingSourcesList()
+  }, [isFocused])
 
   const [iavToken, setIavToken] = useState('')
 
@@ -56,7 +56,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     initialData.map(d => {
       keys.map(k => {
         try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
-        catch {}
+        catch { }
       })
     })
     return data
@@ -64,9 +64,9 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   const RenderBanks = () => (
     <View style={styles.CONTAINER}>
-      <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home")}>
+      <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings")}>
         <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-        <Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+        <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
       </TouchableOpacity>
       <Text style={styles.STEP_TITLE}>Select you bank</Text>
       <View style={styles.LINE} />
@@ -99,18 +99,18 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         <TouchableOpacity onPress={() => {
           getDwollaIav()
           setLoading(true)
-          setTimeout(() => { 
+          setTimeout(() => {
             setLoading(false)
-           }, 3000);
+          }, 3000);
         }}
           style={styles.BANK_ICON_CONTAINER}
-          >
+        >
           {Loading
-            ?<ActivityIndicator size="small" color={'black'} />
-          :<Icon name={"add"} size={50} color={COLOR.PALETTE.gray} />
+            ? <ActivityIndicator size="small" color={'black'} />
+            : <Icon name={"add"} size={50} color={COLOR.PALETTE.gray} />
           }
-          
-          
+
+
         </TouchableOpacity>
       </View>
     </View>
@@ -218,10 +218,10 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     console.log('event => ', event)
     if (event.nativeEvent.data !== "undefined") {
       if (event.nativeEvent.data === 'SuccessIAV') {
-        setTimeout(() => { 
+        setTimeout(() => {
           setStep('banks')
           getFundingSourcesList()
-         }, 3000);
+        }, 3000);
       }
 
     }
@@ -230,6 +230,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   const RenderBankLoginDwolla = () => (
     <WebView
+      key={'webview_contet'}
       style={styles.bankView}
       javascriptEnabled
       originWhitelist={['*']}
@@ -261,7 +262,15 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
             {Step === 'banks' && RenderBanks()}
             {Step === 'bankLogin' && RenderBankLogin()}
-            {Step === 'bankLoginDwolla' && RenderBankLoginDwolla()}
+            {Step === 'bankLoginDwolla' && [
+              <View key={'webview_close'} style={{ justifyContent: 'center', height: 50 }}>
+                <TouchableOpacity onPress={() => setStep('banks')} style={styles.CLOSE_MODAL_BUTTON}>
+                  <Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
+                  <Icon name={"close"} size={20} color={'#000'} />
+                </TouchableOpacity>
+              </View>,
+              RenderBankLoginDwolla()
+            ]}
 
           </View>
         </ScrollView>

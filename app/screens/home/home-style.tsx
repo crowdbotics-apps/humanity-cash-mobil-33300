@@ -100,6 +100,7 @@ export default StyleSheet.create({
 
   },
   HEADER: {
+    alignItems: 'center',
     flexDirection: 'row',
     height: 50,
     marginLeft: 10,

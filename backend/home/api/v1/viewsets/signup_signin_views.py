@@ -70,6 +70,9 @@ class ResendVerificationCodeAPIView(AuthenticatedAPIView):
         if user.verified_email:
             return Response({"error": "User already verified"}, status=status.HTTP_400_BAD_REQUEST)
         code = setup_verification_code(user)
+        if user.phone_number:
+            send_verification_phone(user, code, user.phone_number)
+
         send_verification_email(user, code)
         return Response(status=status.HTTP_200_OK)
 

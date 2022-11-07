@@ -330,7 +330,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				break;
 			default:
 				render = renderSelectBusinessType()
-				render = renderPicUsername()
 				break;
 		}
 		return render
@@ -759,7 +758,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 		</View>
 	)
-
 	const mapInputModal = () => (
 		<Modal visible={ShowMapInputModal}>
 			<View style={styles.MAPS_CONTAINER}>

@@ -90,6 +90,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95
   },
   HEADER: {
+    alignItems: 'center',
     flexDirection: 'row',
     marginLeft: 10,
     marginTop: 10,

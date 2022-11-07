@@ -261,9 +261,9 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 			style={styles.ROOT}
 		>
 				<View style={styles.HEADER_ACTIONS}>
-								<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-									<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
-									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
+								<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate('home')}>
+									<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
+									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 
 								</TouchableOpacity>
 							</View>

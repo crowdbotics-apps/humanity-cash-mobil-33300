@@ -282,6 +282,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
           </TouchableOpacity>
           {ChangeAccountOpen
             ? [
+              // consumer
               <TouchableOpacity
                 key={'consumer_profile'}
                 style={styles.USER_CONTAINER_CHANGE}
@@ -307,6 +308,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                   </View>
                 </View>
               </TouchableOpacity>,
+              // merchant
               <TouchableOpacity
                 key={'merchant_profile'}
                 style={styles.USER_CONTAINER_CHANGE}
@@ -334,14 +336,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
               </TouchableOpacity>,
               <TouchableOpacity
                 key={'cashier_profile'}
-                style={[
-                  styles.USER_CONTAINER_CHANGE,
-                  {
-                    display: loginStore.getSelectedAccount === 'merchant'
-                      ? 'flex'
-                      : 'none'
-                  }
-                ]}
+                style={styles.USER_CONTAINER_CHANGE}
                 onPress={() => [
                   loginStore.setSelectedAccount('cashier'),
                   props.navigation.navigate("home"),

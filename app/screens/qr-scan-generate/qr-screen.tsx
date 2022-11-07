@@ -23,7 +23,7 @@ export const QRScreen = observer(function QRScreen() {
   const rootStore = useStores()
   const { loginStore } = rootStore
   const isFocused = useIsFocused();
-  const [ScanQR, setScanQR] = useState(true)
+  const [ScanQR, setScanQR] = useState(false)
   const [QR, setQR] = useState(null)
   const [ShowQR, setShowQR] = useState(false)
   const [ButtonDisabled, setButtonDisabled] = useState(false)
@@ -266,7 +266,7 @@ export const QRScreen = observer(function QRScreen() {
         <View style={styles.STEP_CONTAINER}>
           <View style={styles.SWITCH_CONTAINER}>
             <CustomSwitch
-              selectionMode={1}
+              selectionMode={2}
               roundCorner={true}
               option1={'Pay'}
               option2={'Receive'}

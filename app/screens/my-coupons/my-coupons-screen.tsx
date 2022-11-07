@@ -214,7 +214,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		>
 			<View style={styles.HEADER_ACTIONS}>
 				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-					<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+					<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
 					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
 
 				</TouchableOpacity>

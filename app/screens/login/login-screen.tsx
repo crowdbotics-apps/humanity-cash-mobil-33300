@@ -43,7 +43,7 @@ export const LoginScreen = observer(function LoginScreen() {
       .login({ email: Username, password: Pass })
       .then((result: any) => {
         setLoading(false)
-        console.log(' login ===>>> ', JSON.stringify(result, null, 2))
+        console.log(' login ===>>> ', { email: Username, password: Pass }, JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setUser(result.response)
@@ -51,6 +51,7 @@ export const LoginScreen = observer(function LoginScreen() {
             loginStore.setSelectedAccount('consumer')
             loginStore.setMerchantUser(result?.response?.user?.merchant_data)
             loginStore.setConsumerUser(result?.response?.user)
+            
             if (result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) navigation.navigate("setupProfile")
             else navigation.navigate("home")
           })

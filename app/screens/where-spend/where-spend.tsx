@@ -59,9 +59,10 @@ export default StyleSheet.create({
     textDecorationLine: 'underline'
   },
   HEADER: {
+    alignItems: 'center',
     flexDirection: 'row',
     marginLeft: 10,
-    marginTop: 10,
+    marginTop: 10
   },
   INDUSTRY_CONTAINER: {
     alignSelf: 'center',
