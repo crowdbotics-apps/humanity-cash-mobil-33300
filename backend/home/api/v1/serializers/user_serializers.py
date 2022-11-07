@@ -24,6 +24,19 @@ class UserSerializer(serializers.ModelSerializer):
 #     """Custom serializer for rest_auth to solve reset password error"""
 #     password_reset_form_class = ResetPasswordForm
 
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True, max_length=254)
+
+    def validate_email(self, email):
+        active_users = User._default_manager.filter(**{
+            '%s__iexact' % User.get_email_field_name(): email,
+            'is_active': True,
+        })
+        if len([u for u in active_users if u.has_usable_password()]) == 0:
+            raise serializers.ValidationError("The e-mail address is not assigned to any user account")
+        return email
+
+
 class ConsumerSerializer(serializers.ModelSerializer):
     balance = serializers.SerializerMethodField()
     full_name = serializers.SerializerMethodField()

@@ -484,7 +484,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					multiline
 					numberOfLines={4}
 					scrollEnabled={false}
-					placeholder={'Tell the world about your business. What gives you joy as an entrepreneur? What do you love about the Berkshires?'}
+					placeholder={'Tell the world about your business. What gives you joy as an entrepreneur?'}
 				/>
 			</View>
 		</View>

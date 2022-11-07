@@ -281,11 +281,11 @@ export const LoginScreen = observer(function LoginScreen() {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.NEED_HELP_CONTAINER}>
+          <TouchableOpacity onPress={() => navigation.navigate("forgotPass")} style={styles.NEED_HELP_CONTAINER}>
             <Text style={styles.NEED_HELP_LINK}>
               Forgot password
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
       <Button

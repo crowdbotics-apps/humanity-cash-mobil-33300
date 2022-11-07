@@ -41,6 +41,7 @@ def setup_verification_code(user):
     if user_code.exists():
         user_code_modify = user_code.first()
         user_code_modify.verification_code = code
+        user_code_modify.active = True
         user_code_modify.save()
     else:
         UserVerificationCode.objects.create(user=user, verification_code=code)

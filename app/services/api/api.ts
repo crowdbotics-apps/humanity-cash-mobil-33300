@@ -34,6 +34,14 @@ export class Api extends ApiBase {
   async login(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post("/dj-rest-auth/login/", data)
   }
+  
+  async forgotPassword(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post("/users/password_reset_mobile/", data)
+  }
+
+  async verifyUserResetCode(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post("/users/verify_reset_code/", data)
+  }
 
   // FACEBOOK LOGIN
   async loginFacebook(accessToken: any): Promise<Types.SimplePostResult> {
