@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Button, Screen, Text } from "../../components";
-import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, BackHandler } from "react-native";
+import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback,  BackHandler } from "react-native";
 import { IMAGES } from "../../theme";
 import styles from "./home-style";
 import { useStores } from "../../models";
@@ -17,6 +17,7 @@ export const HomeScreen = observer(function HomeScreen() {
 
 	const isFocused = useIsFocused();
 	const [Events, setEvents] = useState([])
+	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false)
 
 	const getProfileConsumer = () => {
 		loginStore.environment.api
@@ -148,6 +149,28 @@ export const HomeScreen = observer(function HomeScreen() {
 		return monthNames[new Date(date).getMonth()]
 	}
 
+	const confirmLogoutModal = () => (
+		<Modal visible={ShowConfirmLogoutModal} transparent>
+			<TouchableWithoutFeedback onPress={() => setShowConfirmLogoutModal(false)}>
+				<View style={styles.ROOT_MODAL}>
+					<View style={styles.MODAL_CONTENT}>
+						<Text style={styles.STEP_TITLE_BLACK}>Are you sure you want to log out?</Text>
+						<Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text>
+						<TouchableOpacity
+							style={[styles.MODAL_BUTTON, {backgroundColor: loginStore.getAccountColor}]}
+							onPress={() =>[
+								loginStore.setSelectedAccount('consumer'),
+								setShowConfirmLogoutModal(false)
+							  ]}>
+							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
+						</TouchableOpacity>
+					</View>
+
+				</View>
+			</TouchableWithoutFeedback>
+		</Modal>
+	)
+
 	const renderNews = () => (
 		loginStore.getEvents.map((n, key) => <View key={key + '_new'} style={styles.NEWS_CONTAINER}>
 			<View style={styles.NEWS_HEADER_CONTAINER}>
@@ -167,10 +190,9 @@ export const HomeScreen = observer(function HomeScreen() {
 
 	const ConsumerView = () => (
 		<View style={styles.ROOT_CONTAINER}>
-			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+			<TouchableOpacity style={[styles.HEADER, {marginLeft: 10}]} onPress={() => navigation.toggleDrawer()}>
 				<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
 				<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
-
 			</TouchableOpacity>
 
 			<ScrollView key="consumer_view" showsVerticalScrollIndicator={false} bounces={false}>
@@ -214,9 +236,8 @@ export const HomeScreen = observer(function HomeScreen() {
 	const CashierView = () => (
 		<View style={styles.ROOT_CONTAINER}>
 			<View style={styles.STEP_CONTAINER}>
-				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-					<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
-					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
+				<TouchableOpacity style={[styles.HEADER, {justifyContent: 'flex-end'}]} onPress={() => setShowConfirmLogoutModal(true)}>
+					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Log out`}</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity style={styles.CASHIER_BUTTON_BIG} onPress={() => navigation.navigate("qr")}>
@@ -274,6 +295,7 @@ export const HomeScreen = observer(function HomeScreen() {
 				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
+						{confirmLogoutModal()}
 				{loginStore.getSelectedAccount === 'cashier'
 					? CashierView()
 					: [

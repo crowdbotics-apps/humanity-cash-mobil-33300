@@ -43,19 +43,21 @@ export const LoginScreen = observer(function LoginScreen() {
       .login({ email: Username, password: Pass })
       .then((result: any) => {
         setLoading(false)
-        console.log(' login ===>>> ', { email: Username, password: Pass }, JSON.stringify(result, null, 2))
+        console.log(' login ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
+          console.log(' ===>>> 1')
           runInAction(() => {
+            console.log(' ===>>> 2')
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount('consumer')
             loginStore.setMerchantUser(result?.response?.user?.merchant_data)
             loginStore.setConsumerUser(result?.response?.user)
-            
             if (result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) navigation.navigate("setupProfile")
             else navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
+          console.log(' ===>>> 3')
           const errors = result.errors
           if (result?.errors?.password) {
             setPassError(true)
@@ -76,7 +78,7 @@ export const LoginScreen = observer(function LoginScreen() {
           loginStore.reset()
           notifyMessage(null)
         }
-      }).catch((err) => notifyMessage(getErrorMessage(err)))
+      })
   }
 
   const loginGoogle = async () => {
