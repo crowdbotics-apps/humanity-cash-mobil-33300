@@ -10,6 +10,7 @@ import { useStores } from "../../models";
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import QRCodeScanner from 'react-native-qrcode-scanner';
 
 const maxAmount = 2000
 
@@ -30,15 +31,16 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 	const [ResponseMenssage, setResponseMenssage] = useState('')
 
 	const [Step, setStep] = useState('select') // select - amount
-	const [Type, setType] = useState('') // select - amount
+	const [Type, setType] = useState('') // self - other
+
+	const [ScanQR, setScanQR] = useState(false)
+  const [QR, setQR] = useState(null)
 
 	const [AmountError, setAmountError] = useState(false)
 
 	const postDeposit = () => {
 		setTransactionConfirm(true)
 		setTransactionFinished(false)
-
-
 		const data = {
 			"from": loginStore?.getProfilesId.merchant,
 			"to": loginStore.getProfilesId.consumer,
@@ -48,7 +50,6 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 			"amount": Amount,
 			"roundup": 0,
 		}
-
 		loginStore.environment.api
 			.sendMoney(data)
 			.then((result: any) => {
@@ -68,6 +69,41 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 				}
 			}).catch((err) => notifyMessage(err))
 	}
+
+	const transferCurrency = () => {
+		if (!QR) return
+		setTransactionConfirm(true)
+		setTransactionFinished(false)
+		const qrData = JSON.parse(QR)
+		const data = {
+			"from": loginStore?.getProfilesId.merchant,
+			"to": qrData.to,
+			"from_is_consumer": loginStore.getSelectedAccount === 'consumer',
+			"to_is_consumer": qrData.to_is_consumer,
+			"password": Pass,
+			"amount": Amount,
+			"roundup": 0,
+		}
+
+		loginStore.environment.api
+			.sendMoney(data)
+			.then((result: any) => {
+				console.log(' transferCurrency ===>>> ', JSON.stringify(result, null, 2))
+				if (result.kind === "ok") {
+					setSucess(true)
+					setTransactionFinished(true)
+				} else if (result.kind === "bad-data") {
+					setSucess(false)
+					setTransactionFinished(true)
+					const errors = result.errors
+					notifyMessage(errors)
+				} else if (result.kind === "unauthorized") {
+					setSucess(false)
+					setTransactionFinished(true)
+					notifyMessage('bad password')
+				}
+			}).catch((err) => notifyMessage(err))
+	  }
 
 	
 
@@ -187,7 +223,8 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 							<Icon name={"close"} size={23} color={COLOR.PALETTE.white} />
 						</TouchableOpacity>
 					</View>
-					<View style={styles.MODAL_CONTAINER}>
+					{ Type === 'self'
+						? <View style={styles.MODAL_CONTAINER}>
 						<View style={styles.MODAL_CONTENT}>
 							<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Please confirm your transaction.</Text>
 							<Text style={styles.STEP_SUB_TITLE_MODAL}>
@@ -201,6 +238,22 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 							</TouchableOpacity>
 						</View>
 					</View>
+						: <View style={styles.MODAL_CONTAINER}>
+							<View style={styles.MODAL_CONTENT}>
+								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Scan the recipients QR.</Text>
+								<Text style={styles.STEP_SUB_TITLE_MODAL}>
+									{`Scan the recipient’s QR code. The recipient can pull this up by clicking on “Scan to Pay or Receive” and toggling to “Receive.”`}
+								</Text>
+								<TouchableOpacity
+									style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
+									onPress={() => [setScanQR(true), setShowPassModal(false), setShowModal(false)]}
+								>
+									<Text style={styles.SUBMIT_BUTTON_LABEL}>Confirm</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+					}
+					
 					<View />
 				</View>
 			}
@@ -236,7 +289,7 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 		<Text style={styles.SUB_TITLE}>
 			{Type === 'self'
 				? 'Select the amount of Currents you would like to pay out to your personal account.'
-				: 'Select the amount of Currenets you would like to send. '
+				: 'Select the amount of Currents you would like to send. '
 			}
 		</Text>
 
@@ -288,30 +341,46 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
-			style={styles.ROOT}
+			style={[styles.ROOT, ScanQR && {backgroundColor: COLOR.PALETTE.pureblack}]}
 		>
-			<View style={styles.HEADER_ACTIONS}>
-				{!ShowModal &&
-					<TouchableOpacity onPress={() => navigation.navigate('home')} style={[styles.BACK_BUTON_CONTAINER, { marginTop: 10 }]}>
-						<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
-						<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
-					</TouchableOpacity>
-				}
-			</View>
-			<KeyboardAvoidingView enabled style={styles.ROOT}>
-				{renderStep()}
-				{ConfirmModal()}
-				{passModal()}
-			</KeyboardAvoidingView>
-			<Button
-				buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
-				disabled={ButtonDisabled}
-				onPress={() => setShowPassModal(true)}
-				buttonLabel={'Load up'}
-				showBottonMenu
-				hideButton={Step === 'select'}
-				accountType={loginStore.getSelectedAccount}
-			/>
+			{ScanQR
+				? <QRCodeScanner onRead={e => [
+					setQR(e.data),
+					setShowModal(true),
+					setScanQR(false),
+					transferCurrency(),
+					console.log(' read ===>>> ', JSON.stringify(e, null, 2)),
+				]} />
+				: [
+					<View style={styles.HEADER_ACTIONS} key={'send_personal_header'}>
+						{!ShowModal && (
+							Step === 'select'
+								? <TouchableOpacity onPress={() => navigation.navigate('home')} style={[styles.BACK_BUTON_CONTAINER, { marginTop: 10 }]}>
+									<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
+									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
+								</TouchableOpacity>
+								: <TouchableOpacity onPress={() => setStep('select')} style={[styles.BACK_BUTON_CONTAINER, { marginTop: 10 }]}>
+									<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
+									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Back`}</Text>
+								</TouchableOpacity>
+						)
+						}
+					</View>,
+					<KeyboardAvoidingView key={'send_personal_container'} enabled style={styles.ROOT}>{renderStep()}</KeyboardAvoidingView>,
+					<Button
+					key={'send_personal_button'}
+					buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
+					disabled={ButtonDisabled}
+					onPress={() => setShowPassModal(true)}
+					buttonLabel={'Confirm'}
+					showBottonMenu
+					hideButton={Step === 'select'}
+					accountType={loginStore.getSelectedAccount}
+				/>
+				]
+			}
+			{ConfirmModal()}
+			{passModal()}
 		</Screen>
 	)
 })
