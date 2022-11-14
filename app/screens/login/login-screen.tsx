@@ -43,7 +43,6 @@ export const LoginScreen = observer(function LoginScreen() {
       .login({ email: Username, password: Pass })
       .then((result: any) => {
         setLoading(false)
-        console.log(' login ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setUser(result.response)
@@ -281,11 +280,11 @@ export const LoginScreen = observer(function LoginScreen() {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.NEED_HELP_CONTAINER}>
+          <TouchableOpacity onPress={() => navigation.navigate("forgotPass")} style={styles.NEED_HELP_CONTAINER}>
             <Text style={styles.NEED_HELP_LINK}>
               Forgot password
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
       <Button

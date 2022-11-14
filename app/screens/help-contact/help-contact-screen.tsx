@@ -275,7 +275,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       >
         {(Step === 'help') &&
           <TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-            <Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+            <Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
             <Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
           </TouchableOpacity>
         }

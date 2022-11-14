@@ -97,13 +97,14 @@ export default StyleSheet.create({
     fontSize: 12,
     marginVertical: 3,
     textAlign: 'center',
-
   },
   HEADER: {
+    alignItems: 'center',
     flexDirection: 'row',
     height: 50,
-    marginLeft: 10,
+    justifyContent: 'flex-start',
     marginTop: 10,
+    width: METRICS.screenWidth * 0.90,
   },
   INDUSTRY_TITLE: {
     color: COLOR.PALETTE.orange,
@@ -154,9 +155,12 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80,
   },
   MODAL_CONTENT: {
+    backgroundColor: COLOR.PALETTE.white,
+    borderRadius: 8,
     height: 330,
     justifyContent: 'space-evenly',
-    width: METRICS.screenWidth * 0.70
+    padding: 10,
+    width: METRICS.screenWidth * 0.80
   },
   NEED_HELP_CONTAINER: {
     alignItems: 'center',
@@ -224,7 +228,7 @@ export default StyleSheet.create({
   },
   ROOT_MODAL: {
     alignItems: 'center',
-    backgroundColor: COLOR.PALETTE.background,
+    backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
     flex: 1,
     justifyContent: 'space-around'
   },

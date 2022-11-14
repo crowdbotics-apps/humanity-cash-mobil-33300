@@ -204,7 +204,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					multiline
 					scrollEnabled={false}
 					numberOfLines={4}
-					placeholder={'Tell the world about your business. What gives you joy as an entrepreneur? What do you love about the Berkshires?'}
+					placeholder={'Tell the world about your business. What gives you joy as an entrepreneur?'}
 				/>
 			</View>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
@@ -360,39 +360,26 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		const phoneNumber = PhoneNumber !== ''
 			?  (PhoneNumber && PhoneNumber.includes('+1')) ? PhoneNumber : `+1${PhoneNumber}`
 			: ''
+
+		let MerchantData ={
+			business_name: BusinessName,
+			profile_picture: profPic,
+			background_picture: backPic,
+			business_story: BusinessStory,
+			address_1: Address1,
+			address_2: Address2,
+			city: City?.id,
+			state: State?.id,
+			zip_code: PostalCode,
+			website: BusinessWebsite,
+			industry: BusinessCategory
+		}
+		if (PhoneNumber !== '') MerchantData.phone_number = phoneNumber
+
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
-				.updateProfileMerchant({
-					business_name: BusinessName,
-					profile_picture: profPic,
-					background_picture: backPic,
-					business_story: BusinessStory,
-					address_1: Address1,
-					address_2: Address2,
-					city: City?.id,
-					state: State?.id,
-					zip_code: PostalCode,
-					phone_number: phoneNumber,
-					website: BusinessWebsite,
-					industry: BusinessCategory
-				})
+				.updateProfileMerchant(MerchantData)
 				.then((result: any) => {
-					console.log(' updateProfile ===>>> ', JSON.stringify(result, null, 2))
-					console.log(' updateProfile send ===>>> ', JSON.stringify({
-						business_name: BusinessName,
-						profile_picture: profPic,
-						background_picture: backPic,
-						business_story: BusinessStory,
-						address_1: Address1,
-						address_2: Address2,
-						city: City?.id,
-						state: State?.id,
-						zip_code: PostalCode,
-						phone_number: phoneNumber,
-						website: BusinessWebsite,
-						industry: BusinessCategory
-					}, null, 2))
-					
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {

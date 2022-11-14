@@ -30,7 +30,9 @@ import {
   CashOutScreen,
   MyCouponsScreen,
   CreateCouponScreen,
-  ContactScreen
+  ContactScreen,
+  ForgotPassScreen,
+  SendPersonalScreen
 } from "../screens";
 
 export type NavigatorParamList = {
@@ -58,7 +60,9 @@ export type NavigatorParamList = {
   cashOut: any
   contact: any
   createCoupon: any,
-  myCoupons: any
+  myCoupons: any,
+  forgotPass: any,
+  sendPersonal: any
 }
 
 const DrawerNav = createDrawerNavigator<NavigatorParamList>();
@@ -101,6 +105,8 @@ const AppStackDrawer: React.FC = () => {
       <DrawerNav.Screen name="contact" component={ContactScreen} />
       <DrawerNav.Screen name="myCoupons" component={MyCouponsScreen} />
       <DrawerNav.Screen name="createCoupon" component={CreateCouponScreen} />
+      <DrawerNav.Screen name="forgotPass" component={ForgotPassScreen} />
+      <DrawerNav.Screen name="sendPersonal" component={SendPersonalScreen} />
     </DrawerNav.Navigator>
   )
 }

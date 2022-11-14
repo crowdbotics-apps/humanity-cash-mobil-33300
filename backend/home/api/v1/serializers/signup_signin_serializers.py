@@ -1,6 +1,6 @@
 import random
 
-from dj_rest_auth.serializers import LoginSerializer
+import dj_rest_auth.serializers
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.utils import timezone
@@ -143,7 +143,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         }
 
 
-class LoginSerializer(LoginSerializer):
+class LoginSerializer(dj_rest_auth.serializers.LoginSerializer):
     email = serializers.CharField(required=False, allow_blank=True)
 
     def _validate_username_email(self, username, email, password):

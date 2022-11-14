@@ -3,10 +3,7 @@ import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
 
 export default StyleSheet.create({
   ACTIVITY: {
-    marginTop: METRICS.screenHeight - 200
-  },
-  ADD_ICON: {
-    marginRight: 10
+    marginBottom: 35
   },
   AGREE_CONTAINER: {
     alignSelf: 'center',
@@ -28,44 +25,41 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.activeBlue,
     fontSize: 24,
     fontWeight: 'bold',
-    marginRight: 10,
-    textAlign: 'right'
-  },
-  AMOUNT_CONTAINER: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginLeft: 10,
-    marginTop: 30
-  },
-  AMOUNT_ICON: {
-    height: 30,
-    marginRight: 5,
-    width: 30
+    marginLeft: 10
   },
   BACK_BUTON_CONTAINER: {
     alignItems: 'center',
     flexDirection: 'row',
     height: 30,
     justifyContent: 'flex-start',
+    marginBottom: 10,
     marginLeft: 10,
-    marginVertical: 10,
+    marginTop: 45,
     width: 80
   },
   BACK_BUTON_LABEL: {
     color: COLOR.PALETTE.black,
-    fontSize: 16,
+    fontSize: 16
   },
   BACK_BUTON_LABEL_MODAL: {
     color: COLOR.PALETTE.white,
     fontSize: 16
   },
-  CLEAR_FILTERS: {
-    alignSelf: 'center',
-    color: COLOR.PALETTE.lightGrey,
-    fontSize: 16,
-    marginVertical: 10,
-    textDecorationLine: 'underline'
+  BUTTON_AMOUNT: {
+    backgroundColor: COLOR.PALETTE.transparent, 
+    borderColor: COLOR.PALETTE.green,
+    borderWidth: 1,
+    height: 40,
+    marginBottom: 0,
+    marginRight: 15,
+    width: 105
+  },
+  BUTTON_AMOUNT_ACTIVE: {
+    backgroundColor: COLOR.PALETTE.green, 
+    height: 40,
+    marginBottom: 0,
+    marginRight: 15,
+    width: 105
   },
   CLOSE_MODAL_BUTTON: {
     alignItems: 'center',
@@ -75,33 +69,31 @@ export default StyleSheet.create({
     marginRight: 30
   },
   CONTAINER: {},
-  DISTANCES_CONTAINER: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  DISTANCE_FILTER_LABEL: {
-    color: COLOR.PALETTE.black,
-    fontSize: 10,
-  },
-  DISTANCE_LABEL: {
-    color: COLOR.PALETTE.black,
+  COSTS_LABEL: {
+    color: COLOR.PALETTE.blue,
     fontSize: 16,
-    right: 10,
   },
-  FILTER_CONTAINER: {
+  FORGOT_PASSWORD_CONTAINER: {
+    alignItems: 'center',
     alignSelf: 'center',
-    width: METRICS.screenWidth * 0.95
+    marginBottom: 25
   },
   HEADER: {
-    alignItems: 'center',
     flexDirection: 'row',
     marginLeft: 10,
-    marginTop: 10
+    marginTop: 10,
   },
   HEADER_ACTIONS: {
     flexDirection: 'row',
     height: 50,
     justifyContent: 'space-between',
+    width: METRICS.screenWidth
+  },
+  INPUT_AMOUNT_STYLE_CONTAINER: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    marginTop: 20,
+    width: METRICS.screenWidth * 0.95,
   },
   INPUT_LABEL_ERROR: {
     color: COLOR.PALETTE.pink,
@@ -115,8 +107,8 @@ export default StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
-    width: METRICS.screenWidth * 0.95
+    marginTop: 20,
+    width: METRICS.screenWidth * 0.95,
   },
   INPUT_STYLE: {
     alignSelf: 'center',
@@ -154,16 +146,10 @@ export default StyleSheet.create({
     marginVertical: 10,
     width: METRICS.screenWidth * 0.95
   },
-  LINK: {
-    color: COLOR.PALETTE.darkYellow,
-    fontSize: 16,
-    marginBottom: 15,
-    textAlign: 'center',
-    textDecorationLine: 'underline'
-  },
   LOADING_RETURN: {
-    height: METRICS.screenHeight - 50,
-    marginTop: 50
+    backgroundColor: COLOR.PALETTE.white,
+    flex: 1,
+    justifyContent: 'space-between'
   },
   LOGO_STYLE: {
     alignSelf: 'center',
@@ -184,26 +170,37 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 20,
     height: 350,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     width: METRICS.screenWidth * 0.80,
   },
   MODAL_CONTENT: {
-    alignItems: 'center',
-    backgroundColor: COLOR.PALETTE.lighterGreen,
-    borderRadius: 10,
-    elevation: 5,
-    height: 230,
+    height: 330,
     justifyContent: 'space-evenly',
-    shadowColor: COLOR.PALETTE.black,
-    shadowOffset: { height: 20, width: 20 },
-    shadowOpacity: 0.3,
-    width: METRICS.screenWidth * 0.85
+    width: METRICS.screenWidth * 0.70
+  },
+  NEED_HELP_LINK: {
+    color: COLOR.PALETTE.darkYellow,
+    fontSize: 16,
+    textAlign: 'center',
+    textDecorationLine: 'underline'
+  },
+  PASS_INPUT_STYLE: {
+    alignSelf: 'center',
+    height: 55,
+    width: METRICS.screenWidth * 0.80,
+  },
+  PENDING_TITLE: {
+    color: COLOR.PALETTE.orange,
+    fontSize: 32,
+    marginLeft: 10,
+    marginTop: 80,
+    width: METRICS.screenWidth * 0.8
   },
   RETURNS_LABEL: {
     color: COLOR.PALETTE.purple,
     fontSize: 10,
-    marginLeft: 20,
-    marginTop: 15
+    marginLeft: 10,
+    marginVertical: 10
   },
   RETURN_AMOUNT: {
     color: COLOR.PALETTE.activeBlue,
@@ -215,69 +212,52 @@ export default StyleSheet.create({
   },
   RETURN_CONTAINER: {
     alignSelf: 'center',
+    backgroundColor: '#F8F6F2',
     height: 140,
     marginVertical: 10,
-    width: METRICS.screenWidth * 0.75,
+    width: METRICS.screenWidth * 0.95
   },
   RETURN_DETAIL_CONTAINER: {
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: METRICS.screenWidth * 0.75,
+    width: METRICS.screenWidth * 0.85,
   },
-  RETURN_DETAIL_LABEL: {
+  RETURN_DETAIL_LABEL: { 
     color: COLOR.PALETTE.black,
     fontSize: 10,
-    marginTop: 5
-  },
-  RETURN_IMAGE: {
-    borderRadius: 25,
-    height: 50,
-    width: 50
+    fontWeight: 'bold',
   },
   RETURN_ITEM: {
     alignItems: 'center',
     alignSelf: 'center',
+    backgroundColor:  COLOR.PALETTE.background,
     flexDirection: 'row',
-    height: 70,
+    height: 80,
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginVertical: 5,
     width: METRICS.screenWidth * 0.95
   },
   RETURN_ITEM_AMOUNT: {
-    color: COLOR.PALETTE.pink,
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginRight: 20
-  },
-  RETURN_ITEM_AMOUNT_CASH_OUT: {
-    color: COLOR.PALETTE.green,
+    color: '#681D39',
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 20
   },
   RETURN_ITEM_AMOUNT_CREDIT: {
-    color: COLOR.PALETTE.activeBlue,
+    color: COLOR.PALETTE.black,
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 20
   },
   RETURN_ITEM_CUSTOMER: {
-    color: COLOR.PALETTE.black,
-    flex: 1,
+    color:  COLOR.PALETTE.black,
     fontSize: 16,
     fontWeight: 'bold',
-    marginLeft: 20
-  },
-  RETURN_ITEM_MODAL: {
-    bottom: 30,
-    color: COLOR.PALETTE.activeBlue,
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center'
+    marginRight: 20
   },
   RETURN_ITEM_TIME: {
-    color: COLOR.PALETTE.gray,
+    color:  COLOR.PALETTE.gray,
     fontSize: 10,
     fontWeight: 'bold',
     marginRight: 20
@@ -285,26 +265,31 @@ export default StyleSheet.create({
   ROOT: {
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
-    justifyContent: 'space-between'
   },
   ROOT_CONTAINER: {
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
     justifyContent: 'space-between',
+    minHeight: METRICS.screenHeight,
   },
   ROOT_MODAL: {
     alignItems: 'center',
-    backgroundColor: COLOR.PALETTE.modalBackgroundColor,
+    backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'space-between'
   },
+  ROOT_MODAL_PASS: {
+    backgroundColor: COLOR.PALETTE.white,
+		flex: 1,
+		justifyContent: 'space-between',
+		marginTop: 15
+	},
   SEARCH_INPUT_ADJUSTMENTS: {
     alignItems: 'center',
     backgroundColor: `${COLOR.PALETTE.green}25`,
-    flexDirection: 'row',
     height: 55,
-    justifyContent: 'space-evenly',
-    width: METRICS.screenWidth * 0.22
+    justifyContent: 'center',
+    width: METRICS.screenWidth * 0.15
   },
   SEARCH_INPUT_CONTAINER: {
     alignSelf: 'center',
@@ -315,7 +300,7 @@ export default StyleSheet.create({
   SEARCH_INPUT_STYLE: {
     alignSelf: 'center',
     height: 55,
-    width: METRICS.screenWidth * 0.60,
+    width: METRICS.screenWidth * 0.65,
   },
   SEARCH_INPUT_STYLE_CONTAINER: {
     alignItems: 'center',
@@ -325,59 +310,15 @@ export default StyleSheet.create({
     flexDirection: 'row',
     height: 55,
     justifyContent: 'center',
-    width: METRICS.screenWidth * 0.70
+    width: METRICS.screenWidth * 0.75
   },
-  SELECT_ICON: {
+  SHOW_PASS_CONTAINER: {
     alignItems: 'center',
-    flexDirection: 'row',
-    height: 55,
-    justifyContent: 'space-between',
-    width: METRICS.screenWidth * 0.95,
-  },
-  SELECT_INPUT_STYLE_CONTAINER: {
-    alignSelf: 'center',
-    backgroundColor: `${COLOR.PALETTE.green}25`,
-    borderRadius: 3,
-    height: 55,
-    marginTop: 10,
-    width: METRICS.screenWidth * 0.95,
-  },
-  SELECT_INPUT_STYLE_CONTAINER_OPEN: {
-    alignSelf: 'center',
-    backgroundColor: `${COLOR.PALETTE.green}25`,
-    borderColor: COLOR.PALETTE.orange,
-    borderRadius: 3,
-    borderWidth: 0.8,
-    marginTop: 10,
-    width: METRICS.screenWidth * 0.95,
-  },
-  SELECT_LABEL: {
-    color: COLOR.PALETTE.BLACK,
-    fontSize: 16,
-    marginLeft: 20
-  },
-  SMALL_INPUT_STYLE: {
-    alignSelf: 'center',
-    height: 55,
-    width: METRICS.screenWidth * 0.40,
-  },
-  SMALL_INPUT_STYLE_CONTAINER: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    backgroundColor: `${COLOR.PALETTE.green}25`,
-    borderRadius: 3,
-    flexDirection: 'row',
-    height: 55,
+    height: 50,
     justifyContent: 'center',
-    width: METRICS.screenWidth * 0.45
+    width: 50
   },
   STEP_CONTAINER: {},
-  STEP_SUB_TITLE: {
-    bottom: 20,
-    color: COLOR.PALETTE.black,
-    fontSize: 18,
-    fontWeight: 'bold'
-  },
   STEP_SUB_TITLE_MODAL: {
     color: COLOR.PALETTE.black,
     fontSize: 16,
@@ -385,7 +326,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.7,
   },
   STEP_TITLE: {
-    color: COLOR.PALETTE.blue,
+    color: COLOR.PALETTE.orange,
     fontSize: 32,
     marginLeft: 10
   },
@@ -395,8 +336,30 @@ export default StyleSheet.create({
     marginLeft: 10,
     width: METRICS.screenWidth * 0.7,
   },
+  STEP_TITLE_PASS: {
+    color: COLOR.PALETTE.orange,
+    fontSize: 32,
+    marginLeft: 10,
+    marginVertical: 20
+  },
   SUBMIT_BUTTON_LABEL: {
     color: COLOR.PALETTE.white,
+    fontSize: 16,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
+  SUBMIT_BUTTON_OUTLINE: {
+    alignSelf: 'center',
+    borderColor: COLOR.PALETTE.green,
+    borderRadius: 27.5,
+    borderWidth: 1,
+    height: 55,
+    justifyContent: 'center',
+    marginTop: 30,
+    width: METRICS.screenWidth * 0.95
+  },
+  SUBMIT_BUTTON_OUTLINE_LABEL: {
+    color: COLOR.PALETTE.green,
     fontSize: 16,
     textAlign: 'center',
     textAlignVertical: 'center',
@@ -405,20 +368,7 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.black,
     fontSize: 16,
     marginLeft: 10,
+    marginTop: 10,
     width: METRICS.screenWidth * 0.90,
   },
-  USER_IMAGE: {
-    borderRadius: 30,
-    height: 60,
-    width: 60
-  },
-  USER_IMAGE_CONTAINER: {
-    alignItems: 'center',
-    backgroundColor: COLOR.PALETTE.transparent,
-    borderRadius: 35,
-    bottom: 35,
-    height: 70,
-    justifyContent: 'center',
-    width: 70
-  }
 })

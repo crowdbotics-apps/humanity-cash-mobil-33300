@@ -61,17 +61,21 @@ class WhereToSpendView(ListAPIView):
                 cat_list.append(cat_item)
 
         merchant = Merchant.objects.order_by('?').first()
-        merchant_month = {
-            'id': merchant.id,
-            'business_name': merchant.business_name,
-            'business_story': merchant.business_story,
-            'profile_picture': merchant.profile_picture.url if merchant.profile_picture else None
-        }
+        if merchant:
+            merchant_month = {
+                'id': merchant.id,
+                'business_name': merchant.business_name,
+                'business_story': merchant.business_story,
+                'profile_picture': merchant.profile_picture.url if merchant.profile_picture else None
+            }
+        else:
+            merchant_month = None
 
         result = {
             'merchant_month': merchant_month,
             "merchants": cat_list
         }
+
         return Response(result)
 
     def get_queryset(self):

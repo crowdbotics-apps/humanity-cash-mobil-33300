@@ -279,8 +279,8 @@ export const LoginStoreModel = types
       self.social_security_number = user.social_security_number
       self.address_1 = user.address_1
       self.address_2 = user.address_2
-      self.city = user.city
-      self.state = user.state
+      self.city = `${user.city}`
+      self.state = `${user.state}`
       self.zip_code = user.zip_code
       self.phone_number = user.phone_number
     },

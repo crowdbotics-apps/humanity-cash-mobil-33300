@@ -110,9 +110,9 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 		>
 			<View style={styles.HEADER_ACTIONS}>
 
-				<TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
+				<TouchableOpacity onPress={() => navigation.navigate("myCoupons")} style={styles.BACK_BUTON_CONTAINER}>
 					<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-					<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+					<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
 				</TouchableOpacity>
 
 			</View>

@@ -23,7 +23,8 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-from admin.api.v1.viewsets.user_viewset import password_reset, password_reset_confirm
+from admin.api.v1.viewsets.user_viewset import verify_reset_code, password_reset, password_reset_confirm,\
+    password_reset_mobile
 from home.api.v1.viewsets.dwolla_views import DwollaIAVTemplateView
 
 urlpatterns = [
@@ -34,6 +35,8 @@ urlpatterns = [
     path("api/v1/admin/", include("admin.api.v1.urls")),
     path("admin/", admin.site.urls),
     path('users/password_reset/', password_reset, name='password_reset'),
+    path('users/password_reset_mobile/', password_reset_mobile, name='password_reset_mobile'),
+    path('users/verify_reset_code/', verify_reset_code, name='verify_reset_code'),
     path('users/reset/', password_reset_confirm, name='password_reset_confirm_complete'),
     path('users/reset/<uidb64>/<token>/', password_reset_confirm, name='password_reset_confirm'),
     path("users/", include("users.urls", namespace="users")),

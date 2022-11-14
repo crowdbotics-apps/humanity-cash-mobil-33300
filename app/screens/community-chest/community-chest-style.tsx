@@ -55,6 +55,7 @@ export default StyleSheet.create({
     marginRight: 30
   },
   HEADER: {
+    alignItems: 'center',
     flexDirection: 'row',
     marginBottom: 10,
     marginLeft: 10,

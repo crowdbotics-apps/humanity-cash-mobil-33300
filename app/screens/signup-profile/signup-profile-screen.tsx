@@ -330,7 +330,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				break;
 			default:
 				render = renderSelectBusinessType()
-				render = renderPicUsername()
 				break;
 		}
 		return render
@@ -484,7 +483,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					multiline
 					numberOfLines={4}
 					scrollEnabled={false}
-					placeholder={'Tell the world about your business. What gives you joy as an entrepreneur? What do you love about the Berkshires?'}
+					placeholder={'Tell the world about your business. What gives you joy as an entrepreneur?'}
 				/>
 			</View>
 		</View>
@@ -759,7 +758,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</View>
 		</View>
 	)
-
 	const mapInputModal = () => (
 		<Modal visible={ShowMapInputModal}>
 			<View style={styles.MAPS_CONTAINER}>
