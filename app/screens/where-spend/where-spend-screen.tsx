@@ -947,7 +947,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
             <Text style={styles.MONTH_BUSINESS_ABOUT}>{merchantOfTheMonth.business_story}</Text>
           </View>
           <Image
-            source={{ uri: merchantOfTheMonth.image }}
+            source={{ uri: merchantOfTheMonth.profile_picture }}
             resizeMode='cover'
             style={styles.MONTH_BUSINESS_IMAGE}
           />
@@ -984,23 +984,25 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   const RenderCategories = () => {
     if (!loginStore?.getBusiness?.[0]) return
     return (
-      Object.keys(loginStore.getBusiness[0]).map((i, key) => (
-        <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
-          <Text style={styles.INDUSTRY_TITLE}>{i}</Text>
-          <View style={styles.LINE} />
-          <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
-            {loginStore.getBusiness[0][i].map((b, key2) => (
-              <TouchableOpacity onPress={() => getBusinessDetail(b.id)} style={styles.BUSINESS} key={key + '' + key2}>
-                <Image
-                  source={{ uri: b.background_picture }}
-                  resizeMode='cover'
-                  style={styles.BUSINESS_IMAGE}
-                />
-                <Text style={styles.BUSINESS_NAME}>{b.business_name}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
+      loginStore.getBusiness.map(category => (
+        Object.keys(category).map((i, key) => (
+          <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
+            <Text style={styles.INDUSTRY_TITLE}>{i}</Text>
+            <View style={styles.LINE} />
+            <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
+              {category[i].map((b, key2) => (
+                <TouchableOpacity onPress={() => getBusinessDetail(b.id)} style={styles.BUSINESS} key={key + '' + key2}>
+                  <Image
+                    source={{ uri: b.background_picture }}
+                    resizeMode='cover'
+                    style={styles.BUSINESS_IMAGE}
+                  />
+                  <Text style={styles.BUSINESS_NAME}>{b.business_name}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        ))
       ))
     )
   }
@@ -1169,7 +1171,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                         style={{ marginRight: 8 }}
                       />
                     }
-                    <Text style={styles.SEE_ON_MAP_LABEL}>SHOW ON MAP</Text>
+                    <Text style={styles.SEE_ON_MAP_LABEL}></Text>
                   </View>
                 </View>
                 <View style={styles.INDUSTRY_CONTAINER}>

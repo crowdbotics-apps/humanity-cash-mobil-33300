@@ -47,7 +47,6 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 			"password": Pass,
 			"amount": Amount
 		}
-        console.log(' data ===>>> ', JSON.stringify(data, null, 2))
 		loginStore.environment.api
 			.postDeposit(data)
 			.then((result: any) => {

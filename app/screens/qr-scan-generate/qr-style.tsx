@@ -20,6 +20,18 @@ export default StyleSheet.create({
     borderColor: COLOR.PALETTE.green, 
     borderWidth: 1,
   },
+  STEP_SUB_TITLE_AMOUNT: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16,
+    marginLeft: 10,
+    width: METRICS.screenWidth * 0.90,
+  },
+  STEP_TITLE_AMOUNT: {
+    color: COLOR.PALETTE.green,
+    fontSize: 32,
+    marginLeft: 10,
+    marginTop: 10
+  },
 	CLOSE_MODAL_BUTTON: {
     alignItems: 'center',
     alignSelf: 'flex-end',
@@ -67,6 +79,14 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.purple,
     height: 1,
     marginBottom: 40,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.95
+  },
+  LINE_AMOUNT: {
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.purple,
+    height: 1,
+    marginBottom: 15,
     marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },

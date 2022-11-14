@@ -28,7 +28,10 @@ export const HomeScreen = observer(function HomeScreen() {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
 					})
-					if (loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null) navigation.navigate("setupProfile")
+					if (
+						(loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null)
+						&& (loginStore.getAllData.business_name === '' || loginStore.getAllData.business_name === null)
+						) navigation.navigate("setupProfile")
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -43,6 +46,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getProfileMerchant()
 			.then((result: any) => {
+				getProfileConsumer()
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
@@ -132,7 +136,6 @@ export const HomeScreen = observer(function HomeScreen() {
 			getEvents()
 			getBalanceData()
 			getConsumerCoupons()
-			getProfileConsumer()
 			getProfileMerchant()
 			getFundingSources()
 		}

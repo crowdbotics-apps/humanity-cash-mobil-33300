@@ -18,7 +18,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import QRCode from 'react-native-qrcode-svg'
 import Ionicons from "react-native-vector-icons/Ionicons"
 
-export const QRScreen = observer(function QRScreen() {
+export const QRScreen = observer(function QRScreen(props: any) {
   const navigation = useNavigation()
   const rootStore = useStores()
   const { loginStore } = rootStore
@@ -39,10 +39,22 @@ export const QRScreen = observer(function QRScreen() {
   const [Loading, setLoading] = useState(false)
   const [ShowBankModal, setShowBankModal] = useState(false)
 
+  const [ShowAmountModal, setShowAmountModal] = useState(false)
+
   useEffect(() => {
     if (isFocused) {
-      if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-      else setShowBankModal(false)
+      // if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+      // else setShowBankModal(false)
+
+      console.log('props => ', JSON.stringify(props?.route?.params, null, 2))
+      if (props?.route?.params) {
+        if (props?.route?.params?.QR) {
+          console.log(' aca')
+          setQR(props?.route?.params.QR)
+          setShowAmountModal(true)
+          setShowPassModal(true)
+        } 
+      }
     }
   }, [isFocused])
 
@@ -54,22 +66,59 @@ export const QRScreen = observer(function QRScreen() {
 		  onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
     />
 
-  const generateQR = () => {
-    setShowQR(true)
-  }
-
-  const formatValue = value => {
-    const strFormat = parseFloat(value).toFixed(2);
-    const [firstPart, secondPart] = strFormat.split(".");
-    return (
-      firstPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") +
-      (secondPart ? "." + secondPart : "")
-    );
-  };
-
   const passModal = () => (
     <Modal visible={ShowPassModal}>
-      <View style={styles.ROOT_MODAL_PASS}>
+      {ShowAmountModal
+      ? <View style={styles.ROOT_MODAL_PASS}>
+      <View style={styles.CONTAINER}>
+        <TouchableOpacity onPress={() => [
+          navigation.navigate('contact'),
+          setShowAmountModal(false),
+          setShowPassModal(false)
+        ]}
+        style={styles.BACK_BUTON_CONTAINER}
+        >
+          <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+          <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+        </TouchableOpacity>
+        <Text style={[styles.STEP_TITLE_AMOUNT, { color: loginStore.getAccountColor }]}>Specify payment</Text>
+        <View style={styles.LINE_AMOUNT} />
+        <Text style={styles.STEP_SUB_TITLE_AMOUNT}>Select the amount of Currents you would like to send.</Text>
+        <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+          <Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
+          <Text style={styles.INPUT_LABEL_STYLE}>MAX. CURRENTS 2,000</Text>
+        </View>
+        <View style={styles.INPUT_STYLE_CONTAINER}>
+          {/* <Text style={styles.INPUT_LABEL_STYLE}> C$</Text> */}
+          <TextInput
+            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+            style={styles.INPUT_STYLE}
+            keyboardType='numeric'
+            onChangeText={t => {
+              let temp = t.replace('C', '').replace('$', '').replace(' ', '')
+              temp = temp.replace(",", ".")
+              setAmount(temp)
+            }}
+            value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
+            placeholder={`Amount`}
+          />
+        </View>
+      </View>
+      <View style={styles.CONTAINER}>
+        <Button
+          buttonStyle={{
+            backgroundColor: loginStore.getAccountColor,
+          }}
+          loading={Loading}
+          onPress={() => [
+            setShowPassModal(true),
+            setShowAmountModal(false)
+          ]}
+          buttonLabel={'Confirm'}
+        />
+      </View>
+    </View>
+      : <View style={styles.ROOT_MODAL_PASS}>
         <View style={styles.CONTAINER}>
           <TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
             <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
@@ -107,6 +156,7 @@ export const QRScreen = observer(function QRScreen() {
           />
         </View>
       </View>
+}
     </Modal>
   )
 
@@ -149,7 +199,7 @@ export const QRScreen = observer(function QRScreen() {
       "from_is_consumer": loginStore.getSelectedAccount === 'consumer',
       "to_is_consumer": qrData.to_is_consumer,
       "password": Pass,
-      "amount": qrData.amount,
+      "amount": props?.route?.params?.QR ? Amount : qrData.amount,
       "roundup": 0,
     }
 
@@ -167,6 +217,8 @@ export const QRScreen = observer(function QRScreen() {
           setShowPassModal(false)
           const errors = result.errors
           notifyMessage(errors)
+        } else if (result.kind === "unauthorized") {
+          notifyMessage('bad password')
         }
       }).catch((err) => notifyMessage(err))
   }
