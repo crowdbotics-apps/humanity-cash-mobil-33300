@@ -9,7 +9,7 @@ import styles from './drawer-style';
 import { IMAGES, COLOR } from "../../theme"
 import { useStores } from "../../models"
 
-const profileTypes = [
+export const profileTypes = [
   {
     label: 'Personal',
     value: 'personal',

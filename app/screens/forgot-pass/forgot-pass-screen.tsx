@@ -36,8 +36,9 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
   const [HidePass, setHidePass] = useState(true)
   const [HidePassConfirm, setHidePassConfirm] = useState(true)
   const [MatchPassword, setMatchPassword] = useState(true)
-  const [PassError, setPassError] = useState(false)
-  const [PassErrorMessage, setPassErrorMessage] = useState("")
+
+  // const [PassError, setPassError] = useState(false)
+  // const [PassErrorMessage, setPassErrorMessage] = useState("")
 
   let CodeInp2, CodeInp3, CodeInp4, CodeInp5, CodeInp6
   const [Code1, setCode1] = useState("")
@@ -53,7 +54,10 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
 
   const sendVerificationCode = () => {
     setLoading(true)
+    console.log('Entre en la función')
     loginStore.environment.api.forgotPassword({ email: Username }).then(result => {
+      console.log('Entre en el then')
+      console.log(result)
       setUsernameError(false)
       setLoading(false)
       if (result.kind === "ok") {
@@ -298,15 +302,17 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
       showHeader
     >
       <View style={styles.HEADER_ACTIONS}>
-      {Step !== "code"
-          ? <View style={styles.BACK_BUTON_CONTAINER} />
-          : <TouchableOpacity onPress={() => setStep('email')} style={styles.BACK_BUTON_CONTAINER}>
-            <Icon name={"arrow-back"} size={23} color={'black'} />
-            <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-          </TouchableOpacity>
+
+        {Step !== "code"
+            ? <View style={styles.BACK_BUTON_CONTAINER} />
+            : <TouchableOpacity onPress={() => setStep('email')} style={styles.BACK_BUTON_CONTAINER}>
+              <Icon name={"arrow-back"} size={23} color={'black'} />
+              <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+            </TouchableOpacity>
         }
 
         {Step !== "code"
+          // @ts-ignore
           ? <TouchableOpacity onPress={() => navigation.navigate('login')} style={styles.BACK_BUTON_CONTAINER}>
             <Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
             <Icon name={"close"} size={23} color={'black'} />
@@ -314,20 +320,21 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
           : <View style={styles.BACK_BUTON_CONTAINER} />
         }
 
-        
-
       </View>
+
       <ScrollView bounces={false}>
         {renderStep()}
 
       </ScrollView>
-      {Step === "code" && (
-          <View style={styles.NEED_HELP_CONTAINER}>
-            <Text onPress={() => sendVerificationCode()} style={styles.NEED_HELP_LINK}>
-              Send code again
-            </Text>
-          </View>
+
+        { Step === "code" && (
+            <View style={styles.NEED_HELP_CONTAINER}>
+              <Text onPress={() => sendVerificationCode()} style={styles.NEED_HELP_LINK}>
+                Send code again
+              </Text>
+            </View>
         )}
+
       <Button
         buttonStyle={{
           backgroundColor: Loading ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green

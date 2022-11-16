@@ -36,6 +36,7 @@ export const ForgotPasswordPage: React.FC = observer((props) => {
       setLoading(true)
 
       api.forgotPassword(data).then((result: any) => {
+        console.log('Entre en la función')
         setLoading(false)
         if (result.kind === "ok") {
           console.log(result.response.detail)

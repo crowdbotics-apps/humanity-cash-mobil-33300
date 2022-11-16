@@ -258,4 +258,35 @@ export default StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
+  WARNING_CONTAINER: {
+    alignItems: 'center',
+    borderLeftColor: '#D2A824', 
+    borderLeftWidth: 4, 
+    borderRadius: 5, 
+    flexDirection: 'row', 
+    marginLeft: 10,
+    marginRight: 10, 
+    padding: 15, 
+  }, 
+  ICON_WARNING_CONTAINER: {
+    borderColor: '#D2A824',
+    borderRadius: 2000, 
+    borderWidth: 1, 
+    height: 16, 
+    width: 16, 
+  }, 
+  ICON_WARNING: {
+    color: '#D2A824',
+    fontSize: 10, 
+    fontWeight: 'bold', 
+    textAlign: 'center', 
+  }, 
+  TEXT_WARNING: {
+    marginLeft: 10
+  },
+  TEXT_WARNING_LINK: {
+    color: '#D2A824', 
+    fontWeight: '700', 
+    textDecorationLine: 'underline', 
+  }
 })

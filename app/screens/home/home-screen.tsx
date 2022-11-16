@@ -8,7 +8,8 @@ import styles from "./home-style";
 import { useStores } from "../../models";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { runInAction } from "mobx"
-import { notifyMessage } from "../../utils/helpers"
+import { notifyMessage } from "../../utils/helpers";
+import {profileTypes} from '../drawer/drawer-screen'
 
 export const HomeScreen = observer(function HomeScreen() {
 	const navigation = useNavigation()
@@ -28,6 +29,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
 					})
+					console.log('BUSINESS STORE ===> ', loginStore.getAllData.business_name)
 					if (
 						(loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null)
 						&& (loginStore.getAllData.business_name === '' || loginStore.getAllData.business_name === null)
@@ -217,6 +219,43 @@ export const HomeScreen = observer(function HomeScreen() {
 					</View>
 					<View style={styles.LINE} />
 					<Text style={styles.INDUSTRY_TITLE}>MY SAVED COUPONS</Text>
+					
+					{(!loginStore.getAllData.business_name && loginStore.getBillingData.billing_data_added) ? 
+						(
+							<TouchableOpacity 
+							 style={styles.WARNING_CONTAINER}
+							 onPress={() => navigation.navigate('signupProfile', {profile_type: profileTypes[1]})}
+							>
+								<View style={styles.ICON_WARNING_CONTAINER}>
+									<Text style={styles.ICON_WARNING}>!</Text>
+								</View>
+								<Text style={styles.TEXT_WARNING}>
+									Create your business profile to be connected with your clients.{' '}
+									<Text style={styles.TEXT_WARNING_LINK}>
+										Create Business.
+									</Text>
+								</Text>
+							</TouchableOpacity>
+						) : null
+					}
+
+					{(!loginStore.getBillingData.billing_data_added) &&
+						(
+							<TouchableOpacity 
+							  style={styles.WARNING_CONTAINER}
+							  onPress={() => navigation.navigate('linkBank')}
+							>
+								<View style={styles.ICON_WARNING_CONTAINER}>
+									<Text style={styles.ICON_WARNING}>!</Text>
+								</View>
+								<Text style={styles.TEXT_WARNING}>
+									Load up your wallet to start spending Currents.{' '}
+									<Text style={styles.TEXT_WARNING_LINK}>Load up Currents.</Text>
+								</Text>
+							</TouchableOpacity>
+						) 
+					}
+
 					<ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginHorizontal: 10 }}>
 						{loginStore.getConsumerCoupons.map((c, key) => (
 							<View key={key + '_coupon'} style={styles.COUPON_CONTAINER}>
