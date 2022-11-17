@@ -2,14 +2,14 @@ import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Button, Screen, Text, ConfirmCoupon } from "../../components";
-import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback,  BackHandler } from "react-native";
+import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback, BackHandler } from "react-native";
 import { IMAGES } from "../../theme";
 import styles from "./home-style";
 import { useStores } from "../../models";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers";
-import {profileTypes} from '../drawer/drawer-screen'
+import { profileTypes } from '../drawer/drawer-screen'
 
 export const HomeScreen = observer(function HomeScreen() {
 	const navigation = useNavigation()
@@ -35,7 +35,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					if (
 						(loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null)
 						&& (loginStore.getAllData.business_name === '' || loginStore.getAllData.business_name === null)
-						) navigation.navigate("setupProfile")
+					) navigation.navigate("setupProfile")
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -127,13 +127,11 @@ export const HomeScreen = observer(function HomeScreen() {
 	const getAllCoupons = () => {
 
 		loginStore.environment.api
-		.getCoupons()
-		.then(({data}) => {
-			console.log('CONSUMER COUPONS =============>', loginStore.getConsumerCoupons)
-			console.log('ALL COUPONS ======>', data.results)
-			setCoupons(data.results)
-		})
-		
+			.getCoupons()
+			.then(({ data }) => {
+				setCoupons(data.results)
+			})
+
 	}
 
 
@@ -180,11 +178,11 @@ export const HomeScreen = observer(function HomeScreen() {
 						<Text style={styles.STEP_TITLE_BLACK}>Are you sure you want to log out?</Text>
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text>
 						<TouchableOpacity
-							style={[styles.MODAL_BUTTON, {backgroundColor: loginStore.getAccountColor}]}
-							onPress={() =>[
+							style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
+							onPress={() => [
 								loginStore.setSelectedAccount('consumer'),
 								setShowConfirmLogoutModal(false)
-							  ]}>
+							]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
 					</View>
@@ -213,7 +211,7 @@ export const HomeScreen = observer(function HomeScreen() {
 
 	const ConsumerView = () => (
 		<View style={styles.ROOT_CONTAINER}>
-			<TouchableOpacity style={[styles.HEADER, {marginLeft: 10}]} onPress={() => navigation.toggleDrawer()}>
+			<TouchableOpacity style={[styles.HEADER, { marginLeft: 10 }]} onPress={() => navigation.toggleDrawer()}>
 				<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
 				<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
 			</TouchableOpacity>
@@ -236,54 +234,51 @@ export const HomeScreen = observer(function HomeScreen() {
 						</View>
 					</View>
 					<View style={styles.LINE} />
-					
-					
-					{(!loginStore.getAllData.business_name && loginStore.getBillingData.billing_data_added) ? 
-						(
-							<TouchableOpacity 
-							 style={styles.WARNING_CONTAINER}
-							 onPress={() => navigation.navigate('signupProfile', {profile_type: profileTypes[1]})}
-							>
-								<View style={styles.ICON_WARNING_CONTAINER}>
-									<Text style={styles.ICON_WARNING}>!</Text>
-								</View>
-								<Text style={styles.TEXT_WARNING}>
-									Create your business profile to be connected with your clients.{' '}
-									<Text style={styles.TEXT_WARNING_LINK}>
-										Create Business.
-									</Text>
+
+
+					{!(!loginStore.getAllData.business_name && loginStore.getBillingData.billing_data_added) &&
+
+						<TouchableOpacity
+							style={[styles.WARNING_CONTAINER, {marginBottom: 10}]}
+							onPress={() => navigation.navigate('signupProfile', { profile_type: profileTypes[0] })}
+						>
+							<View style={styles.ICON_WARNING_CONTAINER}>
+								<Text style={styles.ICON_WARNING}>!</Text>
+							</View>
+							<Text style={styles.TEXT_WARNING}>
+								Create a personal profile so you can easily switch accounts.{' '}
+								<Text style={styles.TEXT_WARNING_LINK}>
+									Go to set up
 								</Text>
-							</TouchableOpacity>
-						) : null
+							</Text>
+						</TouchableOpacity>
 					}
 
 					{(!loginStore.getBillingData.billing_data_added) &&
-						(
-							<TouchableOpacity 
-							  style={styles.WARNING_CONTAINER}
-							  onPress={() => navigation.navigate('linkBank')}
-							>
-								<View style={styles.ICON_WARNING_CONTAINER}>
-									<Text style={styles.ICON_WARNING}>!</Text>
-								</View>
-								<Text style={styles.TEXT_WARNING}>
-									Load up your wallet to start spending Currents.{' '}
-									<Text style={styles.TEXT_WARNING_LINK}>Load up Currents.</Text>
-								</Text>
-							</TouchableOpacity>
-						) 
+						<TouchableOpacity
+							style={styles.WARNING_CONTAINER}
+							onPress={() => navigation.navigate('linkBank')}
+						>
+							<View style={styles.ICON_WARNING_CONTAINER}>
+								<Text style={styles.ICON_WARNING}>!</Text>
+							</View>
+							<Text style={styles.TEXT_WARNING}>
+								Load up your wallet to start spending Currents.{' '}
+								<Text style={styles.TEXT_WARNING_LINK}>Load up Currents.</Text>
+							</Text>
+						</TouchableOpacity>
 					}
-					<Text style={[styles.INDUSTRY_TITLE, {marginTop: 15}]}>MY SAVED COUPONS</Text>
-					
+					<Text style={[styles.INDUSTRY_TITLE, { marginTop: 15 }]}>MY SAVED COUPONS</Text>
+
 					<ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginHorizontal: 10 }}>
 						{coupons.map((c, key) => (
-							<TouchableOpacity 
-							  key={key + '_coupon'}
-							  style={styles.COUPON_CONTAINER}
-							  onPress={() => {
-							  console.log('modal')
-							  return <ConfirmCoupon />
-							}}
+							<TouchableOpacity
+								key={key + '_coupon'}
+								style={styles.COUPON_CONTAINER}
+								onPress={() => {
+									console.log('modal')
+									return <ConfirmCoupon />
+								}}
 							>
 								<Image
 									source={{ uri: c.promo_image }}
@@ -291,12 +286,12 @@ export const HomeScreen = observer(function HomeScreen() {
 									style={styles.RETURN_IMAGE}
 								/>
 
-								{loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id) && <Text style={{position: 'absolute', left: 3, bottom: 42}}>⭐️</Text>}
+								{loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id) && <Text style={{ position: 'absolute', left: 3, bottom: 42 }}>⭐️</Text>}
 
 								<Text style={styles.COUPON_TITLE}>
 									{c.title}
 								</Text>
-								
+
 							</TouchableOpacity>
 						))}
 					</ScrollView>
@@ -310,7 +305,7 @@ export const HomeScreen = observer(function HomeScreen() {
 	const CashierView = () => (
 		<View style={styles.ROOT_CONTAINER}>
 			<View style={styles.STEP_CONTAINER}>
-				<TouchableOpacity style={[styles.HEADER, {justifyContent: 'flex-end'}]} onPress={() => setShowConfirmLogoutModal(true)}>
+				<TouchableOpacity style={[styles.HEADER, { justifyContent: 'flex-end' }]} onPress={() => setShowConfirmLogoutModal(true)}>
 					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Log out`}</Text>
 				</TouchableOpacity>
 
@@ -369,7 +364,7 @@ export const HomeScreen = observer(function HomeScreen() {
 				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
-						{confirmLogoutModal()}
+				{confirmLogoutModal()}
 				{loginStore.getSelectedAccount === 'cashier'
 					? CashierView()
 					: [

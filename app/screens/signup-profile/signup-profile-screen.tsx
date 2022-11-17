@@ -949,7 +949,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			)
 
 			const data = loginStore.getSetupData
-			setProfileType(props?.params?.profile_type || profileTypes[1])
+			console.log(' ====================================== props?.params?.profile_type ', JSON.stringify(props, null, 2))
+			setProfileType(props.route?.params?.profile_type || profileTypes[1])
 			if (data?.Username) {
 				setUsername(data.Username)
 				setButtonDisabled(false)
@@ -1020,7 +1021,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				buttonLabel={Step === 'business_exec'
 					? 'Confirm'
 					: Step === 'profile_type'
-						? 'Sign up your business'
+						? `Sign up your ${ProfileType?.label || 'business'}`
 						: 'Next'
 				}
 				buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
