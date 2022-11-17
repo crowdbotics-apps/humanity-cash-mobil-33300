@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Button, Screen, Text } from "../../components";
+import { Button, Screen, Text, ConfirmCoupon } from "../../components";
 import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback,  BackHandler } from "react-native";
 import { IMAGES } from "../../theme";
 import styles from "./home-style";
@@ -17,8 +17,10 @@ export const HomeScreen = observer(function HomeScreen() {
 	const { loginStore } = rootStore
 
 	const isFocused = useIsFocused();
-	const [Events, setEvents] = useState([])
-	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false)
+	const [Events, setEvents] = useState([]);
+	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
+	const [coupons, setCoupons] = useState([]);
+
 
 	const getProfileConsumer = () => {
 		loginStore.environment.api
@@ -102,11 +104,13 @@ export const HomeScreen = observer(function HomeScreen() {
 			})
 	}
 
+
 	const getConsumerCoupons = () => {
 		loginStore.environment.api
 			.getConsumerCoupons()
 			.then((result: any) => {
 				if (result.kind === "ok") {
+					//console.log('CONSUMER COUPONS =============>',result.data)
 					runInAction(() => {
 						loginStore.setConsumerCoupons(result.data?.results)
 					})
@@ -119,6 +123,19 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
+
+	const getAllCoupons = () => {
+
+		loginStore.environment.api
+		.getCoupons()
+		.then(({data}) => {
+			console.log('CONSUMER COUPONS =============>', loginStore.getConsumerCoupons)
+			console.log('ALL COUPONS ======>', data.results)
+			setCoupons(data.results)
+		})
+		
+	}
+
 
 	const getFundingSources = () => {
 		loginStore.environment.api
@@ -140,6 +157,7 @@ export const HomeScreen = observer(function HomeScreen() {
 			getConsumerCoupons()
 			getProfileMerchant()
 			getFundingSources()
+			getAllCoupons();
 		}
 	}, [isFocused])
 
@@ -218,7 +236,7 @@ export const HomeScreen = observer(function HomeScreen() {
 						</View>
 					</View>
 					<View style={styles.LINE} />
-					<Text style={styles.INDUSTRY_TITLE}>MY SAVED COUPONS</Text>
+					
 					
 					{(!loginStore.getAllData.business_name && loginStore.getBillingData.billing_data_added) ? 
 						(
@@ -255,17 +273,31 @@ export const HomeScreen = observer(function HomeScreen() {
 							</TouchableOpacity>
 						) 
 					}
-
+					<Text style={[styles.INDUSTRY_TITLE, {marginTop: 15}]}>MY SAVED COUPONS</Text>
+					
 					<ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginHorizontal: 10 }}>
-						{loginStore.getConsumerCoupons.map((c, key) => (
-							<View key={key + '_coupon'} style={styles.COUPON_CONTAINER}>
+						{coupons.map((c, key) => (
+							<TouchableOpacity 
+							  key={key + '_coupon'}
+							  style={styles.COUPON_CONTAINER}
+							  onPress={() => {
+							  console.log('modal')
+							  return <ConfirmCoupon />
+							}}
+							>
 								<Image
 									source={{ uri: c.promo_image }}
 									resizeMode='cover'
 									style={styles.RETURN_IMAGE}
 								/>
-								<Text style={styles.COUPON_TITLE} >{c.title}</Text>
-							</View>
+
+								{loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id) && <Text style={{position: 'absolute', left: 3, bottom: 42}}>⭐️</Text>}
+
+								<Text style={styles.COUPON_TITLE}>
+									{c.title}
+								</Text>
+								
+							</TouchableOpacity>
 						))}
 					</ScrollView>
 					{renderNews()}

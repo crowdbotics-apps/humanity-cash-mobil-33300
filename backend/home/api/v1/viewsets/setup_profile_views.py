@@ -132,14 +132,17 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
 
     def get_object(self):
         user = self.request.user
+        print('holaaaa')
         if not user.consumer.dwolla_id:
             # if dwolla_id is not set yet
             create_dwolla_customer_consumer(user)
+        else:
+            self.update()
         return user
 
     def update(self, request, *args, **kwargs):
         super(ConsumerMyProfileAPIView, self).update(request, *args, **kwargs)
-
+        import pdb; pdb.set_trace()
         instance = self.get_object()
         request.data.pop('consumer_profile')
         serializer = self.get_serializer(instance, data=request.data)

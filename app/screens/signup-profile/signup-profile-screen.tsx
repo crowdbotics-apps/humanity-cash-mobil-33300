@@ -835,7 +835,10 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				<View style={styles.CONTAINER}>
 					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
 					<Button
-						// onPress={() => nextButtonHandler()}
+						onPressIn={() => {
+							console.log('entre')
+							navigation.navigate('linkBank')}
+						}
 						buttonLabel={'Link my personal bank account'}
 						buttonStyle={styles.SUBMIT_BUTTON}
 					/>

@@ -60,8 +60,7 @@ export function ConnectBankModal(props: ConnectBankModalProps) {
 	// 		</View>
 	// 	</Modal>
 	// )
-
-
+	
 	return (
 		<Modal visible={props.visible} transparent>
 			<View style={styles.ROOT_MODAL}>

@@ -111,6 +111,11 @@ export class Api extends ApiBase {
     return this.simple_get(apiv1 + "/consumer-coupons/")
   }
 
+  async postConsumerCoupon(data: any): Promise<Types.SimplePostResult> {
+
+    return this.simple_post(apiv1 + "/consumer-coupons/", data)
+  }
+
   // SECURITY
   async updateSecurity(data: any): Promise<Types.SimplePostResult> {
     return this.simple_patch(apiv1 + "/security/change-password/", data)
