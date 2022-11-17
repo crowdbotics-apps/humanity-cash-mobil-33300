@@ -3,7 +3,7 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Button, Screen, Text, ConfirmCoupon } from "../../components";
 import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback,  BackHandler } from "react-native";
-import { IMAGES } from "../../theme";
+import { COLOR, IMAGES } from "../../theme";
 import styles from "./home-style";
 import { useStores } from "../../models";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -12,16 +12,19 @@ import { notifyMessage } from "../../utils/helpers";
 import {profileTypes} from '../drawer/drawer-screen'
 
 export const HomeScreen = observer(function HomeScreen() {
-	const [coupons, setCoupons] = useState([]);
-	const [couponSelected, setCouponSelected] = useState({});
-	const [Events, setEvents] = useState([]);
 	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
-	const [ShowConfirmCoupon, setShowConfirmCoupon] = useState(false);
+	const [couponsConfig, setCouponsConfig] = useState({
 
-	const rootStore = useStores()
-	const { loginStore } = rootStore
+		coupons: [],
+		couponSelected: {},
+		ShowConfirmCoupon: false
+	});
+	const {coupons, couponSelected, ShowConfirmCoupon} = couponsConfig;
 
-	const navigation = useNavigation()
+	const rootStore = useStores();
+	const { loginStore } = rootStore;
+
+	const navigation = useNavigation();
 	const isFocused = useIsFocused();
 
 
@@ -125,8 +128,9 @@ export const HomeScreen = observer(function HomeScreen() {
 			})
 	}
 
-	const getAllCoupons = () => loginStore.environment.api
-								.getCoupons().then(({data}) => setCoupons(data.results));
+	const getAllCoupons = () => 
+	loginStore.environment.api.getCoupons()
+	.then(({data}) => setCouponsConfig({...couponsConfig, coupons: data.results}));
 
 	const getFundingSources = () => {
 		loginStore.environment.api
@@ -141,14 +145,12 @@ export const HomeScreen = observer(function HomeScreen() {
 			})
 	}
 
-	const checkModal = (c: any) => {
+	const openModal = (c: any) => setCouponsConfig({
+		...couponsConfig, 
+		ShowConfirmCoupon: !ShowConfirmCoupon,
+		couponSelected: c
+	});
 
-		if(!loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id)) {
-
-			setShowConfirmCoupon(!ShowConfirmCoupon);
-			setCouponSelected(c)
-		}
-	}
 
 	useEffect(() => {
 		if (isFocused) {
@@ -282,7 +284,7 @@ export const HomeScreen = observer(function HomeScreen() {
 							<TouchableOpacity 
 							  key={key + '_coupon'}
 							  style={styles.COUPON_CONTAINER}
-							  onPress={() => checkModal(c)}
+							  onPress={() => openModal(c)}
 							>
 								<Image
 									source={{ uri: c.promo_image }}
@@ -290,7 +292,9 @@ export const HomeScreen = observer(function HomeScreen() {
 									style={styles.RETURN_IMAGE}
 								/>
 
-								{loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id) && <Text style={{position: 'absolute', left: 3, bottom: 42}}>⭐️</Text>}
+								{ loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id) 
+								  && <Icon style={styles.FAVORITE_ICON} name={"star"} size={25} color={COLOR.PALETTE.mustard} />
+								}
 
 								<Text style={styles.COUPON_TITLE}>
 									{c.title}
@@ -308,13 +312,16 @@ export const HomeScreen = observer(function HomeScreen() {
 
 						<ConfirmCoupon 
 							visible={ShowConfirmCoupon} 
-							buttonAction={() => setShowConfirmCoupon(!ShowConfirmCoupon)} 
+							buttonAction={() => setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})} 
 							couponSelected={couponSelected}
+							//@ts-ignore
+							mode={() => loginStore.getConsumerCoupons.find(c => c.id_cupon === couponSelected.id) ? 'delete' : 'add'}
 							goBack={async () => {
 
 								await getAllCoupons()
+								//@ts-ignore
 								navigation.navigate('home')
-								setShowConfirmCoupon(!ShowConfirmCoupon)
+								setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})
 							}}
 						/>
 					}
@@ -385,7 +392,6 @@ export const HomeScreen = observer(function HomeScreen() {
 		>
 			<KeyboardAvoidingView
 				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
 						{confirmLogoutModal()}

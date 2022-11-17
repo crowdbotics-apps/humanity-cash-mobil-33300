@@ -36,7 +36,7 @@ export default StyleSheet.create({
       alignItems: 'center',
       backgroundColor: COLOR.PALETTE.lighterGreen,
       borderRadius: 20,
-      height: 250,
+      height: 300,
       justifyContent: 'space-evenly',
       width: METRICS.screenWidth * 0.80,
     },
@@ -44,7 +44,7 @@ export default StyleSheet.create({
       alignItems: 'center',
       backgroundColor: COLOR.PALETTE.lighterGreen,
       borderRadius: 20,
-      height: 250,
+      height: 220,
       justifyContent: 'space-evenly',
       width: METRICS.screenWidth * 0.80,
       opacity: 10
