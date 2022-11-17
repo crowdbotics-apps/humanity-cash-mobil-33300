@@ -52,7 +52,7 @@ class ConsumerCouponListSerializer(serializers.ModelSerializer):
 class ConsumerCouponCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsumerCoupon
-        fields = ['consumer', 'coupon']
+        fields = ['consumer', 'coupon', 'active']
 
 
 class ConsumerUpdateCreateSerializer(serializers.ModelSerializer):
