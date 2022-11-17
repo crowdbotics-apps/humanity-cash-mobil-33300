@@ -3,7 +3,7 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Button, Screen, Text, ConfirmCoupon } from "../../components";
 import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback, BackHandler } from "react-native";
-import { IMAGES } from "../../theme";
+import { COLOR, IMAGES } from "../../theme";
 import styles from "./home-style";
 import { useStores } from "../../models";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -286,8 +286,8 @@ export const HomeScreen = observer(function HomeScreen() {
 									style={styles.RETURN_IMAGE}
 								/>
 
-								{loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id) && <Text style={{ position: 'absolute', left: 3, bottom: 42 }}>⭐️</Text>}
-
+								{loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id) && <Icon style={{ position: 'absolute', left: 3, bottom: 35, height: 25 }} name={"star"} size={25} color={COLOR.PALETTE.mustard} />}
+								
 								<Text style={styles.COUPON_TITLE}>
 									{c.title}
 								</Text>

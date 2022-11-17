@@ -265,7 +265,7 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 	}, [Amount]);
 
 	const renderSelect = () => <View style={styles.STEP_CONTAINER}>
-		<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Load Wallet</Text>
+		<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Send to Personal</Text>
 		<Text style={styles.LINE} />
 		<Text style={styles.SUB_TITLE}>
 			Specify the amount of Currents (C$ 1 = USD 1) you would like to load up.
