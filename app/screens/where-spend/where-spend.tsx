@@ -107,7 +107,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.lightGray,
     borderRadius: 3,
-    height: 480,
+    height: 430,
     justifyContent: 'space-around',
     marginVertical: 15,
     width: METRICS.screenWidth * 0.95

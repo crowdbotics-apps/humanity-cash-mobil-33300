@@ -32,12 +32,12 @@ export default StyleSheet.create({
         alignItems: 'center',
         backgroundColor: COLOR.PALETTE.lighterGreen,
         borderRadius: 20,
-        height: 350,
-        justifyContent: 'space-around',
+        height: 250,
+        justifyContent: 'space-evenly',
         width: METRICS.screenWidth * 0.80,
       },
       MODAL_CONTENT: {
-        height: 330,
+        height: 250,
         justifyContent: 'space-evenly',
         width: METRICS.screenWidth * 0.70
       },
@@ -45,7 +45,8 @@ export default StyleSheet.create({
         alignItems: 'center',
         backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
         flex: 1,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        
       },
       STEP_SUB_TITLE_MODAL: {
         color: COLOR.PALETTE.black,

@@ -222,7 +222,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				/>
 			</View>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-				<Text style={styles.INPUT_LABEL_STYLE}>WEBSITE - OPCIONAL</Text>
+				<Text style={styles.INPUT_LABEL_STYLE}>WEBSITE (OPCIONAL)</Text>
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
@@ -232,7 +232,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						setBusinessWebsite(t)
 					}}
 					value={BusinessWebsite}
-					placeholder={'website - optional'}
+					placeholder={'website (optional)'}
 				/>
 			</View>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>

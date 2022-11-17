@@ -277,7 +277,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 						buttonStyle={{ backgroundColor: loginStore.getAccountColor, marginTop: 5 }}
 						onPress={() => navigation.navigate("createCoupon")}
 						buttonLabel={'Create a coupon'}
-						showBottonMenu
+						
 						accountType={loginStore.getSelectedAccount}
 					/>
 				}
