@@ -12,14 +12,16 @@ import { notifyMessage } from "../../utils/helpers";
 import {profileTypes} from '../drawer/drawer-screen'
 
 export const HomeScreen = observer(function HomeScreen() {
-	const navigation = useNavigation()
+	const [coupons, setCoupons] = useState([]);
+	const [Events, setEvents] = useState([]);
+	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
+	const [ShowConfirmCoupon, setShowConfirmCoupon] = useState(false);
+
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 
+	const navigation = useNavigation()
 	const isFocused = useIsFocused();
-	const [Events, setEvents] = useState([]);
-	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
-	const [coupons, setCoupons] = useState([]);
 
 
 	const getProfileConsumer = () => {
@@ -280,10 +282,7 @@ export const HomeScreen = observer(function HomeScreen() {
 							<TouchableOpacity 
 							  key={key + '_coupon'}
 							  style={styles.COUPON_CONTAINER}
-							  onPress={() => {
-							  console.log('modal')
-							  return <ConfirmCoupon />
-							}}
+							  onPress={() =>  setShowConfirmCoupon(!ShowConfirmCoupon)}
 							>
 								<Image
 									source={{ uri: c.promo_image }}
@@ -304,6 +303,8 @@ export const HomeScreen = observer(function HomeScreen() {
 					<View style={{ height: 20 }} />
 				</View>
 			</ScrollView>
+
+			{ShowConfirmCoupon && <ConfirmCoupon visible={ShowConfirmCoupon} buttonAction={() => setShowConfirmCoupon(!ShowConfirmCoupon)} />}
 		</View>
 	)
 
