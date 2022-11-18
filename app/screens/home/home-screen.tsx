@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Button, Screen, Text, ConfirmCoupon } from "../../components";
+import { Button, Screen, Text, ConfirmCouponModal } from "../../components";
 import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback,  BackHandler } from "react-native";
 import { COLOR, IMAGES } from "../../theme";
 import styles from "./home-style";
@@ -27,13 +27,12 @@ export const HomeScreen = observer(function HomeScreen() {
 	const navigation = useNavigation();
 	const isFocused = useIsFocused();
 
-
 	const getProfileConsumer = () => {
 		loginStore.environment.api
 			.getProfileConsumer()
 			.then((result: any) => {
 				if (result.kind === "ok") {
-					console.log(' getProfileConsumer ===>>> ', JSON.stringify(result, null, 2))
+					//console.log(' getProfileConsumer ===>>> ', JSON.stringify(result, null, 2))
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
 					})
@@ -76,7 +75,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getBalanceData()
 			.then((result: any) => {
-				console.log(' getBalanceData ===>>> ', JSON.stringify(result, null, 2))
+				//console.log(' getBalanceData ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setBalanceData(result.data)
@@ -114,7 +113,7 @@ export const HomeScreen = observer(function HomeScreen() {
 			.getConsumerCoupons()
 			.then((result: any) => {
 				if (result.kind === "ok") {
-					//console.log('CONSUMER COUPONS =============>',result.data)
+					//console.log('CONSUMER COUPONS =============>', result.data)
 					runInAction(() => {
 						loginStore.setConsumerCoupons(result.data?.results)
 					})
@@ -130,13 +129,21 @@ export const HomeScreen = observer(function HomeScreen() {
 
 	const getAllCoupons = () => 
 	loginStore.environment.api.getCoupons()
-	.then(({data}) => setCouponsConfig({...couponsConfig, coupons: data.results}));
+	.then((result) => {
+		if(result.kind === 'ok') {
+			//console.log('ALL COUPONS =======>', result.data)
+			setCouponsConfig({...couponsConfig, coupons: result.data.results})
+		}}
+		)
+	.catch(error => console.log('GET ALL COUPONS ERROR ', error.message))
+	
 
 	const getFundingSources = () => {
+		
 		loginStore.environment.api
 			.getFundingSources({ "user_type": loginStore.getSelectedAccount })
 			.then((result: any) => {
-				console.log(' result ===>>> ', JSON.stringify(result, null, 2))
+				//console.log(' result ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setFundingSources(result.data)
@@ -310,12 +317,14 @@ export const HomeScreen = observer(function HomeScreen() {
 
 					{ ShowConfirmCoupon &&
 
-						<ConfirmCoupon 
+						<ConfirmCouponModal 
+							couponsConfig={couponsConfig}
+							setCouponsConfig={setCouponsConfig}
 							visible={ShowConfirmCoupon} 
 							buttonAction={() => setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})} 
 							couponSelected={couponSelected}
 							//@ts-ignore
-							mode={() => loginStore.getConsumerCoupons.find(c => c.id_cupon === couponSelected.id) ? 'delete' : 'add'}
+							mode={!loginStore.getConsumerCoupons.some(c => c.id_cupon === couponSelected.id) ? 'ADD' : 'DELETE'}
 							goBack={async () => {
 
 								await getAllCoupons()
@@ -417,3 +426,5 @@ export const HomeScreen = observer(function HomeScreen() {
 		</Screen>
 	)
 })
+
+

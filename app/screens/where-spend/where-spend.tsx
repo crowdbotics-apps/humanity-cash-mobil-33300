@@ -185,5 +185,11 @@ export default StyleSheet.create({
   },
   TOP_MONTH: {
     width: METRICS.screenWidth * 0.95 - 150,
+  },
+  FAVORITE_ICON: {
+    bottom: 35, 
+    height: 25,
+    left: 3, 
+    position: 'absolute',
   }
 })

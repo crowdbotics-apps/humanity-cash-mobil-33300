@@ -116,6 +116,11 @@ export class Api extends ApiBase {
     return this.simple_post(apiv1 + "/consumer-coupons/", data)
   }
 
+  async deleteConsumerCoupon(id: number): Promise<Types.GenericResponse> {
+
+    return this.simple_delete(apiv1 + `/consumer-coupons/${id}/`)
+  }
+
   // SECURITY
   async updateSecurity(data: any): Promise<Types.SimplePostResult> {
     return this.simple_patch(apiv1 + "/security/change-password/", data)

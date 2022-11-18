@@ -1,48 +1,40 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import { Text, View, Modal, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useStores } from "../../models";
-import { COLOR } from "../../theme";
+import {addConsumerCoupon, deleteConsumerCoupon} from '../../utils/coupons';
+import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "../connect-bank-modal/styles";
 
 type ConnectBankModalProps = {
+  couponsConfig?: any,
+  setCouponsConfig?: any,
   visible?: boolean,
   onPressHome?: any,
   buttonStyle?: any,
   buttonAction?: any,
   couponSelected: any,
   goBack?: any,
-  mode?: any
+  mode?: string,
 }
 
 
-export function ConfirmCoupon(props: ConnectBankModalProps) {
+export function ConfirmCouponModal(props: ConnectBankModalProps) {
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
 
     const {loginStore} = useStores();
 
-    const modalMode: string = loginStore.getConsumerCoupons.find(c => c.id_cupon === props.couponSelected.id) ? 'delete' : 'add';
-    
-    const addConsumerCoupon =  (coupon_id: number) => {
-
+    const postCoupon = (): Promise<void> => {
         setLoading(true);
+        return addConsumerCoupon(props.couponSelected.id, props, loginStore)
+        .then(() => {setLoading(false); props.setCouponsConfig({...props.couponsConfig, ShowConfirmCoupon: !props.visible})})
+        .catch(error => console.log('Algo falló en el POST de cupones: ' + error.message))
+    }
 
-        loginStore.environment.api.getProfileConsumer()
-        .then((response) => {
-
-            loginStore.environment.api
-            .postConsumerCoupon({
-                consumer: response.data.consumer, 
-                coupon: coupon_id, 
-                active: true
-            }).then(() => {
-
-                setLoading(false);
-                props.goBack();
-            }).catch(err => console.log(err.mmesage))
-
-        }).catch(error => console.log(error.message))
+    const deleteCoupon = (): Promise<void[]> => {
+        setLoading(true)
+        return deleteConsumerCoupon(props.couponSelected.id, props, loginStore)
+        .then(() => [setLoading(false), props.setCouponsConfig({...props.couponsConfig, ShowConfirmCoupon: !props.visible})])
     }
 
 	return (
@@ -55,13 +47,12 @@ export function ConfirmCoupon(props: ConnectBankModalProps) {
 				<View style={styles.MODAL_CONTAINER_COUPON}>
 					<View style={styles.MODAL_CONTENT}>
 						<Text style={styles.STEP_TITLE}>
-                            {props.mode === 'add' ? 'Add this coupon' : 'Delete this from your courpons'}
+                            {props.mode === 'ADD' ? 'Add this coupon' : 'Delete this from your coupons'}
                         </Text>
 						<TouchableOpacity 
                           style={[styles.MODAL_BUTTON, {backgroundColor: loginStore.getAccountColor, opacity: loading ? 0.5 : 1 }]} 
-                          onPress={() => props.mode === 'add' ? addConsumerCoupon(props.couponSelected.id) : null}
-                          disabled={loading ? true : false}
-                          
+                          onPressIn={() => props.mode === 'ADD' ? postCoupon() : deleteCoupon()}
+                          disabled={loading ? true : false} 
                         >
 							<Text style={[styles.SUBMIT_BUTTON_LABEL]}>Confirm</Text>
 
