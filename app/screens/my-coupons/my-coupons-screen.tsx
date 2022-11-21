@@ -212,9 +212,9 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 			style={styles.ROOT}
 		>
 			<View style={styles.HEADER_ACTIONS}>
-				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate('home')}>
 					<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
-					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
+					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 
 				</TouchableOpacity>
 			</View>
@@ -280,7 +280,6 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 						buttonStyle={{ backgroundColor: loginStore.getAccountColor, marginTop: 5 }}
 						onPress={() => navigation.navigate("createCoupon")}
 						buttonLabel={'Create a coupon'}
-						showBottonMenu
 						accountType={loginStore.getSelectedAccount}
 					/>
 				}

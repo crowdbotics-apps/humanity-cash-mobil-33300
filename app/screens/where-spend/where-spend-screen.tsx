@@ -927,7 +927,6 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
 		couponSelected: c
 	});
 
-
   useEffect(() => {
     if (isFocused) {
 
@@ -1004,12 +1003,12 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   const RenderCategories = () => {
     if (!loginStore?.getBusiness?.[0]) return
     return (
-      loginStore.getBusiness.map(category => (
+      loginStore?.getBusiness?.map(category => (
         Object.keys(category).map((i, key) => (
           <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
             <Text style={styles.INDUSTRY_TITLE}>{i}</Text>
             <View style={styles.LINE} />
-            <ScrollView style={styles.BUSINESS_CONTAINER}>
+            <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
               {category[i].map((b, key2) => (
                 <TouchableOpacity onPress={() =>[ getBusinessDetail(b.id)]} style={styles.BUSINESS} key={key + '' + key2}>
                   <Image
@@ -1017,8 +1016,6 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                     resizeMode='cover'
                     style={styles.BUSINESS_IMAGE}
                   />
-
-                  {/* <Text>==========={JSON.stringify(category, null, 2)}</Text> */}
                   <Text style={styles.BUSINESS_NAME}>{b.business_name}</Text>
                 </TouchableOpacity>
               ))}

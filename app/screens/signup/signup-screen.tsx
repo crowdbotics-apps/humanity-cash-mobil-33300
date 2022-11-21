@@ -54,8 +54,8 @@ export const SignupScreen = observer(function SignupScreen() {
   const [Code5, setCode5] = useState("")
   const [Code6, setCode6] = useState("")
 
-  const [Pass, setPass] = useState("")
-  const [PassConfirm, setPassConfirm] = useState("")
+  const [Pass, setPass] = useState("admin1234567")
+  const [PassConfirm, setPassConfirm] = useState("admin1234567")
   const [HidePass, setHidePass] = useState(true)
   const [HidePassConfirm, setHidePassConfirm] = useState(true)
   const [MatchPassword, setMatchPassword] = useState(true)
@@ -186,8 +186,11 @@ export const SignupScreen = observer(function SignupScreen() {
           runInAction(() => {
             // loginStore.setUser(result.response.user)
             // loginStore.setApiToken(result.response.access_token)
+            //navigation.navigate("signupProfile")
 
-            navigation.navigate("setupProfile")
+            setPass('');
+            setPassConfirm('');
+            navigation.navigate("setupProfile");
             resetData()
           })
         } else if (result.kind === "bad-data") {

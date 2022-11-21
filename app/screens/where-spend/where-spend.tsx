@@ -13,6 +13,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
   },
   BUSINESS_IMAGE: {
+    //backgroundColor: 'red',
     height: 130,
     width: 90,
   },
