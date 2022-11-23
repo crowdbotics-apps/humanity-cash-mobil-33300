@@ -288,5 +288,12 @@ export default StyleSheet.create({
     color: '#D2A824', 
     fontWeight: '700', 
     textDecorationLine: 'underline', 
+  },
+  FAVORITE_ICON: {
+
+    bottom: 35, 
+    height: 25,
+    left: 3, 
+    position: 'absolute',
   }
 })

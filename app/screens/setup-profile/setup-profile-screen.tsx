@@ -1,3 +1,4 @@
+//290 238 243 169
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import {
@@ -165,7 +166,15 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		loginStore.environment.api.setupConsumerFirstStep(data, keys).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
+				
+				//CAMBIOS ======================>
+				setUsername('')
+				setImageSource(null)
+				setName('')
+				setLastName('')
+				
 				setStep("name")
+
 			} else if (result.kind === "bad-data") {
 				const errors = result?.errors
 				if (errors?.username) {
@@ -193,7 +202,8 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			console.log(' setupConsumerDetail ===>>> ', JSON.stringify(result, null, 2))
 			setLoading(false)
 			if (result.kind === "ok") {
-				setShowThankyouModal(true)
+				setShowThankyouModal(true);
+				setStep('profile_type');
 			} else if (result.kind === "bad-data") {
 				const key = Object.keys(result?.errors)[0]
 				const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -233,6 +243,10 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
+
+					//CAMBIOS ====================================>
+					setBusinessName('')
+					setBusinessStory('')
 					setStep('business_type')
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -287,6 +301,9 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				if (result.kind === "ok") {
 					loginStore.setSelectedAccount('merchant')
 					setShowThankyouModal(true)
+					//=======> CAMBIO
+					loginStore.setSetupData({});
+					
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -304,6 +321,9 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		let render
 		switch (Step) {
 			// consumer
+			case 'profile_type':
+				render = renderSelectBusinessType()
+				break
 			case 'pic_username':
 				render = renderPicUsername()
 				break;

@@ -23,9 +23,8 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		'Discount percentage',
 		'Discount dollar amount',
 		'Special Offer',
-	]
-
-	const coupons: any = [
+	];
+	const coupons: object[] = [
 		{
 			title: 'Super Promo',
 			start_date: '12/31/2022',
@@ -50,10 +49,9 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 			discount_input: 'Free Wine',
 			image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
 		},
-	]
+	];
 
 	const [ShowIndex, setShowIndex] = useState(true)
-
 	const [Search, setSearch] = useState('')
 	const [ShowFilter, setShowFilter] = useState(false)
 	const [SelectedReturn, setSelectedReturn] = useState({})
@@ -64,7 +62,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	const [DateFrom, setDateFrom] = useState(new Date(new Date().getFullYear(), 0, 1))
 	const [OpenFrom, setOpenFrom] = useState(false)
 	const [DateTo, setDateTo] = useState(new Date(new Date().getFullYear(), 11, 31))
-	const [OpenTo, setOpenTo] = useState(false)
+	const [OpenTo, setOpenTo] = useState(false);
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
@@ -72,10 +70,12 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		loginStore.environment.api
 			.getCoupons()
 			.then((result: any) => {
-				console.log(' getCoupons ===>>>  ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
-						loginStore.setMerchantCoupons(result?.data?.results)
+
+						//console.log('CUPONES ====>', result.data.results)
+						const filteredCouponsByLoguedMerchant = result?.data?.results.filter(c => c.merchant === loginStore.merchant_id)
+						loginStore.setMerchantCoupons(filteredCouponsByLoguedMerchant);
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -84,7 +84,6 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 				}
 			})
 	}
-
 	useEffect(() => {
 		if (isFocused) getCoupons()
 	}, [isFocused])
@@ -213,9 +212,9 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 			style={styles.ROOT}
 		>
 			<View style={styles.HEADER_ACTIONS}>
-				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
+				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate('home')}>
 					<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
-					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
+					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 
 				</TouchableOpacity>
 			</View>
@@ -262,7 +261,11 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.title}</Text>
 										</View>
 										<View style={styles.CONTAINER}>
-											<Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{i.discount_input}</Text>
+											<Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>
+												{i.type_of_promo === 'Discount dollar amount' && '$' }
+												{i.discount_input}
+												{i.type_of_promo === 'Discount percentage' && '%' }
+											</Text>
 										</View>
 									</TouchableOpacity>
 								))}
@@ -277,7 +280,6 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 						buttonStyle={{ backgroundColor: loginStore.getAccountColor, marginTop: 5 }}
 						onPress={() => navigation.navigate("createCoupon")}
 						buttonLabel={'Create a coupon'}
-						
 						accountType={loginStore.getSelectedAccount}
 					/>
 				}

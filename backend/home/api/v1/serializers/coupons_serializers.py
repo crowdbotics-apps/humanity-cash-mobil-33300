@@ -19,7 +19,8 @@ class CounponListSerializer(serializers.ModelSerializer):
 class CounponCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coupon
-        fields = ['title', 'start_date', 'end_date', 'type_of_promo', 'discount_input', 'description', 'promo_image',
+        #se agrego el campo id 18/11
+        fields = ['id', 'title', 'start_date', 'end_date', 'type_of_promo', 'discount_input', 'description', 'promo_image',
                   'merchant']
 
     def validate(self, attrs):
@@ -52,7 +53,7 @@ class ConsumerCouponListSerializer(serializers.ModelSerializer):
 class ConsumerCouponCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsumerCoupon
-        fields = ['consumer', 'coupon']
+        fields = ['consumer', 'coupon', 'active']
 
 
 class ConsumerUpdateCreateSerializer(serializers.ModelSerializer):

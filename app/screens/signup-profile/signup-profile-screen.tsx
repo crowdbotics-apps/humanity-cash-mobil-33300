@@ -171,7 +171,11 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		}).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
-				setStep("name")
+				setUsername('');
+				setName('');
+				setLastName('');
+				setImageSource('');
+				setStep('name')
 			} else if (result.kind === "bad-data") {
 				const key = Object.keys(result?.errors)[0]
 				const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -196,7 +200,11 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		}).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
-				setShowThankyouModal(true)
+				setUsername('');
+				setName('');
+				setLastName('');
+				//setStep('profile_type');
+				setShowThankyouModal(true);
 			} else if (result.kind === "bad-data") {
 				const key = Object.keys(result?.errors)[0]
 				const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -288,8 +296,28 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
-					loginStore.setSelectedAccount('merchant')
-					setShowThankyouModal(true)
+					loginStore.setSelectedAccount('merchant');
+					setShowThankyouModal(true);
+					setBusinessName('');
+					setBusinessStory('');
+					setBusinessExecName('');
+					setBusinessExecLastName('');
+					setBusinessImageSource(null);
+					setBusinessRegName('');
+					setBusinessIndustryType('');
+					setIndentifierType('');
+					setEmployerId('');
+					setBusinessType('');
+					setFacebookLink('');
+					setInstagramLink('');
+					setTwitterLink('');
+					setAddress1('');
+					setAddress2('');
+					setCity('');
+					setState('');
+					setPostalCode('');
+					setPhoneNumber('');
+					setStep('');
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -837,7 +865,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					<Button
 						onPressIn={() => {
 							console.log('entre')
-							navigation.navigate('linkBank')}
+							navigation.navigate('linkBank')
+						}
 						}
 						buttonLabel={'Link my personal bank account'}
 						buttonStyle={styles.SUBMIT_BUTTON}
@@ -947,38 +976,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				console.log,
 				{ enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
 			)
-
-			const data = loginStore.getSetupData
-			console.log(' ====================================== props?.params?.profile_type ', JSON.stringify(props, null, 2))
 			setProfileType(props.route?.params?.profile_type || profileTypes[1])
-			if (data?.Username) {
-				setUsername(data.Username)
-				setButtonDisabled(false)
-			}
-			if (data?.imageSource) setImageSource(data.imageSource)
-			if (data?.Name) setName(data.Name)
-			if (data?.LastName) setLastName(data.LastName)
-			if (data?.BusinessName) {
-				setBusinessName(data.BusinessName)
-				setButtonDisabled(false)
-			}
-			if (data?.BusinessStory) setBusinessStory(data.BusinessStory)
-			if (data?.BusinessType) setBusinessType(data.BusinessType)
-			if (data?.BusinessExecName) setBusinessExecName(data.BusinessExecName)
-			if (data?.BusinessExecLastName) setBusinessExecLastName(data.BusinessExecLastName)
-			if (data?.BusinessImageSource) setBusinessImageSource(data.BusinessImageSource)
-			if (data?.BackBusinessImageSource) setBackBusinessImageSource(data.BackBusinessImageSource)
-			if (data?.BusinessRegName) setBusinessRegName(data.BusinessRegName)
-			if (data?.BusinessIndustryType) setBusinessIndustryType(data.BusinessIndustryType)
-			if (data?.IndentifierType) setIndentifierType(data.IndentifierType)
-			if (data?.EmployerId) setEmployerId(data.EmployerId)
-			if (data?.SocialSecurityNumber) setSocialSecurityNumber(data.SocialSecurityNumber)
-			if (data?.Address1) setAddress1(data.Address1)
-			if (data?.Address2) setAddress2(data.Address2)
-			if (data?.City) setCity(data.City)
-			if (data?.State) setState(data.State)
-			if (data?.PostalCode) setPostalCode(data.PostalCode)
-			if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
 
 			fetchCity()
 			fetchState()
@@ -1006,10 +1004,10 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
-					{renderStep()}
-				</View>
-			</View>
-			</ScrollView>
+							{renderStep()}
+						</View>
+					</View>
+				</ScrollView>
 			</KeyboardAvoidingView>
 			{mapInputModal()}
 			{confirmLogoutModal()}
