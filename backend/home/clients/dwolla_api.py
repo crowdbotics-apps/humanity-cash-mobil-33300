@@ -130,7 +130,6 @@ class DwollaClient:
             "status": "deactivated",
         }
         req = self.app_token.post(url, body)
-        a = 1
         return req
 
 

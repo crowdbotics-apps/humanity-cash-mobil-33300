@@ -56,21 +56,18 @@ def create_dwolla_customer_consumer(instance):
     try:
         dwolla_client = DwollaClient()
         if instance.first_name and instance.last_name and instance.email:
-            if instance.get_merchant_data and instance.get_merchant_data.dwolla_id:
-                instance.consumer.dwolla_id = instance.merchant.dwolla_id
-                instance.consumer.save()
-            else:
-                dwolla_id = dwolla_client.create_customer(
-                    {
-                        "firstName": instance.first_name,
-                        "lastName": instance.last_name,
-                        "email": instance.email
-                    }
-                )
-                # TODO: add additional fields
-                # TODO: change if email for owner is added
-                instance.consumer.dwolla_id = dwolla_id
-                instance.consumer.save()
+
+            dwolla_id = dwolla_client.create_customer(
+                {
+                    "firstName": instance.first_name,
+                    "lastName": instance.last_name,
+                    "email": instance.email + '_consumer'
+                }
+            )
+            # TODO: add additional fields
+            # TODO: change if email for owner is added
+            instance.consumer.dwolla_id = dwolla_id
+            instance.consumer.save()
     except Exception as e:
         logger.exception('Dwolla Error: {}'.format(e))
 
@@ -79,23 +76,18 @@ def create_dwolla_customer_merchant(instance):
     try:
         dwolla_client = DwollaClient()
         if instance.owner_first_name and instance.owner_last_name and instance.user.email and instance.business_name:
-            user_instance = instance.user
-            if user_instance.get_consumer_data and user_instance.get_consumer_data.dwolla_id:
-                instance.dwolla_id = user_instance.consumer.dwolla_id
-                instance.save()
-            else:
-                dwolla_id = dwolla_client.create_customer(
-                    {
-                        "firstName": instance.owner_first_name,
-                        "lastName": instance.owner_last_name,
-                        "email": instance.user.email,
-                        "businessName": instance.business_name
-                    }
-                )
-                # TODO: add additional fields
-                # TODO: change if email for owner is added
-                instance.dwolla_id = dwolla_id
-                instance.save()
+            dwolla_id = dwolla_client.create_customer(
+                {
+                    "firstName": instance.owner_first_name,
+                    "lastName": instance.owner_last_name,
+                    "email": instance.user.email + '_merchant',
+                    "businessName": instance.business_name
+                }
+            )
+            # TODO: add additional fields
+            # TODO: change if email for owner is added
+            instance.dwolla_id = dwolla_id
+            instance.save()
     except Exception as e:
         logger.exception('Dwolla Error: {}'.format(e))
 

@@ -15,7 +15,6 @@ import MapView, { Marker, Circle } from 'react-native-maps'
 import Geolocation from '@react-native-community/geolocation';
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
-import {industryTypes} from './industries'
 
 export const WhereSpendScreen = observer(function WhereSpendScreen() {
   const rootStore = useStores()
