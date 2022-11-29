@@ -30,6 +30,11 @@ export class Api extends ApiBase {
     return this.simple_post(apiv1 + "/registration/send-verification-code/")
   }
 
+  // DELETE
+  async deleteAccount(): Promise<Types.GenericResponse> {
+    return this.simple_delete(apiv1 + `/security/delete-account/`)
+  }
+
   // LOGIN
   async login(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post("/dj-rest-auth/login/", data)
@@ -112,12 +117,10 @@ export class Api extends ApiBase {
   }
 
   async postConsumerCoupon(data: any): Promise<Types.SimplePostResult> {
-
     return this.simple_post(apiv1 + "/consumer-coupons/", data)
   }
 
   async deleteConsumerCoupon(id: number): Promise<Types.GenericResponse> {
-
     return this.simple_delete(apiv1 + `/consumer-coupons/${id}/`)
   }
 

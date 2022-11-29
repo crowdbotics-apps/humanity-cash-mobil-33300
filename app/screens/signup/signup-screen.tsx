@@ -160,7 +160,6 @@ export const SignupScreen = observer(function SignupScreen() {
       .then(result => {
         setLoading(false)
         if (result.kind === "ok") {
-          notifyMessage("Email verified", "success")
           setStep("email_confirmed")
         } else if (result.kind === "bad-data") {
           notifyMessage(result.errors.verification_code[0])

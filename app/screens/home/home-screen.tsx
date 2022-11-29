@@ -247,7 +247,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					<View style={styles.LINE} />
 
 
-					{!(!loginStore.getAllData.business_name && loginStore.getBillingData.billing_data_added) &&
+					{!loginStore.getAllData.first_name &&
 
 						<TouchableOpacity
 							style={[styles.WARNING_CONTAINER, {marginBottom: 10}]}

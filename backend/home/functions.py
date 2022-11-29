@@ -98,3 +98,13 @@ def create_dwolla_customer_merchant(instance):
                 instance.save()
     except Exception as e:
         logger.exception('Dwolla Error: {}'.format(e))
+
+
+def deactivate_dwolla_customer(dwolla_id):
+    try:
+        dwolla_client = DwollaClient()
+        if dwolla_id:
+            dwolla_client.deactivate_client(dwolla_id)
+
+    except Exception as e:
+        logger.exception('Dwolla Error: {}'.format(e))
