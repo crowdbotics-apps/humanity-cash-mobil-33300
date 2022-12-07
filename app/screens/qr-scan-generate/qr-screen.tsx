@@ -192,7 +192,14 @@ export const QRScreen = observer(function QRScreen(props: any) {
   const transferCurrency = () => {
     if (!QR) return
     setLoading(true)
-    const qrData = JSON.parse(QR)
+    console.log(' QR => ', QR)
+    let temp = QR.replaceAll('”','"')
+    console.log(' temp => ', temp)
+    temp = temp.replaceAll('“','"')
+    console.log(' temp => ', temp)
+    temp = temp.replaceAll("'","")
+    console.log(' temp => ', temp)
+    const qrData = JSON.parse(temp)
     const data = {
       "from": loginStore?.getProfilesId[loginStore.getSelectedAccount],
       "to": qrData.to,

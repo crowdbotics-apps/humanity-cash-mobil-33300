@@ -185,7 +185,7 @@ export class Api extends ApiBase {
   }
 
   async postCashOut(data?: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(apiv1 + "/deposit/", data)
+    return this.simple_post(apiv1 + "/withdraw/", data)
   }
 
   async getACHTransactions(data?: any): Promise<Types.SimpleGetResult> {
@@ -194,5 +194,13 @@ export class Api extends ApiBase {
 
   async getTransactions(data?: any): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/transaction/", data)
+  }
+
+  async sendReport(data?: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/send-report/", data)
+  }
+
+  async sendQR(data?: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/send-qr/", data)
   }
 }
