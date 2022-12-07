@@ -89,7 +89,6 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
-
 	const getEvents = () => {
 		loginStore.environment.api
 			.getEvents()
@@ -107,7 +106,6 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
-
 	const getConsumerCoupons = () => {
 		loginStore.environment.api
 			.getConsumerCoupons()
@@ -126,20 +124,18 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
-
-	const getAllCoupons = () => 
-	loginStore.environment.api.getCoupons()
-	.then((result) => {
-		if(result.kind === 'ok') {
-			//console.log('ALL COUPONS =======>', result.data)
-			setCouponsConfig({...couponsConfig, coupons: result.data.results})
-		}}
-		)
-	.catch(error => console.log('GET ALL COUPONS ERROR ', error.message))
-	
+	const getAllCoupons = () =>
+		loginStore.environment.api.getCoupons()
+			.then((result) => {
+				if (result.kind === 'ok') {
+					//console.log('ALL COUPONS =======>', result.data)
+					setCouponsConfig({ ...couponsConfig, coupons: result.data.results })
+				}
+			}
+			)
+			.catch(error => console.log('GET ALL COUPONS ERROR ', error.message))
 
 	const getFundingSources = () => {
-		
 		loginStore.environment.api
 			.getFundingSources({ "user_type": loginStore.getSelectedAccount })
 			.then((result: any) => {
@@ -151,13 +147,11 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
-
 	const openModal = (c: any) => setCouponsConfig({
 		...couponsConfig, 
 		ShowConfirmCoupon: !ShowConfirmCoupon,
 		couponSelected: c
 	});
-
 
 	useEffect(() => {
 		if (isFocused) {
@@ -197,7 +191,6 @@ export const HomeScreen = observer(function HomeScreen() {
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
 					</View>
-
 				</View>
 			</TouchableWithoutFeedback>
 		</Modal>
@@ -246,9 +239,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					</View>
 					<View style={styles.LINE} />
 
-
 					{(!loginStore.getAllData.first_name && loginStore.getSelectedAccount === 'merchant') &&
-
 						<TouchableOpacity
 							style={[styles.WARNING_CONTAINER, {marginBottom: 10}]}
 							onPress={() => navigation.navigate('signupProfile', { profile_type: profileTypes[0] })}
@@ -264,7 +255,6 @@ export const HomeScreen = observer(function HomeScreen() {
 							</Text>
 						</TouchableOpacity>
 					}
-
 					{(!loginStore.getBillingData.billing_data_added) &&
 						<TouchableOpacity
 							style={styles.WARNING_CONTAINER}
@@ -282,32 +272,25 @@ export const HomeScreen = observer(function HomeScreen() {
 					<Text style={[styles.INDUSTRY_TITLE, { marginTop: 15 }]}>MY SAVED COUPONS</Text>
 
 					<ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginHorizontal: 10 }}>
-
 						{coupons.map((c, key) => (
-
-							<TouchableOpacity 
-							  key={key + '_coupon'}
-							  style={styles.COUPON_CONTAINER}
-							  onPress={() => openModal(c)}
+							<TouchableOpacity
+								key={key + '_coupon'}
+								style={styles.COUPON_CONTAINER}
+								onPress={() => openModal(c)}
 							>
 								<Image
 									source={{ uri: c.promo_image }}
 									resizeMode='cover'
 									style={styles.RETURN_IMAGE}
 								/>
-
-								{ loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id) 
-								  && <Icon style={styles.FAVORITE_ICON} name={"star"} size={25} color={COLOR.PALETTE.mustard} />
+								{loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id)
+									&& <Icon style={styles.FAVORITE_ICON} name={"star"} size={25} color={COLOR.PALETTE.mustard} />
 								}
-
 								<Text style={styles.COUPON_TITLE}>
 									{c.title}
 								</Text>
-								
-
 							</TouchableOpacity>
 						))}
-
 					</ScrollView>
 
 					{renderNews()}

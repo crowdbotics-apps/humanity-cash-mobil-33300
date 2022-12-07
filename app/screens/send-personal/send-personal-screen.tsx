@@ -30,8 +30,8 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 	const [Sucess, setSucess] = useState(true)
 	const [ResponseMenssage, setResponseMenssage] = useState('')
 
-	const [Step, setStep] = useState('select') // select - amount
-	const [Type, setType] = useState('') // self - other
+	const [Step, setStep] = useState('amount') // select - amount
+	const [Type, setType] = useState('self') // self - other
 
 	const [ScanQR, setScanQR] = useState(false)
   const [QR, setQR] = useState(null)
@@ -273,9 +273,6 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 		<TouchableOpacity style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setStep('amount'), setType('self')]}>
 			<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>My personal account</Text>
 		</TouchableOpacity>
-		<TouchableOpacity style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setStep('amount'), setType('other')]}>
-			<Text style={styles.SUBMIT_BUTTON_OUTLINE_LABEL}>Someone else</Text>
-		</TouchableOpacity>
 	</View>
 
 	const renderAmount = () => <View style={styles.STEP_CONTAINER}>
@@ -329,7 +326,7 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 				render = renderAmount()
 				break;
 			default:
-				render = renderSelect()
+				render = renderAmount()
 				break;
 		}
 		return render
@@ -359,7 +356,7 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 									<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
 									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 								</TouchableOpacity>
-								: <TouchableOpacity onPress={() => setStep('select')} style={[styles.BACK_BUTON_CONTAINER, { marginTop: 10 }]}>
+								: <TouchableOpacity onPress={() => navigation.navigate('home')} style={[styles.BACK_BUTON_CONTAINER, { marginTop: 10 }]}>
 									<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
 									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Back`}</Text>
 								</TouchableOpacity>

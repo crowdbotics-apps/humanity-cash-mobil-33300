@@ -130,14 +130,15 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         />
         <Text style={styles.MENU_ITEM_LABEL}>Load Wallet</Text>
       </TouchableOpacity>,
+      loginStore.getAllData.first_name &&
       <TouchableOpacity key={'merchant_personal'} style={styles.MENU_ITEM_CONTAINER} onPress={() => props.navigation.navigate("sendPersonal", { profile_type: profileTypes[1] })}>
-      <Image
-        resizeMode="contain"
-        source={IMAGES.send_to_personal}
-        style={styles.MENU_ITEM_ICON}
-      />
-      <Text style={styles.MENU_ITEM_LABEL}>Send to personal</Text>
-    </TouchableOpacity>,
+        <Image
+          resizeMode="contain"
+          source={IMAGES.send_to_personal}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>Send to personal</Text>
+      </TouchableOpacity>,
       <TouchableOpacity key={'merchant_cashout'} onPress={() => props.navigation.navigate("cashOut")} style={styles.MENU_ITEM_CONTAINER}>
         <Image
           resizeMode="contain"
