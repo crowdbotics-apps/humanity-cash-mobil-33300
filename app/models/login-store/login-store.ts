@@ -254,7 +254,7 @@ export const LoginStoreModel = types
     },
     setConsumerUser(user) {
       if (!user) return
-      console.log(' ===>>> ', user)
+      //console.log(' ===>>> ', user)
       self.consumer_id = user.consumer
       self.id = user.id
       self.profile_picture = user.consumer_profile

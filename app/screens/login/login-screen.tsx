@@ -50,7 +50,8 @@ export const LoginScreen = observer(function LoginScreen() {
             loginStore.setSelectedAccount('consumer')
             loginStore.setMerchantUser(result?.response?.user?.merchant_data)
             loginStore.setConsumerUser(result?.response?.user)
-            if (result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) navigation.navigate("setupProfile")
+            if ((result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) &&
+              (result?.response?.user?.merchant_data?.business_name === '' || result?.response?.user?.merchant_data?.business_name === null)) navigation.navigate("setupProfile")
             else navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {

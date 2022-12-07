@@ -1,37 +1,45 @@
 import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { Button, Screen, Text } from "../../components";
+import { Button, Screen, Text, ConfirmCouponModal } from "../../components";
 import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback,  BackHandler } from "react-native";
-import { IMAGES } from "../../theme";
+import { COLOR, IMAGES } from "../../theme";
 import styles from "./home-style";
 import { useStores } from "../../models";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { runInAction } from "mobx"
-import { notifyMessage } from "../../utils/helpers"
+import { notifyMessage } from "../../utils/helpers";
+import { profileTypes } from '../drawer/drawer-screen'
 
 export const HomeScreen = observer(function HomeScreen() {
-	const navigation = useNavigation()
-	const rootStore = useStores()
-	const { loginStore } = rootStore
+	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
+	const [couponsConfig, setCouponsConfig] = useState({
 
+		coupons: [],
+		couponSelected: {},
+		ShowConfirmCoupon: false
+	});
+	const {coupons, couponSelected, ShowConfirmCoupon} = couponsConfig;
+
+	const rootStore = useStores();
+	const { loginStore } = rootStore;
+
+	const navigation = useNavigation();
 	const isFocused = useIsFocused();
-	const [Events, setEvents] = useState([])
-	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false)
 
 	const getProfileConsumer = () => {
 		loginStore.environment.api
 			.getProfileConsumer()
 			.then((result: any) => {
 				if (result.kind === "ok") {
-					console.log(' getProfileConsumer ===>>> ', JSON.stringify(result, null, 2))
+					//console.log(' getProfileConsumer ===>>> ', JSON.stringify(result, null, 2))
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
 					})
 					if (
 						(loginStore.ProfileData.first_name === '' || loginStore.ProfileData.first_name === null)
 						&& (loginStore.getAllData.business_name === '' || loginStore.getAllData.business_name === null)
-						) navigation.navigate("setupProfile")
+					) navigation.navigate("setupProfile")
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -67,7 +75,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getBalanceData()
 			.then((result: any) => {
-				console.log(' getBalanceData ===>>> ', JSON.stringify(result, null, 2))
+				//console.log(' getBalanceData ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setBalanceData(result.data)
@@ -81,7 +89,6 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
-
 	const getEvents = () => {
 		loginStore.environment.api
 			.getEvents()
@@ -99,12 +106,12 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
-
 	const getConsumerCoupons = () => {
 		loginStore.environment.api
 			.getConsumerCoupons()
 			.then((result: any) => {
 				if (result.kind === "ok") {
+					//console.log('CONSUMER COUPONS =============>', result.data)
 					runInAction(() => {
 						loginStore.setConsumerCoupons(result.data?.results)
 					})
@@ -117,12 +124,22 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
+	const getAllCoupons = () =>
+		loginStore.environment.api.getCoupons()
+			.then((result) => {
+				if (result.kind === 'ok') {
+					//console.log('ALL COUPONS =======>', result.data)
+					setCouponsConfig({ ...couponsConfig, coupons: result.data.results })
+				}
+			}
+			)
+			.catch(error => console.log('GET ALL COUPONS ERROR ', error.message))
 
 	const getFundingSources = () => {
 		loginStore.environment.api
 			.getFundingSources({ "user_type": loginStore.getSelectedAccount })
 			.then((result: any) => {
-				console.log(' result ===>>> ', JSON.stringify(result, null, 2))
+				//console.log(' result ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setFundingSources(result.data)
@@ -130,6 +147,11 @@ export const HomeScreen = observer(function HomeScreen() {
 				}
 			})
 	}
+	const openModal = (c: any) => setCouponsConfig({
+		...couponsConfig, 
+		ShowConfirmCoupon: !ShowConfirmCoupon,
+		couponSelected: c
+	});
 
 	useEffect(() => {
 		if (isFocused) {
@@ -138,8 +160,9 @@ export const HomeScreen = observer(function HomeScreen() {
 			getConsumerCoupons()
 			getProfileMerchant()
 			getFundingSources()
+			getAllCoupons();
 		}
-	}, [isFocused])
+	}, [isFocused, ShowConfirmCoupon])
 
 	useEffect(() => {
 		const backAction = () => true
@@ -160,15 +183,14 @@ export const HomeScreen = observer(function HomeScreen() {
 						<Text style={styles.STEP_TITLE_BLACK}>Are you sure you want to log out?</Text>
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>Please note that unsaved data will be lost.</Text>
 						<TouchableOpacity
-							style={[styles.MODAL_BUTTON, {backgroundColor: loginStore.getAccountColor}]}
-							onPress={() =>[
+							style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
+							onPress={() => [
 								loginStore.setSelectedAccount('consumer'),
 								setShowConfirmLogoutModal(false)
-							  ]}>
+							]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
 					</View>
-
 				</View>
 			</TouchableWithoutFeedback>
 		</Modal>
@@ -193,7 +215,7 @@ export const HomeScreen = observer(function HomeScreen() {
 
 	const ConsumerView = () => (
 		<View style={styles.ROOT_CONTAINER}>
-			<TouchableOpacity style={[styles.HEADER, {marginLeft: 10}]} onPress={() => navigation.toggleDrawer()}>
+			<TouchableOpacity style={[styles.HEADER, { marginLeft: 10 }]} onPress={() => navigation.toggleDrawer()}>
 				<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
 				<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
 			</TouchableOpacity>
@@ -216,30 +238,94 @@ export const HomeScreen = observer(function HomeScreen() {
 						</View>
 					</View>
 					<View style={styles.LINE} />
-					<Text style={styles.INDUSTRY_TITLE}>MY SAVED COUPONS</Text>
+
+					{(!loginStore.getAllData.first_name && loginStore.getSelectedAccount === 'merchant') &&
+						<TouchableOpacity
+							style={[styles.WARNING_CONTAINER, {marginBottom: 10}]}
+							onPress={() => navigation.navigate('signupProfile', { profile_type: profileTypes[0] })}
+						>
+							<View style={styles.ICON_WARNING_CONTAINER}>
+								<Text style={styles.ICON_WARNING}>!</Text>
+							</View>
+							<Text style={styles.TEXT_WARNING}>
+								Create a personal profile so you can easily switch accounts.{' '}
+								<Text style={styles.TEXT_WARNING_LINK}>
+									Go to set up
+								</Text>
+							</Text>
+						</TouchableOpacity>
+					}
+					{(!loginStore.getBillingData.billing_data_added) &&
+						<TouchableOpacity
+							style={styles.WARNING_CONTAINER}
+							onPress={() => navigation.navigate('linkBank')}
+						>
+							<View style={styles.ICON_WARNING_CONTAINER}>
+								<Text style={styles.ICON_WARNING}>!</Text>
+							</View>
+							<Text style={styles.TEXT_WARNING}>
+								Load up your wallet to start spending Currents.{' '}
+								<Text style={styles.TEXT_WARNING_LINK}>Load up Currents.</Text>
+							</Text>
+						</TouchableOpacity>
+					}
+					<Text style={[styles.INDUSTRY_TITLE, { marginTop: 15 }]}>MY SAVED COUPONS</Text>
+
 					<ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ marginHorizontal: 10 }}>
-						{loginStore.getConsumerCoupons.map((c, key) => (
-							<View key={key + '_coupon'} style={styles.COUPON_CONTAINER}>
+						{coupons.map((c, key) => (
+							<TouchableOpacity
+								key={key + '_coupon'}
+								style={styles.COUPON_CONTAINER}
+								onPress={() => openModal(c)}
+							>
 								<Image
 									source={{ uri: c.promo_image }}
 									resizeMode='cover'
 									style={styles.RETURN_IMAGE}
 								/>
-								<Text style={styles.COUPON_TITLE} >{c.title}</Text>
-							</View>
+								{loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === c.id)
+									&& <Icon style={styles.FAVORITE_ICON} name={"star"} size={25} color={COLOR.PALETTE.mustard} />
+								}
+								<Text style={styles.COUPON_TITLE}>
+									{c.title}
+								</Text>
+							</TouchableOpacity>
 						))}
 					</ScrollView>
+
 					{renderNews()}
+
+					{ ShowConfirmCoupon &&
+
+						<ConfirmCouponModal 
+							couponsConfig={couponsConfig}
+							setCouponsConfig={setCouponsConfig}
+							visible={ShowConfirmCoupon} 
+							buttonAction={() => setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})} 
+							couponSelected={couponSelected}
+							//@ts-ignore
+							mode={!loginStore.getConsumerCoupons.some(c => c.id_cupon === couponSelected.id) ? 'ADD' : 'DELETE'}
+							goBack={async () => {
+
+								await getAllCoupons()
+								//@ts-ignore
+								navigation.navigate('home')
+								setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})
+							}}
+						/>
+					}
+
 					<View style={{ height: 20 }} />
 				</View>
 			</ScrollView>
+
 		</View>
 	)
 
 	const CashierView = () => (
 		<View style={styles.ROOT_CONTAINER}>
 			<View style={styles.STEP_CONTAINER}>
-				<TouchableOpacity style={[styles.HEADER, {justifyContent: 'flex-end'}]} onPress={() => setShowConfirmLogoutModal(true)}>
+				<TouchableOpacity style={[styles.HEADER, { justifyContent: 'flex-end' }]} onPress={() => setShowConfirmLogoutModal(true)}>
 					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{`Log out`}</Text>
 				</TouchableOpacity>
 
@@ -295,10 +381,9 @@ export const HomeScreen = observer(function HomeScreen() {
 		>
 			<KeyboardAvoidingView
 				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
 				style={styles.ROOT}
 			>
-						{confirmLogoutModal()}
+				{confirmLogoutModal()}
 				{loginStore.getSelectedAccount === 'cashier'
 					? CashierView()
 					: [
@@ -321,3 +406,5 @@ export const HomeScreen = observer(function HomeScreen() {
 		</Screen>
 	)
 })
+
+

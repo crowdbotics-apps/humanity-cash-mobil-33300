@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { observer } from "mobx-react-lite"
 import { View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Image } from "react-native"
-import { Text, Button, Screen, TextInputComponent } from "../../components"
+import { Text, Button, Screen, TextInputComponent, ConfirmCouponModal } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 // import styles from "./where-spend-style"
 import styles from "./where-spend"
@@ -15,864 +15,6 @@ import MapView, { Marker, Circle } from 'react-native-maps'
 import Geolocation from '@react-native-community/geolocation';
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
-
-const industryTypes = [
-  {
-    type: 'Arts & entertainment',
-    business: [
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-    ]
-  },
-  {
-    type: 'Communication & education',
-    business: [
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-    ]
-  },
-  {
-    type: 'Food & drink',
-    business: [
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      },
-    ]
-  },
-  {
-    type: 'Health & wellness',
-    business: [
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      }
-    ]
-  },
-  {
-    type: 'Lodging',
-    business: [
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      }
-    ]
-  },
-  {
-    type: 'Shopping',
-    business: [
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      }
-    ]
-  },
-  {
-    type: 'Services',
-    business: [
-      {
-        name: 'DORY & GINGER',
-        image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-        description: 'Our motto is Live and Give. We have treasures for your home and lifestyle, along with the perfect gift for that special someone or that occasion that begs for something unique.',
-        location: '',
-        website: 'link',
-        facebook: 'link',
-        instagram: 'link',
-        twitter: 'link',
-        active_cupons: [
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-
-          {
-            image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg',
-            label: 'cupom exaple'
-          },
-        ]
-      }
-    ]
-  },
-]
 
 export const WhereSpendScreen = observer(function WhereSpendScreen() {
   const rootStore = useStores()
@@ -894,6 +36,12 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   const [Latitud, setLatitud] = useState(null)
   const [Longitud, setLongitud] = useState(null)
   const isFocused = useIsFocused();
+  const [couponConfig, setCouponConfig] = useState({
+
+    couponSelected: {},
+    ShowConfirmCoupon: false
+  });
+  const {couponSelected, ShowConfirmCoupon} = couponConfig;
 
   const getBusiness = () => {
     loginStore.environment.api
@@ -914,9 +62,17 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
       })
   }
 
+  const openModal = (c: any) => setCouponConfig({
+		...couponConfig, 
+		ShowConfirmCoupon: !ShowConfirmCoupon,
+		couponSelected: c
+	});
+
   useEffect(() => {
     if (isFocused) {
+
       getBusiness()
+
       Geolocation.getCurrentPosition(
         ({ coords: { latitude, longitude } }) => {
           const location = {
@@ -932,8 +88,12 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
         console.warn,
         { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
       )
+
+    } else {
+
+      setShowDetail(false)
     }
-  }, [isFocused])
+  }, [isFocused, ShowConfirmCoupon])
 
   const RenderTopMonth = () => {
     const merchantOfTheMonth = loginStore.getMerchantOfMonth
@@ -984,14 +144,14 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   const RenderCategories = () => {
     if (!loginStore?.getBusiness?.[0]) return
     return (
-      loginStore.getBusiness.map(category => (
+      loginStore?.getBusiness?.map(category => (
         Object.keys(category).map((i, key) => (
           <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
             <Text style={styles.INDUSTRY_TITLE}>{i}</Text>
             <View style={styles.LINE} />
             <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
               {category[i].map((b, key2) => (
-                <TouchableOpacity onPress={() => getBusinessDetail(b.id)} style={styles.BUSINESS} key={key + '' + key2}>
+                <TouchableOpacity onPress={() =>[ getBusinessDetail(b.id)]} style={styles.BUSINESS} key={key + '' + key2}>
                   <Image
                     source={{ uri: b.background_picture }}
                     resizeMode='cover'
@@ -1074,7 +234,6 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
       <MapView
         // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
         style={{
-          // height: METRICS.screenHeight - 200,
           flex: 1,
           width: METRICS.screenWidth,
           justifyContent: 'flex-end',
@@ -1178,17 +337,40 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                   <Text style={styles.INDUSTRY_TITLE}>ALL ACTIVE COUPONS</Text>
                   <View style={styles.LINE} />
                   <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
+
                     {SelectedDetail?.coupons && SelectedDetail?.coupons.map((b, key2) => (
-                      <View style={styles.BUSINESS} key={key2 + '_coupon'}>
+                      <TouchableOpacity 
+                        style={styles.BUSINESS} key={key2 + '_coupon'}
+                        onPress={() => openModal(b)}
+                      >
                         <Image
                           source={{ uri: b.promo_image }}
                           resizeMode='cover'
                           style={styles.BUSINESS_IMAGE}
                         />
                         <Text style={styles.BUSINESS_NAME}>{b.title}</Text>
-                      </View>
+                        {loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === b.id) && 
+                         <Icon style={styles.FAVORITE_ICON} name={"star"} size={25} color={COLOR.PALETTE.mustard} /> 
+                        }
+                        
+                      </TouchableOpacity>
                     ))}
+
                   </ScrollView>
+
+                  { ShowConfirmCoupon &&
+
+                  <ConfirmCouponModal 
+                    couponsConfig={couponConfig}
+                    setCouponsConfig={setCouponConfig}
+                    visible={ShowConfirmCoupon} 
+                    buttonAction={() => setCouponConfig({...couponConfig, ShowConfirmCoupon: false})} 
+                    couponSelected={couponSelected}
+                    //@ts-ignore
+                    mode={!loginStore.getConsumerCoupons.some(c => c.id_cupon === couponSelected.id) ? 'ADD' : 'DELETE'}
+                    goBack={async () => [setShowDetail(!ShowDetail), setCouponConfig({...couponConfig, ShowConfirmCoupon: !ShowConfirmCoupon})]}
+                  />
+                  }
                 </View>
               </View>
               : <View style={styles.CONTAINER}>
@@ -1218,7 +400,6 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
         </View>
       }
       <Button
-        // onPress={() => {}}
         buttonLabel={''}
         hideButton
         showBottonMenu={false}

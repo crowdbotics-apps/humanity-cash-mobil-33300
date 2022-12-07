@@ -235,7 +235,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     // backgroundColor:  COLOR.PALETTE.background,
-    // backgroundColor: 'red',
+    //backgroundColor: 'red',
     flexDirection: 'row',
     height: 70,
     justifyContent: 'space-between',

@@ -124,3 +124,12 @@ class DwollaClient:
     def get_transaction(self, trn_id):
         return self.get_resource('{}/transfers/{}'.format(self.get_base_url(), trn_id))
 
+    def deactivate_client(self, client_id):
+        url = '{}/customers/{}'.format(self.get_base_url(), client_id)
+        body = {
+            "status": "deactivated",
+        }
+        req = self.app_token.post(url, body)
+        return req
+
+

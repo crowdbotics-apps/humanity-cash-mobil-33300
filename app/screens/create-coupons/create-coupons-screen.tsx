@@ -94,6 +94,8 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 			})
 	}
 
+	
+
 	const TypeOfPromos = [
 		'Discount percentage',
 		'Discount dollar amount',

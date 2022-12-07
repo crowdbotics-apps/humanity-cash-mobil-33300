@@ -13,6 +13,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
   },
   BUSINESS_IMAGE: {
+    //backgroundColor: 'red',
     height: 130,
     width: 90,
   },
@@ -107,7 +108,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.lightGray,
     borderRadius: 3,
-    height: 480,
+    height: 430,
     justifyContent: 'space-around',
     marginVertical: 15,
     width: METRICS.screenWidth * 0.95
@@ -185,5 +186,11 @@ export default StyleSheet.create({
   },
   TOP_MONTH: {
     width: METRICS.screenWidth * 0.95 - 150,
+  },
+  FAVORITE_ICON: {
+    bottom: 35, 
+    height: 25,
+    left: 3, 
+    position: 'absolute',
   }
 })

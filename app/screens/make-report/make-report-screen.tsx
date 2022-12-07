@@ -25,9 +25,9 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 
 	const [SelectOpen, setSelectOpen] = useState(false)
 	const [TransactionType, setTransactionType] = React.useState('All');
-	const [DateFrom, setDateFrom] = useState(new Date().toLocaleDateString())
+	const [DateFrom, setDateFrom] = useState(new Date())
 	const [OpenFrom, setOpenFrom] = useState(false)
-	const [DateTo, setDateTo] = useState(new Date().toLocaleDateString())
+	const [DateTo, setDateTo] = useState(new Date())
 	const [OpenTo, setOpenTo] = useState(false)
 
 	const transactionTypes = [

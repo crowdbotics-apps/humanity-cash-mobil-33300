@@ -139,7 +139,6 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         super(ConsumerMyProfileAPIView, self).update(request, *args, **kwargs)
-
         instance = self.get_object()
         request.data.pop('consumer_profile')
         serializer = self.get_serializer(instance, data=request.data)

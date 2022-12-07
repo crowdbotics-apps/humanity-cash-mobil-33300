@@ -28,22 +28,28 @@ export const ContactScreen = observer(function ContactScreen() {
 	const [TabIndex, setTabIndex] = React.useState(0);
 
 	const ContactList = (data) =>
-		data.map((i, key2) => (
+		
+		{
+			return data.map((i, key2) => (
 			<TouchableOpacity
 				key={key2 + '_values'}
 				style={styles.RETURN_ITEM}
-				onPress={() => navigation.navigate("qr", {
+				onPressIn={() => 
+					// @ts-ignore
+					navigation.navigate("qr", {
 					QR: JSON.stringify({
 						to_is_consumer: TabIndex === 0,
 						to: i.id,
+						})	
 					})
-				})}
+				}
 			>
 				<Image
 					source={i.profile_picture ? { uri: i.profile_picture } :
 						randomImages[Math.round(Math.random() * 3)]}
 					resizeMode='cover'
 					style={styles.RETURN_IMAGE}
+					
 				/>
 				<Text style={styles.RETURN_ITEM_CUSTOMER}>
 					{(i.first_name && i.first_name !== '')
@@ -55,7 +61,7 @@ export const ContactScreen = observer(function ContactScreen() {
 					{i.id}
 				</Text>
 			</TouchableOpacity>
-		))
+		))}
 
 
 	const ReturnDetailModal = () => <Modal transparent visible={DetailModalVisible}>
