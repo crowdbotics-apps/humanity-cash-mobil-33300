@@ -109,7 +109,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
-	const [Citys, setCitys] = React.useState([]);
+	// const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
 	const [States, setStates] = React.useState([]);
 	const [State, setState] = React.useState('');
@@ -143,12 +143,12 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		});
 	}
 
-	const fetchCity = (data?: string) => {
-		loginStore.environment.api.getCities({ value: data })
-			.then((result: any) => {
-				result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
-			})
-	}
+	// const fetchCity = (data?: string) => {
+	// 	loginStore.environment.api.getCities({ value: data })
+	// 		.then((result: any) => {
+	// 			result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
+	// 		})
+	// }
 	const fetchState = (data?: string) => {
 		loginStore.environment.api.getStates({ value: data })
 			.then((result: any) => {
@@ -291,7 +291,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			owner_last_name: BusinessExecLastName,
 			address_1: Address1,
 			address_2: Address2,
-			city: City?.id,
+			city: City,
 			state: State?.id,
 			zip_code: PostalCode,
 			phone_number: phoneNumber
@@ -301,7 +301,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				if (result.kind === "ok") {
 					loginStore.setSelectedAccount('merchant')
 					setShowThankyouModal(true)
-					//=======> CAMBIO
 					loginStore.setSetupData({});
 					
 				} else if (result.kind === "bad-data") {
@@ -680,11 +679,17 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
-					<TouchableOpacity
-						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, justifyContent: 'flex-start' }]}
-						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
+					<View
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
 					>
-						<ModalSelector
+							<TextInput
+							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.60 }]}
+							onChangeText={t => setCity(t)}
+							value={City}
+							placeholder={'City'}
+						/>
+						{/* <ModalSelector
 							options={Citys}
 							action={setCity}
 							title={""}
@@ -694,8 +699,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 							displaySelector
 							closeOnClick
 							searchAction={fetchCity}
-						/>
-					</TouchableOpacity>
+						/> */}
+					</View>
 				</View>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
@@ -910,7 +915,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			if (data?.PostalCode) setPostalCode(data.PostalCode)
 			if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
 
-			fetchCity()
+			// fetchCity()
 			fetchState()
 		}
 	}, [isFocused])

@@ -11,7 +11,7 @@ import { notifyMessage } from "../../utils/helpers"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
-import {Masks} from "react-native-mask-input";
+import { Masks } from "react-native-mask-input";
 import Entypo from "react-native-vector-icons/Entypo"
 
 const businessTypes = [
@@ -51,7 +51,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
-	const [Citys, setCitys] = React.useState([]);
+	// const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
 	const [States, setStates] = React.useState([]);
 	const [State, setState] = React.useState('');
@@ -232,7 +232,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					placeholder={'business category'}
 				/>
 			</View> */}
-<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
+			<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
 				<TouchableOpacity style={styles.SELECT_ICON_2} onPress={() => [setSelectOpen(!SelectOpen), setBusinessType('')]}>
 					<Text style={styles.SELECT_LABEL}>{BusinessType !== '' ? BusinessType : 'Select'}</Text>
 					<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
@@ -286,9 +286,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
-					<TouchableOpacity
+					<View
 						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, backgroundColor: `${loginStore.getAccountColor}25` }]}
-						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
 					>
 						<TextInput
 							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
@@ -309,7 +308,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 							searchAction={fetchCity}
 						/> */}
 
-					</TouchableOpacity>
+					</View>
 				</View>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
@@ -322,16 +321,16 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						<ModalSelector
 							options={States}
 							action={setState}
-								title={""}
-								value={State}
-								visible={SelectStateOpen}
-								setVisible={setSelectStateOpen}
-								displaySelector
-								closeOnClick
-								searchAction={fetchState}
-							/>
-						</TouchableOpacity>
-					
+							title={""}
+							value={State}
+							visible={SelectStateOpen}
+							setVisible={setSelectStateOpen}
+							displaySelector
+							closeOnClick
+							searchAction={fetchState}
+						/>
+					</TouchableOpacity>
+
 				</View>
 			</View>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
@@ -356,7 +355,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				placeholder="(XXX)-XXX-XXXX"
 				keyboardType="number-pad"
 				onChange={(masked, unmasked) => setPhoneNumber(unmasked)}
-				style={{...styles.INPUT_STYLE_CONTAINER, backgroundColor: `${loginStore.getAccountColor}25`}}
+				style={{ ...styles.INPUT_STYLE_CONTAINER, backgroundColor: `${loginStore.getAccountColor}25` }}
 			/>
 		</View>
 	)
@@ -388,10 +387,10 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			name: BackBusinessImageSource.fileName
 		}
 		const phoneNumber = PhoneNumber !== ''
-			?  (PhoneNumber && PhoneNumber.includes('+1')) ? PhoneNumber : `+1${PhoneNumber}`
+			? (PhoneNumber && PhoneNumber.includes('+1')) ? PhoneNumber : `+1${PhoneNumber}`
 			: ''
 
-		let MerchantData ={
+		let MerchantData = {
 			business_name: BusinessName,
 			profile_picture: profPic,
 			background_picture: backPic,
@@ -410,7 +409,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			? loginStore.environment.api
 				.updateProfileMerchant(MerchantData)
 				.then((result: any) => {
-					console.log(' result ===>>> ', JSON.stringify(result, null, 2 ))
+					console.log(' result ===>>> ', JSON.stringify(result, null, 2))
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
@@ -432,7 +431,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					last_name: LastName
 				})
 				.then((result: any) => {
-					console.log(' result ===>>> ', JSON.stringify(result, null, 2 ))
+					console.log(' result ===>>> ', JSON.stringify(result, null, 2))
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
