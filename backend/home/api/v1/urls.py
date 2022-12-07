@@ -70,8 +70,8 @@ urlpatterns = [
 
     ])),
     path('base/', include([
-        path('cities/', base_views.CityListView.as_view(), name='cities'),
-        path('cities/<int:pk>/', base_views.CityRetrieveView.as_view(), name='city'),
+        # path('cities/', base_views.CityListView.as_view(), name='cities'),
+        # path('cities/<int:pk>/', base_views.CityRetrieveView.as_view(), name='city'),
         path('states/', base_views.StateListView.as_view(), name='states'),
         path('states/<int:pk>/', base_views.StateRetrieveView.as_view(), name='state'),
     ])),

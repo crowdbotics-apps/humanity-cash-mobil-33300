@@ -3,7 +3,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from rest_framework import filters, status
 from rest_framework.generics import ListAPIView, RetrieveAPIView
-from cities_light.models import City, Region
+from cities_light.models import Region
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -11,23 +11,11 @@ from django.db.models import Q
 from django.utils import timezone
 from base import configs
 from celo_humanity.humanity_contract_helpers import get_community_balance
-from home.api.v1.serializers.base_serializers import CityListSerializer, StateListSerializer, \
+from home.api.v1.serializers.base_serializers import StateListSerializer, \
     WhereToSpendListSerializer, BusinessDetailsSerializer, SendQrCodeSerializer
 from home.helpers import AuthenticatedAPIView, send_qr_code_email
 from users.constants import Industry
 from users.models import Merchant, Coupon
-
-
-class CityListView(AuthenticatedAPIView, ListAPIView):
-    queryset = City.objects.all()
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['^display_name', ]
-    serializer_class = CityListSerializer
-
-
-class CityRetrieveView(AuthenticatedAPIView, RetrieveAPIView):
-    queryset = City.objects.all()
-    serializer_class = CityListSerializer
 
 
 class StateListView(AuthenticatedAPIView, ListAPIView):

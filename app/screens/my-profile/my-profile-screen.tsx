@@ -12,6 +12,15 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
 import {Masks} from "react-native-mask-input";
+import Entypo from "react-native-vector-icons/Entypo"
+
+const businessTypes = [
+	'Sole Proprietorship',
+	'Corporation',
+	'LLC',
+	'Partnership',
+	'Non-profit',
+]
 
 export const MyProfileScreen = observer(function MyProfileScreen() {
 	const navigation = useNavigation()
@@ -33,7 +42,9 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [BackBusinessImageSource, setBackBusinessImageSource] = React.useState<any>(null);
 	const [BusinessName, setBusinessName] = React.useState('');
 	const [BusinessStory, setBusinessStory] = React.useState('');
-	const [BusinessCategory, setBusinessCategory] = React.useState('');
+	// const [BusinessCategory, setBusinessCategory] = React.useState('');
+	const [BusinessType, setBusinessType] = React.useState('');
+	const [SelectOpen, setSelectOpen] = useState(false)
 	const [BusinessWebsite, setBusinessWebsite] = React.useState('');
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
@@ -41,7 +52,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
 	const [Citys, setCitys] = React.useState([]);
-	const [City, setCity] = React.useState({});
+	const [City, setCity] = React.useState('');
 	const [States, setStates] = React.useState([]);
 	const [State, setState] = React.useState('');
 	const [SelectStateOpen, setSelectStateOpen] = React.useState(false);
@@ -67,12 +78,12 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		});
 	}
 
-	const fetchCity = (data?: string) => {
-		loginStore.environment.api.getCities({ value: data })
-			.then((result: any) => {
-				result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
-			})
-	}
+	// const fetchCity = (data?: string) => {
+	// 	loginStore.environment.api.getCities({ value: data })
+	// 		.then((result: any) => {
+	// 			result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
+	// 		})
+	// }
 	const fetchState = (data?: string) => {
 		loginStore.environment.api.getStates({ value: data })
 			.then((result: any) => {
@@ -210,7 +221,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS CATEGORY</Text>
 			</View>
-			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
+			{/* <View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
 					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
@@ -220,6 +231,17 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					value={BusinessCategory}
 					placeholder={'business category'}
 				/>
+			</View> */}
+<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
+				<TouchableOpacity style={styles.SELECT_ICON_2} onPress={() => [setSelectOpen(!SelectOpen), setBusinessType('')]}>
+					<Text style={styles.SELECT_LABEL}>{BusinessType !== '' ? BusinessType : 'Select'}</Text>
+					<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
+				</TouchableOpacity>
+				{SelectOpen && businessTypes.map((t, key) => (
+					<TouchableOpacity key={key + 'btype'} style={styles.SELECT_ICON_2} onPress={() => [setSelectOpen(!SelectOpen), setBusinessType(t)]}>
+						<Text style={styles.SELECT_LABEL}>{t}</Text>
+					</TouchableOpacity>
+				))}
 			</View>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>WEBSITE (OPCIONAL)</Text>
@@ -265,10 +287,17 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
 					<TouchableOpacity
-						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, backgroundColor: `${loginStore.getAccountColor}25`, justifyContent: 'flex-start' }]}
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, backgroundColor: `${loginStore.getAccountColor}25` }]}
 						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
 					>
-						<ModalSelector
+						<TextInput
+							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.60 }]}
+							onChangeText={t => setCity(t)}
+							value={City}
+							placeholder={'City'}
+						/>
+						{/* <ModalSelector
 							options={Citys}
 							action={setCity}
 							title={""}
@@ -278,20 +307,21 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 							displaySelector
 							closeOnClick
 							searchAction={fetchCity}
-						/>
+						/> */}
+
 					</TouchableOpacity>
 				</View>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>STATE</Text>
 					</View>
-						<TouchableOpacity
-							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.25, backgroundColor: `${loginStore.getAccountColor}25` }]}
-							onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
-						>
-							<ModalSelector
-								options={States}
-								action={setState}
+					<TouchableOpacity
+						style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.25, backgroundColor: `${loginStore.getAccountColor}25` }]}
+						onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
+					>
+						<ModalSelector
+							options={States}
+							action={setState}
 								title={""}
 								value={State}
 								visible={SelectStateOpen}
@@ -368,11 +398,11 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			business_story: BusinessStory,
 			address_1: Address1,
 			address_2: Address2,
-			city: City?.id,
+			city: City,
 			state: State?.id,
 			zip_code: PostalCode,
 			website: BusinessWebsite,
-			industry: BusinessCategory
+			// industry: BusinessCategory
 		}
 		if (PhoneNumber !== '') MerchantData.phone_number = phoneNumber
 
@@ -380,6 +410,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			? loginStore.environment.api
 				.updateProfileMerchant(MerchantData)
 				.then((result: any) => {
+					console.log(' result ===>>> ', JSON.stringify(result, null, 2 ))
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
@@ -401,6 +432,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					last_name: LastName
 				})
 				.then((result: any) => {
+					console.log(' result ===>>> ', JSON.stringify(result, null, 2 ))
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
@@ -426,7 +458,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			setBackBusinessImageSource({ uri: loginStore.ProfileDataBusiness.background_picture })
 			setBusinessName(loginStore.ProfileDataBusiness.business_name)
 			setBusinessStory(loginStore.ProfileDataBusiness.business_story)
-			setBusinessCategory(loginStore.ProfileDataBusiness.industry)
+			// setBusinessCategory(loginStore.ProfileDataBusiness.industry)
 			setBusinessWebsite(loginStore.ProfileDataBusiness.website)
 			setCity(loginStore.ProfileDataBusiness.city)
 			setState(loginStore.ProfileDataBusiness.state)
@@ -436,7 +468,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			setPhoneNumber(loginStore.ProfileDataBusiness.phone_number)
 			setEmail(loginStore.getAllData.email)
 
-			fetchCity()
+			// fetchCity()
 			fetchState()
 		}
 	}, [isFocused])

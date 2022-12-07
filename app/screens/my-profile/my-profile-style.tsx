@@ -159,6 +159,13 @@ export default StyleSheet.create({
     marginTop: 10,
     width: METRICS.screenWidth * 0.95,
   },
+  SELECT_ICON_2: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 55,
+    justifyContent: 'space-between',
+    width: METRICS.screenWidth * 0.95,
+  },
   SELECT_INPUT_STYLE_CONTAINER: {
     alignSelf: 'center',
     backgroundColor: `${COLOR.PALETTE.green}25`,

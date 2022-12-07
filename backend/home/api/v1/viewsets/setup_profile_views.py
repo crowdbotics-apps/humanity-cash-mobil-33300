@@ -173,7 +173,7 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
-
+        serializer.save()
         if not self.request.user.merchant.dwolla_id:
             # if dwolla_id is not set yet
             create_dwolla_customer_merchant(instance)
