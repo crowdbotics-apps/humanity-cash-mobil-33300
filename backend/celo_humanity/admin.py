@@ -11,7 +11,7 @@ class ContractAdmin(admin.ModelAdmin):
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    ...
+    list_display = ['id', 'amount','consumer', 'merchant']
 
 
 @admin.register(ACHTransaction)

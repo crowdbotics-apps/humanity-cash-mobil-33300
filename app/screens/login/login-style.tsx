@@ -70,8 +70,7 @@ export default StyleSheet.create({
   NEED_HELP_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
-    width: METRICS.screenWidth * 0.80,
-    // marginTop: 40
+    width: METRICS.screenWidth * 0.80
   },
   NEED_HELP_LINK: {
     color: COLOR.PALETTE.darkYellow,

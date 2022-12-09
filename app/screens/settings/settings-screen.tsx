@@ -8,7 +8,7 @@ import {
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from './settings-style';
-import { COLOR } from '../../theme';
+import { COLOR, METRICS } from '../../theme';
 import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -27,6 +27,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
 
   const [Pass, setPass] = useState("")
   const [HidePass, setHidePass] = useState(true)
+  const [Loading, setLoading] = useState(false)
 
   const DeleteAcountModal = () => (
     <Modal visible={ModalVisibility} transparent>
@@ -76,12 +77,16 @@ export const SettingsScreen = observer(function SettingsScreen() {
           <View style={styles.MODAL_CONTAINER}>
             <View style={styles.MODAL_CONTENT}>
               <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Are you sure you want to delete your account?</Text>
-              <TouchableOpacity
-                style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
-                onPress={() => setModalStep('password')}
-              >
-                <Text style={styles.SUBMIT_BUTTON_LABEL}>Delete account</Text>
-              </TouchableOpacity>
+              <Button
+              buttonStyle={{
+                backgroundColor: loginStore.getAccountColor,
+                width: METRICS.screenWidth * 0.70
+              }}
+              onPress={() => deleteAccount()}
+              loading={Loading}
+              disabled={Loading}
+              buttonLabel={'Delete account'}
+            />
             </View>
           </View>
           <View />
@@ -90,7 +95,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
     }
     if (ModalStep === 'password') {
       return (
-        <View style={styles.ROOT}>
+        <View style={[styles.ROOT, { marginTop: 40}]}>
           <View style={styles.CONTAINER}>
             <TouchableOpacity onPress={() => [setModalStep('confirm'), setModalVisibility(false)]} style={styles.BACK_BUTON_CONTAINER}>
               <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
@@ -125,7 +130,7 @@ export const SettingsScreen = observer(function SettingsScreen() {
               buttonStyle={{
                 backgroundColor: loginStore.getAccountColor,
               }}
-              onPress={() => setModalStep('finish')}
+              onPress={() => deleteAccount()}
               buttonLabel={'Confirm'}
             />
           </View>
@@ -149,7 +154,7 @@ you back soon. `}
               buttonStyle={{
                 backgroundColor: loginStore.getAccountColor,
               }}
-              onPress={() => setModalVisibility(false)}
+              onPress={() => [setModalVisibility(false), setModalStep('confirm'), navigation.navigate('login'), loginStore.reset()]}
               buttonLabel={'Close'}
             />
           </View>
@@ -158,6 +163,23 @@ you back soon. `}
     }
     return null
   }
+
+	const deleteAccount = () => {
+    setLoading(true)
+		loginStore.environment.api
+			.deleteAccount()
+			.then((result: any) => {
+        setLoading(false)
+        console.log(' result ===>> ', JSON.stringify(result, null, 2 ))
+				if (result.kind === "ok") {
+					console.log('ok')
+          setLoading(true)
+          setModalStep('finish')
+				} else if (result.kind === "bad-data") {
+					console.log('bad-data')
+				}
+			})
+	}
 
   return (
     <Screen

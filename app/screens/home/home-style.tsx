@@ -97,13 +97,14 @@ export default StyleSheet.create({
     fontSize: 12,
     marginVertical: 3,
     textAlign: 'center',
-
   },
   HEADER: {
+    alignItems: 'center',
     flexDirection: 'row',
     height: 50,
-    marginLeft: 10,
+    justifyContent: 'flex-start',
     marginTop: 10,
+    width: METRICS.screenWidth * 0.90,
   },
   INDUSTRY_TITLE: {
     color: COLOR.PALETTE.orange,
@@ -154,9 +155,12 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80,
   },
   MODAL_CONTENT: {
+    backgroundColor: COLOR.PALETTE.white,
+    borderRadius: 8,
     height: 330,
     justifyContent: 'space-evenly',
-    width: METRICS.screenWidth * 0.70
+    padding: 10,
+    width: METRICS.screenWidth * 0.80
   },
   NEED_HELP_CONTAINER: {
     alignItems: 'center',
@@ -224,7 +228,7 @@ export default StyleSheet.create({
   },
   ROOT_MODAL: {
     alignItems: 'center',
-    backgroundColor: COLOR.PALETTE.background,
+    backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
     flex: 1,
     justifyContent: 'space-around'
   },
@@ -254,4 +258,42 @@ export default StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
+  WARNING_CONTAINER: {
+    alignItems: 'center',
+    borderLeftColor: '#D2A824', 
+    borderLeftWidth: 4, 
+    borderRadius: 5, 
+    flexDirection: 'row', 
+    marginLeft: 10,
+    marginRight: 10, 
+    padding: 15, 
+  }, 
+  ICON_WARNING_CONTAINER: {
+    borderColor: '#D2A824',
+    borderRadius: 2000, 
+    borderWidth: 1, 
+    height: 16, 
+    width: 16, 
+  }, 
+  ICON_WARNING: {
+    color: '#D2A824',
+    fontSize: 10, 
+    fontWeight: 'bold', 
+    textAlign: 'center', 
+  }, 
+  TEXT_WARNING: {
+    marginLeft: 10
+  },
+  TEXT_WARNING_LINK: {
+    color: '#D2A824', 
+    fontWeight: '700', 
+    textDecorationLine: 'underline', 
+  },
+  FAVORITE_ICON: {
+
+    bottom: 35, 
+    height: 25,
+    left: 3, 
+    position: 'absolute',
+  }
 })

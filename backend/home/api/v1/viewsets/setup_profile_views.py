@@ -139,7 +139,6 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         super(ConsumerMyProfileAPIView, self).update(request, *args, **kwargs)
-
         instance = self.get_object()
         request.data.pop('consumer_profile')
         serializer = self.get_serializer(instance, data=request.data)
@@ -174,7 +173,7 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
-
+        serializer.save()
         if not self.request.user.merchant.dwolla_id:
             # if dwolla_id is not set yet
             create_dwolla_customer_merchant(instance)

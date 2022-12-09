@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import styles from './Dashboard.module.css';
 import AdminPanelContainer from "../../containers";
 import {ArcElement, Chart as ChartJS, Legend, Tooltip} from 'chart.js';
 import {Pie} from 'react-chartjs-2';
+import {useApi} from "../../utils";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -55,6 +56,20 @@ export const Dashboard: React.FC = observer(() => {
 
     const [LeftOpen, setLeftOpen] = useState<any>(true);
     const [RightOpen, setRightOpen] = useState<any>(true);
+    const [Values, setValues] = useState<any>({})
+    const api = useApi()
+
+    useEffect(() => {
+        api.getDashboardInfo().then((res:any) => {
+            console.log("tokens_burned", res.data["tokens_burned"])
+
+            if(res.kind === "ok"){
+                console.log(res.data)
+                setValues(res.data)
+            }
+
+        }).catch(reason => console.log(reason))
+    },[])
 
     const Dot = (opts:any)=>{
         const {color} = opts
@@ -69,6 +84,7 @@ export const Dashboard: React.FC = observer(() => {
     const AmountField = (opts:any)=>{
         const {label, amount, color,backgroundColor} = opts
         let style:any = { borderColor:color, color:color}
+        console.log("AmountField", amount)
         if(backgroundColor){
             style.color = "white"
             style["backgroundColor"] = backgroundColor
@@ -77,7 +93,10 @@ export const Dashboard: React.FC = observer(() => {
           <div className={'d-flex flex-column justify-content-center ms-4 me-4 mt-4'}>
               <h2 className={`text-uppercase ${styles.amountLabel}`}>{label}</h2>
               <div className={`${styles.amountContainer}`} style={style}>
-                  ${addCommas(amount)}
+                  {amount && (
+                    addCommas(amount)
+                  )}
+
               </div>
           </div>
         )
@@ -109,13 +128,13 @@ export const Dashboard: React.FC = observer(() => {
               <div className={`d-flex flex-row ${styles.borderBottom}`} >
                   <div className={'col-md-3 sol-sm-6 d-flex flex-column justify-content-between'}>
                       <AmountField
-                        amount={250000}
+                        amount={Values['deposits_settled']}
                         label={"total cumulative deposits (settled)"}
                         color={"var(--green)"}
                       />
 
                       <AmountField
-                        amount={250000}
+                        amount={Values['tokens_minted']}
                         label={"total cumulative tokens (minted)"}
                         color={"var(--green)"}
                       />
@@ -123,27 +142,27 @@ export const Dashboard: React.FC = observer(() => {
 
                   <div className={'col-md-3 col-sm-6 d-flex flex-column'}>
                       <AmountField
-                        amount={8000}
-                        label={"total cumulative deposits (settled)"}
+                        amount={Values['withdrawals_settled']}
+                        label={"total cumulative withdrawals (settled)"}
                         color={"var(--pink)"}
                       />
 
                       <AmountField
-                        amount={10000}
-                        label={"total cumulative tokens (minted)"}
+                        amount={Values['tokens_burned']}
+                        label={"total cumulative tokens (burned)"}
                         color={"var(--pink)"}
                       />
                   </div>
 
                   <div className={'col-md-3 col-sm-6 d-flex flex-column  justify-content-between'}>
                       <AmountField
-                        amount={8000}
+                        amount={Values['net_deposits']}
                         label={"net deposits"}
                         color={"var(--green)"}
                       />
 
                       <AmountField
-                        amount={10000}
+                        amount={Values['tokens_outstanding']}
                         label={"total tokens outstanding"}
                         color={"var(--green)"}
                       />
@@ -151,8 +170,8 @@ export const Dashboard: React.FC = observer(() => {
 
                   <div className={'col-md-3 col-sm-6 d-flex flex-column justify-content-center'}>
                       <AmountField
-                        amount={2000}
-                        label={"total tokens outstanding"}
+                        amount={Values['diff_net_outstanding'] }
+                        label={"difference net deposits & tokens outstanding"}
                         color={"var(--green)"}
                         backgroundColor={"var(--green)"}
                       />
@@ -162,7 +181,7 @@ export const Dashboard: React.FC = observer(() => {
               <div className={`d-flex flex-row `} >
                   <div className={'col-md-3 col-sm-6 d-flex flex-column  justify-content-between'}>
                       <AmountField
-                        amount={5000}
+                        amount={Values['deposits_pending']}
                         label={"TOTAL PENDING DEPOSITS"}
                         color={"var(--green)"}
                       />
@@ -170,7 +189,7 @@ export const Dashboard: React.FC = observer(() => {
                   <div className={'col-md-3 col-sm-6 d-flex flex-column  justify-content-between'}>
 
                       <AmountField
-                        amount={2000}
+                        amount={Values['withdrawals_pending']}
                         label={"TOTAL PENDING WITHDRAWALS"}
                         color={"var(--pink)"}
                       />

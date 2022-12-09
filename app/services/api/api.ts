@@ -30,9 +30,22 @@ export class Api extends ApiBase {
     return this.simple_post(apiv1 + "/registration/send-verification-code/")
   }
 
+  // DELETE
+  async deleteAccount(): Promise<Types.GenericResponse> {
+    return this.simple_delete(apiv1 + `/security/delete-account/`)
+  }
+
   // LOGIN
   async login(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post("/dj-rest-auth/login/", data)
+  }
+  
+  async forgotPassword(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post("/users/password_reset_mobile/", data)
+  }
+
+  async verifyUserResetCode(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post("/users/verify_reset_code/", data)
   }
 
   // FACEBOOK LOGIN
@@ -103,6 +116,14 @@ export class Api extends ApiBase {
     return this.simple_get(apiv1 + "/consumer-coupons/")
   }
 
+  async postConsumerCoupon(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/consumer-coupons/", data)
+  }
+
+  async deleteConsumerCoupon(id: number): Promise<Types.GenericResponse> {
+    return this.simple_delete(apiv1 + `/consumer-coupons/${id}/`)
+  }
+
   // SECURITY
   async updateSecurity(data: any): Promise<Types.SimplePostResult> {
     return this.simple_patch(apiv1 + "/security/change-password/", data)
@@ -164,7 +185,7 @@ export class Api extends ApiBase {
   }
 
   async postCashOut(data?: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(apiv1 + "/deposit/", data)
+    return this.simple_post(apiv1 + "/withdraw/", data)
   }
 
   async getACHTransactions(data?: any): Promise<Types.SimpleGetResult> {
@@ -173,5 +194,13 @@ export class Api extends ApiBase {
 
   async getTransactions(data?: any): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/transaction/", data)
+  }
+
+  async sendReport(data?: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/send-report/", data)
+  }
+
+  async sendQR(data?: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/send-qr/", data)
   }
 }

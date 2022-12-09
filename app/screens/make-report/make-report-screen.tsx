@@ -170,7 +170,10 @@ C$ ${Amount}`}
 									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
 							buttonLabelStyle={{ color: Amount === 'Today' ? COLOR.PALETTE.white : loginStore.getAccountColor }}
-							onPress={() => setAmount('Today')}
+							onPress={() => {
+								setAmount('Today')
+								console.log(' -> ', DateTo)
+							}}
 							buttonLabel={'Today'}
 						/>
 						<Button
@@ -214,11 +217,14 @@ C$ ${Amount}`}
 									modal
 									open={OpenFrom}
 									date={DateFrom}
-									onConfirm={(date) => {
-										setOpenFrom(false)
-										setDateFrom(date)
-									}}
-									onCancel={() => setOpenFrom(false)}
+									mode='date'
+									onDateChange={d => setDateFrom(d)}
+									// onConfirm={(date) => {
+									// 	setOpenFrom(false)
+									// 	console.log(' datefrom> ', DateFrom.toLocaleDateString(), DateFrom)
+									// 	setDateFrom(date)
+									// }}
+									// onCancel={() => setOpenFrom(false)}
 								/>
 							</View>
 							<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>

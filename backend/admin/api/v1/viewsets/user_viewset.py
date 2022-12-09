@@ -9,7 +9,8 @@ from rest_framework.viewsets import ModelViewSet
 
 from admin.api.v1.serializers.user_serializer import ResetPasswordSerializer, ResetPasswordConfirmSerializer, \
     UserAdminSerializer, UserDetailAdminSerializer, CustomPasswordResetForm
-from home.helpers import get_user_by_uidb64, AuthenticatedAPIView
+from home.api.v1.serializers.signup_signin_serializers import VerificationCodeSerializer
+from home.helpers import get_user_by_uidb64, AuthenticatedAPIView, setup_verification_code, send_verification_email
 
 User = get_user_model()
 
@@ -26,9 +27,44 @@ def password_reset(request):
         }
         form.save(**opts)
     return Response(
-            {'detail': 'Password reset e-mail has been sent.'},
-            status=status.HTTP_200_OK
-        )
+        {'detail': 'Password reset e-mail has been sent.'},
+        status=status.HTTP_200_OK
+    )
+
+
+@api_view(['POST'])
+def password_reset_mobile(request):
+    serializer = ResetPasswordSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        form = CustomPasswordResetForm(serializer.data)
+        form.is_valid()
+        opts = {
+            'use_https': request.is_secure(),
+            'request': request,
+        }
+        form.save(**opts)
+    user = User.objects.get(email=request.data.get('email'), is_active=True)
+    code = setup_verification_code(user)
+    send_verification_email(user, code)
+    return Response(
+        {'detail': 'Password reset e-mail has been sent.'},
+        status=status.HTTP_200_OK
+    )
+
+
+@api_view(['POST'])
+def verify_reset_code(request):
+    user = User.objects.get(email=request.data.get('email'), is_active=True)
+    request.user = user
+    serializer = VerificationCodeSerializer(data=request.data, context={'request': request})
+    serializer.is_valid(raise_exception=True)
+    user_verification_code = serializer.validated_data
+    user_verification_code.active = False
+    user = user_verification_code.user
+    user.verified_email = True
+    user_verification_code.save()
+    user.save()
+    return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -41,8 +77,8 @@ def password_reset_confirm(request):
         user.set_password(serializer.data['new_password1'])
         user.save()
     return Response(
-            {'detail': 'Password has been reset with the new password.'},
-        )
+        {'detail': 'Password has been reset with the new password.'},
+    )
 
 
 class UserAdminViewSet(AuthenticatedAPIView, ModelViewSet):
@@ -59,4 +95,3 @@ class UserAdminViewSet(AuthenticatedAPIView, ModelViewSet):
                 return self.detail_serializer_class
 
         return super(UserAdminViewSet, self).get_serializer_class()
-

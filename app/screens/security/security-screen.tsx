@@ -60,6 +60,8 @@ export const SecurityScreen = observer(function SecurityScreen() {
       })
   }
 
+  
+
   return (
     <Screen
       preset="fixed"
@@ -67,15 +69,15 @@ export const SecurityScreen = observer(function SecurityScreen() {
       style={styles.ROOT}
       showHeader
     >
-       <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings")}>
-              <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-              <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-            </TouchableOpacity>
+      <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings")}>
+        <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+        <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+      </TouchableOpacity>
       <KeyboardAvoidingView enabled style={styles.ROOT}>
         <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
           {/* <View style={styles.ROOT_CONTAINER}> */}
           <View style={styles.CONTAINER}>
-           
+
             <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Security</Text>
             <View style={styles.LINE} />
             <View style={styles.SWITCH_INPUT_STYLE_CONTAINER}>
@@ -89,7 +91,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
                 style={{ marginRight: 10 }}
               />
             </View>
-            <View style={styles.SWITCH_INPUT_STYLE_CONTAINER}>
+            {/* <View style={styles.SWITCH_INPUT_STYLE_CONTAINER}>
               <Text style={styles.ALLOW_LABEL}>Enable cashier view</Text>
               <Switch
                 trackColor={{ false: "#39534480", true: "#4CD964" }}
@@ -99,7 +101,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
                 value={enableCashierView}
                 style={{ marginRight: 10 }}
               />
-            </View>
+            </View> */}
             <View style={styles.LINE} />
             <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
               <Text style={styles.INPUT_LABEL_STYLE}>OLD PASSWORD</Text>

@@ -17,9 +17,9 @@ export default StyleSheet.create({
     alignSelf: 'center',
     color: COLOR.PALETTE.pureblack,
     fontSize: 13,
-        marginTop: 10,
-        textAlign: 'center',
-        width: METRICS.screenWidth * 0.46,
+    marginTop: 10,
+    textAlign: 'center',
+    width: METRICS.screenWidth * 0.46,
   },
   BANK_ICON: {
     height: 80,
@@ -47,15 +47,24 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.pureblack,
     fontSize: 13,
     fontWeight: '700',
-        marginTop: 10,
-        textAlign: 'center',
-        width: METRICS.screenWidth * 0.46,
+    marginTop: 10,
+    textAlign: 'center',
+    width: METRICS.screenWidth * 0.46,
+  },
+  CLOSE_MODAL_BUTTON: {
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    flexDirection: 'row',
+    height: 40,
+    justifyContent: 'center',
+    marginRight: 30,
   },
   CONTAINER: {},
   HEADER: {
     flexDirection: 'row',
     marginLeft: 10,
     marginTop: 10,
+    alignItems: 'center'
   },
   INPUT_LABEL_STYLE: {
     color: COLOR.PALETTE.black,
@@ -199,9 +208,11 @@ export default StyleSheet.create({
     marginLeft: 15
   },
   bankView: {
+    borderColor: COLOR.PALETTE.gray,
+    borderWidth: 0.5,
     flex: 1,
-    height: METRICS.screenHeight - 200,
-    paddingBottom: 10,
+    height: METRICS.screenHeight - 180,
+    paddingBottom: 10
   },
   buttonStyle: {
     backgroundColor: COLOR.PALETTE.blue,

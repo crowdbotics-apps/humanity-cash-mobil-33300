@@ -1,22 +1,10 @@
 from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
-from cities_light.models import City, Region
+from cities_light.models import Region
 from rest_framework.generics import RetrieveAPIView
 
 from home.api.v1.serializers.coupons_serializers import CounponCreateSerializer
 from users.models import Merchant
-
-
-class CityListSerializer(serializers.ModelSerializer):
-    city_id = serializers.IntegerField(source='id')
-    city_name = serializers.SerializerMethodField()
-
-    class Meta:
-        model = City
-        fields = ('city_id', 'city_name')
-
-    def get_city_name(self, obj):
-        return obj.display_name.rsplit(',', maxsplit=1)[0]
 
 
 class StateListSerializer(serializers.ModelSerializer):

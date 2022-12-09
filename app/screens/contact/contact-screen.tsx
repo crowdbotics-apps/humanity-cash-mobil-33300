@@ -12,79 +12,57 @@ import { Tab, TabView } from 'react-native-elements'
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 
+const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
+
 export const ContactScreen = observer(function ContactScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 	const isFocused = useIsFocused();
-	const transactionTypes = [
-		'Incoming transactions',
-		'Outgoing transactions',
-		'Load ups',
-		'Cash out to USD',
-	]
-
-	const returns = {
-		TODAY: [
-			{
-				item: 'Customer sale',
-				time: '7 min ago',
-				credit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-			{
-				item: 'Carr Hardware',
-				time: '3:51, Jun 17, 2021',
-				debit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-			{
-				item: 'Cash out',
-				time: '4:51, Jun 17, 2021',
-				cash_out: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-		],
-		YESTERDAY: [
-			{
-				item: 'Customer return',
-				time: '3:51, Jun 16, 2021',
-				debit: '10.00',
-				amount: '10.00',
-				image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-			},
-		]
-	}
 
 	const [ShowIndex, setShowIndex] = useState(true)
 
 	const [Search, setSearch] = useState('')
-	const [ShowFilter, setShowFilter] = useState(false)
 	const [SelectedReturn, setSelectedReturn] = useState({})
 	const [DetailModalVisible, setDetailModalVisible] = useState(false)
 	const [TabIndex, setTabIndex] = React.useState(0);
 
-	const ContactList = (data) => 
-		data.map((i, key2) => (
-			<TouchableOpacity key={key2 + '_values'} style={styles.RETURN_ITEM}>
+	const ContactList = (data) =>
+		
+		{
+			return data.map((i, key2) => (
+			<TouchableOpacity
+				key={key2 + '_values'}
+				style={styles.RETURN_ITEM}
+				onPressIn={() => 
+					// @ts-ignore
+					navigation.navigate("qr", {
+					QR: JSON.stringify({
+						to_is_consumer: TabIndex === 0,
+						to: i.id,
+						})	
+					})
+				}
+			>
 				<Image
-					source={{ uri: `${i.profile_picture}` }}
+					source={i.profile_picture ? { uri: i.profile_picture } :
+						randomImages[Math.round(Math.random() * 3)]}
 					resizeMode='cover'
 					style={styles.RETURN_IMAGE}
+					
 				/>
 				<Text style={styles.RETURN_ITEM_CUSTOMER}>
-					{i.first_name
+					{(i.first_name && i.first_name !== '')
 						? i.first_name + ' ' + i.last_name
-						: i.business_name
+						: (i.business_name && i.business_name !== '')
+							? i.business_name
+							: i.username
 					}
+					{i.id}
 				</Text>
-
 			</TouchableOpacity>
-		))
-	
+		))}
+
 
 	const ReturnDetailModal = () => <Modal transparent visible={DetailModalVisible}>
 		<View style={styles.ROOT_MODAL}>
@@ -126,52 +104,51 @@ export const ContactScreen = observer(function ContactScreen() {
 		</View>
 	</Modal>
 
-const formatUsersData = (users = []) => {
-	let consumers = []
-	let merchants = []
-	users.map(user => {
-		if (user.consumer_data) consumers.push( {...user.consumer_data, first_name: user.first_name, last_name: user.last_name})
-		if (user.merchant_data) merchants.push(user.merchant_data)
-	})
-	return ({ consumers, merchants })
-}
-
-const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
-	if (initialData === [] || !initialData) return []
-	if (keys === [] || !keys) return initialData
-	if (filter === '' || !filter) return initialData
-	let data = []
-	initialData.map(d => {
-		keys.map(k => {
-			try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
-			catch {}
+	const formatUsersData = (users = []) => {
+		let consumers = []
+		let merchants = []
+		users.map(user => {
+			if (user.consumer_data) consumers.push({ ...user.consumer_data, first_name: user.first_name, last_name: user.last_name, username: user.username })
+			if (user.merchant_data) merchants.push({ ...user.merchant_data, username: user.username })
 		})
-	})
-	return data
-}
+		return ({ consumers, merchants })
+	}
 
-const getUsers = () => {
-	loginStore.environment.api
-		.getUsers()
-		.then((result: any) => {
-			console.log(' getUsers ===>>> ', JSON.stringify(result, null, 2))
-			if (result.kind === "ok") {
-				runInAction(() => {
-					loginStore.setUsers(formatUsersData(result.data?.results))
-				})
-			} else if (result.kind === "bad-data") {
-				const key = Object.keys(result?.errors)[0]
-				const msg = `${key}: ${result?.errors?.[key][0]}`
-				notifyMessage(msg)
-			} else {
-				notifyMessage(null)
-			}
+	const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
+		if (initialData === [] || !initialData) return []
+		if (keys === [] || !keys) return initialData
+		if (filter === '' || !filter) return initialData
+		let data = []
+		initialData.map(d => {
+			keys.map(k => {
+				try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
+				catch { }
+			})
 		})
-}
+		return data
+	}
 
-useEffect(() => {
-	if (isFocused) getUsers()
-}, [isFocused])
+	const getUsers = () => {
+		loginStore.environment.api
+			.getUsers()
+			.then((result: any) => {
+				if (result.kind === "ok") {
+					runInAction(() => {
+						loginStore.setUsers(formatUsersData(result.data?.results))
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
+	useEffect(() => {
+		if (isFocused) getUsers()
+	}, [isFocused])
 
 	return (
 		<Screen
@@ -199,7 +176,7 @@ useEffect(() => {
 
 							<View style={styles.STEP_CONTAINER}>
 
-								<Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Address Book</Text>
+								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Address Book</Text>
 
 								<View style={styles.LINE} />
 								<View style={styles.SEARCH_INPUT_CONTAINER}>
@@ -235,10 +212,10 @@ useEffect(() => {
 									<View style={styles.BLUE_LINE} />
 									<TabView value={TabIndex} onChange={setTabIndex} animationType="spring">
 										<TabView.Item style={{ height: 500, width: '95%' }}>
-										<View>{ContactList(getDataFiltered(loginStore.getUsers.consumers, ['first_name', 'last_name', 'business_name'], Search))}</View>
+											<View>{ContactList(getDataFiltered(loginStore.getUsers.consumers, ['first_name', 'last_name', 'business_name'], Search))}</View>
 										</TabView.Item>
 										<TabView.Item style={{ height: 500, width: '95%' }}>
-										<View>{ContactList(getDataFiltered(loginStore.getUsers.merchants, ['first_name', 'last_name', 'business_name'], Search))}</View>
+											<View>{ContactList(getDataFiltered(loginStore.getUsers.merchants, ['first_name', 'last_name', 'business_name'], Search))}</View>
 										</TabView.Item>
 									</TabView>
 								</View>

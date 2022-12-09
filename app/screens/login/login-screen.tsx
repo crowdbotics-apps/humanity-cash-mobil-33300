@@ -43,7 +43,6 @@ export const LoginScreen = observer(function LoginScreen() {
       .login({ email: Username, password: Pass })
       .then((result: any) => {
         setLoading(false)
-        console.log(' login ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setUser(result.response)
@@ -51,7 +50,8 @@ export const LoginScreen = observer(function LoginScreen() {
             loginStore.setSelectedAccount('consumer')
             loginStore.setMerchantUser(result?.response?.user?.merchant_data)
             loginStore.setConsumerUser(result?.response?.user)
-            if (result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) navigation.navigate("setupProfile")
+            if ((result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) &&
+              (result?.response?.user?.merchant_data?.business_name === '' || result?.response?.user?.merchant_data?.business_name === null)) navigation.navigate("setupProfile")
             else navigation.navigate("home")
           })
         } else if (result.kind === "bad-data") {
@@ -260,7 +260,7 @@ export const LoginScreen = observer(function LoginScreen() {
             <View style={styles.LOGIN_TYPES_CONTAINER}>
               {Platform.OS === 'ios' && <TouchableOpacity onPress={() => onAppleButtonPress()}>
                 <Image
-                  source={IMAGES.appleIcon}
+                  source={IMAGES.apple_icon}
                   resizeMode="contain"
                   style={styles.LOGIN_TYPE}
                 />
@@ -281,11 +281,11 @@ export const LoginScreen = observer(function LoginScreen() {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.NEED_HELP_CONTAINER}>
+          <TouchableOpacity onPress={() => navigation.navigate("forgotPass")} style={styles.NEED_HELP_CONTAINER}>
             <Text style={styles.NEED_HELP_LINK}>
               Forgot password
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
       <Button
