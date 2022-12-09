@@ -10,7 +10,6 @@ from rest_framework.views import APIView
 
 from celo_humanity.models import Transaction, ACHTransaction
 from home.helpers import AuthenticatedAPIView
-from home.models.dwolla import DwollaOperation
 
 
 class DashboardDataView(APIView): #AuthenticatedAPIView):
