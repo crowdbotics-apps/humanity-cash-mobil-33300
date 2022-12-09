@@ -123,6 +123,7 @@ export const SignupScreen = observer(function SignupScreen() {
     setLoading(true)
     const phoneNumber = Phone !== '' ? `+1${Phone}` : ''
     loginStore.environment.api.userRegister({ email: Email, phone_number: phoneNumber }).then(result => {
+      console.log(' ===>>> ', JSON.stringify(result, null, 2))
       setPhoneNumberError(false)
       setEmailError(false)
       setLoading(false)

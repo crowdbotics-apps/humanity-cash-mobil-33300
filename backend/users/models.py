@@ -102,6 +102,9 @@ class BaseProfileModel(models.Model):
                 except NoWalletException:  # good, is a fresh uid
                     get_wallet(uid, create=True, profile=self)
                     new_uid = uid
+                except:
+                    return 0
+                    # TODO log when gets a error while create the wallet
 
             self.crypto_wallet_id = new_uid
             if save:
