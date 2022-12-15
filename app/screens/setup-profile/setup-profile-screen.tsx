@@ -166,15 +166,11 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		loginStore.environment.api.setupConsumerFirstStep(data, keys).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
-				
-				//CAMBIOS ======================>
 				setUsername('')
 				setImageSource(null)
 				setName('')
 				setLastName('')
-				
 				setStep("name")
-
 			} else if (result.kind === "bad-data") {
 				const errors = result?.errors
 				if (errors?.username) {
@@ -243,8 +239,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
-
-					//CAMBIOS ====================================>
 					setBusinessName('')
 					setBusinessStory('')
 					setStep('business_type')
@@ -292,7 +286,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			address_1: Address1,
 			address_2: Address2,
 			city: City,
-			state: State?.id,
+			// state: State?.id,
 			zip_code: PostalCode,
 			phone_number: phoneNumber
 		})
@@ -302,7 +296,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					loginStore.setSelectedAccount('merchant')
 					setShowThankyouModal(true)
 					loginStore.setSetupData({});
-					
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`

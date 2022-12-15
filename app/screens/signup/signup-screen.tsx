@@ -54,8 +54,8 @@ export const SignupScreen = observer(function SignupScreen() {
   const [Code5, setCode5] = useState("")
   const [Code6, setCode6] = useState("")
 
-  const [Pass, setPass] = useState("admin1234567")
-  const [PassConfirm, setPassConfirm] = useState("admin1234567")
+  const [Pass, setPass] = useState("")
+  const [PassConfirm, setPassConfirm] = useState("")
   const [HidePass, setHidePass] = useState(true)
   const [HidePassConfirm, setHidePassConfirm] = useState(true)
   const [MatchPassword, setMatchPassword] = useState(true)
@@ -123,7 +123,6 @@ export const SignupScreen = observer(function SignupScreen() {
     setLoading(true)
     const phoneNumber = Phone !== '' ? `+1${Phone}` : ''
     loginStore.environment.api.userRegister({ email: Email, phone_number: phoneNumber }).then(result => {
-      console.log(' ===>>> ', JSON.stringify(result, null, 2))
       setPhoneNumberError(false)
       setEmailError(false)
       setLoading(false)
