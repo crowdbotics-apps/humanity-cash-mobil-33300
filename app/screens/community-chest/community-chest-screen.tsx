@@ -43,7 +43,6 @@ export const CommunityChestScreen = observer(function CommunityChestScreen() {
 	}
 
 	const getCommunityChestData = () => {
-		console.log(' aca ')
 		loginStore.environment.api
 			.getCommunityChestData()
 			.then((result: any) => {

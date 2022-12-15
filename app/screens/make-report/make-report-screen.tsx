@@ -172,7 +172,6 @@ C$ ${Amount}`}
 							buttonLabelStyle={{ color: Amount === 'Today' ? COLOR.PALETTE.white : loginStore.getAccountColor }}
 							onPress={() => {
 								setAmount('Today')
-								console.log(' -> ', DateTo)
 							}}
 							buttonLabel={'Today'}
 						/>
@@ -219,12 +218,6 @@ C$ ${Amount}`}
 									date={DateFrom}
 									mode='date'
 									onDateChange={d => setDateFrom(d)}
-									// onConfirm={(date) => {
-									// 	setOpenFrom(false)
-									// 	console.log(' datefrom> ', DateFrom.toLocaleDateString(), DateFrom)
-									// 	setDateFrom(date)
-									// }}
-									// onCancel={() => setOpenFrom(false)}
 								/>
 							</View>
 							<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>

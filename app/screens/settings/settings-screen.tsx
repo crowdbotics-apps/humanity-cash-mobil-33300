@@ -170,9 +170,7 @@ you back soon. `}
 			.deleteAccount()
 			.then((result: any) => {
         setLoading(false)
-        console.log(' result ===>> ', JSON.stringify(result, null, 2 ))
 				if (result.kind === "ok") {
-					console.log('ok')
           setLoading(true)
           setModalStep('finish')
 				} else if (result.kind === "bad-data") {

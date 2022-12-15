@@ -72,8 +72,6 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 			.then((result: any) => {
 				if (result.kind === "ok") {
 					runInAction(() => {
-
-						//console.log('CUPONES ====>', result.data.results)
 						const filteredCouponsByLoguedMerchant = result?.data?.results.filter(c => c.merchant === loginStore.merchant_id)
 						loginStore.setMerchantCoupons(filteredCouponsByLoguedMerchant);
 					})

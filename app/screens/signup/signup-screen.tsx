@@ -133,7 +133,6 @@ export const SignupScreen = observer(function SignupScreen() {
         })
         setStep("verify_email")
       } else if (result.kind === "bad-data") {
-        console.log(' result => ', result)
         if (result.errors.email) {
           setEmailError(true)
           setEmailErrorMessage(result.errors.email[0])
@@ -179,14 +178,9 @@ export const SignupScreen = observer(function SignupScreen() {
     loginStore.environment.api
       .setUserPassword({ password: Pass, password_confirm: PassConfirm })
       .then(result => {
-        console.log(' result ===>>> ', JSON.stringify(result, null, 2))
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
-            // loginStore.setUser(result.response.user)
-            // loginStore.setApiToken(result.response.access_token)
-            //navigation.navigate("signupProfile")
-
             setPass('');
             setPassConfirm('');
             navigation.navigate("setupProfile");

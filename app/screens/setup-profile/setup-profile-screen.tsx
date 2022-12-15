@@ -195,7 +195,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			first_name: Name,
 			last_name: LastName
 		}).then((result: any) => {
-			console.log(' setupConsumerDetail ===>>> ', JSON.stringify(result, null, 2))
 			setLoading(false)
 			if (result.kind === "ok") {
 				setShowThankyouModal(true);
@@ -351,7 +350,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			<View style={styles.LINE} />
 			<Text style={styles.STEP_SUB_TITLE}>Select the profile you’d like to create. If you’re a business owner, you can automatically set up a personal profile. You can have one account login with two profiles.</Text>
 			{profileTypes.map((t, key) => {
-				console.log(' ginStore.ProfileDataBusiness.business_name -> ', t.value)
 				return (loginStore.ProfileDataBusiness.business_name !== '' && loginStore.ProfileDataBusiness.business_name !== null && t.value === 'business_personal')
 					? null
 					: <TouchableOpacity key={key + '_ptype'} style={styles.SUBMIT_BUTTON_OUTLINE} onPress={() => [setProfileType(t.value), setStep(t.first_step)]}>

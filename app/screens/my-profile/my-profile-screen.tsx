@@ -409,7 +409,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			? loginStore.environment.api
 				.updateProfileMerchant(MerchantData)
 				.then((result: any) => {
-					console.log(' result ===>>> ', JSON.stringify(result, null, 2))
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
@@ -431,7 +430,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					last_name: LastName
 				})
 				.then((result: any) => {
-					console.log(' result ===>>> ', JSON.stringify(result, null, 2))
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {

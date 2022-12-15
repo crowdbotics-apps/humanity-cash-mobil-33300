@@ -81,7 +81,6 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 		})
 			.then((result: any) => {
 				setLoading(false)
-				console.log(' postCoupon ===>>> ', JSON.stringify(result, null, 2), DateFrom, `${DateTo}`.split('T')[0])
 				if (result.kind === "ok") {
 					navigation.navigate("myCoupons")
 				} else if (result.kind === "bad-data") {

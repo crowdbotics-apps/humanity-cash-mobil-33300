@@ -109,7 +109,6 @@ export const HomeScreen = observer(function HomeScreen() {
 			.getConsumerCoupons()
 			.then((result: any) => {
 				if (result.kind === "ok") {
-					//console.log('CONSUMER COUPONS =============>', result.data)
 					runInAction(() => {
 						loginStore.setConsumerCoupons(result.data?.results)
 					})
@@ -126,7 +125,6 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api.getCoupons()
 			.then((result) => {
 				if (result.kind === 'ok') {
-					//console.log('ALL COUPONS =======>', result.data)
 					setCouponsConfig({ ...couponsConfig, coupons: result.data.results })
 				}
 			}
@@ -137,7 +135,6 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getFundingSources({ "user_type": loginStore.getSelectedAccount })
 			.then((result: any) => {
-				//console.log(' result ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setFundingSources(result.data)

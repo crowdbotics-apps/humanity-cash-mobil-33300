@@ -53,7 +53,6 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 		loginStore.environment.api
 			.sendMoney(data)
 			.then((result: any) => {
-				console.log(' postDeposit ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					setSucess(true)
 					setTransactionFinished(true)
@@ -88,7 +87,6 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 		loginStore.environment.api
 			.sendMoney(data)
 			.then((result: any) => {
-				console.log(' transferCurrency ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					setSucess(true)
 					setTransactionFinished(true)
@@ -346,7 +344,6 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 					setShowModal(true),
 					setScanQR(false),
 					transferCurrency(),
-					console.log(' read ===>>> ', JSON.stringify(e, null, 2)),
 				]} />
 				: [
 					<View style={styles.HEADER_ACTIONS} key={'send_personal_header'}>

@@ -46,10 +46,8 @@ export const QRScreen = observer(function QRScreen(props: any) {
       // if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
       // else setShowBankModal(false)
 
-      console.log('props => ', JSON.stringify(props?.route?.params, null, 2))
       if (props?.route?.params) {
         if (props?.route?.params?.QR) {
-          console.log(' aca')
           setQR(props?.route?.params.QR)
           setShowAmountModal(true)
           setShowPassModal(true)
@@ -192,13 +190,9 @@ export const QRScreen = observer(function QRScreen(props: any) {
   const transferCurrency = () => {
     if (!QR) return
     setLoading(true)
-    console.log(' QR => ', QR)
     let temp = QR.replaceAll('”','"')
-    console.log(' temp => ', temp)
     temp = temp.replaceAll('“','"')
-    console.log(' temp => ', temp)
     temp = temp.replaceAll("'","")
-    console.log(' temp => ', temp)
     const qrData = JSON.parse(temp)
     const data = {
       "from": loginStore?.getProfilesId[loginStore.getSelectedAccount],
