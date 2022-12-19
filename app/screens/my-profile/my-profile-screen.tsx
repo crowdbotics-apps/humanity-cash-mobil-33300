@@ -221,17 +221,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>BUSINESS CATEGORY</Text>
 			</View>
-			{/* <View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
-				<TextInput
-					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => {
-						setBusinessCategory(t)
-					}}
-					value={BusinessCategory}
-					placeholder={'business category'}
-				/>
-			</View> */}
 			<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
 				<TouchableOpacity style={styles.SELECT_ICON_2} onPress={() => [setSelectOpen(!SelectOpen), setBusinessType('')]}>
 					<Text style={styles.SELECT_LABEL}>{BusinessType !== '' ? BusinessType : 'Select'}</Text>
@@ -244,7 +233,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				))}
 			</View>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-				<Text style={styles.INPUT_LABEL_STYLE}>WEBSITE (OPCIONAL)</Text>
+				<Text style={styles.INPUT_LABEL_STYLE}>WEBSITE (OPTIONAL)</Text>
 			</View>
 			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
 				<TextInput
@@ -390,7 +379,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			? (PhoneNumber && PhoneNumber.includes('+1')) ? PhoneNumber : `+1${PhoneNumber}`
 			: ''
 
-		let MerchantData = {
+		const MerchantData: any = {
 			business_name: BusinessName,
 			profile_picture: profPic,
 			background_picture: backPic,
@@ -401,7 +390,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			state: State?.id,
 			zip_code: PostalCode,
 			website: BusinessWebsite,
-			// industry: BusinessCategory
 		}
 		if (PhoneNumber !== '') MerchantData.phone_number = phoneNumber
 
@@ -409,16 +397,19 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			? loginStore.environment.api
 				.updateProfileMerchant(MerchantData)
 				.then((result: any) => {
+					// alert(JSON.stringify({MerchantData, result}));
+
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
 							// loginStore.setMerchantUser(result.response)
 							loginStore.setSelectedAccount('merchant')
-							navigation.navigate("home")
+							// navigation.navigate("home")
 						})
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]
 						const msg = `${key}: ${result?.errors?.[key][0]}`
+						alert(JSON.stringify(msg))
 						notifyMessage(msg)
 					}
 				})
@@ -427,15 +418,18 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					username: Username,
 					consumer_profile: pic,
 					first_name: Name,
-					last_name: LastName
+					last_name: LastName,
+					consumer: loginStore.consumer_id
 				})
 				.then((result: any) => {
+					alert(JSON.stringify(result))
 					setLoading(false)
 					if (result.kind === "ok") {
+
 						runInAction(() => {
-							// loginStore.setConsumerUser(result.response)
+							loginStore.setConsumerUser(result.response)
 							loginStore.setSelectedAccount('consumer')
-							navigation.navigate("home")
+							// navigation.navigate("home")
 						})
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]
@@ -478,7 +472,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			unsafe={true}
 			style={styles.ROOT}
 		>
-			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings")}>
+			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate(/* "settings" */ "home" )}>
 				<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
 				<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
 			</TouchableOpacity>

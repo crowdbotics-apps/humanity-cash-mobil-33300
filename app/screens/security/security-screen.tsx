@@ -46,18 +46,31 @@ export const SecurityScreen = observer(function SecurityScreen() {
         allow_touch_id: allowTouchId
       })
       .then((result: any) => {
-        setLoading(false)
+        setLoading(false);
+        setPass('');
+        setNewPass('');
+        setNewPassConfirmation('');  
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setAllowTouchId(result.response)
             navigation.navigate("settings")
           })
         } else if (result.kind === "bad-data") {
-          const key = Object.keys(result?.errors)[0]
-          const msg = `${key}: ${result?.errors?.[key][0]}`
-          notifyMessage(msg)
+          const key = Object.keys(result?.errors)[0];
+          // alert(JSON.stringify(result.errors));
+          let msg;
+          msg = `${key}: ${result?.errors?.[key]}`;
+          if(result?.errors?.old_password?.old_password) {
+            msg = `${key}: ${result?.errors?.[key]?.old_password}`;
+          }
+          notifyMessage(msg);
         }
       })
+  }
+
+  const passwordsValidations = () => {
+    if(NewPass !== NewPassConfirmation) return notifyMessage('Passwords does not match')
+    
   }
 
   
@@ -91,17 +104,6 @@ export const SecurityScreen = observer(function SecurityScreen() {
                 style={{ marginRight: 10 }}
               />
             </View>
-            {/* <View style={styles.SWITCH_INPUT_STYLE_CONTAINER}>
-              <Text style={styles.ALLOW_LABEL}>Enable cashier view</Text>
-              <Switch
-                trackColor={{ false: "#39534480", true: "#4CD964" }}
-                thumbColor={enableCashierView ? COLOR.PALETTE.lighterGreen : COLOR.PALETTE.lighterGreen}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitchCashier}
-                value={enableCashierView}
-                style={{ marginRight: 10 }}
-              />
-            </View> */}
             <View style={styles.LINE} />
             <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
               <Text style={styles.INPUT_LABEL_STYLE}>OLD PASSWORD</Text>

@@ -1,5 +1,5 @@
-import { Animated, StyleSheet } from 'react-native';
-import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
+import { StyleSheet } from 'react-native';
+import { COLOR, METRICS } from '../../theme';
 
 export default StyleSheet.create({
     BACK_BUTON_LABEL: {
@@ -46,8 +46,8 @@ export default StyleSheet.create({
       borderRadius: 20,
       height: 220,
       justifyContent: 'space-evenly',
+      opacity: 10,
       width: METRICS.screenWidth * 0.80,
-      opacity: 10
     },
     MODAL_CONTENT: {
       height: 250,
@@ -62,8 +62,8 @@ export default StyleSheet.create({
       
     },
     ROOT_MODAL_COUPON: {
-      backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
       alignItems: 'center',
+      backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
       flex: 1,
       justifyContent: 'space-between',
     },
