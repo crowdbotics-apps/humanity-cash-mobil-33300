@@ -69,11 +69,8 @@ export const SecurityScreen = observer(function SecurityScreen() {
   }
 
   const passwordsValidations = () => {
-    if(NewPass !== NewPassConfirmation) return notifyMessage('Passwords does not match')
-    
+    if (NewPass !== NewPassConfirmation) return notifyMessage('Passwords does not match')
   }
-
-  
 
   return (
     <Screen

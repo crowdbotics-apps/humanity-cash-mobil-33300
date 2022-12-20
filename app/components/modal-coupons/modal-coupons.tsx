@@ -1,29 +1,30 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import { Text, View, Modal, TouchableOpacity, ViewStyle, TextStyle } from "react-native";
 import { useStores } from "../../models";
-import { addConsumerCoupon, deleteConsumerCoupon } from '../../utils/coupons';
+import {addConsumerCoupon, deleteConsumerCoupon} from '../../utils/coupons';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "../connect-bank-modal/styles";
 
 type ConnectBankModalProps = {
-    couponsConfig?: any,
-    setCouponsConfig?: any,
-    visible?: boolean,
-    onPressHome?: any,
-    buttonStyle?: any,
-    buttonAction?: any,
-    couponSelected: any,
-    goBack?: any,
-    mode?: string,
+  couponsConfig?: any,
+  setCouponsConfig?: any,
+  visible?: boolean,
+  onPressHome?: any,
+  buttonStyle?: any,
+  buttonAction?: any,
+  couponSelected: any,
+  goBack?: any,
+  mode?: string,
 }
+
 
 export function ConfirmCouponModal(props: ConnectBankModalProps) {
 
     const [loading, setLoading] = useState(false);
 
-    const { couponSelected } = props;
+    const {couponSelected} = props;
 
-    const { loginStore } = useStores();
+    const {loginStore} = useStores();
 
     const ContainerStyle: ViewStyle = {
         ...styles.MODAL_CONTAINER_COUPON,
@@ -32,22 +33,21 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
 
     const ContentStyle: ViewStyle = {
         position: 'absolute',
-        top: 10,
+        height: '95%',
+        justifyContent: 'space-around',
+        top: 10,       
     };
 
     const MarginTextStyle: TextStyle = {
-
-        marginTop: '60%',
         color: 'black'
     };
 
     const TitleStyle: TextStyle = {
         ...styles.STEP_TITLE,
-        marginTop: '60%',
         textAlign: 'center'
     };
 
-    const DateStyle: ViewStyle = {
+    const DateStyle : ViewStyle = {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-around'
@@ -57,20 +57,21 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
         backgroundColor: loginStore.getAccountColor,
         opacity: loading ? 0.5 : 1,
         ...styles.MODAL_BUTTON,
-        ...MarginTextStyle
+        ...MarginTextStyle,
+        marginBottom: 0,
     }
 
     const postCoupon = (): Promise<void> => {
         setLoading(true);
         return addConsumerCoupon(couponSelected.id, props, loginStore)
-            .then(() => { setLoading(false); props.setCouponsConfig({ ...props.couponsConfig, ShowConfirmCoupon: !props.visible }) })
-            .catch(error => console.log('Algo falló en el POST de cupones: ' + error.message))
+        .then(() => {setLoading(false); props.setCouponsConfig({...props.couponsConfig, ShowConfirmCoupon: !props.visible})})
+        .catch(error => console.log('Algo falló en el POST de cupones: ' + error.message))
     }
 
     const deleteCoupon = (): Promise<void[]> => {
         setLoading(true)
         return deleteConsumerCoupon(props.couponSelected.id, props, loginStore)
-            .then(() => [setLoading(false), props.setCouponsConfig({ ...props.couponsConfig, ShowConfirmCoupon: !props.visible })])
+        .then(() => [setLoading(false), props.setCouponsConfig({...props.couponsConfig, ShowConfirmCoupon: !props.visible})])
     }
 
     return (
@@ -105,10 +106,10 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
                         >
                             <Text style={styles.SUBMIT_BUTTON_LABEL}>{props.mode === 'ADD' ? 'Add this coupon' : 'Delete this from your coupons'}</Text>
                         </TouchableOpacity>
-                    </View>
-                </View>
-                <View />
-            </View>
-        </Modal>
-    )
+					</View>
+				</View>
+				<View />
+			</View>
+		</Modal>
+	)
 }

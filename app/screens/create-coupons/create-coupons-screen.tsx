@@ -75,7 +75,7 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 			end_date: DateTo.toISOString().split('T')[0],
 			type_of_promo: TypeOfPromo,
 			discount_input: DiscountInput,
-			descripton: Description,
+			description: Description,
 			promo_image: promoImage,
 			merchant: loginStore.getAllData.merchant_id
 		})

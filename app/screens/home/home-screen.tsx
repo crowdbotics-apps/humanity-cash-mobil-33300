@@ -14,7 +14,6 @@ import { profileTypes } from '../drawer/drawer-screen'
 export const HomeScreen = observer(function HomeScreen() {
 	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
 	const [couponsConfig, setCouponsConfig] = useState({
-
 		coupons: [],
 		couponSelected: {},
 		ShowConfirmCoupon: false
@@ -128,8 +127,7 @@ export const HomeScreen = observer(function HomeScreen() {
 				if (result.kind === 'ok') {
 					setCouponsConfig({ ...couponsConfig, coupons: result.data.results })
 				}
-			}
-			)
+			})
 			.catch(error => console.log('GET ALL COUPONS ERROR ', error.message))
 
 	const getFundingSources = () => {
