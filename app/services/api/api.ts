@@ -97,11 +97,13 @@ export class Api extends ApiBase {
   }
 
   async updateProfileConsumer(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data_patch(apiv1 + "/my-profile/consumer/", data, ["consumer_profile"])
+    if(data.consumer_profile?.name) return this.multipart_form_data_patch(apiv1 + "/my-profile/consumer/", data, ["consumer_profile"])
+    else return this.simple_patch(apiv1 + "/my-profile/consumer/", data)
   }
 
   async updateProfileMerchant(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
+    if(data.profile_picture?.name || data.background_picture?.name) return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
+    else return this.simple_patch(apiv1 + "/my-profile/consumer/", data)
   }
 
   async getCoupons(): Promise<Types.SimpleGetResult> {

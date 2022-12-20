@@ -203,7 +203,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				setUsername('');
 				setName('');
 				setLastName('');
-				//setStep('profile_type');
+				// setStep('profile_type');
 				setShowThankyouModal(true);
 			} else if (result.kind === "bad-data") {
 				const key = Object.keys(result?.errors)[0]

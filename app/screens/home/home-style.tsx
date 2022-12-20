@@ -98,6 +98,13 @@ export default StyleSheet.create({
     marginVertical: 3,
     textAlign: 'center',
   },
+  FAVORITE_ICON: {
+
+    bottom: 35, 
+    height: 25,
+    left: 3, 
+    position: 'absolute',
+  },
   HEADER: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -106,6 +113,19 @@ export default StyleSheet.create({
     marginTop: 10,
     width: METRICS.screenWidth * 0.90,
   },
+  ICON_WARNING: {
+    color: '#D2A824',
+    fontSize: 10, 
+    fontWeight: 'bold', 
+    textAlign: 'center', 
+  }, 
+  ICON_WARNING_CONTAINER: {
+    borderColor: '#D2A824',
+    borderRadius: 2000, 
+    borderWidth: 1, 
+    height: 16, 
+    width: 16, 
+  }, 
   INDUSTRY_TITLE: {
     color: COLOR.PALETTE.orange,
     fontSize: 12,
@@ -258,6 +278,14 @@ export default StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
+  TEXT_WARNING: {
+    marginLeft: 10
+  },
+  TEXT_WARNING_LINK: {
+    color: '#D2A824', 
+    fontWeight: '700', 
+    textDecorationLine: 'underline', 
+  },
   WARNING_CONTAINER: {
     alignItems: 'center',
     borderLeftColor: '#D2A824', 
@@ -268,32 +296,4 @@ export default StyleSheet.create({
     marginRight: 10, 
     padding: 15, 
   }, 
-  ICON_WARNING_CONTAINER: {
-    borderColor: '#D2A824',
-    borderRadius: 2000, 
-    borderWidth: 1, 
-    height: 16, 
-    width: 16, 
-  }, 
-  ICON_WARNING: {
-    color: '#D2A824',
-    fontSize: 10, 
-    fontWeight: 'bold', 
-    textAlign: 'center', 
-  }, 
-  TEXT_WARNING: {
-    marginLeft: 10
-  },
-  TEXT_WARNING_LINK: {
-    color: '#D2A824', 
-    fontWeight: '700', 
-    textDecorationLine: 'underline', 
-  },
-  FAVORITE_ICON: {
-
-    bottom: 35, 
-    height: 25,
-    left: 3, 
-    position: 'absolute',
-  }
 })

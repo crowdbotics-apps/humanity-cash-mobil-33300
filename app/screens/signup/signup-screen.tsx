@@ -235,12 +235,6 @@ export const SignupScreen = observer(function SignupScreen() {
           </Text>
         }
       </View>
-      {/*<TextInputComponent*/}
-      {/*  label='PHONE NUMBER'*/}
-      {/*  onChangeText={t => setPhone(t)}*/}
-      {/*  value={Phone}*/}
-      {/*  placeholder={"(555) 555-1234"}*/}
-      {/*/>*/}
       <MaskInput
         value={Phone}
         mask={Masks.USA_PHONE}
