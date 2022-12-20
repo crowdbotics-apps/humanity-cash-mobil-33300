@@ -50,6 +50,9 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [Address2, setAddress2] = React.useState('');
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
+	const [Instagram, setInstagram] = React.useState('');
+	const [Facebook, setFacebook] = React.useState('');
+	const [Twitter, setTwitter] = React.useState('');
 
 	// const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
@@ -345,6 +348,47 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					placeholder={'xxxxxxxxx'}
 				/>
 			</View>
+
+
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>INSTAGRAM</Text>
+			</View>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
+				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setInstagram(t)}
+					value={Instagram}
+					placeholder={'Instagram'}
+				/>
+			</View>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>FACEBOOK</Text>
+			</View>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
+				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setFacebook(t)}
+					value={Facebook}
+					placeholder={'Facebook'}
+				/>
+			</View>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>TWITTER</Text>
+			</View>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
+				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setTwitter(t)}
+					value={Twitter}
+					placeholder={'Twitter'}
+				/>
+			</View>
+
+
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
@@ -367,8 +411,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				Platform.OS === "android"
 					? imageSource?.uri
 					: imageSource?.uri?.replace("file://", ""),
-			type: imageSource.type,
-			name: imageSource.fileName
+			type: imageSource.type || 'image/jpg',
+			name: imageSource.fileName || 'image.jpg'
 		}
 		const profPic = {
 			uri:
@@ -410,6 +454,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				.updateProfileMerchant(MerchantData)
 				.then((result: any) => {
 					setLoading(false)
+					console.log(' result ===>>> updateProfileMerchant ', result)
 					if (result.kind === "ok") {
 						runInAction(() => {
 							// loginStore.setMerchantUser(result.response)
@@ -446,6 +491,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	}
 
 	useEffect(() => {
+		console.log(' loginStore.ProfileDataBusiness ======>>>>>>> ', JSON.stringify(loginStore.ProfileDataBusiness, null, 2))
 		if (isFocused) {
 			setImageSource({ uri: loginStore.ProfileData.profile_picture })
 			setUsername(loginStore.ProfileData.username)
@@ -455,7 +501,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			setBackBusinessImageSource({ uri: loginStore.ProfileDataBusiness.background_picture })
 			setBusinessName(loginStore.ProfileDataBusiness.business_name)
 			setBusinessStory(loginStore.ProfileDataBusiness.business_story)
-			// setBusinessCategory(loginStore.ProfileDataBusiness.industry)
 			setBusinessWebsite(loginStore.ProfileDataBusiness.website)
 			setCity(loginStore.ProfileDataBusiness.city)
 			setState(loginStore.ProfileDataBusiness.state)
@@ -463,6 +508,9 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			setAddress2(loginStore.ProfileDataBusiness.address_2)
 			setPostalCode(loginStore.ProfileDataBusiness.zip_code)
 			setPhoneNumber(loginStore.ProfileDataBusiness.phone_number)
+			setInstagram(loginStore.ProfileDataBusiness.instagram)
+			setFacebook(loginStore.ProfileDataBusiness.facebook)
+			setTwitter(loginStore.ProfileDataBusiness.twitter)
 			setEmail(loginStore.getAllData.email)
 
 			// fetchCity()

@@ -141,6 +141,7 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
         super(ConsumerMyProfileAPIView, self).update(request, *args, **kwargs)
         instance = self.get_object()
         request.data.pop('consumer_profile')
+        request.data['consumer'] = Consumer.objects.get(user=instance).id
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
@@ -166,11 +167,11 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
         except ObjectDoesNotExist:
             return None
 
-
     def update(self, request, *args, **kwargs):
         super(MerchantMyProfileDetailAPIView, self).update(request, *args, **kwargs)
 
         instance = self.get_object()
+        request.data['merchant'] = Merchant.objects.get(user=instance).id
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
