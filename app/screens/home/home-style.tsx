@@ -1,5 +1,5 @@
-import { Animated, StyleSheet } from 'react-native';
-import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
+import { StyleSheet } from 'react-native';
+import { COLOR, METRICS } from '../../theme';
 
 export default StyleSheet.create({
   AGREE_CONTAINER: {
