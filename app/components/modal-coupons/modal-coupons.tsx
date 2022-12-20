@@ -74,6 +74,15 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
         .then(() => [setLoading(false), props.setCouponsConfig({...props.couponsConfig, ShowConfirmCoupon: !props.visible})])
     }
 
+    const dateFormat = (date) => {
+        let dateFormated = ''
+        if (date && date.split('-')) {
+            const t = date.split('-')
+            dateFormated = `${t[2]}/${t[1]}/${t[0]}`
+        }
+        return dateFormated
+    }
+
     return (
         <Modal visible transparent>
             <View style={styles.ROOT_MODAL_COUPON}>
@@ -84,8 +93,8 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
                 <View style={ContainerStyle}>
                     <View style={[styles.MODAL_CONTENT, ContentStyle]}>
                         <View style={DateStyle}>
-                            <Text style={MarginTextStyle}>Valid from: {couponSelected?.start_date}</Text>
-                            <Text style={MarginTextStyle}>To: {couponSelected?.end_date}</Text>
+                            <Text style={MarginTextStyle}>Valid from: {dateFormat(couponSelected?.start_date)}</Text>
+                            <Text style={MarginTextStyle}>To: {dateFormat(couponSelected?.end_date)}</Text>
                         </View>
                         <Text style={TitleStyle}>{couponSelected?.title}</Text>
                         <Text style={MarginTextStyle}>Promo Type: {couponSelected?.type_of_promo}</Text>
