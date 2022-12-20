@@ -9,7 +9,6 @@ import {
 	MaskInput
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
-import FontAwesome from "react-native-vector-icons/FontAwesome"
 import styles from './signup-profile-style';
 import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { launchImageLibrary } from 'react-native-image-picker';

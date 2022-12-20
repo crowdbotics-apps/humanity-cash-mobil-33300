@@ -1,5 +1,6 @@
-import { Animated, StyleSheet } from 'react-native';
-import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
+import {  StyleSheet } from 'react-native';
+import { COLOR, METRICS } from '../../theme';
+// 6
 
 export default StyleSheet.create({
   ACTIVITY: {
@@ -91,6 +92,10 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.black,
     fontSize: 16,
     right: 10,
+  },
+  EMPTY_CONTACTS: {
+    alignItems: 'center', 
+    marginTop: '50%'
   },
   FILTER_CONTAINER: {
     alignSelf: 'center',
@@ -229,18 +234,15 @@ export default StyleSheet.create({
   RETURN_IMAGE: {
     borderRadius: 30,
     height: 60,
-    width: 60
+    width: 60,
   },
   RETURN_ITEM: {
     alignItems: 'center',
-    alignSelf: 'center',
-    // backgroundColor:  COLOR.PALETTE.background,
-    //backgroundColor: 'red',
     flexDirection: 'row',
-    height: 70,
-    justifyContent: 'space-between',
-    marginVertical: 5,
-    width: METRICS.screenWidth * 0.95
+    marginBottom: '5%',
+    position: 'relative',
+    width: '100%', 
+    zIndex: 1000, 
   },
   RETURN_ITEM_AMOUNT: {
     color: COLOR.PALETTE.pink,
@@ -265,7 +267,8 @@ export default StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: 'bold',
-    marginLeft: 20
+    marginLeft: 20,
+    marginTop: 25
   },
   RETURN_ITEM_MODAL: {
     bottom: 30,
@@ -279,6 +282,14 @@ export default StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
     marginRight: 20
+  },
+  RETURN_ITEM_TOUCHABLE: {
+    // alignItems: 'center',
+    // alignSelf: 'center',
+    // flexDirection: 'row',
+    height: 60,
+    // justifyContent: 'space-between',
+    // marginVertical: 5,
   },
   ROOT: {
     backgroundColor: COLOR.PALETTE.white,

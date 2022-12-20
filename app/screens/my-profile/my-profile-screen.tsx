@@ -409,7 +409,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]
 						const msg = `${key}: ${result?.errors?.[key][0]}`
-						alert(JSON.stringify(msg))
 						notifyMessage(msg)
 					}
 				})
@@ -422,7 +421,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					consumer: loginStore.consumer_id
 				})
 				.then((result: any) => {
-					alert(JSON.stringify(result))
 					setLoading(false)
 					if (result.kind === "ok") {
 
