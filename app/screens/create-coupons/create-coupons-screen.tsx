@@ -93,8 +93,6 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 			})
 	}
 
-	
-
 	const TypeOfPromos = [
 		'Discount percentage',
 		'Discount dollar amount',
@@ -225,6 +223,7 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 								}}
 								value={DiscountInput}
 								placeholder={''}
+								maxLength={30}
 							/>
 						</View>
 

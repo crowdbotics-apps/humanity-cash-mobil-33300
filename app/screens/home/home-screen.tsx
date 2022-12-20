@@ -294,17 +294,17 @@ export const HomeScreen = observer(function HomeScreen() {
 					{ ShowConfirmCoupon &&
 
 						<ConfirmCouponModal 
+							mustDoAction={true}
 							couponsConfig={couponsConfig}
 							setCouponsConfig={setCouponsConfig}
 							visible={ShowConfirmCoupon} 
 							buttonAction={() => setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})} 
 							couponSelected={couponSelected}
-							//@ts-ignore
+							// @ts-ignore
 							mode={!loginStore.getConsumerCoupons.some(c => c.id_cupon === couponSelected.id) ? 'ADD' : 'DELETE'}
 							goBack={async () => {
-
 								await getAllCoupons()
-								//@ts-ignore
+								// @ts-ignore
 								navigation.navigate('home')
 								setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})
 							}}

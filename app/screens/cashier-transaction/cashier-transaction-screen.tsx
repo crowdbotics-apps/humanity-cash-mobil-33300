@@ -49,8 +49,8 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 
 	useEffect(() => {
 		if (isFocused) {
-			if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-			else setShowBankModal(false)
+			// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+			// else setShowBankModal(false)
 		}
 	}, [isFocused])
   

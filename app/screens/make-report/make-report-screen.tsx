@@ -1,10 +1,9 @@
 import { observer } from "mobx-react-lite";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Screen, Text, ConnectBankModal } from "../../components";
-import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView } from "react-native";
-import { COLOR, IMAGES, METRICS } from "../../theme";
-import { ButtonIcon } from "../../components/button-icon/button-icon";
+import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, KeyboardAvoidingView } from "react-native";
+import { COLOR, METRICS } from "../../theme";
 import styles from './make-report';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
@@ -35,7 +34,44 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 		'Outgoing transactions',
 		'Load ups',
 		'Cash out to USD',
-	]
+	];
+
+	const setTodayDate = () => {
+		setAmount('Today')
+		setDateFrom(new Date())
+		setDateTo(new Date())
+	}
+
+	const setAllCurrentWeekDate = () => {
+		const now = new Date; 
+		const first = now.getDate() - now.getDay(); 
+		const last = first + 6;
+		const firstDay = new Date(now.setDate(first));
+		const lastday = new Date(now.setDate(last));
+		setAmount('Week');
+		setDateFrom(firstDay);
+		setDateTo(lastday);
+	}
+
+	const setAllCurrentMonth = () => {
+		const now = new Date();
+		const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+		const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+		setAmount('Month');
+		setDateFrom(firstDay);
+		setDateTo(lastDay);
+	}
+
+	const confirmDate = (date, mode = 'from') => {
+
+		if(mode === 'from') {
+			setOpenFrom(false)
+			setDateFrom(date)
+			return
+		}
+		setOpenTo(false)
+		setDateTo(date)
+	}
 
 	useEffect(() => {
 		// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
@@ -56,18 +92,19 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 				? <View style={styles.LOADING_RETURN}>
 					{TransactionFinished
 						? [
-							<Text key={'congrat_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Congratulations! You 
-have topped up 
-C$ ${Amount}`}
+							<Text 
+							  key={'congrat_title'} 
+							  style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}
+							>
+								{`Congratulations! You have topped up C$ ${Amount}`}
 							</Text>,
 							<Text key={'congrat_sub_title'} style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>,
 							<Button
 								key={'congrat_button'}
-								buttonStyle={{
-									backgroundColor: loginStore.getAccountColor,
-									marginTop: METRICS.screenHeight * 0.6,
-									position: 'absolute'
-								}}
+								buttonStyle={[styles.CONGRAT_BUTTON, 
+									{backgroundColor: loginStore.getAccountColor,
+									marginTop: METRICS.screenHeight * 0.6,}
+								]}
 								onPress={() => [
 									setTransactionConfirm(false),
 									setShowModal(false),
@@ -89,10 +126,10 @@ C$ ${Amount}`}
 				: <View style={[
 					styles.ROOT_MODAL,
 					{
-						backgroundColor:
-							loginStore.getSelectedAccount === 'merchant'
-								? 'rgba(157, 165, 111, 0.50)'
-								: 'rgba(59, 136, 182, 0.50)'
+					  backgroundColor:
+					  	loginStore.getSelectedAccount === 'merchant'
+					  		? 'rgba(157, 165, 111, 0.50)'
+					  		: 'rgba(59, 136, 182, 0.50)'
 					}
 				]}>
 					<View style={styles.HEADER_ACTIONS}>
@@ -145,6 +182,7 @@ C$ ${Amount}`}
 			>
 				<View style={styles.HEADER_ACTIONS}>
 					{!ShowModal &&
+					     // @ts-ignore
 						<TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
 							<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
@@ -170,9 +208,7 @@ C$ ${Amount}`}
 									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
 							buttonLabelStyle={{ color: Amount === 'Today' ? COLOR.PALETTE.white : loginStore.getAccountColor }}
-							onPress={() => {
-								setAmount('Today')
-							}}
+							onPress={setTodayDate}
 							buttonLabel={'Today'}
 						/>
 						<Button
@@ -182,7 +218,8 @@ C$ ${Amount}`}
 									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
 							buttonLabelStyle={{ color: Amount === 'Week' ? COLOR.PALETTE.white : loginStore.getAccountColor }}
-							onPress={() => setAmount('Week')}
+							onPress={setAllCurrentWeekDate}
+
 							buttonLabel={'Week'}
 						/>
 						<Button
@@ -192,7 +229,7 @@ C$ ${Amount}`}
 									: [styles.BUTTON_AMOUNT, { borderColor: loginStore.getAccountColor }]
 							}
 							buttonLabelStyle={Amount === 'Month' ? { color: COLOR.PALETTE.white } : { color: loginStore.getAccountColor }}
-							onPress={() => setAmount('Month')}
+							onPress={setAllCurrentMonth}
 							buttonLabel={'Month'}
 						/>
 					</View>
@@ -217,7 +254,8 @@ C$ ${Amount}`}
 									open={OpenFrom}
 									date={DateFrom}
 									mode='date'
-									onDateChange={d => setDateFrom(d)}
+									onConfirm={(date) => confirmDate(date)}
+									onCancel={() => setOpenFrom(false)}
 								/>
 							</View>
 							<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
@@ -233,10 +271,8 @@ C$ ${Amount}`}
 									modal
 									open={OpenTo}
 									date={DateTo}
-									onConfirm={(date) => {
-										setOpenTo(false)
-										setDateTo(date)
-									}}
+									mode='date'
+									onConfirm={(date) => confirmDate(date, 'to')}
 									onCancel={() => setOpenTo(false)}
 								/>
 							</View>
@@ -263,10 +299,7 @@ C$ ${Amount}`}
 				{bankModal()}
 			</KeyboardAvoidingView>
 			<Button
-				buttonStyle={{
-					backgroundColor: loginStore.getAccountColor,
-					bottom: 5,
-				}}
+				buttonStyle={[styles.SUBMIT_BUTTON, {backgroundColor: loginStore.getAccountColor,}]}
 				onPress={() => setShowModal(true)}
 				buttonLabel={'Send report'}
 			/>

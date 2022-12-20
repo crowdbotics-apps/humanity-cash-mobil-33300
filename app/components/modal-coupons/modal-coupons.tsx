@@ -1,27 +1,28 @@
-import React, { useState } from "react";
-import { Text, View, Modal, TouchableOpacity, ViewStyle, TextStyle } from "react-native";
-import { useStores } from "../../models";
+import React, {useState} from "react";
+import {Text, View, Modal, TouchableOpacity, ViewStyle, TextStyle, Pressable} from "react-native";
+import {useStores} from "../../models";
 import { addConsumerCoupon, deleteConsumerCoupon } from '../../utils/coupons';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import styles from "../connect-bank-modal/styles";
 
 type ConnectBankModalProps = {
+    visible?: boolean,
+    mustDoAction?: boolean
+    mode?: string,
     couponsConfig?: any,
     setCouponsConfig?: any,
-    visible?: boolean,
     onPressHome?: any,
     buttonStyle?: any,
     buttonAction?: any,
     couponSelected: any,
     goBack?: any,
-    mode?: string,
 }
 
 export function ConfirmCouponModal(props: ConnectBankModalProps) {
 
     const [loading, setLoading] = useState(false);
 
-    const { couponSelected } = props;
+    const {couponSelected, mustDoAction} = props;
 
     const { loginStore } = useStores();
 
@@ -29,7 +30,7 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
         ...styles.MODAL_CONTAINER_COUPON,
         height: '50%',
     };
-
+    
     const ContentStyle: ViewStyle = {
         position: 'absolute',
         top: 10,
@@ -74,14 +75,18 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
     }
 
     return (
-        <Modal visible transparent>
-            <View style={styles.ROOT_MODAL_COUPON}>
+        <Modal 
+          visible 
+          transparent 
+          animationType='fade'
+        >
+            <Pressable style={styles.ROOT_MODAL_COUPON} onPress={props.buttonAction}>
                 <TouchableOpacity onPress={props.buttonAction} style={styles.CLOSE_MODAL_BUTTON}>
                     <Text style={styles.BACK_BUTON_LABEL_COUPON}>{`Close `}</Text>
                     <Icon name={"close"} size={20} color={'#fff'} />
                 </TouchableOpacity>
                 <View style={ContainerStyle}>
-                    <View style={[styles.MODAL_CONTENT, ContentStyle]}>
+                    <Pressable style={[styles.MODAL_CONTENT, ContentStyle]} onPress={() => ''}>
                         <View style={DateStyle}>
                             <Text style={MarginTextStyle}>Valid from: {couponSelected?.start_date}</Text>
                             <Text style={MarginTextStyle}>To: {couponSelected?.end_date}</Text>
@@ -98,17 +103,20 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
                             Description:
                             {couponSelected?.description ? ` ${couponSelected.description}` : ' No description'}
                         </Text>
-                        <TouchableOpacity
-                            style={ButtonStyle}
-                            onPressIn={() => props.mode === 'ADD' ? postCoupon() : deleteCoupon()}
-                            disabled={loading}
-                        >
-                            <Text style={styles.SUBMIT_BUTTON_LABEL}>{props.mode === 'ADD' ? 'Add this coupon' : 'Delete this from your coupons'}</Text>
-                        </TouchableOpacity>
-                    </View>
+
+                        {mustDoAction && (
+                            <TouchableOpacity
+                                style={ButtonStyle}
+                                onPressIn={() => props.mode === 'ADD' ? postCoupon() : deleteCoupon()}
+                                disabled={loading}
+                            >
+                                <Text style={styles.SUBMIT_BUTTON_LABEL}>{props.mode === 'ADD' ? 'Add this coupon' : 'Delete this from your coupons'}</Text>
+                            </TouchableOpacity>
+                        )}
+                    </Pressable>
                 </View>
                 <View />
-            </View>
+            </Pressable>
         </Modal>
     )
 }
