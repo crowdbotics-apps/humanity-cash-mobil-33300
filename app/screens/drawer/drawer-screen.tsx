@@ -282,6 +282,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
       preset="scroll"
       statusBar={'dark-content'}
       unsafe={true}
+      backgroundColor={loginStore.getSelectedAccount === 'consumer' ? COLOR.PALETTE.background : loginStore.getAccountColor}
       headerStyle={[styles.HEADER, { backgroundColor: loginStore.getSelectedAccount === 'consumer' ? COLOR.PALETTE.background : loginStore.getAccountColor }]}
     >
       <View style={[styles.ROOT, { backgroundColor: loginStore.getSelectedAccount === 'consumer' ? COLOR.PALETTE.background : loginStore.getAccountColor }]}>

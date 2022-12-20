@@ -50,6 +50,9 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const [Address2, setAddress2] = React.useState('');
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
+	const [Instagram, setInstagram] = React.useState('');
+	const [Facebook, setFacebook] = React.useState('');
+	const [Twitter, setTwitter] = React.useState('');
 
 	// const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
@@ -334,6 +337,47 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					placeholder={'xxxxxxxxx'}
 				/>
 			</View>
+
+
+
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>INSTAGRAM</Text>
+			</View>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
+				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setInstagram(t)}
+					value={Instagram}
+					placeholder={'Instagram'}
+				/>
+			</View>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>FACEBOOK</Text>
+			</View>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
+				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setFacebook(t)}
+					value={Facebook}
+					placeholder={'Facebook'}
+				/>
+			</View>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>TWITTER</Text>
+			</View>
+			<View style={[styles.INPUT_STYLE_CONTAINER, { backgroundColor: `${loginStore.getAccountColor}25` }]}>
+				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setTwitter(t)}
+					value={Twitter}
+					placeholder={'Twitter'}
+				/>
+			</View>
+
+
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
@@ -356,8 +400,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				Platform.OS === "android"
 					? imageSource?.uri
 					: imageSource?.uri?.replace("file://", ""),
-			type: imageSource.type,
-			name: imageSource.fileName
+			type: imageSource.type || 'image/jpg',
+			name: imageSource.fileName || 'image.jpg'
 		}
 		const profPic = {
 			uri:
@@ -379,7 +423,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			? (PhoneNumber && PhoneNumber.includes('+1')) ? PhoneNumber : `+1${PhoneNumber}`
 			: ''
 
-		const MerchantData: any = {
+		let MerchantData: any = {
 			business_name: BusinessName,
 			profile_picture: profPic,
 			background_picture: backPic,
@@ -390,6 +434,9 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			state: State?.id,
 			zip_code: PostalCode,
 			website: BusinessWebsite,
+			instagram: Instagram,
+			facebook: Facebook,
+			twitter: Twitter
 		}
 		if (PhoneNumber !== '') MerchantData.phone_number = phoneNumber
 
@@ -397,14 +444,12 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			? loginStore.environment.api
 				.updateProfileMerchant(MerchantData)
 				.then((result: any) => {
-					// alert(JSON.stringify({MerchantData, result}));
-
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
 							// loginStore.setMerchantUser(result.response)
 							loginStore.setSelectedAccount('merchant')
-							// navigation.navigate("home")
+							navigation.navigate("home")
 						})
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]
@@ -418,7 +463,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					consumer_profile: pic,
 					first_name: Name,
 					last_name: LastName,
-					consumer: loginStore.consumer_id
 				})
 				.then((result: any) => {
 					setLoading(false)
@@ -427,7 +471,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						runInAction(() => {
 							loginStore.setConsumerUser(result.response)
 							loginStore.setSelectedAccount('consumer')
-							// navigation.navigate("home")
+							navigation.navigate("home")
 						})
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]
@@ -447,7 +491,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			setBackBusinessImageSource({ uri: loginStore.ProfileDataBusiness.background_picture })
 			setBusinessName(loginStore.ProfileDataBusiness.business_name)
 			setBusinessStory(loginStore.ProfileDataBusiness.business_story)
-			// setBusinessCategory(loginStore.ProfileDataBusiness.industry)
 			setBusinessWebsite(loginStore.ProfileDataBusiness.website)
 			setCity(loginStore.ProfileDataBusiness.city)
 			setState(loginStore.ProfileDataBusiness.state)
@@ -455,6 +498,9 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			setAddress2(loginStore.ProfileDataBusiness.address_2)
 			setPostalCode(loginStore.ProfileDataBusiness.zip_code)
 			setPhoneNumber(loginStore.ProfileDataBusiness.phone_number)
+			setInstagram(loginStore.ProfileDataBusiness.instagram)
+			setFacebook(loginStore.ProfileDataBusiness.facebook)
+			setTwitter(loginStore.ProfileDataBusiness.twitter)
 			setEmail(loginStore.getAllData.email)
 
 			// fetchCity()
@@ -470,7 +516,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			unsafe={true}
 			style={styles.ROOT}
 		>
-			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate(/* "settings" */ "home" )}>
+			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home")}>
 				<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
 				<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
 			</TouchableOpacity>
