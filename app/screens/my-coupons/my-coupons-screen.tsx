@@ -1,17 +1,16 @@
-import { observer } from "mobx-react-lite";
-import { useNavigation, useIsFocused } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
-import { Button, Screen, Text, TextInputComponent, ConnectBankModal } from "../../components";
-import { TouchableWithoutFeedback, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
-import { COLOR, IMAGES, METRICS } from "../../theme";
+import {observer} from "mobx-react-lite";
+import {useNavigation, useIsFocused} from "@react-navigation/native";
+import React, {useEffect, useState} from "react";
+import {Button, Screen, Text, ConnectBankModal, ConfirmCouponModal} from "../../components";
+import {TouchableWithoutFeedback, TextInput, TouchableOpacity, View, Modal, KeyboardAvoidingView, ScrollView, Image, ViewStyle} from "react-native";
+import {COLOR, IMAGES} from "../../theme";
 import styles from './my-coupons-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
-import { useStores } from "../../models";
-import { CheckBox } from 'react-native-elements'
+import {useStores} from "../../models";
 import DatePicker from 'react-native-date-picker'
 import Entypo from "react-native-vector-icons/Entypo"
-import { runInAction } from "mobx"
-import { notifyMessage } from "../../utils/helpers"
+import {runInAction} from "mobx"
+import {notifyMessage} from "../../utils/helpers"
 
 export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	const navigation = useNavigation()
@@ -24,32 +23,32 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		'Discount dollar amount',
 		'Special Offer',
 	];
-	const coupons: object[] = [
-		{
-			title: 'Super Promo',
-			start_date: '12/31/2022',
-			end_date: '12/31/2023',
-			type_of_promo: 'Discount percentage',
-			discount_input: '10%',
-			image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-		},
-		{
-			title: 'Super Promo 2',
-			start_date: '12/31/2022',
-			end_date: '12/31/2023',
-			type_of_promo: 'Discount dollar amount',
-			discount_input: '$20',
-			image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-		},
-		{
-			title: 'Super Promo 3',
-			start_date: '12/31/2022',
-			end_date: '12/31/2023',
-			type_of_promo: 'Special Offer',
-			discount_input: 'Free Wine',
-			image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-		},
-	];
+	// const coupons: object[] = [
+	// 	{
+	// 		title: 'Super Promo',
+	// 		start_date: '12/31/2022',
+	// 		end_date: '12/31/2023',
+	// 		type_of_promo: 'Discount percentage',
+	// 		discount_input: '10%',
+	// 		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	// 	},
+	// 	{
+	// 		title: 'Super Promo 2',
+	// 		start_date: '12/31/2022',
+	// 		end_date: '12/31/2023',
+	// 		type_of_promo: 'Discount dollar amount',
+	// 		discount_input: '$20',
+	// 		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	// 	},
+	// 	{
+	// 		title: 'Super Promo 3',
+	// 		start_date: '12/31/2022',
+	// 		end_date: '12/31/2023',
+	// 		type_of_promo: 'Special Offer',
+	// 		discount_input: 'Free Wine',
+	// 		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
+	// 	},
+	// ];
 
 	const [ShowIndex, setShowIndex] = useState(true)
 	const [Search, setSearch] = useState('')
@@ -63,8 +62,10 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	const [OpenFrom, setOpenFrom] = useState(false)
 	const [DateTo, setDateTo] = useState(new Date(new Date().getFullYear(), 11, 31))
 	const [OpenTo, setOpenTo] = useState(false);
-
-	const [ShowBankModal, setShowBankModal] = useState(false)
+	const [couponsModalConfig, setCouponsModalConfig] = useState({couponSelected: null, showCouponModalInfo: false});
+	const {couponSelected, showCouponModalInfo} = couponsModalConfig;
+	const [ShowBankModal, setShowBankModal] = useState(false);
+	const transactionStyle: ViewStyle = {display: SelectOpen ? 'flex' : 'none'}
 
 	const getCoupons = () => {
 		loginStore.environment.api
@@ -164,10 +165,14 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
 			<TouchableOpacity style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen)]}>
 				<Text style={styles.SELECT_LABEL}>{TransactionType || 'All'}</Text>
-				<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
+				<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={styles.ENTYPO} />
 			</TouchableOpacity>
 			{transactionTypes.map((t, key) => (
-				<TouchableOpacity key={key + 'btype'} style={[styles.SELECT_ICON, { display: SelectOpen ? 'flex' : 'none' }]} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType(t), setSearch(Search)]}>
+				<TouchableOpacity 
+				  key={key + 'btype'} 
+				  style={[styles.SELECT_ICON, transactionStyle]} 
+				  onPress={() => [setSelectOpen(!SelectOpen), setTransactionType(t), setSearch(Search)]}
+				>
 					<Text style={styles.SELECT_LABEL}>{t}</Text>
 				</TouchableOpacity>
 			))}
@@ -197,8 +202,17 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		<ConnectBankModal
 			visible={ShowBankModal}
 			buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+			// @ts-ignore
 			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+			// @ts-ignore
 			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
+		/>
+
+	const couponInfoModal = () => 
+		<ConfirmCouponModal 
+		  visible={showCouponModalInfo}
+		  couponSelected={couponSelected}
+		  buttonAction={() => setCouponsModalConfig({showCouponModalInfo: false, couponSelected: null})}
 		/>
 
 	return (
@@ -210,7 +224,10 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 			style={styles.ROOT}
 		>
 			<View style={styles.HEADER_ACTIONS}>
-				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate('home')}>
+				<TouchableOpacity 
+				  style={styles.HEADER} 
+				  // @ts-ignore
+				  onPress={() => navigation.navigate('home')}>
 					<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
 					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 
@@ -221,7 +238,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
 							<View style={styles.STEP_CONTAINER}>
-								<View style={[styles.CONTAINER, { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}>
+								<View style={styles.TITLE_CONTAINER}>
 									<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>My Coupons</Text>
 								</View>
 								<View style={styles.LINE} />
@@ -237,19 +254,24 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 										/>
 									</View>
 									<TouchableOpacity style={styles.SEARCH_INPUT_ADJUSTMENTS} onPress={() => setShowFilter(!ShowFilter)}>
-										<Image source={IMAGES.shortIcon} resizeMode='contain' style={{ width: 20, height: 20 }} />
+										<Image source={IMAGES.shortIcon} resizeMode='contain' style={styles.COUPON_IMAGE} />
 										<Text>Filter</Text>
 									</TouchableOpacity>
 								</View>
 								{ShowFilter && Filters()}
 								{getDataFiltered(loginStore.getMerchantCoupons, ['title', 'description', 'discount_input'], Search).map((i, key) => (
-									<TouchableOpacity onLongPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key + '_values'} style={styles.RETURN_ITEM}>
+									<TouchableOpacity 
+									  onLongPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]}
+									  onPress={() => setCouponsModalConfig({showCouponModalInfo: true, couponSelected: i})} 
+									  key={key + '_values'} 
+									  style={styles.RETURN_ITEM}
+									>
 										<Image
 											source={{ uri: i.promo_image }}
 											resizeMode='cover'
 											style={styles.RETURN_IMAGE}
 										/>
-										<View style={[styles.CONTAINER, { flex: 1, justifyContent: 'center' }]}>
+										<View style={styles.DATE_INFO_CONTAINER}>
 											<Text key={key + '_label'} style={styles.RETURNS_LABEL}>
 												{(i.start_date && i.end_date)
 													? `${i.start_date} - ${i.end_date}`
@@ -258,15 +280,10 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 											</Text>
 											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.title}</Text>
 										</View>
-										<View style={styles.CONTAINER}>
-											<Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>
-												{i.type_of_promo === 'Discount dollar amount' && '$' }
-												{i.discount_input}
-												{i.type_of_promo === 'Discount percentage' && '%' }
-											</Text>
-										</View>
 									</TouchableOpacity>
 								))}
+
+								{showCouponModalInfo && couponInfoModal()}
 							</View>
 						</View>
 					</View>
@@ -275,7 +292,8 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 				{bankModal()}
 				{ShowIndex &&
 					<Button
-						buttonStyle={{ backgroundColor: loginStore.getAccountColor, marginTop: 5 }}
+						buttonStyle={[styles.BUTTON_CREATE, {backgroundColor: loginStore.getAccountColor}]}
+						// @ts-ignore
 						onPress={() => navigation.navigate("createCoupon")}
 						buttonLabel={'Create a coupon'}
 						accountType={loginStore.getSelectedAccount}

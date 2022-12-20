@@ -1,5 +1,5 @@
-import { Animated, StyleSheet } from 'react-native';
-import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
+import { StyleSheet } from 'react-native';
+import { COLOR, METRICS } from '../../theme';
 
 export default StyleSheet.create({
   ACTIVITY: {
@@ -60,6 +60,9 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.white,
     fontSize: 16
   },
+  BUTTON_CREATE: {
+    marginTop: 5
+  },
   CLEAR_FILTERS: {
     alignSelf: 'center',
     color: COLOR.PALETTE.lightGrey,
@@ -74,7 +77,19 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     marginRight: 30
   },
-  CONTAINER: {},
+  CONTAINER: {
+    // flexWrap: 'wrap',
+    // flex: 1,
+    // justifyContent: 'center'
+  },
+  COUPON_IMAGE: {
+    height: 20,
+    width: 20, 
+  },
+  DATE_INFO_CONTAINER: {
+    flex: 1, 
+    justifyContent: 'center'
+  },
   DISTANCES_CONTAINER: {
     alignItems: 'center',
     flexDirection: 'row',
@@ -87,6 +102,9 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.black,
     fontSize: 16,
     right: 10,
+  },
+  ENTYPO: {
+    marginRight: 20
   },
   FILTER_CONTAINER: {
     alignSelf: 'center',
@@ -239,10 +257,11 @@ export default StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     height: 70,
     justifyContent: 'space-between',
     marginTop: 10,
-    width: METRICS.screenWidth * 0.95
+    width: METRICS.screenWidth * 0.95,
   },
   RETURN_ITEM_AMOUNT: {
     color: COLOR.PALETTE.pink,
@@ -352,7 +371,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
   },
   SELECT_LABEL: {
-    color: COLOR.PALETTE.BLACK,
+    color: COLOR.PALETTE.black,
     fontSize: 16,
     marginLeft: 20
   },
@@ -406,6 +425,12 @@ export default StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
     width: METRICS.screenWidth * 0.90,
+  },
+  TITLE_CONTAINER: {
+    alignItems: 'center', 
+    flex: 1, 
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
   },
   USER_IMAGE: {
     borderRadius: 30,
