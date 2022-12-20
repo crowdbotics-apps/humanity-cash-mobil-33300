@@ -47,10 +47,10 @@ export const SecurityScreen = observer(function SecurityScreen() {
       })
       .then((result: any) => {
         setLoading(false);
-        setPass('');
-        setNewPass('');
-        setNewPassConfirmation('');  
         if (result.kind === "ok") {
+          setPass('');
+          setNewPass('');
+          setNewPassConfirmation('');  
           runInAction(() => {
             loginStore.setAllowTouchId(result.response)
             navigation.navigate("settings")

@@ -423,7 +423,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			? (PhoneNumber && PhoneNumber.includes('+1')) ? PhoneNumber : `+1${PhoneNumber}`
 			: ''
 
-		const MerchantData: any = {
+		let MerchantData: any = {
 			business_name: BusinessName,
 			profile_picture: profPic,
 			background_picture: backPic,
@@ -434,6 +434,9 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			state: State?.id,
 			zip_code: PostalCode,
 			website: BusinessWebsite,
+			instagram: Instagram,
+			facebook: Facebook,
+			twitter: Twitter
 		}
 		if (PhoneNumber !== '') MerchantData.phone_number = phoneNumber
 
@@ -441,20 +444,16 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			? loginStore.environment.api
 				.updateProfileMerchant(MerchantData)
 				.then((result: any) => {
-					// alert(JSON.stringify({MerchantData, result}));
-
 					setLoading(false)
-					console.log(' result ===>>> updateProfileMerchant ', result)
 					if (result.kind === "ok") {
 						runInAction(() => {
 							// loginStore.setMerchantUser(result.response)
 							loginStore.setSelectedAccount('merchant')
-							// navigation.navigate("home")
+							navigation.navigate("home")
 						})
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]
 						const msg = `${key}: ${result?.errors?.[key][0]}`
-						alert(JSON.stringify(msg))
 						notifyMessage(msg)
 					}
 				})
@@ -464,17 +463,15 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					consumer_profile: pic,
 					first_name: Name,
 					last_name: LastName,
-					consumer: loginStore.consumer_id
 				})
 				.then((result: any) => {
-					alert(JSON.stringify(result))
 					setLoading(false)
 					if (result.kind === "ok") {
 
 						runInAction(() => {
 							loginStore.setConsumerUser(result.response)
 							loginStore.setSelectedAccount('consumer')
-							// navigation.navigate("home")
+							navigation.navigate("home")
 						})
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]
@@ -485,7 +482,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	}
 
 	useEffect(() => {
-		console.log(' loginStore.ProfileDataBusiness ======>>>>>>> ', JSON.stringify(loginStore.ProfileDataBusiness, null, 2))
 		if (isFocused) {
 			setImageSource({ uri: loginStore.ProfileData.profile_picture })
 			setUsername(loginStore.ProfileData.username)
@@ -520,7 +516,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			unsafe={true}
 			style={styles.ROOT}
 		>
-			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate(/* "settings" */ "home" )}>
+			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home")}>
 				<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
 				<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
 			</TouchableOpacity>
