@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { View, TouchableOpacity, Modal, TextInput, Image } from 'react-native';
+import { View, TouchableOpacity, Modal, TextInput, Image, Keyboard } from 'react-native';
 import {
   Text,
   Button,
@@ -40,6 +40,14 @@ export const QRScreen = observer(function QRScreen(props: any) {
   const [ShowBankModal, setShowBankModal] = useState(false)
 
   const [ShowAmountModal, setShowAmountModal] = useState(false)
+
+  const [keyboardIsOpen, setKeyboardIsOpen] = React.useState(false);
+  Keyboard.addListener("keyboardDidShow", () => {
+    setKeyboardIsOpen(true);
+  });
+  Keyboard.addListener("keyboardDidHide", () => {
+    setKeyboardIsOpen(false);
+  });
 
   useEffect(() => {
     if (isFocused) {
@@ -105,6 +113,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
       <View style={styles.CONTAINER}>
         <Button
           buttonStyle={{
+            marginBottom: keyboardIsOpen ? 300 : 30,
             backgroundColor: loginStore.getAccountColor,
           }}
           loading={Loading}
@@ -143,16 +152,15 @@ export const QRScreen = observer(function QRScreen(props: any) {
             </View>
           </View>
         </View>
-        <View style={styles.CONTAINER}>
           <Button
             buttonStyle={{
+              marginBottom: keyboardIsOpen ? 300 : 30,
               backgroundColor: loginStore.getAccountColor,
             }}
             loading={Loading}
             onPress={() => transferCurrency()}
             buttonLabel={'Confirm'}
           />
-        </View>
       </View>
 }
     </Modal>

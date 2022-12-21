@@ -29,7 +29,7 @@ export function ModalSelector(props: ModalSelectortProps) {
     useEffect(() => {
         if (props.value === null) {
             setSelectedValue(null)
-        }
+        } else setSelectedValue(props.value)
         setSearch('')
     }, [props.value])
 
@@ -98,6 +98,7 @@ export function ModalSelector(props: ModalSelectortProps) {
                                     onPress={() => {
                                         if (props.closeOnClick === true) {
                                             props.setVisible(false)
+                                            console.log(' option -> ', option)
                                             props.action(option)
                                             setSelectedValue(option)
                                         } else {

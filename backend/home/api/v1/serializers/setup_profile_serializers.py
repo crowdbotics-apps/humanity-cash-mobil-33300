@@ -134,21 +134,6 @@ class MerchantMyProfileSerializer(serializers.ModelSerializer):
         if obj.get_consumer_data:
             return obj.consumer.dwolla_id
 
-    def update(self, instance, validated_data):
-        profile_picture = validated_data.get('profile_picture')
-        background_picture = validated_data.get('background_picture')
-
-        merchant = Merchant.objects.get(id=instance.id)
-
-        if profile_picture:
-            merchant.profile_picture = profile_picture
-            merchant.save()
-        if background_picture:
-            merchant.background_picture = background_picture
-            merchant.save()
-
-        return super(MerchantMyProfileSerializer, self).update(instance, validated_data)
-
 
 class ConsumerProfileDetailSerializer(serializers.ModelSerializer):
 

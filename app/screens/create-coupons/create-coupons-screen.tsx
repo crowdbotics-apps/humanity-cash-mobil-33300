@@ -59,6 +59,23 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 		});
 	}
 
+	const getCoupons = () => {
+		loginStore.environment.api
+			.getCoupons()
+			.then((result: any) => {
+				if (result.kind === "ok") {
+					runInAction(() => {
+						const filteredCouponsByLoguedMerchant = result?.data?.results.filter(c => c.merchant === loginStore.merchant_id)
+						loginStore.setMerchantCoupons(filteredCouponsByLoguedMerchant);
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				}
+			})
+	}
+
 	const postCoupon = () => {
 		setLoading(true)
 		const promoImage = {
@@ -82,6 +99,7 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
+					getCoupons()
 					navigation.navigate("myCoupons")
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]

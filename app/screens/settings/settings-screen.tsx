@@ -211,7 +211,7 @@ you back soon. `}
             <Button
               buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
-              onPress={() => { }}
+              onPress={() => navigation.navigate("staticQR")}
               buttonLabel={'Static QR '}
             />
             <Button

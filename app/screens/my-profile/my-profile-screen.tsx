@@ -90,7 +90,15 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 	const fetchState = (data?: string) => {
 		loginStore.environment.api.getStates({ value: data })
 			.then((result: any) => {
-				result?.data?.results && setStates(result.data.results.map(r => ({ id: r.state_id, title: r.state_name })))
+
+				if (result?.data?.results) {
+					const states = result.data.results.map(r => {
+						if (loginStore.ProfileDataBusiness.state == r.state_id) setState({ id: r.state_id, title: r.state_name })
+
+						return { id: r.state_id, title: r.state_name }
+					})
+					setStates(states)
+				}
 			})
 	}
 
@@ -338,8 +346,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				/>
 			</View>
 
-
-
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>INSTAGRAM</Text>
 			</View>
@@ -425,6 +431,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 
 		let MerchantData: any = {
 			business_name: BusinessName,
+			type_of_business: BusinessType,
 			profile_picture: profPic,
 			background_picture: backPic,
 			business_story: BusinessStory,
@@ -439,7 +446,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			twitter: Twitter
 		}
 		if (PhoneNumber !== '') MerchantData.phone_number = phoneNumber
-		console.log(' MerchantData ===>>> ', JSON.stringify(MerchantData, null, 2))
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
 				.updateProfileMerchant(MerchantData)
@@ -486,6 +492,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			setImageSource({ uri: loginStore.ProfileData.profile_picture })
 			setUsername(loginStore.ProfileData.username)
 			setName(loginStore.ProfileData.first_name)
+			setBusinessType(loginStore.ProfileDataBusiness.type_of_business)
 			setLastName(loginStore.ProfileData.last_name)
 			setBusinessImageSource({ uri: loginStore.ProfileDataBusiness.profile_picture_merchant })
 			setBackBusinessImageSource({ uri: loginStore.ProfileDataBusiness.background_picture })
@@ -516,7 +523,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			unsafe={true}
 			style={styles.ROOT}
 		>
-			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("home")}>
+			<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings")}>
 				<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
 				<Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
 			</TouchableOpacity>

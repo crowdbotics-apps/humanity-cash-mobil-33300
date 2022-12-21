@@ -42,6 +42,7 @@ export default StyleSheet.create({
     marginBottom: 80
   },
   HEADER: {
+    alignItems: 'center',
     flexDirection: 'row',
     marginLeft: 10,
     marginTop: 10,
