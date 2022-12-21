@@ -266,6 +266,7 @@ export const LoginStoreModel = types
       self.username = user.username
       self.first_name = user.first_name
       self.last_name = user.last_name
+      self.email = user.email
     },
     setMerchantUser(user) {
       if (!user) return

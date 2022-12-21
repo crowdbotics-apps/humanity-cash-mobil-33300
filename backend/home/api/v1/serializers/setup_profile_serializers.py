@@ -91,7 +91,7 @@ class ConsumerMyProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'consumer_profile', 'dwolla_id', 'consumer']
+        fields = ['id', 'email', 'username', 'first_name', 'last_name', 'consumer_profile', 'dwolla_id', 'consumer']
 
     def get_dwolla_id(self, obj):
         if obj.get_consumer_data:

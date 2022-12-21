@@ -31,6 +31,7 @@ export const HomeScreen = observer(function HomeScreen() {
 			.getProfileConsumer()
 			.then((result: any) => {
 				if (result.kind === "ok") {
+					console.log(' getProfileConsumer ===>>> ', JSON.stringify(result, null, 2))
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
 					})

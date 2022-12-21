@@ -1,14 +1,13 @@
 import logging
 import random
-import io
-import base64
+from django.template import loader
 from email.mime.image import MIMEImage
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 # from django.contrib.auth.backends import UserModel
 from django.core.exceptions import ValidationError
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 from django.db.models import QuerySet
 from django.utils.http import urlsafe_base64_decode
 from rest_framework.permissions import IsAuthenticated
@@ -191,3 +190,28 @@ def send_push(title, message, extra_data, devices_ids=None, notification_object=
     LOGGER.info('Sending process finished')
     return True
 
+
+def send_email_with_template(subject, email, context, template_to_load):
+    template = loader.get_template(template_to_load)
+    html_content = template.render(context)
+    send_mail(
+        subject,
+        html_content,
+        settings.DEFAULT_FROM_EMAIL,
+        [email],
+        html_message=html_content,
+    )
+
+
+def send_email_with_template_attach_pdf(subject, email, context, template_to_load, pdf):
+    template = loader.get_template(template_to_load)
+    html_content = template.render(context)
+
+    connection = get_connection()
+    mail = EmailMultiAlternatives(subject, html_content, settings.DEFAULT_FROM_EMAIL, [email],
+                                  connection=connection)
+    if html_content:
+        mail.attach_alternative(html_content, 'text/html')
+    mail.attach('Transaction.pdf', pdf, 'application/pdf')
+
+    return mail.send()

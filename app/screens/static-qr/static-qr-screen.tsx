@@ -20,6 +20,7 @@ export const StaticQRScreen = observer(function StaticQRScreen() {
 
   const updateSendMail = () => {
     setLoading(true)
+    console.log(' 0---->>> ', loginStore.getAllData.email)
     loginStore.environment.api
       .sendQR({
         qr_data: JSON.stringify({
