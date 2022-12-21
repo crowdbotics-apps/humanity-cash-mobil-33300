@@ -36,7 +36,7 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
         position: 'absolute',
         height: '95%',
         justifyContent: 'space-around',
-        top: 10,       
+        top: 10,
     };
 
     const MarginTextStyle: TextStyle = {

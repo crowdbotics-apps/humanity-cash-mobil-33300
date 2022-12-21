@@ -408,16 +408,16 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 				Platform.OS === "android"
 					? BusinessImageSource?.uri
 					: BusinessImageSource?.uri?.replace("file://", ""),
-			type: BusinessImageSource.type,
-			name: BusinessImageSource.fileName
+			type: BusinessImageSource.type || 'image/jpg',
+			name: BusinessImageSource.fileName || 'image.jpg'
 		}
 		const backPic = {
 			uri:
 				Platform.OS === "android"
 					? BackBusinessImageSource?.uri
 					: BackBusinessImageSource?.uri?.replace("file://", ""),
-			type: BackBusinessImageSource.type,
-			name: BackBusinessImageSource.fileName
+			type: BackBusinessImageSource.type || 'image/jpg',
+			name: BackBusinessImageSource.fileName || 'image.jpg'
 		}
 		const phoneNumber = PhoneNumber !== ''
 			? (PhoneNumber && PhoneNumber.includes('+1')) ? PhoneNumber : `+1${PhoneNumber}`
@@ -439,7 +439,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			twitter: Twitter
 		}
 		if (PhoneNumber !== '') MerchantData.phone_number = phoneNumber
-
+		console.log(' MerchantData ===>>> ', JSON.stringify(MerchantData, null, 2))
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
 				.updateProfileMerchant(MerchantData)
@@ -449,7 +449,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						runInAction(() => {
 							// loginStore.setMerchantUser(result.response)
 							loginStore.setSelectedAccount('merchant')
-							navigation.navigate("home")
+							// navigation.navigate("home")
 						})
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]
