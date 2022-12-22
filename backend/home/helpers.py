@@ -203,7 +203,7 @@ def send_email_with_template(subject, email, context, template_to_load):
     )
 
 
-def send_email_with_template_attach_pdf(subject, email, context, template_to_load, pdf):
+def send_email_with_template_attach_element(subject, email, context, template_to_load, image):
     template = loader.get_template(template_to_load)
     html_content = template.render(context)
 
@@ -212,6 +212,6 @@ def send_email_with_template_attach_pdf(subject, email, context, template_to_loa
                                   connection=connection)
     if html_content:
         mail.attach_alternative(html_content, 'text/html')
-    mail.attach('Transaction.pdf', pdf, 'application/pdf')
+    mail.attach('qr_code.png', image, 'image/png')
 
     return mail.send()

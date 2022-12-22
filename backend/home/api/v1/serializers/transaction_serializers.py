@@ -107,6 +107,6 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 
 class SendQRSerializer(serializers.Serializer):
-    qr_data = serializers.CharField()
+    qr_data = serializers.JSONField()
     email = serializers.EmailField()
 
