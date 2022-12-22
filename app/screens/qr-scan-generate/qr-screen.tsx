@@ -392,12 +392,12 @@ export const QRScreen = observer(function QRScreen(props: any) {
           </View>
         </View>
         {ScanQR
-          ? <QRCodeScanner onRead={e => {
-              setQR(e.data) 
-              setShowPassModal(true)
-            }}
-            
-            /> // TODO: action when read
+          ? <QRCodeScanner // TODO: action when read
+              onRead={e => {
+                setQR(e.data) 
+                setShowPassModal(true)
+              }}
+            /> 
           : inputQR()
         }
         {viewQR()}
