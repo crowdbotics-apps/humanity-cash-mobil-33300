@@ -104,3 +104,9 @@ class TransactionSerializer(serializers.ModelSerializer):
     def get_merchant_data(self, obj):
         if obj.get_consumer_data:
             return MerchantMyProfileSerializer().to_representation(obj.get_merchant_data)
+
+
+class SendQRSerializer(serializers.Serializer):
+    qr_data = serializers.CharField()
+    email = serializers.EmailField()
+

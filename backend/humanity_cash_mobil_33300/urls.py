@@ -24,7 +24,7 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 from admin.api.v1.viewsets.user_viewset import verify_reset_code, password_reset, password_reset_confirm,\
-    password_reset_mobile
+    password_reset_mobile, password_set
 from home.api.v1.viewsets.dwolla_views import DwollaIAVTemplateView
 
 urlpatterns = [
@@ -37,6 +37,7 @@ urlpatterns = [
     path('users/password_reset/', password_reset, name='password_reset'),
     path('users/password_reset_mobile/', password_reset_mobile, name='password_reset_mobile'),
     path('users/verify_reset_code/', verify_reset_code, name='verify_reset_code'),
+    path('users/password_set_mobile/', password_set, name='password_set_mobile'),
     path('users/reset/', password_reset_confirm, name='password_reset_confirm_complete'),
     path('users/reset/<uidb64>/<token>/', password_reset_confirm, name='password_reset_confirm'),
     path("users/", include("users.urls", namespace="users")),

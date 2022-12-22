@@ -18,13 +18,14 @@ type ConnectBankModalProps = {
     goBack?: any,
 }
 
+
 export function ConfirmCouponModal(props: ConnectBankModalProps) {
 
     const [loading, setLoading] = useState(false);
 
     const {couponSelected, mustDoAction} = props;
 
-    const { loginStore } = useStores();
+    const {loginStore} = useStores();
 
     const ContainerStyle: ViewStyle = {
         ...styles.MODAL_CONTAINER_COUPON,
@@ -33,22 +34,21 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
     
     const ContentStyle: ViewStyle = {
         position: 'absolute',
+        height: '95%',
+        justifyContent: 'space-around',
         top: 10,
     };
 
     const MarginTextStyle: TextStyle = {
-
-        marginTop: '60%',
         color: 'black'
     };
 
     const TitleStyle: TextStyle = {
         ...styles.STEP_TITLE,
-        marginTop: '60%',
         textAlign: 'center'
     };
 
-    const DateStyle: ViewStyle = {
+    const DateStyle : ViewStyle = {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-around'
@@ -58,20 +58,30 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
         backgroundColor: loginStore.getAccountColor,
         opacity: loading ? 0.5 : 1,
         ...styles.MODAL_BUTTON,
-        ...MarginTextStyle
+        ...MarginTextStyle,
+        marginBottom: 0,
     }
 
     const postCoupon = (): Promise<void> => {
         setLoading(true);
         return addConsumerCoupon(couponSelected.id, props, loginStore)
-            .then(() => { setLoading(false); props.setCouponsConfig({ ...props.couponsConfig, ShowConfirmCoupon: !props.visible }) })
-            .catch(error => console.log('Algo falló en el POST de cupones: ' + error.message))
+        .then(() => {setLoading(false); props.setCouponsConfig({...props.couponsConfig, ShowConfirmCoupon: !props.visible})})
+        .catch(error => console.log('Algo falló en el POST de cupones: ' + error.message))
     }
 
     const deleteCoupon = (): Promise<void[]> => {
         setLoading(true)
         return deleteConsumerCoupon(props.couponSelected.id, props, loginStore)
-            .then(() => [setLoading(false), props.setCouponsConfig({ ...props.couponsConfig, ShowConfirmCoupon: !props.visible })])
+        .then(() => [setLoading(false), props.setCouponsConfig({...props.couponsConfig, ShowConfirmCoupon: !props.visible})])
+    }
+
+    const dateFormat = (date) => {
+        let dateFormated = ''
+        if (date && date.split('-')) {
+            const t = date.split('-')
+            dateFormated = `${t[2]}/${t[1]}/${t[0]}`
+        }
+        return dateFormated
     }
 
     return (
@@ -88,8 +98,8 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
                 <View style={ContainerStyle}>
                     <Pressable style={[styles.MODAL_CONTENT, ContentStyle]} onPress={() => ''}>
                         <View style={DateStyle}>
-                            <Text style={MarginTextStyle}>Valid from: {couponSelected?.start_date}</Text>
-                            <Text style={MarginTextStyle}>To: {couponSelected?.end_date}</Text>
+                            <Text style={MarginTextStyle}>Valid from: {dateFormat(couponSelected?.start_date)}</Text>
+                            <Text style={MarginTextStyle}>To: {dateFormat(couponSelected?.end_date)}</Text>
                         </View>
                         <Text style={TitleStyle}>{couponSelected?.title}</Text>
                         <Text style={MarginTextStyle}>Promo Type: {couponSelected?.type_of_promo}</Text>

@@ -48,6 +48,11 @@ export class Api extends ApiBase {
     return this.simple_post("/users/verify_reset_code/", data)
   }
 
+  async passwordSet(data: any): Promise<Types.SimplePostResult> {
+    console.log(' data -< ', data)
+    return this.simple_post("/users/password_set_mobile/", data)
+  }
+
   // FACEBOOK LOGIN
   async loginFacebook(accessToken: any): Promise<Types.SimplePostResult> {
     return this.simple_post(apiv1 + "/social/fb-login/", { accessToken: accessToken })

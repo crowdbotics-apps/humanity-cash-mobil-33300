@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
-import { View, TouchableOpacity, Modal, TextInput, Image } from 'react-native';
+import { View, TouchableOpacity, Modal, TextInput, Image, Keyboard } from 'react-native';
 import {
   Text,
   Button,
@@ -29,6 +29,13 @@ export const QRScreen = observer(function QRScreen(props: any) {
   const [Amount, setAmount] = useState('0')
   const [RoundedAmount, setRoundedAmount] = useState(0);
   const toggleSwitch = () => setScanQR(previousState => !previousState)
+  const [keyboardIsOpen, setKeyboardIsOpen] = React.useState(false);
+  Keyboard.addListener("keyboardDidShow", () => {
+    setKeyboardIsOpen(true);
+  });
+  Keyboard.addListener("keyboardDidHide", () => {
+    setKeyboardIsOpen(false);
+  });
   
   /* boolean states */
   const [TransactionSucceed, setTransactionSucceed] = useState(true)
@@ -99,6 +106,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
       <View style={styles.CONTAINER}>
         <Button
           buttonStyle={{
+            marginBottom: keyboardIsOpen ? 300 : 30,
             backgroundColor: loginStore.getAccountColor,
           }}
           loading={Loading}
@@ -137,16 +145,15 @@ export const QRScreen = observer(function QRScreen(props: any) {
             </View>
           </View>
         </View>
-        <View style={styles.CONTAINER}>
           <Button
             buttonStyle={{
+              marginBottom: keyboardIsOpen ? 300 : 30,
               backgroundColor: loginStore.getAccountColor,
             }}
             loading={Loading}
             onPress={() => transferCurrency()}
             buttonLabel={'Confirm'}
           />
-        </View>
       </View>
 }
     </Modal>

@@ -1,6 +1,10 @@
+from django.conf import settings
+from django.db.models import Q
+from rest_framework import viewsets, permissions, mixins
 import json
 import logging
 from datetime import datetime
+import qrcode
 
 from django.db.models import Q
 from rest_framework import mixins
@@ -12,7 +16,7 @@ from rest_framework.response import Response
 from base import configs
 from celo_humanity.models import Transaction, ACHTransaction
 from home.api.v1.cashier_permission import IsNotCashier
-from home.api.v1.serializers.transaction_serializers import TransactionSerializer
+from home.api.v1.serializers.transaction_serializers import TransactionSerializer, SendQRSerializer
 from home.clients.dwolla_api import DwollaClient
 from home.helpers import AuthenticatedAPIView, send_notifications
 from users.models import Consumer, Merchant, Notification
@@ -194,5 +198,33 @@ def create_ach_transaction(dwolla_trn, withdraw, profile):
                            profile.user,
                            Notification.Types.TRANSACTION,
                            ach_transaction=ach_transaction)
+
     except:
         logger.error(f'Error saving transaction [{dwolla_trn.id}], please contact a system administrator.')
+
+
+class SendReportView(AuthenticatedAPIView):
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            serializer = SendQRSerializer(data=data)
+
+        except Exception:
+            logger.exception("Error Sending report")
+            return Response('Error while depositing, please try again', status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)
+
+
+class SendQRView(AuthenticatedAPIView):
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = SendQRSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        # data = serializer.validated_data
+        # image = qrcode.make(data['qr_data'])
+        # name = 'qrcode.jpg'
+        # image.save(settings.MEDIA_ROOT + name)
+        return Response(status=status.HTTP_200_OK)
+

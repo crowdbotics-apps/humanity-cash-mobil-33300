@@ -284,12 +284,7 @@ export default StyleSheet.create({
     marginRight: 20
   },
   RETURN_ITEM_TOUCHABLE: {
-    // alignItems: 'center',
-    // alignSelf: 'center',
-    // flexDirection: 'row',
     height: 60,
-    // justifyContent: 'space-between',
-    // marginVertical: 5,
   },
   ROOT: {
     backgroundColor: COLOR.PALETTE.white,

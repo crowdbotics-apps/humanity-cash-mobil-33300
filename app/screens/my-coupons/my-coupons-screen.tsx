@@ -88,8 +88,10 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	}, [isFocused])
 
 	const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
+
 		if (initialData === [] || !initialData) return []
 		if (keys === [] || !keys) return initialData
+		if (filter === "" || !filter) return initialData
 		let data = []
 		initialData.map(d => {
 			keys.map(k => {
@@ -215,6 +217,15 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		  buttonAction={() => setCouponsModalConfig({showCouponModalInfo: false, couponSelected: null})}
 		/>
 
+	const dateFormat = (date) => {
+		let dateFormated = ''
+		if (date && date.split('-')) {
+			const t = date.split('-')
+			dateFormated = `${t[2]}/${t[1]}/${t[0]}`
+		}
+		return dateFormated
+	}
+
 	return (
 		<Screen
 			showHeader
@@ -274,7 +285,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 										<View style={styles.DATE_INFO_CONTAINER}>
 											<Text key={key + '_label'} style={styles.RETURNS_LABEL}>
 												{(i.start_date && i.end_date)
-													? `${i.start_date} - ${i.end_date}`
+													? `${dateFormat(i.start_date)} - ${dateFormat(i.end_date)}`
 													: '-'
 												}
 											</Text>
