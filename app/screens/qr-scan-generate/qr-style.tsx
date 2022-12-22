@@ -1,5 +1,5 @@
-import { Animated, StyleSheet } from 'react-native';
-import { COLOR, TYPOGRAPHY, METRICS } from '../../theme';
+import { StyleSheet } from 'react-native';
+import { COLOR, METRICS } from '../../theme';
 
 export default StyleSheet.create({
 	BACK_BUTON_CONTAINER: {
@@ -20,30 +20,57 @@ export default StyleSheet.create({
     borderColor: COLOR.PALETTE.green, 
     borderWidth: 1,
   },
-  STEP_SUB_TITLE_AMOUNT: {
-    color: COLOR.PALETTE.black,
-    fontSize: 16,
-    marginLeft: 10,
-    width: METRICS.screenWidth * 0.90,
-  },
-  STEP_TITLE_AMOUNT: {
-    color: COLOR.PALETTE.green,
-    fontSize: 32,
-    marginLeft: 10,
-    marginTop: 10
-  },
 	CLOSE_MODAL_BUTTON: {
     alignItems: 'center',
     alignSelf: 'flex-end',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginRight: 30
+    // marginRight: 30,
+    position: 'absolute',
+    right: 20,
+    top: 20,
+  },
+  COLOR_BLACK: {
+    color: COLOR.PALETTE.black
+  },
+  CONFIRM_MODAL_AMOUNT: {
+    fontSize: 35, 
+    fontWeight: 'bold', 
+    textAlign: 'center'
+  },
+  CONFIRM_MODAL_GENERIC_TEXT: {
+    marginTop: 10,
+    textAlign: 'center', 
+  },
+  CONFIRM_MODAL_PAY_BUTTON: {
+    backgroundColor: 'white', 
+    borderColor: '#ced2b7', 
+    borderWidth: 1, 
+    fontSize: 20, 
+    marginBottom: 10,
+    width: '90%', 
+  },
+  CONFIRM_MODAL_PAY_BUTTON_ROUND: {
+    marginBottom: 50,
+    width: '90%', 
+  },
+  CONFIRM_MODAL_SECONDARY_TEXT: {
+    bottom: 5, 
+    fontSize: 10, 
+    paddingBottom: 10,
+    position: 'absolute', 
+  },
+  CONFIRM_MODAL_TEXT: {
+    paddingHorizontal: '10%'
   },
 	CONTAINER: {},
 	FORGOT_PASSWORD_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
     marginBottom: 25
+  },
+  FULL_WIDTH: {
+    width: '100%'
   },
   INPUT_LABEL_STYLE: {
     color: COLOR.PALETTE.black,
@@ -130,6 +157,16 @@ export default StyleSheet.create({
     shadowRadius: 2,
     width: METRICS.screenWidth * 0.80,
   },
+  MODAL_CONTAINER_CONFIRMATION: {
+    backgroundColor: COLOR.PALETTE.white,
+    height: 480,
+    position: 'absolute',
+    top: '20%'
+    // ? The content doesnt centered with this
+    // alignItems: 'center',
+    // ? The close button doesnt show in the screen with this 
+    // marginTop: '100%', 
+  },
   MODAL_CONTENT: {
     height: 330,
     justifyContent: 'space-evenly',
@@ -149,13 +186,16 @@ export default StyleSheet.create({
   },
 	PASS_INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.pureblack,
     height: 55,
     width: METRICS.screenWidth * 0.80,
-    color: COLOR.PALETTE.pureblack
   },
   PASS_REQUIREMENTS: {
     color: COLOR.PALETTE.strongGreen,
     fontSize: 10,
+  },
+  RELATIVE: {
+    position: 'relative'
   },
   ROOT: {
 		flex: 1,
@@ -164,13 +204,16 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(240, 240, 240, 0.80)',
     flex: 1,
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    paddingBottom: '60%', 
+
   },
   ROOT_MODAL_PASS: {
     backgroundColor: COLOR.PALETTE.white,
 		flex: 1,
 		justifyContent: 'space-between',
-		marginTop: 35
+		marginTop: 35,
+    position: 'relative'
 	},
   SHOW_PASS_CONTAINER: {
     alignItems: 'center',
@@ -187,17 +230,36 @@ export default StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold'
   },
+  STEP_SUB_TITLE_AMOUNT: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16,
+    marginLeft: 10,
+    width: METRICS.screenWidth * 0.90,
+  },
   STEP_SUB_TITLE_MODAL: {
     color: COLOR.PALETTE.black,
     fontSize: 16,
     marginLeft: 10,
     width: METRICS.screenWidth * 0.7,
   },
+  STEP_SUB_TITLE_USERNAME : {
+    color: COLOR.PALETTE.black,
+    fontSize: 18,
+    fontWeight: 'bold',
+    position: 'absolute',
+    top: '10%'
+  },
   STEP_TITLE: {
     color: COLOR.PALETTE.orange,
     fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 20
+  },
+  STEP_TITLE_AMOUNT: {
+    color: COLOR.PALETTE.green,
+    fontSize: 32,
+    marginLeft: 10,
+    marginTop: 10
   },
   STEP_TITLE_PASS: {
     color: COLOR.PALETTE.orange,
@@ -215,7 +277,10 @@ export default StyleSheet.create({
   SWITCH_CONTAINER: {
     alignSelf: 'center',
     marginTop: 30
-},
+  },
+  TEXT_BOLD: {
+    fontWeight: 'bold'
+  },
   USER_IMAGE: {
     borderRadius: 30,
     height: 60,

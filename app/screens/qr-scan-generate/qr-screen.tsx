@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { View, TouchableOpacity, Modal, TextInput, Image } from 'react-native';
 import {
@@ -17,44 +17,36 @@ import { getErrorMessage, notifyMessage } from "../../utils/helpers"
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import QRCode from 'react-native-qrcode-svg'
 import Ionicons from "react-native-vector-icons/Ionicons"
+import {BaseConfirmModal as UserModal} from '../../layouts'
 
 export const QRScreen = observer(function QRScreen(props: any) {
   const navigation = useNavigation()
   const rootStore = useStores()
   const { loginStore } = rootStore
   const isFocused = useIsFocused();
-  const [ScanQR, setScanQR] = useState(false)
   const [QR, setQR] = useState(null)
-  const [ShowQR, setShowQR] = useState(false)
-  const [ButtonDisabled, setButtonDisabled] = useState(false)
-  const [ShowPassModal, setShowPassModal] = useState(false)
   const [Pass, setPass] = useState('')
-  const [HidePass, setHidePass] = useState(true)
-  const [TransactionSucceed, setTransactionSucceed] = useState(true)
-  const [ShowFinishModal, setShowFinishModal] = useState(false)
-  const [PayerSetAmount, setPayerSetAmount] = useState(true)
-  const toggleSwitch = () => setScanQR(previousState => !previousState)
-
   const [Amount, setAmount] = useState('0')
+  const [RoundedAmount, setRoundedAmount] = useState(0);
+  const toggleSwitch = () => setScanQR(previousState => !previousState)
+  
+  /* boolean states */
+  const [TransactionSucceed, setTransactionSucceed] = useState(true)
+  const [ShowQR, setShowQR] = useState(false)
+  const [PayerSetAmount, setPayerSetAmount] = useState(true)
+  const [HidePass, setHidePass] = useState(true)
+  const [ButtonDisabled, setButtonDisabled] = useState(false)
+  const [ScanQR, setScanQR] = useState(false)
   const [Loading, setLoading] = useState(false)
+  
+  /* modals */
+  const [ShowAmountModal, setShowAmountModal] = useState(false)
+  const [showConfirmTransactionModal, setShowConfirmTransactionModal] = useState(false);
+  const [ShowPassModal, setShowPassModal] = useState(false)
+  const [ShowFinishModal, setShowFinishModal] = useState(false)
   const [ShowBankModal, setShowBankModal] = useState(false)
 
-  const [ShowAmountModal, setShowAmountModal] = useState(false)
-
-  useEffect(() => {
-    if (isFocused) {
-      // if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-      // else setShowBankModal(false)
-
-      if (props?.route?.params) {
-        if (props?.route?.params?.QR) {
-          setQR(props?.route?.params.QR)
-          setShowAmountModal(true)
-          setShowPassModal(true)
-        } 
-      }
-    }
-  }, [isFocused])
+  const userToPay = useRef(null);
 
   const bankModal = () =>
     <ConnectBankModal
@@ -69,6 +61,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
       {ShowAmountModal
       ? <View style={styles.ROOT_MODAL_PASS}>
       <View style={styles.CONTAINER}>
+
         <TouchableOpacity onPress={() => [
           navigation.navigate('contact'),
           setShowAmountModal(false),
@@ -79,6 +72,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
           <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
           <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
         </TouchableOpacity>
+
         <Text style={[styles.STEP_TITLE_AMOUNT, { color: loginStore.getAccountColor }]}>Specify payment</Text>
         <View style={styles.LINE_AMOUNT} />
         <Text style={styles.STEP_SUB_TITLE_AMOUNT}>Select the amount of Currents you would like to send.</Text>
@@ -109,8 +103,8 @@ export const QRScreen = observer(function QRScreen(props: any) {
           }}
           loading={Loading}
           onPress={() => [
-            setShowPassModal(true),
-            setShowAmountModal(false)
+            setShowConfirmTransactionModal(true),
+            setShowPassModal(false),
           ]}
           buttonLabel={'Confirm'}
         />
@@ -260,47 +254,109 @@ export const QRScreen = observer(function QRScreen(props: any) {
     </View>
   </View>
 
-  useEffect(() => {
-    setButtonDisabled(!(Number(Amount) > 0));
-  }, [Amount]);
-
-  const viewQR = () => <Modal transparent visible={ShowQR}>
-    <View style={styles.ROOT_MODAL}>
-      <TouchableOpacity
-        onPress={() => [setShowQR(false), setPayerSetAmount(false)]}
-        style={styles.CLOSE_MODAL_BUTTON}
-      >
-        <Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-        <Icon name={"close"} size={20} color={'#0D0E21'} />
-      </TouchableOpacity>
-      <View style={styles.MODAL_CONTAINER}>
-        <View style={styles.USER_IMAGE_CONTAINER}>
-          <Image
-            resizeMode="cover"
-            source={{ uri: loginStore.ProfileData.profile_picture }}
-            style={styles.USER_IMAGE}
-          />
-        </View>
-        <Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor }]}>{loginStore.ProfileData.username}</Text>
-        <QRCode
-          value={
-            JSON.stringify({
-              to: loginStore?.getProfilesId[loginStore.getSelectedAccount],
-              to_is_consumer: loginStore.getSelectedAccount === 'consumer',
-              amount: Amount
-            })
-          }
-          size={200}
-        />
-        <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>
+  const viewQR = () => 
+    <UserModal 
+      visible={ShowQR}
+      closeModalAction={() => [setShowQR(false), setPayerSetAmount(false)]}
+      username={loginStore.ProfileData.username}
+      imgSrc={loginStore.ProfileData.profile_picture}
+    >
+      <QRCode
+        value={
+          JSON.stringify({
+            to: loginStore?.getProfilesId[loginStore.getSelectedAccount],
+            to_is_consumer: loginStore.getSelectedAccount === 'consumer',
+            amount: Amount
+          })
+        }
+        size={200}
+      />
+      <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>
         { !PayerSetAmount &&
           `C$ ${Amount}`
         }
-          </Text>
+      </Text>
+    </UserModal>
+
+  const ConfirmTransactionModal = () => (
+    <UserModal
+      visible={showConfirmTransactionModal}
+      closeModalAction={() => setShowConfirmTransactionModal(false)}
+      username={userToPay.current?.username}
+      imgSrc={userToPay.current?.photo}
+      type='pay'
+    > 
+      <View>
+        <Text
+          style={[{color: loginStore.getAccountColor}, styles.CONFIRM_MODAL_AMOUNT]}
+        >
+          B$ {Amount}
+        </Text>
+
+        <Text style={styles.CONFIRM_MODAL_GENERIC_TEXT}>or</Text>
+        <Text style={[styles.CONFIRM_MODAL_GENERIC_TEXT, styles.CONFIRM_MODAL_TEXT]}>
+          choose to round up and directly donate to the 
+          <Text style={styles.TEXT_BOLD}> Community Chest Fund </Text>
+          which provides Currents grants to people in the area.
+        </Text>
       </View>
-      <View />
-    </View>
-  </Modal>
+
+      <View style={styles.FULL_WIDTH}>
+        <Button 
+          buttonStyle={styles.CONFIRM_MODAL_PAY_BUTTON}
+          buttonLabel={`Pay C$ ${Amount} `}
+          buttonLabelStyle={styles.COLOR_BLACK}
+          onPress={() => [
+            setShowConfirmTransactionModal(false), setShowAmountModal(false), setShowPassModal(true)
+          ]}
+        />
+          <Button 
+            buttonStyle={[{backgroundColor: loginStore.getAccountColor}, styles.CONFIRM_MODAL_PAY_BUTTON_ROUND]} 
+            buttonLabel={`Round up to C$ ${RoundedAmount}`}
+            onPress={() => [
+              setShowConfirmTransactionModal(false), setShowAmountModal(false), setShowPassModal(true),
+              setAmount(RoundedAmount.toString())
+            ]}
+          />
+      </View>
+      <Text style={styles.CONFIRM_MODAL_SECONDARY_TEXT}>THE ROUND UP IS A NON REFUNDABLE DONATION</Text>
+    </UserModal>
+  )
+
+  useEffect(() => {
+    if (isFocused) {
+      // if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
+      // else setShowBankModal(false)
+      if (props?.route?.params) {
+        if (props?.route?.params?.QR) {
+          const qrInfo = props?.route?.params?.QR;
+          setQR(qrInfo)
+          setShowAmountModal(true)
+          // setShowConfirmTransactionModal(true)
+          setShowPassModal(true)
+          try {
+            const userInfo = JSON.parse(qrInfo);
+            userToPay.current = {
+              username: userInfo?.to_username ?? '',
+              photo: userInfo?.to_profile_photo ?? '',
+            }
+          } catch(error) {
+            alert(error)
+          }
+        } 
+      }
+    }
+  }, [isFocused])
+
+  useEffect(() => {
+    if(Number(Amount) > 0) {
+      if(parseFloat(Amount) % 1 !== 0) {
+        const rounded = Math.round(parseFloat(Amount));
+        setRoundedAmount(rounded);
+      } else setRoundedAmount(parseFloat(Amount));
+    }
+    setButtonDisabled(!(Number(Amount) > 0));
+  }, [Amount]);
 
   return (
     <Screen
@@ -329,14 +385,21 @@ export const QRScreen = observer(function QRScreen(props: any) {
           </View>
         </View>
         {ScanQR
-          ? <QRCodeScanner onRead={e => [setQR(e.data), setShowPassModal(true), console.log(' read ===>>> ', JSON.stringify(e, null, 2))]} /> // TODO: action when read
+          ? <QRCodeScanner onRead={e => {
+              setQR(e.data) 
+              setShowPassModal(true)
+            }}
+            
+            /> // TODO: action when read
           : inputQR()
         }
         {viewQR()}
         {bankModal()}
         {passModal()}
         {FinishReturn()}
+        {ConfirmTransactionModal()}
       </View>
     </Screen>
   )
 })
+  
