@@ -9,16 +9,14 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
 import DatePicker from 'react-native-date-picker'
 import Entypo from "react-native-vector-icons/Entypo"
+import { notifyMessage } from "../../utils/helpers"
 
 export const MakeReportScreen = observer(function MakeReportScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
-
+    const [Loading, setLoading] = useState(false);
 	const [Amount, setAmount] = useState('')
-	const [ShowModal, setShowModal] = useState(false)
-	const [TransactionConfirm, setTransactionConfirm] = useState(false)
-	const [TransactionFinished, setTransactionFinished] = useState(false)
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
@@ -43,8 +41,8 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 	}
 
 	const setAllCurrentWeekDate = () => {
-		const now = new Date; 
-		const first = now.getDate() - now.getDay(); 
+		const now = new Date;
+		const first = now.getDate() - now.getDay();
 		const last = first + 6;
 		const firstDay = new Date(now.setDate(first));
 		const lastday = new Date(now.setDate(last));
@@ -63,8 +61,7 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 	}
 
 	const confirmDate = (date, mode = 'from') => {
-
-		if(mode === 'from') {
+		if (mode === 'from') {
 			setOpenFrom(false)
 			setDateFrom(date)
 			return
@@ -78,6 +75,28 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 		// else setShowBankModal(false)
 	}, [])
 
+	const makeReport = () => {
+		setLoading(true)
+	
+		loginStore.environment.api.sendReport({
+			start_date: DateFrom.toISOString().split('T')[0],
+			end_date: DateTo.toISOString().split('T')[0],
+		})
+			.then((result: any) => {
+				console.log(' makeReport ====>>>> ', JSON.stringify(result, null, 2))
+				setLoading(false)
+				if (result.kind === "ok") {
+					let a 
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
 	const bankModal = () =>
 		<ConnectBankModal
 			visible={ShowBankModal}
@@ -85,87 +104,6 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
 			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
 		/>
-
-	const ConfirmModal = () => (
-		<Modal visible={ShowModal}>
-			{TransactionConfirm
-				? <View style={styles.LOADING_RETURN}>
-					{TransactionFinished
-						? [
-							<Text 
-							  key={'congrat_title'} 
-							  style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}
-							>
-								{`Congratulations! You have topped up C$ ${Amount}`}
-							</Text>,
-							<Text key={'congrat_sub_title'} style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>,
-							<Button
-								key={'congrat_button'}
-								buttonStyle={[styles.CONGRAT_BUTTON, 
-									{backgroundColor: loginStore.getAccountColor,
-									marginTop: METRICS.screenHeight * 0.6,}
-								]}
-								onPress={() => [
-									setTransactionConfirm(false),
-									setShowModal(false),
-									setTransactionFinished(false),
-									setAmount(''),
-									navigation.navigate("home")
-								]}
-								buttonLabel={'Explore BerkShares'}
-							/>
-						]
-						: [
-							<Text key={'pending_title'} style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Pending...</Text>,
-							<Text key={'pending_sub_title'} style={styles.SUB_TITLE}>This usually takes 5-6 seconds</Text>,
-							<ActivityIndicator key={'pending_ind'} style={styles.ACTIVITY} size="large" color={'black'} />
-						]
-					}
-
-				</View>
-				: <View style={[
-					styles.ROOT_MODAL,
-					{
-					  backgroundColor:
-					  	loginStore.getSelectedAccount === 'merchant'
-					  		? 'rgba(157, 165, 111, 0.50)'
-					  		: 'rgba(59, 136, 182, 0.50)'
-					}
-				]}>
-					<View style={styles.HEADER_ACTIONS}>
-						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
-							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.white} style={{ marginLeft: 10 }} />
-							<Text style={styles.BACK_BUTON_LABEL_MODAL}>{` Back`}</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
-							<Text style={styles.BACK_BUTON_LABEL_MODAL}>{`Close `}</Text>
-							<Icon name={"close"} size={23} color={COLOR.PALETTE.white} />
-						</TouchableOpacity>
-					</View>
-					<View style={styles.MODAL_CONTAINER}>
-						<View style={styles.MODAL_CONTENT}>
-							<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Please confirm your transaction.</Text>
-							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will load up C$ ${Amount} to your wallet.`}</Text>
-							<TouchableOpacity
-								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
-								onPress={() => {
-									setTransactionConfirm(true)
-									setTimeout(function () {
-										setTransactionFinished(true)
-									}, 5000)
-								}}
-							>
-								<Text style={styles.SUBMIT_BUTTON_LABEL}>Confirm</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-					<View />
-				</View>
-			}
-
-
-		</Modal>
-	)
 
 	return (
 		<Screen
@@ -175,19 +113,12 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 			unsafe={true}
 			style={styles.ROOT}
 		>
-			<KeyboardAvoidingView
-				enabled
-				// behavior={Platform.OS === 'ios' ? 'padding' : null}
-				style={styles.ROOT}
-			>
+			<KeyboardAvoidingView enabled style={styles.ROOT} >
 				<View style={styles.HEADER_ACTIONS}>
-					{!ShowModal &&
-					     // @ts-ignore
-						<TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
-							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
-							<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
-						</TouchableOpacity>
-					}
+					<TouchableOpacity onPress={() => navigation.navigate("home")} style={styles.BACK_BUTON_CONTAINER}>
+						<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
+						<Text style={styles.BACK_BUTON_LABEL}>{` Home`}</Text>
+					</TouchableOpacity>
 				</View>
 				<View style={styles.STEP_CONTAINER}>
 					<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Make a report</Text>
@@ -295,12 +226,13 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 					</View>
 					<Text style={styles.LINE} />
 				</View>
-				{ConfirmModal()}
 				{bankModal()}
 			</KeyboardAvoidingView>
 			<Button
-				buttonStyle={[styles.SUBMIT_BUTTON, {backgroundColor: loginStore.getAccountColor,}]}
-				onPress={() => setShowModal(true)}
+				buttonStyle={[styles.SUBMIT_BUTTON, { backgroundColor: Loading ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }]}
+				onPress={() => makeReport()}
+				loading={Loading}
+				disabled={Loading}
 				buttonLabel={'Send report'}
 			/>
 		</Screen>
