@@ -31,7 +31,7 @@ export const BaseConfirmModal = ({
   const profilePictureSrc = imgSrc !== '' ? {uri: imgSrc} : randomImages[Math.round(Math.random() * 3)];
   
   return (
-    <Modal visible={visible} transparent={transparent} style={styles.RELATIVE}>
+    <Modal visible={visible} transparent={transparent}>
       <Pressable style={styles.ROOT_MODAL} onPress={closeModalAction}>
         <TouchableOpacity
           onPress={closeModalAction}
@@ -57,10 +57,10 @@ export const BaseConfirmModal = ({
             ]}
           >
             {userText}
-            {/* {`Tilda's Kitchen`} */}
           </Text>
             {children}
         </Pressable>
+        <View />
       </Pressable>
     </Modal>
   )
