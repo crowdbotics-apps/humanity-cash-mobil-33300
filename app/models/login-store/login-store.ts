@@ -45,6 +45,9 @@ export const LoginStoreModel = types
     merchant_balance: types.maybeNull(types.number),
     consumer_balance: types.maybeNull(types.number),
     access_token: types.maybeNull(types.string),
+    instagram: types.maybeNull(types.string),
+    facebook: types.maybeNull(types.string),
+    twitter: types.maybeNull(types.string),
     // currentStep
     currentStep: types.maybeNull(types.string),
     // signup
@@ -205,7 +208,10 @@ export const LoginStoreModel = types
         state: self.state,
         zip_code: self.zip_code,
         phone_number: self.phone_number,
-        allow_touch_id: self.allow_touch_id
+        allow_touch_id: self.allow_touch_id,
+        instagram: self.instagram,
+        facebook: self.facebook,
+        twitter: self.twitter,
       }
     },
     get getRandomProfilePictureIndex() {
@@ -254,13 +260,13 @@ export const LoginStoreModel = types
     },
     setConsumerUser(user) {
       if (!user) return
-      //console.log(' ===>>> ', user)
       self.consumer_id = user.consumer
       self.id = user.id
       self.profile_picture = user.consumer_profile
       self.username = user.username
       self.first_name = user.first_name
       self.last_name = user.last_name
+      self.email = user.email
     },
     setMerchantUser(user) {
       if (!user) return
@@ -279,10 +285,13 @@ export const LoginStoreModel = types
       self.social_security_number = user.social_security_number
       self.address_1 = user.address_1
       self.address_2 = user.address_2
-      self.city = `${user.city}`
+      self.city = `${user.city}` || ''
       self.state = `${user.state}`
       self.zip_code = user.zip_code
       self.phone_number = user.phone_number
+      self.instagram = user.instagram
+      self.facebook = user.facebook
+      self.twitter = user.twitter
     },
     setBalanceData(data) {
       self.consumer_balance = data?.consumer

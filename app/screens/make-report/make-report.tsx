@@ -318,7 +318,7 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.95,
   },
   SELECT_LABEL: {
-    color: COLOR.PALETTE.BLACK,
+    color: COLOR.PALETTE.black,
     fontSize: 16,
     marginLeft: 20
   },
@@ -356,6 +356,9 @@ export default StyleSheet.create({
     fontSize: 32,
     marginLeft: 10,
     width: METRICS.screenWidth * 0.7,
+  },
+  SUBMIT_BUTTON: {
+    bottom: 5,
   },
   SUBMIT_BUTTON_LABEL: {
     color: COLOR.PALETTE.white,

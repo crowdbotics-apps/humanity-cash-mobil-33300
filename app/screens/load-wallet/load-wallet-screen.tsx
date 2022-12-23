@@ -51,7 +51,6 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 			.postDeposit(data)
 			.then((result: any) => {
 				setTransactionFinished(true)
-				console.log(' postDeposit ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					setSucess(true)
 					// runInAction(() => {

@@ -48,6 +48,11 @@ export class Api extends ApiBase {
     return this.simple_post("/users/verify_reset_code/", data)
   }
 
+  async passwordSet(data: any): Promise<Types.SimplePostResult> {
+    console.log(' data -< ', data)
+    return this.simple_post("/users/password_set_mobile/", data)
+  }
+
   // FACEBOOK LOGIN
   async loginFacebook(accessToken: any): Promise<Types.SimplePostResult> {
     return this.simple_post(apiv1 + "/social/fb-login/", { accessToken: accessToken })
@@ -185,7 +190,7 @@ export class Api extends ApiBase {
   }
 
   async postCashOut(data?: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(apiv1 + "/deposit/", data)
+    return this.simple_post(apiv1 + "/withdraw/", data)
   }
 
   async getACHTransactions(data?: any): Promise<Types.SimpleGetResult> {
@@ -194,5 +199,13 @@ export class Api extends ApiBase {
 
   async getTransactions(data?: any): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/transaction/", data)
+  }
+
+  async sendReport(data?: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/send-report/", data)
+  }
+
+  async sendQR(data?: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/send-qr/", data)
   }
 }

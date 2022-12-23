@@ -2,6 +2,7 @@ import logging
 import dwollav2
 
 from django.conf import settings
+from munch import munchify
 
 logger = logging.getLogger('django')
 
@@ -70,7 +71,8 @@ class DwollaClient:
         }
         resource_url = '{}/transfers'.format(self.get_base_url())
         transfer = self.app_token.post(resource_url, request_body)
-        return transfer
+        url = transfer.headers['location']
+        return munchify(self.get_resource(url))
 
     def get_transfers_by_customer(self, dwolla_customer_id):
         transfers_url = '{}/customers/{}/transfers'.format(self.get_base_url(), dwolla_customer_id)

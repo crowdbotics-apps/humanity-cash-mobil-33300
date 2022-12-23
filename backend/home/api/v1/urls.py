@@ -70,8 +70,8 @@ urlpatterns = [
 
     ])),
     path('base/', include([
-        path('cities/', base_views.CityListView.as_view(), name='cities'),
-        path('cities/<int:pk>/', base_views.CityRetrieveView.as_view(), name='city'),
+        # path('cities/', base_views.CityListView.as_view(), name='cities'),
+        # path('cities/<int:pk>/', base_views.CityRetrieveView.as_view(), name='city'),
         path('states/', base_views.StateListView.as_view(), name='states'),
         path('states/<int:pk>/', base_views.StateRetrieveView.as_view(), name='state'),
     ])),
@@ -84,6 +84,8 @@ urlpatterns = [
     path('send-money/', transaction_views.SendMoneyView.as_view(), name='send_money'),
     path('withdraw/', transaction_views.WithdrawView.as_view(), name='withdraw'),
     path('deposit/', transaction_views.DepositView.as_view(), name='deposit'),
+    path('send-qr/', transaction_views.SendQRView.as_view(), name='send_qr'),
+    path('send-report/', transaction_views.SendReportView.as_view(), name='send_report'),
     path('compliance/dashboard/', DashboardDataView.as_view(), name='compliance_dashboard'),
     # path('is-cashier-mode/', setup_profile_views.CashierTestView.as_view(), name='iscashiermode'),
     # path('is-cashier-mode-not/', setup_profile_views.NoCashierTestView.as_view(), name='iscashiermode'),

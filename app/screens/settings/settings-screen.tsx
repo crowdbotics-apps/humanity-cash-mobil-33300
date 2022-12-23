@@ -170,9 +170,7 @@ you back soon. `}
 			.deleteAccount()
 			.then((result: any) => {
         setLoading(false)
-        console.log(' result ===>> ', JSON.stringify(result, null, 2 ))
 				if (result.kind === "ok") {
-					console.log('ok')
           setLoading(true)
           setModalStep('finish')
 				} else if (result.kind === "bad-data") {
@@ -213,7 +211,7 @@ you back soon. `}
             <Button
               buttonStyle={[styles.BUTTON_STYLE, { borderColor: loginStore.getAccountColor }]}
               buttonLabelStyle={{ color: loginStore.getAccountColor }}
-              onPress={() => { }}
+              onPress={() => navigation.navigate("staticQR")}
               buttonLabel={'Static QR '}
             />
             <Button

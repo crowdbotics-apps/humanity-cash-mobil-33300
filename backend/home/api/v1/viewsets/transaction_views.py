@@ -1,20 +1,25 @@
+from django.conf import settings
 from django.db.models import Q
 from rest_framework import viewsets, permissions, mixins
 import json
 import logging
+from datetime import datetime
+import qrcode
 
+from django.db.models import Q
+from rest_framework import mixins
 from rest_framework import viewsets, permissions, status
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from celo_humanity.models import Transaction
-from home.api.v1.cashier_permission import IsNotCashier
-from home.api.v1.serializers.transaction_serializers import TransactionSerializer
-from home.clients.dwolla_api import DwollaClient
-from home.helpers import AuthenticatedAPIView
-from users.models import Consumer, Merchant
 from base import configs
+from celo_humanity.models import Transaction, ACHTransaction
+from home.api.v1.cashier_permission import IsNotCashier
+from home.api.v1.serializers.transaction_serializers import TransactionSerializer, SendQRSerializer
+from home.clients.dwolla_api import DwollaClient
+from home.helpers import AuthenticatedAPIView, send_notifications
+from users.models import Consumer, Merchant, Notification
 
 logger = logging.getLogger('transaction')
 
@@ -114,7 +119,8 @@ class WithdrawView(AuthenticatedAPIView):
                 destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
                 origin_source = configs.DWOLLA_ACCOUNT_DESTINATION
 
-                dwolla_client.create_transfer(origin_source, destination_source, amount)
+                transfer = dwolla_client.create_transfer(origin_source, destination_source, amount)
+                create_ach_transaction(transfer, True, user)
 
                 return Response(status=status.HTTP_200_OK)
             else:
@@ -152,7 +158,8 @@ class DepositView(AuthenticatedAPIView):
                 origin_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
                 destination_source = configs.DWOLLA_ACCOUNT_DESTINATION
 
-                dwolla_client.create_transfer(destination_source, origin_source, amount)
+                transfer = dwolla_client.create_transfer(destination_source, origin_source, amount)
+                create_ach_transaction(transfer, False, user)
 
                 return Response(status=status.HTTP_200_OK)
             else:
@@ -166,4 +173,58 @@ class DepositView(AuthenticatedAPIView):
         except Exception:
             logger.exception("Error depositing money")
             return Response('Error while depositing, please try again', status=status.HTTP_400_BAD_REQUEST)
+
+
+def create_ach_transaction(dwolla_trn, withdraw, profile):
+    try:
+        ach_transaction = ACHTransaction.objects.create(transaction_id=dwolla_trn.id,
+                                                        amount=dwolla_trn.amount.value,
+                                                        status=ACHTransaction.Status.pending,
+                                                        ach_id=dwolla_trn.get("individualAchId", None),
+                                                        currency=dwolla_trn.amount.currency,
+                                                        created_at=datetime.strptime(dwolla_trn.created,
+                                                                                     '%Y-%m-%dT%H:%M:%S.%fZ'),
+                                                        customer=profile if profile.is_consumer else None,
+                                                        merchant=profile if profile.is_merchant else None,
+                                                        type=(
+                                                            ACHTransaction.Type.withdraw if withdraw else ACHTransaction.Type.deposit),
+
+                                                        )
+
+        send_notifications([profile.user],
+                           'Transaction created',
+                           f'The transaction {dwolla_trn.get("individualAchId", dwolla_trn.id)} has started',
+                           '',
+                           profile.user,
+                           Notification.Types.TRANSACTION,
+                           ach_transaction=ach_transaction)
+
+    except:
+        logger.error(f'Error saving transaction [{dwolla_trn.id}], please contact a system administrator.')
+
+
+class SendReportView(AuthenticatedAPIView):
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            serializer = SendQRSerializer(data=data)
+
+        except Exception:
+            logger.exception("Error Sending report")
+            return Response('Error while depositing, please try again', status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)
+
+
+class SendQRView(AuthenticatedAPIView):
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = SendQRSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        # data = serializer.validated_data
+        # image = qrcode.make(data['qr_data'])
+        # name = 'qrcode.jpg'
+        # image.save(settings.MEDIA_ROOT + name)
+        return Response(status=status.HTTP_200_OK)
 

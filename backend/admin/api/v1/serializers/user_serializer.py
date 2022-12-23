@@ -91,6 +91,7 @@ class UserAdminSerializer(serializers.ModelSerializer):
             return 'Business'
 
     def get_physical_address(self, obj):
+        self.validate()
         if obj.get_consumer_data:
             return obj.consumer.address_1
         elif obj.get_merchant_data:

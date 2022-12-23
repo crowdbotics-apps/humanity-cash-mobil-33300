@@ -8,9 +8,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from celo_humanity.models import Transaction
+from celo_humanity.models import Transaction, ACHTransaction
 from home.helpers import AuthenticatedAPIView
-from home.models.dwolla import DwollaOperation
 
 
 class DashboardDataView(APIView): #AuthenticatedAPIView):
@@ -24,22 +23,22 @@ class DashboardDataView(APIView): #AuthenticatedAPIView):
             tokens_burned = Transaction.objects.filter(type=Transaction.Type.withdraw).aggregate(
                 Sum('amount'))['amount__sum'] or  Decimal(0.0)
 
-            withdrawals_settled = DwollaOperation.objects.filter(
-                type=DwollaOperation.Type.WITHDRAW,
-                status=DwollaOperation.Status.COMPLETED
+            deposits_settled = ACHTransaction.objects.filter(
+                type=ACHTransaction.Type.deposit,
+                status=ACHTransaction.Status.processed
             ).aggregate(Sum('amount'))['amount__sum'] or Decimal(0.0)
-            deposits_settled = DwollaOperation.objects.filter(
-                type=DwollaOperation.Type.DEPOSIT,
-                status=DwollaOperation.Status.COMPLETED
+            withdrawals_settled = ACHTransaction.objects.filter(
+                type=ACHTransaction.Type.withdraw,
+                status=ACHTransaction.Status.processed
             ).aggregate(Sum('amount'))['amount__sum'] or Decimal(0.0)
 
-            deposits_pending = DwollaOperation.objects.filter(
-                type=DwollaOperation.Type.DEPOSIT,
-                status=DwollaOperation.Status.PENDING
+            deposits_pending = ACHTransaction.objects.filter(
+                type=ACHTransaction.Type.deposit,
+                status=ACHTransaction.Status.pending
             ).aggregate(Sum('amount'))['amount__sum'] or Decimal(0.0)
-            withdrawals_pending = DwollaOperation.objects.filter(
-                type=DwollaOperation.Type.WITHDRAW,
-                status=DwollaOperation.Status.PENDING
+            withdrawals_pending = ACHTransaction.objects.filter(
+                type=ACHTransaction.Type.withdraw,
+                status=ACHTransaction.Status.pending
             ).aggregate(Sum('amount'))['amount__sum'] or Decimal(0.0)
 
             return JsonResponse(

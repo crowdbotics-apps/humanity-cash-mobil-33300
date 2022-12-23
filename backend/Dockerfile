@@ -2,7 +2,7 @@ FROM python:3.8-slim as base
 
 # libpq-dev and python3-dev help with psycopg2
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends python3-dev libpq-dev gcc curl binutils libproj-dev gdal-bin \
+  && apt-get install -y --no-install-recommends python3-dev libpq-dev gcc curl binutils libproj-dev gdal-bin g++ \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
   # You can add additional steps to the build by appending commands down here using the
@@ -14,7 +14,7 @@ RUN apt-get update \
 WORKDIR /opt/webapp
 COPY Pipfile* /opt/webapp/
 
-RUN pip3 install --no-cache-dir -q 'pipenv==2020.11.15' 
+RUN pip3 install --no-cache-dir -q 'pipenv'
 RUN pipenv install --deploy --system
 COPY . /opt/webapp
 

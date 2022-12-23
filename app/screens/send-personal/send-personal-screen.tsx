@@ -34,7 +34,7 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 	const [Type, setType] = useState('self') // self - other
 
 	const [ScanQR, setScanQR] = useState(false)
-  const [QR, setQR] = useState(null)
+	const [QR, setQR] = useState(null)
 
 	const [AmountError, setAmountError] = useState(false)
 
@@ -53,7 +53,6 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 		loginStore.environment.api
 			.sendMoney(data)
 			.then((result: any) => {
-				console.log(' postDeposit ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					setSucess(true)
 					setTransactionFinished(true)
@@ -88,7 +87,6 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 		loginStore.environment.api
 			.sendMoney(data)
 			.then((result: any) => {
-				console.log(' transferCurrency ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					setSucess(true)
 					setTransactionFinished(true)
@@ -103,9 +101,9 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 					notifyMessage('bad password')
 				}
 			}).catch((err) => notifyMessage(err))
-	  }
+	}
 
-	
+
 
 	const passModal = () => (
 		<Modal visible={ShowPassModal} transparent>
@@ -171,36 +169,36 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 						</TouchableOpacity>
 					</View>
 					: <View key={'confirm_header'} style={styles.HEADER_ACTIONS} />,
-					<View key={'confirm_content'} style={styles.LOADING_RETURN}>
-						{TransactionFinished
-							? [
-								Sucess
-									? <View style={styles.CONTAINER} key={'congrat_title'} >
-										<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Congratulations! You  have topped up C$ ${Amount}`}</Text>
-										<Text style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>
-									</View>
-									: <View style={styles.CONTAINER} key={'congrat_title'} >
-										<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Whoops, something went wrong.</Text>
-										<Text style={[styles.SUB_TITLE, { color: COLOR.PALETTE.red }]}>{ResponseMenssage}</Text>
-									</View>
-								, <Button
-									key={'congrat_button'}
-									buttonStyle={{
-										backgroundColor: loginStore.getAccountColor,
-									}}
-									onPress={() => {
-										if (Sucess) {
-											setTransactionConfirm(false)
-											setShowModal(false)
-											setTransactionFinished(false)
-											setAmount('0')
-											setPass('')
-											navigation.navigate("home")
-										} else postDeposit()
+				<View key={'confirm_content'} style={styles.LOADING_RETURN}>
+					{TransactionFinished
+						? [
+							Sucess
+								? <View style={styles.CONTAINER} key={'congrat_title'} >
+									<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>{`Congratulations! You  have topped up C$ ${Amount}`}</Text>
+									<Text style={styles.SUB_TITLE}>Currents will soon be available in your wallet!</Text>
+								</View>
+								: <View style={styles.CONTAINER} key={'congrat_title'} >
+									<Text style={[styles.PENDING_TITLE, { color: loginStore.getAccountColor }]}>Whoops, something went wrong.</Text>
+									<Text style={[styles.SUB_TITLE, { color: COLOR.PALETTE.red }]}>{ResponseMenssage}</Text>
+								</View>
+							, <Button
+								key={'congrat_button'}
+								buttonStyle={{
+									backgroundColor: loginStore.getAccountColor,
+								}}
+								onPress={() => {
+									if (Sucess) {
+										setTransactionConfirm(false)
+										setShowModal(false)
+										setTransactionFinished(false)
+										setAmount('0')
+										setPass('')
+										navigation.navigate("home")
+									} else postDeposit()
 
-									}}
-									buttonLabel={Sucess ? 'Explore your community' : 'Try again'}
-								/>
+								}}
+								buttonLabel={Sucess ? 'Explore your community' : 'Try again'}
+							/>
 						]
 						: [
 							<View style={styles.CONTAINER} key={'pending_title'}>
@@ -223,21 +221,21 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 							<Icon name={"close"} size={23} color={COLOR.PALETTE.white} />
 						</TouchableOpacity>
 					</View>
-					{ Type === 'self'
+					{Type === 'self'
 						? <View style={styles.MODAL_CONTAINER}>
-						<View style={styles.MODAL_CONTENT}>
-							<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Please confirm your transaction.</Text>
-							<Text style={styles.STEP_SUB_TITLE_MODAL}>
-								{`You will transfer C$ ${Amount} to your personal account.`}
+							<View style={styles.MODAL_CONTENT}>
+								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Please confirm your transaction.</Text>
+								<Text style={styles.STEP_SUB_TITLE_MODAL}>
+									{`You will transfer C$ ${Amount} to your personal account.`}
 								</Text>
-							<TouchableOpacity
-								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
-								onPress={() => [postDeposit(), setShowPassModal(false)]}
-							>
-								<Text style={styles.SUBMIT_BUTTON_LABEL}>Confirm</Text>
-							</TouchableOpacity>
+								<TouchableOpacity
+									style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
+									onPress={() => [postDeposit(), setShowPassModal(false)]}
+								>
+									<Text style={styles.SUBMIT_BUTTON_LABEL}>Confirm</Text>
+								</TouchableOpacity>
+							</View>
 						</View>
-					</View>
 						: <View style={styles.MODAL_CONTAINER}>
 							<View style={styles.MODAL_CONTENT}>
 								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Scan the recipients QR.</Text>
@@ -253,7 +251,7 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 							</View>
 						</View>
 					}
-					
+
 					<View />
 				</View>
 			}
@@ -338,7 +336,7 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 			preset="fixed"
 			statusBar={'dark-content'}
 			unsafe={true}
-			style={[styles.ROOT, ScanQR && {backgroundColor: COLOR.PALETTE.pureblack}]}
+			style={[styles.ROOT, ScanQR && { backgroundColor: COLOR.PALETTE.pureblack }]}
 		>
 			{ScanQR
 				? <QRCodeScanner onRead={e => [
@@ -346,7 +344,6 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 					setShowModal(true),
 					setScanQR(false),
 					transferCurrency(),
-					console.log(' read ===>>> ', JSON.stringify(e, null, 2)),
 				]} />
 				: [
 					<View style={styles.HEADER_ACTIONS} key={'send_personal_header'}>
@@ -360,20 +357,19 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 									<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
 									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Back`}</Text>
 								</TouchableOpacity>
-						)
-						}
+						)}
 					</View>,
 					<KeyboardAvoidingView key={'send_personal_container'} enabled style={styles.ROOT}>{renderStep()}</KeyboardAvoidingView>,
 					<Button
-					key={'send_personal_button'}
-					buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
-					disabled={ButtonDisabled}
-					onPress={() => setShowPassModal(true)}
-					buttonLabel={'Confirm'}
-					showBottonMenu
-					hideButton={Step === 'select'}
-					accountType={loginStore.getSelectedAccount}
-				/>
+						key={'send_personal_button'}
+						buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
+						disabled={ButtonDisabled}
+						onPress={() => setShowPassModal(true)}
+						buttonLabel={'Confirm'}
+						showBottonMenu
+						hideButton={Step === 'select'}
+						accountType={loginStore.getSelectedAccount}
+					/>
 				]
 			}
 			{ConfirmModal()}

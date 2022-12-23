@@ -83,7 +83,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         </View>
       </View>
       <View style={styles.BANKS_ICON_CONTAINER}>
-        {console.log(' loginStore.getFundingSources => ', JSON.stringify(loginStore.getFundingSources, null, 2))}
         {getDataFiltered(loginStore.getFundingSources, ['bankName', 'name'], Search).map((bank, key) => (
           <TouchableOpacity onPress={() => setStep('bankLogin')} key={key + '_bank'} style={styles.BANK_ICON_CONTAINER}>
             {/* <Image
@@ -172,7 +171,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     // TODO: change user_type argument with the one selected at that moment, consumer o merchant
     loginStore.environment.api.getFundingSources({ "user_type": loginStore.getSelectedAccount })
       .then((result: any) => {
-        console.log(' getFundingSourcesList ===>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setFundingSources(result.data)

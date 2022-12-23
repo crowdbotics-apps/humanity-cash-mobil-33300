@@ -52,6 +52,7 @@ class SignupSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         phone_number = validated_data.get('phone_number', None)
+        email_exists = validated_data.get('email')
         user = User(
             email=validated_data.get('email'),
             username=validated_data.get('email'),
@@ -66,7 +67,9 @@ class SignupSerializer(serializers.ModelSerializer):
         send_verification_email(user, code)
 
         consumer = Consumer.objects.create(user=user)
+
         consumer.new_wallet()
+
         return user
 
     def save(self, request=None):
@@ -94,7 +97,6 @@ class VerificationCodeSerializer(serializers.Serializer):
         verification_code_object = UserVerificationCode.objects.filter(
             user=user,
             verification_code=verification_code,
-            expires_on__gt=timezone.now(),
             active=True
         ).first()
         if not verification_code_object:

@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 import { COLOR, METRICS } from '../../theme';
 
 export default StyleSheet.create({
-  BACK_BUTON_CONTAINER: {
+	BACK_BUTON_CONTAINER: {
     alignItems: 'center',
     flexDirection: 'row',
     height: 30,
@@ -12,19 +12,21 @@ export default StyleSheet.create({
     width: 80
   },
   BACK_BUTON_LABEL: {
-    color: COLOR.PALETTE.black,
-    fontSize: 16
-  },
-  BUTTON_STYLE: {
-    backgroundColor: COLOR.PALETTE.transparent,
-    borderColor: COLOR.PALETTE.green,
+		color: COLOR.PALETTE.black,
+		fontSize: 16
+	},
+  BUTTON_STYLE: { 
+    backgroundColor: COLOR.PALETTE.transparent, 
+    borderColor: COLOR.PALETTE.green, 
     borderWidth: 1,
   },
-  CLOSE_MODAL_BUTTON: {
+	CLOSE_MODAL_BUTTON: {
     alignItems: 'center',
     alignSelf: 'flex-end',
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    // marginRight: 30,
+    position: 'absolute',
     right: 20,
     top: 20,
   },
@@ -32,35 +34,37 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.black
   },
   CONFIRM_MODAL_AMOUNT: {
-    fontSize: 35,
-    fontWeight: 'bold',
+    fontSize: 35, 
+    fontWeight: 'bold', 
     textAlign: 'center'
   },
   CONFIRM_MODAL_GENERIC_TEXT: {
     marginTop: 10,
-    textAlign: 'center',
+    textAlign: 'center', 
   },
   CONFIRM_MODAL_PAY_BUTTON: {
-    backgroundColor: COLOR.PALETTE.white,
-    borderWidth: 1,
-    fontSize: 20,
+    backgroundColor: 'white', 
+    borderColor: '#ced2b7', 
+    borderWidth: 1, 
+    fontSize: 20, 
     marginBottom: 10,
-    width: '90%',
+    width: '90%', 
   },
   CONFIRM_MODAL_PAY_BUTTON_ROUND: {
     marginBottom: 50,
-    width: '90%',
+    width: '90%', 
   },
   CONFIRM_MODAL_SECONDARY_TEXT: {
-    bottom: 5,
-    fontSize: 10,
+    bottom: 5, 
+    fontSize: 10, 
     paddingBottom: 10,
+    position: 'absolute', 
   },
   CONFIRM_MODAL_TEXT: {
     paddingHorizontal: '10%'
   },
-  CONTAINER: {},
-  FORGOT_PASSWORD_CONTAINER: {
+	CONTAINER: {},
+	FORGOT_PASSWORD_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
     marginBottom: 25
@@ -113,7 +117,7 @@ export default StyleSheet.create({
     marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },
-  LOGIN_TYPE: {
+	LOGIN_TYPE: {
     height: 50,
     width: 50
   },
@@ -123,7 +127,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     width: 250,
   },
-  LOGIN_TYPES_LABEL: {
+	LOGIN_TYPES_LABEL: {
     color: COLOR.PALETTE.green,
     fontSize: 16,
     marginBottom: 30,
@@ -131,7 +135,7 @@ export default StyleSheet.create({
     marginTop: 70,
     textAlign: 'center'
   },
-  MODAL_BUTTON: {
+	MODAL_BUTTON: {
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.green,
     borderRadius: 27.5,
@@ -140,10 +144,11 @@ export default StyleSheet.create({
     marginBottom: 20,
     width: METRICS.screenWidth * 0.70
   },
-  MODAL_CONTAINER: {
+	MODAL_CONTAINER: {
     alignItems: 'center',
     backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 20,
+    elevation: 2,
     height: 380,
     justifyContent: 'space-between',
     shadowColor: COLOR.PALETTE.black,
@@ -155,6 +160,12 @@ export default StyleSheet.create({
   MODAL_CONTAINER_CONFIRMATION: {
     backgroundColor: COLOR.PALETTE.white,
     height: 480,
+    position: 'absolute',
+    top: '20%'
+    // ? The content doesnt centered with this
+    // alignItems: 'center',
+    // ? The close button doesnt show in the screen with this 
+    // marginTop: '100%', 
   },
   MODAL_CONTENT: {
     height: 330,
@@ -167,13 +178,13 @@ export default StyleSheet.create({
     marginBottom: 20,
     width: METRICS.screenWidth * 0.80
   },
-  NEED_HELP_LINK: {
+	NEED_HELP_LINK: {
     color: COLOR.PALETTE.darkYellow,
     fontSize: 16,
     textAlign: 'center',
     textDecorationLine: 'underline'
   },
-  PASS_INPUT_STYLE: {
+	PASS_INPUT_STYLE: {
     alignSelf: 'center',
     color: COLOR.PALETTE.pureblack,
     height: 55,
@@ -183,22 +194,27 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.strongGreen,
     fontSize: 10,
   },
-  ROOT: {
-    flex: 1,
+  RELATIVE: {
+    position: 'relative'
   },
+  ROOT: {
+		flex: 1,
+	},
   ROOT_MODAL: {
     alignItems: 'center',
-    backgroundColor: COLOR.PALETTE.modalBackgroundColor,
+    backgroundColor: 'rgba(240, 240, 240, 0.80)',
     flex: 1,
     justifyContent: 'space-around',
+    paddingBottom: '60%', 
 
   },
   ROOT_MODAL_PASS: {
     backgroundColor: COLOR.PALETTE.white,
-    flex: 1,
-    justifyContent: 'space-between',
+		flex: 1,
+		justifyContent: 'space-between',
+		marginTop: 35,
     position: 'relative'
-  },
+	},
   SHOW_PASS_CONTAINER: {
     alignItems: 'center',
     height: 50,
@@ -226,10 +242,12 @@ export default StyleSheet.create({
     marginLeft: 10,
     width: METRICS.screenWidth * 0.7,
   },
-  STEP_SUB_TITLE_USERNAME: {
+  STEP_SUB_TITLE_USERNAME : {
     color: COLOR.PALETTE.black,
     fontSize: 18,
     fontWeight: 'bold',
+    position: 'absolute',
+    top: '10%'
   },
   STEP_TITLE: {
     color: COLOR.PALETTE.orange,
@@ -266,7 +284,7 @@ export default StyleSheet.create({
   USER_IMAGE: {
     borderRadius: 30,
     height: 60,
-    width: 60,
+    width: 60
   },
   USER_IMAGE_CONTAINER: {
     alignItems: 'center',

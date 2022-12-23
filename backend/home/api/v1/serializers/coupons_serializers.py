@@ -20,8 +20,8 @@ class CounponCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coupon
         #se agrego el campo id 18/11
-        fields = ['id', 'title', 'start_date', 'end_date', 'type_of_promo', 'discount_input', 'description', 'promo_image',
-                  'merchant']
+        fields = ['id', 'title', 'start_date', 'end_date', 'type_of_promo', 'discount_input', 'description',
+                  'promo_image', 'merchant']
 
     def validate(self, attrs):
         start_date = attrs.get('start_date', None)

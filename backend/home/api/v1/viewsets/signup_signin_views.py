@@ -27,7 +27,7 @@ class SetPasswordView(AuthenticatedAPIView):
     serializer_class = signup_signin_serializers.SetPasswordSerializer
 
     def post(self, request):
-        user = self.reqgiuest.user
+        user = self.request.user
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         password = serializer.data.get("password")

@@ -58,7 +58,6 @@ export const CashOutScreen = observer(function CashOutScreen() {
 			.postCashOut(data)
 			.then((result: any) => {
 				setTransactionFinished(true)
-				console.log(' postCashOut ===>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					setSucess(true)
 					// runInAction(() => {

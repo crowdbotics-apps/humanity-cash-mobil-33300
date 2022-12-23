@@ -1,12 +1,10 @@
 
 from django.db import models
 
-
-# Create your models here.
-from django.utils.timezone import now
-
 from celo_humanity.web3helpers import get_contract, ContractProxy
 
+
+# Create your models here.
 
 
 class Account(models.Model):
@@ -148,4 +146,13 @@ class ACHTransaction(models.Model):
     def get_merchant_data(self):
         if hasattr(self, 'merchant'):
             return self.merchant
+
+    @property
+    def profile(self):
+        return self.consumer or self.merchant
+
+    @profile.setter
+    def profile(self, value):
+        self.consumer = value if value.is_consumer else None
+        self.merchant = value if value.is_merchant else None
 

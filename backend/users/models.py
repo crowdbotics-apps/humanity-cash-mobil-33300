@@ -1,6 +1,6 @@
 import time
 
-from cities_light.models import City, Region
+from cities_light.models import Region
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
 from django.urls import reverse
@@ -82,7 +82,7 @@ class BaseProfileModel(models.Model):
     profile_picture = models.ImageField(upload_to='profile-pictures', null=True, blank=True)
     address_1 = models.CharField(max_length=150, null=True, blank=True)
     address_2 = models.CharField(max_length=150, null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
+    city = models.CharField(max_length=150, null=True, blank=True)
     state = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True)
     zip_code = models.CharField(max_length=16, null=True, blank=True)
     dwolla_id = models.CharField(max_length=50, null=True, blank=True)
@@ -102,6 +102,9 @@ class BaseProfileModel(models.Model):
                 except NoWalletException:  # good, is a fresh uid
                     get_wallet(uid, create=True, profile=self)
                     new_uid = uid
+                except:
+                    return 0
+                    # TODO log when gets a error while create the wallet
 
             self.crypto_wallet_id = new_uid
             if save:
@@ -206,7 +209,7 @@ class Merchant(BaseProfileModel):
     owner_last_name = models.CharField(max_length=150, null=True, blank=True)
     address_1 = models.CharField(max_length=150, null=True, blank=True)
     address_2 = models.CharField(max_length=150, null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, null=True)
+    city = models.CharField(max_length=150, null=True, blank=True)
     state = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True)
     zip_code = models.CharField(max_length=16, null=True, blank=True)
     location = models.PointField(null=True, blank=True)

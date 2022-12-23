@@ -9,7 +9,6 @@ import {
 	MaskInput
 } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
-import FontAwesome from "react-native-vector-icons/FontAwesome"
 import styles from './signup-profile-style';
 import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -112,7 +111,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
-	const [Citys, setCitys] = React.useState([]);
+	// const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
 	const [States, setStates] = React.useState([]);
 	const [State, setState] = React.useState('');
@@ -140,12 +139,12 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		});
 	}
 
-	const fetchCity = (data?: string) => {
-		loginStore.environment.api.getCities({ value: data })
-			.then((result: any) => {
-				result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
-			})
-	}
+	// const fetchCity = (data?: string) => {
+	// 	loginStore.environment.api.getCities({ value: data })
+	// 		.then((result: any) => {
+	// 			result?.data?.results && setCitys(result.data.results.map(r => ({ id: r.city_id, title: r.city_name })))
+	// 		})
+	// }
 	const fetchState = (data?: string) => {
 		loginStore.environment.api.getStates({ value: data })
 			.then((result: any) => {
@@ -203,7 +202,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				setUsername('');
 				setName('');
 				setLastName('');
-				//setStep('profile_type');
+				// setStep('profile_type');
 				setShowThankyouModal(true);
 			} else if (result.kind === "bad-data") {
 				const key = Object.keys(result?.errors)[0]
@@ -288,6 +287,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			owner_last_name: BusinessExecLastName,
 			// city: 1988, // TODO: fetch
 			// state: 28, // TODO: fetch
+			city: City,
 			address_1: Address1,
 			address_2: Address2,
 			zip_code: PostalCode,
@@ -716,11 +716,17 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
-					<TouchableOpacity
-						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, justifyContent: 'flex-end' }]}
-						onPress={() => [setSelectCityOpen(!SelectCityOpen)]}
+					<View
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
 					>
-						<ModalSelector
+							<TextInput
+							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.60 }]}
+							onChangeText={t => setCity(t)}
+							value={City}
+							placeholder={'City'}
+						/>
+						{/* <ModalSelector
 							options={Citys}
 							action={setCity}
 							title={""}
@@ -730,8 +736,8 @@ IDENTIFICATION NUMBER (ENTER ONE)
 							displaySelector
 							closeOnClick
 							searchAction={fetchCity}
-						/>
-					</TouchableOpacity>
+						/> */}
+					</View>
 				</View>
 				<View style={styles.CONTAINER}>
 					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
@@ -863,11 +869,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				<View style={styles.CONTAINER}>
 					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
 					<Button
-						onPressIn={() => {
-							console.log('entre')
-							navigation.navigate('linkBank')
-						}
-						}
+						onPressIn={() => navigation.navigate('linkBank')}
 						buttonLabel={'Link my personal bank account'}
 						buttonStyle={styles.SUBMIT_BUTTON}
 					/>
@@ -978,7 +980,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			)
 			setProfileType(props.route?.params?.profile_type || profileTypes[1])
 
-			fetchCity()
+			// fetchCity()
 			fetchState()
 		}
 	}, [isFocused])

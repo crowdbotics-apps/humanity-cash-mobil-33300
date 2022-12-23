@@ -36,6 +36,7 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
   const [HidePass, setHidePass] = useState(true)
   const [HidePassConfirm, setHidePassConfirm] = useState(true)
   const [MatchPassword, setMatchPassword] = useState(true)
+  const [Token, setToken] = useState('')
 
   // const [PassError, setPassError] = useState(false)
   // const [PassErrorMessage, setPassErrorMessage] = useState("")
@@ -54,21 +55,14 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
 
   const sendVerificationCode = () => {
     setLoading(true)
-    console.log('Entre en la función')
     loginStore.environment.api.forgotPassword({ email: Username }).then(result => {
-      console.log('Entre en el then')
-      console.log(result)
       setUsernameError(false)
       setLoading(false)
+      console.log(' sendVerificationCode ====>>>>> ', JSON.stringify(result, null, 2))
       if (result.kind === "ok") {
         if (result?.response?.detail) notifyMessage(result.response.detail)
         setStep('code')
-        // runInAction(() => {
-        //   loginStore.setUser(result.response.user)
-        //   loginStore.setApiToken(result.response.access_token)
-        // })
       } else if (result.kind === "bad-data") {
-        console.log(' result => ', result)
         if (result.errors.email) {
           setUsernameError(true)
           setUsernameErrorMessage(result.errors.email[0])
@@ -78,25 +72,46 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
     })
   }
 
+  const setPassword = () => {
+    if (!Pass) {
+      notifyMessage("Password can't be blank")
+      return
+    }
+    if (Pass !== PassConfirm) {
+      notifyMessage("Password don't match")
+      return
+    }
+    setLoading(true)
+    loginStore.environment.api
+      .passwordSet({ password: Pass, password_confirm: PassConfirm, token: Token, email: Username })
+      .then(result => {
+        console.log(' setPassword ====>>>>> ', JSON.stringify(result, null, 2))
+        setLoading(false)
+        if (result.kind === "ok") {
+          runInAction(() => {
+            notifyMessage("You’ve successfully changed your password!")
+            navigation.navigate('login')
+          })
+        } else if (result.kind === "bad-data") {
+          notifyMessage(result?.errors?.shift())
+        }
+      })
+  }
+
   const verifyUserResetCode = () => {
     const code = Code1 + Code2 + Code3 + Code4 + Code5 + Code6
     setLoading(true)
     loginStore.environment.api
       .verifyUserResetCode({ verification_code: code ,email: Username })
       .then(result => {
-        console.log(' result ===>>> ', JSON.stringify(result, null, 2))
         setLoading(false)
+        console.log(' verifyUserResetCode ====>>>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           notifyMessage("Email verified", "success")
+          setToken(result.response.token)
           setStep("new_pass")
         } else if (result.kind === "bad-data") {
           notifyMessage(result.errors.verification_code[0])
-          // setCode1('')
-          // setCode2('')
-          // setCode3('')
-          // setCode4('')
-          // setCode5('')
-          // setCode6('')
         } else {
           notifyMessage(null)
         }
@@ -288,7 +303,7 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
       if (Pass !== PassConfirm) {
         setMatchPassword(false)
       } else {
-        // setPassword()
+        setPassword()
         setMatchPassword(true)
       }
     }
