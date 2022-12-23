@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Humanity Cash</title>
+    <style>
+        @import url(http://fonts.googleapis.com/css?family=Roboto);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            align-items: center;
+            background-color: black;
+            display: flex;
+            font-family: Roboto, Arial, sans-serif;
+            height: 100vh;
+            justify-content: center;
+        }
+
+        .main_content {
+            background-color: white;
+            height: 90%;
+            width: 70%;
+            overflow-y: scroll;
+        }
+
+        header {
+            align-items: center;
+            background-color: #3b88b6;
+            display: flex;
+            justify-content: flex-start;
+            height: 15%;
+            padding-left: 5%;
+            width: 100%;
+        }
+
+        .logo {
+            width: 10rem;
+            height: 10rem;
+        }
+
+        .message_section {
+            padding: 5% 7% 2% 7%;
+            font-size: 1rem;
+        }
+
+        h3 {
+            color: #3b88b6;
+            font-weight: bold;
+        }
+
+        .message {
+            padding-top: 3%;
+        }
+
+        .qr_container {
+            display: flex;
+            justify-content: center;
+            margin-top: 5%;
+        }
+
+        .qr {
+            width: 20rem;
+            height: 20rem;
+        }
+
+        table {
+
+            width: 100%;
+            margin-top: 3%;
+        }
+
+
+        .fields {
+            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(5, 2fr) 1fr 1.5fr 1fr 1.5fr;
+            justify-content: center;
+            margin: 0 2%;
+            padding: 0 2%;
+        }
+
+        .field {
+            color: #7a7a7a;
+            font-size: 0.75rem;
+        }
+
+        .fields_text {
+            border-bottom: 1px solid #e5c1a9;
+            grid-template-columns: repeat(5, 2fr) 1fr 1.5fr 1fr 1.5fr;
+            word-break: break-all;
+            grid-template-rows: auto;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .field_text {
+            align-items: center;
+            color: #5397bf;
+            cursor: pointer;
+            display: flex;
+            height: fit-content;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: 0.7rem;
+            padding: 10%;
+            max-width: 90%;
+            
+        }
+
+
+        .field_text_info {
+            cursor:text;
+            color: black;
+            font-weight: bolder;
+        }
+
+        .field_text_info_date {
+            font-size: 0.7rem;
+
+        }
+
+        .field_text_info_hour {
+            color: #797979;
+            font-size: 0.6rem;
+            padding-top: 10%;
+            font-weight: bolder;
+        }
+
+        
+
+    </style>
+</head>
+<body>
+    <main class="main_content">
+        <header>
+            <img 
+            src="../../static/img/logo_humanity.png"  
+              alt="humanity_logo"
+            >
+        </header>
+        <section class="message_section">
+            <h3>Hi {username},</h2>
+            <div class="message">
+                This is your QR. Please don't hesitate for use it. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Incidunt nostrum quaerat aliquid aut! Porro quas dolores rerum ipsam, aliquid dicta nemo voluptate ullam quos, nesciunt aspernatur. Nisi, asperiores. Ut, est.
+            </div>
+        </section>
+        <table>
+            <tr class="fields">
+                <th class="field">HASH</th>
+                <th class="field">FROM</th>
+                <th class="field">TO</th>
+                <th class="field">FROM ADDRESS</th>
+                <th class="field">TO ADDRESS</th>
+                <th class="field">TYPE</th>
+                <th class="field">CREATED AT</th>
+                <th class="field">AMOUNT</th>
+                <th class="field block">BLOCKS CONFIRMED</th>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...................................................</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+            <tr class="fields fields_text">
+                <td class="field_text">1Cs4wu6pu5qCZ35b...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">3Cs3vu3pu2qCZ35...</td>
+                <td class="field_text">4Cs3wu1pu3qCZ25b...</td>
+                <td class="field_text">2Cs3vu1zu5qCA25b...</td>
+                <td class="field_text">Type</td>
+                <td class="field_text field_text_info">
+                    <div>
+                        <p class="field_text_info_date">
+                            April 14, 2022
+                        </p>
+
+                        <p class="field_text_info_hour">
+                            5:20 PM
+                        </p>
+                    </div>
+                </td>
+                <td class="field_text field_text_info">0.55</td>
+                <td class="field_text field_text_info">12</td>
+            </tr>
+        </table>
+    </main>
+</body>
+</html>
