@@ -18,9 +18,11 @@ from rest_framework.response import Response
 from base import configs
 from celo_humanity.models import Transaction, ACHTransaction
 from home.api.v1.cashier_permission import IsNotCashier
-from home.api.v1.serializers.transaction_serializers import TransactionSerializer, SendQRSerializer
+from home.api.v1.serializers.transaction_serializers import TransactionSerializer, SendQRSerializer, \
+    SendReportSerializer
 from home.clients.dwolla_api import DwollaClient
-from home.helpers import AuthenticatedAPIView, send_notifications, send_email_with_template_attach_element
+from home.helpers import AuthenticatedAPIView, send_notifications, send_email_with_template_attach_element, \
+    send_email_with_template
 from users.models import Consumer, Merchant, Notification
 
 logger = logging.getLogger('transaction')
@@ -210,8 +212,27 @@ class SendReportView(AuthenticatedAPIView):
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
-            serializer = SendQRSerializer(data=data)
-
+            serializer = SendReportSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            data = serializer.validated_data
+            start_date = data['start_date']
+            end_date = data['start_date']
+            user = self.request.user
+            transactions = Transaction.objects.filter(
+                merchant__user=user,
+                created_lte=end_date,
+                created__gte=start_date
+            )
+            send_email_with_template(
+                subject='Humanity Cash Report',
+                email=user.email,
+                template_to_load='emails/transactions.html',
+                context={
+                    "username": user.get_full_name(),
+                    "message": "message",
+                    "transactions": transactions,
+                }
+            )
         except Exception as error:
             logger.exception(error)
             return Response('Error while depositing, please try again', status=status.HTTP_400_BAD_REQUEST)
@@ -226,7 +247,7 @@ class SendQRView(AuthenticatedAPIView):
             serializer = SendQRSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             data = serializer.validated_data
-            image = qrcode.make(data['qr_data'])
+            image = qrcode.make(json.dumps(data['qr_data']))
             stream = BytesIO()
             image.save(stream, format="png")
             stream.seek(0)
