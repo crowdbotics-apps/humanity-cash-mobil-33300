@@ -215,16 +215,24 @@ class SendReportView(AuthenticatedAPIView):
             serializer = SendReportSerializer(data=data)
             serializer.is_valid(raise_exception=True)
             data = serializer.validated_data
-            start_date = data['start_date']
-            end_date = data['start_date']
+            start_date = datetime(
+                year=data['start_date'].year,
+                month=data['start_date'].month,
+                day=data['start_date'].day,
+            )
+            end_date = datetime(
+                year=data['end_date'].year,
+                month=data['end_date'].month,
+                day=data['end_date'].day,
+            )
             user = self.request.user
             transactions = Transaction.objects.filter(
                 merchant__user=user,
-                created_lte=end_date,
+                created__lte=end_date,
                 created__gte=start_date
             )
             send_email_with_template(
-                subject='Humanity Cash Report',
+                subject='Humanity Cash Transaction Report',
                 email=user.email,
                 template_to_load='emails/transactions.html',
                 context={
