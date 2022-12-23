@@ -1,3 +1,4 @@
+from allauth.account.forms import default_token_generator
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
 from django_filters.rest_framework import DjangoFilterBackend
@@ -35,14 +36,6 @@ def password_reset(request):
 @api_view(['POST'])
 def password_reset_mobile(request):
     serializer = ResetPasswordSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        form = CustomPasswordResetForm(serializer.data)
-        form.is_valid()
-        opts = {
-            'use_https': request.is_secure(),
-            'request': request,
-        }
-        form.save(**opts)
     user = User.objects.get(email=request.data.get('email'), is_active=True)
     code = setup_verification_code(user)
     send_verification_email(user, code)
@@ -64,6 +57,16 @@ def verify_reset_code(request):
     user.verified_email = True
     user_verification_code.save()
     user.save()
+    token = default_token_generator.make_token(user)
+    return Response({"token": token}, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def password_set(request):
+    user = User.objects.get(email=request.data.get('email'), is_active=True)
+    user.set_password(request.data.get('password'))
+    user.save()
+    request.user = user
     return Response(status=status.HTTP_200_OK)
 
 

@@ -45,7 +45,9 @@ export const ContactScreen = observer(function ContactScreen() {
               QR: JSON.stringify({
               to_is_consumer: TabIndex === 0,
               to: i.id,
-              }),
+              to_username: i.username, 
+              to_profile_photo: i.profile_picture
+            }),
             })]
           }
         >

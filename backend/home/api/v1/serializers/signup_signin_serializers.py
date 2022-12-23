@@ -97,7 +97,6 @@ class VerificationCodeSerializer(serializers.Serializer):
         verification_code_object = UserVerificationCode.objects.filter(
             user=user,
             verification_code=verification_code,
-            expires_on__gt=timezone.now(),
             active=True
         ).first()
         if not verification_code_object:
