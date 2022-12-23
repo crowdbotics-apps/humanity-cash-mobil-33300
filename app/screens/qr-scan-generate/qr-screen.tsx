@@ -144,9 +144,11 @@ export const QRScreen = observer(function QRScreen(props: any) {
 
   const readQRAction = (data: any) => {
     let dataJson
+
+    console.log(' data ===>>> ', typeof data, data)
+
     try {
-      const temp = data.replace(': True', ': true')
-      dataJson = JSON.parse(temp)
+      dataJson = JSON.parse(data)
     } catch {
       notifyMessage('Invalid QR')
       return
@@ -380,11 +382,11 @@ export const QRScreen = observer(function QRScreen(props: any) {
       unsafe={true}
       showHeader
     >
-      <View style={[styles.ROOT, { backgroundColor: ScanQR ? '#000' : '#FFF' }]}>
+      <View style={[styles.ROOT, { backgroundColor: (ScanQR && Step === 'tabs') ? '#000' : '#FFF' }]}>
         <View style={styles.CONTAINER}>
           <TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
-            <Icon name={"arrow-back"} size={23} color={!ScanQR ? '#000' : '#FFF'} />
-            <Text style={[styles.BACK_BUTON_LABEL, { color: !ScanQR ? '#000' : '#FFF' }]}>{` Home`}</Text>
+            <Icon name={"arrow-back"} size={23} color={!(ScanQR && Step === 'tabs') ? '#000' : '#FFF'} />
+            <Text style={[styles.BACK_BUTON_LABEL, { color: !(ScanQR && Step === 'tabs') ? '#000' : '#FFF' }]}>{` Home`}</Text>
           </TouchableOpacity>
         </View>
         {renderStep()}
