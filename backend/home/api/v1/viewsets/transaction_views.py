@@ -1,3 +1,6 @@
+import base64
+from email.mime.image import MIMEImage
+
 from django.conf import settings
 from io import BytesIO
 import json
@@ -209,8 +212,8 @@ class SendReportView(AuthenticatedAPIView):
             data = request.data
             serializer = SendQRSerializer(data=data)
 
-        except Exception:
-            logger.exception("Error Sending report")
+        except Exception as error:
+            logger.exception(error)
             return Response('Error while depositing, please try again', status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
 
@@ -228,13 +231,18 @@ class SendQRView(AuthenticatedAPIView):
             image.save(stream, format="png")
             stream.seek(0)
             imgObj = stream.read()
-
+            banner_image = MIMEImage(imgObj)
+            banner_image.add_header('Content-ID', '<qr_code.png>')
             send_email_with_template_attach_element(
-                context={},
+                context={
+                    "username": "Username",
+                    "detail": "Detail text",
+                    "qr_image": banner_image
+                },
                 subject='Humanity Cash QR code',
                 email=data['email'],
-                template_to_load='emails/email_qr.html',
-                image=imgObj
+                template_to_load='emails/qr.html',
+                image=banner_image
             )
         except Exception as error:
             logger.exception(error)

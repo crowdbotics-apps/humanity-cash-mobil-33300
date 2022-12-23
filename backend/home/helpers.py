@@ -212,6 +212,6 @@ def send_email_with_template_attach_element(subject, email, context, template_to
                                   connection=connection)
     if html_content:
         mail.attach_alternative(html_content, 'text/html')
-    mail.attach('qr_code.png', image, 'image/png')
+    mail.attach(image)
 
     return mail.send()
