@@ -98,7 +98,6 @@ export function ModalSelector(props: ModalSelectortProps) {
                                     onPress={() => {
                                         if (props.closeOnClick === true) {
                                             props.setVisible(false)
-                                            console.log(' option -> ', option)
                                             props.action(option)
                                             setSelectedValue(option)
                                         } else {

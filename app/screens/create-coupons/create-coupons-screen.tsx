@@ -12,12 +12,13 @@ import Entypo from "react-native-vector-icons/Entypo"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { launchImageLibrary } from 'react-native-image-picker';
 import { notifyMessage } from "../../utils/helpers"
+import {runInAction} from "mobx";
 
-// a) Discount percentage, b) Discount dollar amount, c) Special Offer. 
-// Depending on the pull down choice, this would prompt user to enter either the discount percentage 
+// a) Discount percentage, b) Discount dollar amount, c) Special Offer.
+// Depending on the pull down choice, this would prompt user to enter either the discount percentage
 // (e.g. 10% every Tuesday),
 // the discount amount (e.g. $10 off when you spend $50 or more this week)
-// or special offer (e.g. get a free glass of wine on your birthday). 
+// or special offer (e.g. get a free glass of wine on your birthday).
 
 export const CreateCouponScreen = observer(function CreateCouponScreen() {
 	const navigation = useNavigation()
@@ -59,23 +60,6 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 		});
 	}
 
-	const getCoupons = () => {
-		loginStore.environment.api
-			.getCoupons()
-			.then((result: any) => {
-				if (result.kind === "ok") {
-					runInAction(() => {
-						const filteredCouponsByLoguedMerchant = result?.data?.results.filter(c => c.merchant === loginStore.merchant_id)
-						loginStore.setMerchantCoupons(filteredCouponsByLoguedMerchant);
-					})
-				} else if (result.kind === "bad-data") {
-					const key = Object.keys(result?.errors)[0]
-					const msg = `${key}: ${result?.errors?.[key][0]}`
-					notifyMessage(msg)
-				}
-			})
-	}
-
 	const postCoupon = () => {
 		setLoading(true)
 		const promoImage = {
@@ -100,7 +84,6 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
-					getCoupons()
 					navigation.navigate("myCoupons")
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]

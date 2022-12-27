@@ -213,7 +213,6 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
     `;
 
   function onMessage(event) {
-    console.log('event => ', event)
     if (event.nativeEvent.data !== "undefined") {
       if (event.nativeEvent.data === 'SuccessIAV') {
         setTimeout(() => {

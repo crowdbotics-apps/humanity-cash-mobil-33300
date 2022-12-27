@@ -77,16 +77,15 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 
 	const makeReport = () => {
 		setLoading(true)
-	
+
 		loginStore.environment.api.sendReport({
 			start_date: DateFrom.toISOString().split('T')[0],
 			end_date: DateTo.toISOString().split('T')[0],
 		})
 			.then((result: any) => {
-				console.log(' makeReport ====>>>> ', JSON.stringify(result, null, 2))
 				setLoading(false)
 				if (result.kind === "ok") {
-					let a 
+					let a
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`

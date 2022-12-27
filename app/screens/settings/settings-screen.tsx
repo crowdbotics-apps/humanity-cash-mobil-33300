@@ -174,7 +174,7 @@ you back soon. `}
           setLoading(true)
           setModalStep('finish')
 				} else if (result.kind === "bad-data") {
-					console.log('bad-data')
+
 				}
 			})
 	}
