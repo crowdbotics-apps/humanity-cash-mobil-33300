@@ -19,7 +19,6 @@ import {toast} from "react-toastify";
 import {getErrorMessages} from "../../utils/functions";
 import {genericApiError} from "../../helpers";
 import {Eyes} from "../../components/icons";
-import {useModal} from "../../components/ModalBubble";
 
 
 export const LoginPage: React.FC = () => {
@@ -28,7 +27,6 @@ export const LoginPage: React.FC = () => {
   const navigate = useNavigate()
   const api = useApi()
   const userStore = useUserStore()
-  const {ModalBubble, isOpen, getPositionProperty} = useModal();
 
   const formik = useFormik({
     initialValues: {
@@ -86,9 +84,6 @@ export const LoginPage: React.FC = () => {
       <div style={{marginTop: 30, marginBottom: 20}}>
         <img src={logo} alt={"logo"} className={"logo img-fluid"}/>
       </div>
-
-
-
       <FormContent>
         <div>
           <Form noValidate className={'pb-5'}
@@ -160,16 +155,7 @@ export const LoginPage: React.FC = () => {
 
             </div>
           </Form>
-
-
-          <Button type={"button"} variant="secondary" onClick={(e) => getPositionProperty(e.target)}>Testing</Button>
-          <ModalBubble isOpen={isOpen}>
-            <Button type={"button"} variant="secondary" onClick={() => console.log("Hello")}>Touch me</Button>
-            <Button type={"button"} variant="secondary" onClick={() => console.log("hi")}>Touch me, again</Button>
-          </ModalBubble>
-
         </div>
-
       </FormContent>
     </PageWeb>
   )

@@ -81,7 +81,7 @@ class ComplianceActionCreateSerializer(serializers.Serializer):
         fields = (
             'type',
             'documentation',
-            'amount'
+            'amount',
             'profile_is_consumer',
             'profile_id',
             'password',
