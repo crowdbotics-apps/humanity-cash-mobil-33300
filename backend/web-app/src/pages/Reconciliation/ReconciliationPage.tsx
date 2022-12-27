@@ -144,6 +144,12 @@ const ReconciliationPage: React.FC = observer(() => {
 
   useEffect(() => {
     userStore.setUp()
+    setItems([{
+      title:<div style={{color:"var(--green-dark)", fontWeight:"bold"}}>Today's Date</div>,
+      reserve:<div style={{fontWeight:500, fontSize:"14px"}}>$ 100,000.00</div>,
+      negative:<div style={{fontWeight:500, fontSize:"14px"}}>$ 0.00</div>,
+      positive:<div style={{fontWeight:500, fontSize:"14px"}}>$ 0.00</div>,
+    }])
 
   },[])
 
@@ -217,8 +223,11 @@ const ReconciliationPage: React.FC = observer(() => {
           <AdvancedTable
             onClickPage={onClickPage}
             currentPage={CurrentPage}
-            totalItems={TotalItems} headerRow={ColumnsTitles}
-            deletable={true} paginate={false} rows={Items}
+            totalItems={TotalItems}
+            headerRow={ColumnsTitles}
+            deletable={true}
+            paginate={false}
+            rows={Items}
             onNext={onNextPage}
             onPrevious={onPreviousPage}/>
         </div>
