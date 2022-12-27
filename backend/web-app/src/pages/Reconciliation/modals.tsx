@@ -100,7 +100,7 @@ export const CredentialsModal = observer((props: any) => {
 })
 
 export const AmountModal = observer((props: any) => {
-  const {showModal, onConfirm, onClose, title, subTitle, selectRecipient} = props
+  const {showModal, onConfirm, onClose, title, subTitle, selectRecipient, searchFn} = props
   const [Amount, setAmount] = useState<string>("0")
 
   return (
@@ -143,7 +143,7 @@ export const AmountModal = observer((props: any) => {
                 <Form.Control
                   placeholder='search by name, email and wallet address'
                   type="search" name="search" className='search-button-navbar'
-
+                  onChange={(e) => searchFn(e.target.value)}
                 />
                 <Button variant="secondary" id="button-addon2" className='search-buttons'>
                   <SearchIcon/>

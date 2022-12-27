@@ -30,6 +30,7 @@ const ReconciliationPage: React.FC = observer(() => {
   const [profileIsConsumer, setProfileIsConsumer] = useState(false)
   const [profileID, setProfileID] = useState(null)
   const [Documentation, setDocumentation] = useState("Placeholder")
+  const [RecipientsList, setRecipientsList] = useState([])
   const dataRefInitialValue = {
     type: '',
     documentation: "Placeholder to fill",
@@ -170,8 +171,18 @@ const ReconciliationPage: React.FC = observer(() => {
 
   const [ColumnsTitles, setColumnsTitles] = useState(COLUMN_TITLES)
 
+  const searchFn = (searchText: any) => {
+    api.getRecipients(searchText).then(res => {
+      if (res.kind === 'ok') {
+        const {results}: any = res.data;
+        setRecipientsList(results)
+      } else {
+        console.log("There were problems")
+      }
+    }).catch(reason => console.log(reason))
+  }
+
   useEffect(() => {
-    console.log(CurrentAmount, profileIsConsumer, profileID, supervisorCredential)
     dataRef.current.amount = CurrentAmount
     dataRef.current.documentation = Documentation
     dataRef.current.profile_is_consumer = profileIsConsumer
@@ -280,6 +291,7 @@ const ReconciliationPage: React.FC = observer(() => {
                    title={CurrentAction.title}
                    selectRecipient={CurrentAction.selectRecipient}
                    subTitle={CurrentAction.subTitle}
+                   searchFn={searchFn}
                    onClose={() => {
                      setShowAmountModal(false)
                    }}

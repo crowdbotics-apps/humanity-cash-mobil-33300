@@ -130,4 +130,8 @@ export class Api extends ApiBase {
         return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
     }
 
+    async getRecipients(data: any): Promise<Types.ListResult> {
+        return this.simple_get(API_VERSION_PREFIX+"/compliance_recipient/", {search: data})
+    }
+
 }
