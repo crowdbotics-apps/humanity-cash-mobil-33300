@@ -29,6 +29,9 @@ const ReconciliationPage: React.FC = observer(() => {
   const [ShowConfirmationModal, setShowConfirmationModal] = useState<boolean>(false)
   const [ShowAmountModal, setShowAmountModal] = useState<boolean>(false)
   const [CurrentAction, setCurrentAction ] = useState<any>({})
+  const [supervisorCredential, setSupervisorCredential] = useState("")
+  const [profileIsConsumer, setProfileIsConsumer] = useState(false)
+  const [profileID, setProfileID] = useState(null)
 
   const api = useApi()
   const userStore = useUserStore()
@@ -37,23 +40,23 @@ const ReconciliationPage: React.FC = observer(() => {
   const onAddAjustment = ()=>{
     const data = {
       type: 'fund_negative',
-      documentation: "Placeholder to fill",
-      amount: 10,
+      documentation: "Placeholder to fill on Add Ajustment",
+      amount: CurrentAmount,
       profile_is_consumer: false,
       profile_id: null,
-      password: ""
+      password: supervisorCredential
     }
     api.addAdjustment(data)
   }
 
   const onAddAdjustmentAndMint = ()=>{
     const data = {
-      type: 'fund_negative',
-      documentation: "Placeholder to fill",
-      amount: 10,
+      type: 'burn_from_negative',
+      documentation: "Placeholder to fill on Add Adjustment And Mint",
+      amount: CurrentAmount,
       profile_is_consumer: false,
       profile_id: null,
-      password: ""
+      password: supervisorCredential
     }
     api.addAdjustmentAndMintTokens(data)
   }
@@ -61,24 +64,24 @@ const ReconciliationPage: React.FC = observer(() => {
 
   const onReconcileAndBurn = ()=>{
     const data = {
-      type: 'fund_negative',
-      documentation: "Placeholder to fill",
-      amount: 10,
+      type: 'mint_to_positive',
+      documentation: "Placeholder to fill on Reconcile And Burn",
+      amount: CurrentAmount,
       profile_is_consumer: false,
       profile_id: null,
-      password: ""
+      password: supervisorCredential
     }
     api.reconcileAndBrnTokens(data)
   }
 
   const onReconcileAndTransfer = ()=>{
     const data = {
-      type: 'fund_negative',
-      documentation: "Placeholder to fill",
-      amount: 10,
-      profile_is_consumer: false,
-      profile_id: null,
-      password: ""
+      type: 'positive_to_user',
+      documentation: "Placeholder to fill on Reconcile And Transfer",
+      amount: CurrentAmount,
+      profile_is_consumer: profileIsConsumer,
+      profile_id: profileID,
+      password: supervisorCredential
     }
     api.reconcileAndTransferTokens(data)
   }
@@ -268,6 +271,7 @@ const ReconciliationPage: React.FC = observer(() => {
       <CredentialsModal showModal={ShowPasswordModal}
                         onClose={()=>setShowPasswordModal(false)}
                         onConfirm={(password:string)=>{
+                          setSupervisorCredential(password)
                           setShowPasswordModal(false)
                           setShowAmountModal(true)
                         }}/>
