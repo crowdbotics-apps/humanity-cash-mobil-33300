@@ -432,8 +432,8 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		let MerchantData: any = {
 			business_name: BusinessName,
 			type_of_business: BusinessType,
-			profile_picture: profPic,
-			background_picture: backPic,
+			profile_picture: BusinessImageSource?.uri ? profPic : null,
+			background_picture: BackBusinessImageSource?.uri ? backPic : null,
 			business_story: BusinessStory,
 			address_1: Address1,
 			address_2: Address2,
@@ -446,6 +446,15 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			twitter: Twitter
 		}
 		if (PhoneNumber !== '') MerchantData.phone_number = phoneNumber
+		//
+
+		const consumerData = {
+			username: Username,
+			consumer_profile: imageSource?.uri !== null ? pic : null,
+			first_name: Name,
+			last_name: LastName,
+		}
+		const consumerKeys = imageSource?.uri !== null ? ["consumer_profile"] : []
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
 				.updateProfileMerchant(MerchantData)
@@ -464,12 +473,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					}
 				})
 			: loginStore.environment.api
-				.updateProfileConsumer({
-					username: Username,
-					consumer_profile: pic,
-					first_name: Name,
-					last_name: LastName,
-				})
+				.updateProfileConsumer(consumerData, consumerKeys)
 				.then((result: any) => {
 					setLoading(false)
 					if (result.kind === "ok") {

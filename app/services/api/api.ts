@@ -49,7 +49,6 @@ export class Api extends ApiBase {
   }
 
   async passwordSet(data: any): Promise<Types.SimplePostResult> {
-    console.log(' data -< ', data)
     return this.simple_post("/users/password_set_mobile/", data)
   }
 
@@ -84,8 +83,8 @@ export class Api extends ApiBase {
     return this.simple_patch(apiv1 + "/set-up-profile/consumer-detail/", data)
   }
 
-  async setupMerchant(data: any): Promise<Types.SimplePostResult> {
-    return this.post_multipart_form_data(apiv1 + "/set-up-profile/merchant/", data, ["profile_picture", "background_picture"])
+  async setupMerchant(data: any, keys: any = []): Promise<Types.SimplePostResult> {
+    return this.post_multipart_form_data(apiv1 + "/set-up-profile/merchant/", data, keys)
   }
 
   async setupMerchantDetail(data: any): Promise<Types.SimplePostResult> {
@@ -101,12 +100,12 @@ export class Api extends ApiBase {
     return this.simple_get(apiv1 + "/my-profile/merchant/")
   }
 
-  async updateProfileConsumer(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data_patch(apiv1 + "/my-profile/consumer/", data, ["consumer_profile"])
+  async updateProfileConsumer(data: any, keys: any = []): Promise<Types.SimplePostResult> {
+    return this.patch_multipart_form_data(apiv1 + "/my-profile/consumer/", data, keys)
   }
 
-  async updateProfileMerchant(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
+  async updateProfileMerchant(data: any, keys: any = []): Promise<Types.SimplePostResult> {
+    return this.patch_multipart_form_data(apiv1 + "/my-profile/merchant/", data, keys)
   }
 
   async getCoupons(): Promise<Types.SimpleGetResult> {

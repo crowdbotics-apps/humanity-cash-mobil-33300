@@ -55,7 +55,6 @@ class SetupConsumerProfileAPIView(AuthenticatedAPIView, UpdateAPIView):
     Endpoint to set up Consumer Profile after first log in
     """
     serializer_class = setup_profile_serializers.SetupConsumerProfileSerializer
-    parser_classes = (MultiPartParser, FormParser)
     queryset = User.objects.all()
 
     def get_object(self):
@@ -90,7 +89,6 @@ class SetupMerchantProfileAPIView(AuthenticatedAPIView, CreateAPIView):
     Endpoint to set up Merchant Profile after first log in
     """
     serializer_class = setup_profile_serializers.SetupMerchantProfileSerializer
-    parser_classes = (MultiPartParser, FormParser)
     queryset = Merchant.objects.all()
 
     def perform_create(self, serializer):
@@ -127,7 +125,6 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
     Endpoint to view and edit Consumer Profile
     """
     serializer_class = setup_profile_serializers.ConsumerMyProfileSerializer
-    parser_classes = (MultiPartParser, FormParser)
     queryset = User.objects.all()
 
     def get_object(self):
@@ -138,11 +135,13 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
         return user
 
     def update(self, request, *args, **kwargs):
-        super(ConsumerMyProfileAPIView, self).update(request, *args, **kwargs)
+        super().update(request, *args, **kwargs)
         instance = self.get_object()
-        request.data.pop('consumer_profile')
-        request.data['consumer'] = Consumer.objects.get(user=instance).id
-        serializer = self.get_serializer(instance, data=request.data)
+        data = request.data.dict()
+        if data.get('consumer_profile', None):
+            data.pop('consumer_profile')
+        data['consumer'] = Consumer.objects.get(user=instance).id
+        serializer = self.get_serializer(instance, data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
@@ -159,7 +158,6 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
     """
     serializer_class = setup_profile_serializers.MerchantMyProfileSerializer
     queryset = Merchant.objects.all()
-    parser_classes = (MultiPartParser, FormParser)
 
     def get_object(self):
         try:
