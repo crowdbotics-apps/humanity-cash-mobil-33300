@@ -91,6 +91,10 @@ def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart
     return transaction
 
 
+def burn_coin(from_uid, amount, profile=None):
+    return withdraw_coin(from_uid, amount, profile)
+
+
 def withdraw_coin(from_uid, amount, profile=None):
     txn = get_humanity_contract().proxy.withdraw(from_uid,
                                                  usd2crypto(amount),
@@ -110,6 +114,10 @@ def withdraw_coin(from_uid, amount, profile=None):
     )
     # TODO wrap exceptions
     return transaction
+
+
+def mint_coin(to_uid, amount, profile=None):
+    return deposit_coin(to_uid, amount, profile)
 
 
 def deposit_coin(to_uid, amount, profile=None):
