@@ -1,6 +1,8 @@
+import base64
+from email.mime.image import MIMEImage
+
 from django.conf import settings
-from django.db.models import Q
-from rest_framework import viewsets, permissions, mixins
+from io import BytesIO
 import json
 import logging
 from datetime import datetime
@@ -16,9 +18,11 @@ from rest_framework.response import Response
 from base import configs
 from celo_humanity.models import Transaction, ACHTransaction
 from home.api.v1.cashier_permission import IsNotCashier
-from home.api.v1.serializers.transaction_serializers import TransactionSerializer, SendQRSerializer
+from home.api.v1.serializers.transaction_serializers import TransactionSerializer, SendQRSerializer, \
+    SendReportSerializer
 from home.clients.dwolla_api import DwollaClient
-from home.helpers import AuthenticatedAPIView, send_notifications
+from home.helpers import AuthenticatedAPIView, send_notifications, send_email_with_template_attach_element, \
+    send_email_with_template
 from users.models import Consumer, Merchant, Notification
 
 logger = logging.getLogger('transaction')
@@ -208,10 +212,37 @@ class SendReportView(AuthenticatedAPIView):
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
-            serializer = SendQRSerializer(data=data)
-
-        except Exception:
-            logger.exception("Error Sending report")
+            serializer = SendReportSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            data = serializer.validated_data
+            start_date = datetime(
+                year=data['start_date'].year,
+                month=data['start_date'].month,
+                day=data['start_date'].day,
+            )
+            end_date = datetime(
+                year=data['end_date'].year,
+                month=data['end_date'].month,
+                day=data['end_date'].day,
+            )
+            user = self.request.user
+            transactions = Transaction.objects.filter(
+                merchant__user=user,
+                created__lte=end_date,
+                created__gte=start_date
+            )
+            send_email_with_template(
+                subject='Humanity Cash Transaction Report',
+                email=user.email,
+                template_to_load='emails/transactions.html',
+                context={
+                    "username": user.get_full_name(),
+                    "message": "message",
+                    "transactions": transactions,
+                }
+            )
+        except Exception as error:
+            logger.exception(error)
             return Response('Error while depositing, please try again', status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
 
@@ -219,12 +250,32 @@ class SendReportView(AuthenticatedAPIView):
 class SendQRView(AuthenticatedAPIView):
 
     def post(self, request, *args, **kwargs):
-        data = request.data
-        serializer = SendQRSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        # data = serializer.validated_data
-        # image = qrcode.make(data['qr_data'])
-        # name = 'qrcode.jpg'
-        # image.save(settings.MEDIA_ROOT + name)
+        try:
+            data = request.data
+            serializer = SendQRSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            data = serializer.validated_data
+            image = qrcode.make(json.dumps(data['qr_data']))
+            stream = BytesIO()
+            image.save(stream, format="png")
+            stream.seek(0)
+            imgObj = stream.read()
+            banner_image = MIMEImage(imgObj)
+            banner_image.add_header('Content-ID', '<qr_code.png>')
+            send_email_with_template_attach_element(
+                context={
+                    "username": "Username",
+                    "detail": "Detail text",
+                    "qr_image": banner_image
+                },
+                subject='Humanity Cash QR code',
+                email=data['email'],
+                template_to_load='emails/qr.html',
+                image=banner_image
+            )
+        except Exception as error:
+            logger.exception(error)
+            return Response('Error sending QR code', status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
+
 

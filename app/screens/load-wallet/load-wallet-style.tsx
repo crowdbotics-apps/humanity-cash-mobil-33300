@@ -112,6 +112,7 @@ export default StyleSheet.create({
   },
   INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.black,
     height: 55,
     width: METRICS.screenWidth * 0.90,
   },
@@ -186,6 +187,7 @@ export default StyleSheet.create({
   },
   PASS_INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.black,
     height: 55,
     width: METRICS.screenWidth * 0.80,
   },

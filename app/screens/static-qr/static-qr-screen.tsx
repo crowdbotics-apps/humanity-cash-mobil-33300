@@ -20,15 +20,16 @@ export const StaticQRScreen = observer(function StaticQRScreen() {
 
   const updateSendMail = () => {
     setLoading(true)
-    console.log(' 0---->>> ', loginStore.getAllData.email)
+    const data = {
+      qr_data: {
+        to: loginStore?.getProfilesId[loginStore.getSelectedAccount],
+        to_is_consumer: loginStore.getSelectedAccount === 'consumer',
+      },
+      email: loginStore.getAllData.email
+    }
+    console.log(' 0---->>> ', JSON.stringify(data, null, 2))
     loginStore.environment.api
-      .sendQR({
-        qr_data: JSON.stringify({
-          to: loginStore?.getProfilesId[loginStore.getSelectedAccount],
-          to_is_consumer: loginStore.getSelectedAccount === 'consumer',
-        }), 
-        email: loginStore.getAllData.email
-      })
+      .sendQR(data)
       .then((result: any) => {
         console.log(' =====>>>> ', JSON.stringify(result, null, 2))
         setLoading(false);
@@ -57,7 +58,8 @@ export const StaticQRScreen = observer(function StaticQRScreen() {
       </TouchableOpacity>
       <KeyboardAvoidingView enabled style={styles.ROOT}>
         <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-          {/* <View style={styles.ROOT_CONTAINER}> */}
+          {
+}
           <View style={styles.CONTAINER}>
 
             <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Static QR</Text>
@@ -83,6 +85,7 @@ If you encounter any issue, don’t hesitate to contact us via info@berkshares.o
         }}
         onPress={() => updateSendMail()}
         loading={Loading}
+        disabled={Loading}
         buttonLabel={'Email my QR code again'}
       />
     </Screen>

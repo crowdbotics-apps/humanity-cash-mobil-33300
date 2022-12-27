@@ -46,7 +46,7 @@ export default StyleSheet.create({
     fontSize: 16
   },
   BUTTON_AMOUNT: {
-    backgroundColor: COLOR.PALETTE.transparent, 
+    backgroundColor: COLOR.PALETTE.transparent,
     borderColor: COLOR.PALETTE.green,
     borderWidth: 1,
     height: 40,
@@ -55,7 +55,7 @@ export default StyleSheet.create({
     width: 105
   },
   BUTTON_AMOUNT_ACTIVE: {
-    backgroundColor: COLOR.PALETTE.green, 
+    backgroundColor: COLOR.PALETTE.green,
     height: 40,
     marginBottom: 0,
     marginRight: 15,
@@ -118,6 +118,7 @@ export default StyleSheet.create({
   },
   INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.black,
     height: 55,
     width: METRICS.screenWidth * 0.90,
   },
@@ -186,6 +187,7 @@ export default StyleSheet.create({
   },
   PASS_INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.black,
     height: 55,
     width: METRICS.screenWidth * 0.80,
   },
@@ -223,7 +225,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     width: METRICS.screenWidth * 0.85,
   },
-  RETURN_DETAIL_LABEL: { 
+  RETURN_DETAIL_LABEL: {
     color: COLOR.PALETTE.black,
     fontSize: 10,
     fontWeight: 'bold',
