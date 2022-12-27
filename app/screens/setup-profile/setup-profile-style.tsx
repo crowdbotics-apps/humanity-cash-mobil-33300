@@ -48,8 +48,9 @@ export default StyleSheet.create({
   },
   BIG_INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.black,
     height: 120,
-    width: METRICS.screenWidth * 0.90,
+    width: METRICS.screenWidth * 0.90
   },
   BIG_INPUT_STYLE_CONTAINER: {
     alignItems: 'center',
@@ -183,6 +184,7 @@ export default StyleSheet.create({
   },
   INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.black,
     height: 55,
     width: METRICS.screenWidth * 0.90,
   },
@@ -252,6 +254,7 @@ export default StyleSheet.create({
   },
   PASS_INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.black,
     height: 55,
     width: METRICS.screenWidth * 0.80,
   },
