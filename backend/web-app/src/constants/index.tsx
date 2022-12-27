@@ -10,6 +10,7 @@ export const ROUTES = {
   TRANSACTIONS: '/transactions',
   BLOCKCHAIN_TRANSACTIONS: '/blockchain-transactions',
   CONTENTS: '/content',
+  RECONCILIATION: '/reconciliation',
   SOCIAL: '/social',
   CONTRACTS: '/contracts',
   WALLET: '/wallet',

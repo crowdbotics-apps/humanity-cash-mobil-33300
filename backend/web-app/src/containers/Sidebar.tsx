@@ -11,6 +11,7 @@ import {
     UsersIcons,
     BlockChainIcon,
     DashboardIcon,
+    ReconciliationIcon,
     CarsRemoveIcon,
     CloseIcons
 } from '../components/icons'
@@ -38,6 +39,12 @@ export const Sidebar: React.FC<PropsSide> = ({ sideBarStatus, sideBarActions }) 
             path: "/dashboard",
             name: "Dashboard",
             icons: <DashboardIcon />,
+            style: 'pt-3'
+        },
+        {
+            path: "/reconciliation",
+            name: "Reconciliation Action",
+            icons: <ReconciliationIcon />,
             style: 'pt-3'
         },
         {
