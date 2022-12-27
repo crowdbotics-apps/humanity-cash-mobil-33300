@@ -39,7 +39,7 @@ export class Api extends ApiBase {
   async login(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post("/dj-rest-auth/login/", data)
   }
-  
+
   async forgotPassword(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post("/users/password_reset_mobile/", data)
   }
@@ -85,7 +85,7 @@ export class Api extends ApiBase {
   }
 
   async setupMerchant(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data(apiv1 + "/set-up-profile/merchant/", data, ["profile_picture", "background_picture"])
+    return this.post_multipart_form_data(apiv1 + "/set-up-profile/merchant/", data, ["profile_picture", "background_picture"])
   }
 
   async setupMerchantDetail(data: any): Promise<Types.SimplePostResult> {
