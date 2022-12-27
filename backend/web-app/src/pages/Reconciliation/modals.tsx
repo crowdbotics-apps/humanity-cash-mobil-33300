@@ -1,5 +1,5 @@
 import Modal from "react-bootstrap/Modal";
-import {Button, Form, Row} from "react-bootstrap";
+import {Button, Col, Form, ListGroup, Row, Tab} from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import Stack from "react-bootstrap/Stack";
 import styles from "./BlockchainTransactions.module.css";
@@ -99,8 +99,41 @@ export const CredentialsModal = observer((props: any) => {
   )
 })
 
+export const ListResultData = ({data, callback}: any) => {
+  const [hidden, setHidden] = useState(true)
+
+  const handleClick = (element: any) => {
+    setHidden(true)
+    callback(element)
+  }
+
+  useEffect(() => {
+    console.log("hidden", hidden)
+  }, [hidden])
+
+  useEffect(() => {
+    console.log("data", data)
+    setHidden(data.length === 0)
+  }, [])
+
+  return (<Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+    <Row>
+      <Col sm={12}>
+        <ListGroup hidden={hidden}>
+          {data.map((e: any, k: number) =>
+            <ListGroup.Item key={`k_${k}`} onClick={() => handleClick(e)}>
+              {e.label}
+            </ListGroup.Item>
+          )}
+        </ListGroup>
+      </Col>
+    </Row>
+  </Tab.Container>)
+}
+
 export const AmountModal = observer((props: any) => {
-  const {showModal, onConfirm, onClose, title, subTitle, selectRecipient, searchFn} = props
+  const {showModal, onConfirm, onClose, title, subTitle, selectRecipient, searchFn, results} = props
+  const [Recipient, setRecipient] = useState<any>(null)
   const [Amount, setAmount] = useState<string>("0")
 
   return (
@@ -136,21 +169,20 @@ export const AmountModal = observer((props: any) => {
             </InputGroup>
           </Form.Group>
 
-          {selectRecipient && (
-            <Row className={'ps-3 pe-3 mt-4 mb-4'}>
-              <InputGroup className="mb-0 search-button-group" style={{border: "2px solid var(--headings) !important"}}>
+          {selectRecipient && <Row className={'ps-3 pe-3 mt-4 mb-4'}>
+            <InputGroup className="mb-0 search-button-group" style={{border: "2px solid var(--headings) !important"}}>
 
-                <Form.Control
-                  placeholder='search by name, email and wallet address'
-                  type="search" name="search" className='search-button-navbar'
-                  onChange={(e) => searchFn(e.target.value)}
-                />
-                <Button variant="secondary" id="button-addon2" className='search-buttons'>
-                  <SearchIcon/>
-                </Button>
-              </InputGroup>
-            </Row>
-          )}
+              <Form.Control
+                placeholder='search by name, email and wallet address'
+                type="search" name="search" className='search-button-navbar'
+                onChange={(e) => searchFn(e.target.value)}
+              />
+              <Button variant="secondary" id="button-addon2" className='search-buttons'>
+                <SearchIcon/>
+              </Button>
+            </InputGroup>
+            <ListResultData data={results} callback={(recipient: any) => setRecipient(recipient)}/>
+          </Row>}
         </Modal.Body>
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">

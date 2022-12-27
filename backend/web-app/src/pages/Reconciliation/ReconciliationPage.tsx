@@ -11,10 +11,13 @@ import {AmountModal, CredentialsModal, ReconciliationActions, ReconciliationConf
 import ButtonWithPopover from "../../components/Popover";
 
 
-const ReconciliationPage: React.FC = observer(() => {
+type RecipientType = {
+  id: number,
+  profile_is_consumer: boolean
+}
 
+const ReconciliationPage: React.FC = observer(() => {
   const [LeftOpen, setLeftOpen] = useState<any>(true);
-  //const [RightOpen, setRightOpen] = useState<any>(true);
   const [Items, setItems] = useState<any>([])
   const [TotalItems, setTotalItems] = useState(0)
   const [CurrentAmount, setCurrentAmount] = useState(0)
@@ -27,10 +30,13 @@ const ReconciliationPage: React.FC = observer(() => {
   const [ShowAmountModal, setShowAmountModal] = useState<boolean>(false)
   const [CurrentAction, setCurrentAction] = useState<any>({})
   const [supervisorCredential, setSupervisorCredential] = useState("")
-  const [profileIsConsumer, setProfileIsConsumer] = useState(false)
-  const [profileID, setProfileID] = useState(null)
+  const [Recipient, setRecipient] = useState<RecipientType | null>(null)
   const [Documentation, setDocumentation] = useState("Placeholder")
-  const [RecipientsList, setRecipientsList] = useState([])
+  const [RecipientsList, setRecipientsList] = useState([
+    {id: 1, label: "First recipient", is_consumer: true},
+    {id: 2, label: "Second recipient", is_consumer: false},
+    {id: 3, label: "Third recipient", is_consumer: true},
+  ])
   const dataRefInitialValue = {
     type: '',
     documentation: "Placeholder to fill",
@@ -46,8 +52,7 @@ const ReconciliationPage: React.FC = observer(() => {
 
   const initializeDataRef = () => {
     setCurrentAmount(0)
-    setProfileIsConsumer(false)
-    setProfileID(null)
+    setRecipient(null)
     setSupervisorCredential("")
     setDocumentation("Placeholder")
     dataRef.current = dataRefInitialValue
@@ -65,7 +70,6 @@ const ReconciliationPage: React.FC = observer(() => {
       .finally(initializeDataRef)
   }
 
-
   const onReconcileAndBurn = () => {
     dataRef.current.type = 'mint_to_positive'
     api.reconcileAndBrnTokens(dataRef.current)
@@ -74,12 +78,11 @@ const ReconciliationPage: React.FC = observer(() => {
 
   const onReconcileAndTransfer = () => {
     dataRef.current.type = 'positive_to_user'
-    dataRef.current.profile_is_consumer = profileIsConsumer
-    dataRef.current.profile_id = profileID
+    // dataRef.current.profile_is_consumer = Recipient?.profile_is_consumer
+    // dataRef.current.profile_id = Recipient?.id
     api.reconcileAndTransferTokens(dataRef.current)
       .finally(initializeDataRef)
   }
-
 
   const actions = {
     [ReconciliationActions.AddAdjustment]: {
@@ -129,6 +132,13 @@ const ReconciliationPage: React.FC = observer(() => {
         setShowPasswordModal(true)
       },
       disabled: false
+    },
+    {
+      label: "Revert Adjustment",
+      action: () => {
+        alert("Revert Adjustment")
+      },
+      disabled: false
     }
   ]
 
@@ -146,6 +156,13 @@ const ReconciliationPage: React.FC = observer(() => {
       action: () => {
         setCurrentAction(actions[ReconciliationActions.ReconcileAndTransfer])
         setShowPasswordModal(true)
+      },
+      disabled: false
+    },
+    {
+      label: "Revert Adjustment & Burn Tokens",
+      action: () => {
+        alert("Burn Tokens")
       },
       disabled: false
     }
@@ -185,10 +202,8 @@ const ReconciliationPage: React.FC = observer(() => {
   useEffect(() => {
     dataRef.current.amount = CurrentAmount
     dataRef.current.documentation = Documentation
-    dataRef.current.profile_is_consumer = profileIsConsumer
-    dataRef.current.profile_id = profileID
     dataRef.current.password = supervisorCredential
-  }, [CurrentAmount, profileIsConsumer, profileID, supervisorCredential, Documentation])
+  }, [CurrentAmount, supervisorCredential, Documentation])
 
   useEffect(() => {
     userStore.setUp()
@@ -292,11 +307,15 @@ const ReconciliationPage: React.FC = observer(() => {
                    selectRecipient={CurrentAction.selectRecipient}
                    subTitle={CurrentAction.subTitle}
                    searchFn={searchFn}
+                   results={RecipientsList}
                    onClose={() => {
                      setShowAmountModal(false)
                    }}
-                   onConfirm={(amount: number) => {
+                   onConfirm={(amount: number, recipient?: any) => {
                      setCurrentAmount(amount)
+                     if (recipient) {
+                       setRecipient(recipient)
+                     }
                      setShowAmountModal(false)
                      setShowConfirmationModal(true)
                    }}/>
