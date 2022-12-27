@@ -22,6 +22,7 @@ export default StyleSheet.create({
   },
   BIG_INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.black,
     height: 120,
     width: METRICS.screenWidth * 0.90,
   },

@@ -168,7 +168,7 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
     def update(self, request, *args, **kwargs):
         super(MerchantMyProfileDetailAPIView, self).update(request, *args, **kwargs)
         instance = self.get_object()
-        serializer = self.get_serializer(instance.user, data=request.data)
+        serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         if not self.request.user.merchant.dwolla_id:
