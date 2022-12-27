@@ -11,6 +11,7 @@ from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from rest_framework import status, mixins, viewsets
 from rest_framework.decorators import action
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -19,7 +20,7 @@ from base import configs
 from celo_humanity.humanity_contract_helpers import get_wallet_balance
 from celo_humanity.models import Transaction, ACHTransaction, ComplianceActionSignoff, ComplianceAction
 from home.api.v1.serializers.compliance_serializers import ComplianceActionReadSerializer, \
-    ComplianceActionCreateSerializer, ComplianceActionSignoffSerializer
+    ComplianceActionCreateSerializer, ComplianceActionSignoffSerializer, ComplianceRecipientSerializer
 from home.helpers import AuthenticatedAPIView
 from users.models import Merchant, Consumer
 
@@ -160,3 +161,28 @@ class ComplianceActionViewset(
             negative=get_wallet_balance(configs.NEGATIVE_ADJUSTMENT_WALLET_UID),
         ), status=status.HTTP_200_OK)
 
+
+# class MultiQueryWrapper:
+#
+#     def __init__(self):
+#         self.a = Consumer.objects.all()
+#         self.b = Merchant.objects.all()
+#
+#     def filter(self, *args, **kwargs):
+#         self.a = self.a.filter(*args, **kwargs)
+#         self.b = self.b.filter(*args, **kwargs)
+#         return self
+#
+#     def distinct(self, *args, **kwargs):
+#         self.a = self.a.filter(*args, **kwargs)
+#         self.b = self.b.filter(*args, **kwargs)
+
+class ComplianceRecipientSearchViewset(mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.CreateModelMixin,
+                    viewsets.GenericViewSet):
+    serializer_class = ComplianceRecipientSerializer
+    queryset = Consumer.objects.all()  # TODO both user and merchants
+    #permission_classes = [IsAuthenticated] # TODO is admin permission
+    filter_backends = [SearchFilter]
+    search_fields = ['user__username', 'user__name', 'user__email', 'crypto_wallet_id']

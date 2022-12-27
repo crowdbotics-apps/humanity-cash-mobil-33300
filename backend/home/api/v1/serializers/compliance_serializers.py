@@ -5,7 +5,7 @@ from rest_framework.exceptions import ValidationError
 
 from base import configs
 from celo_humanity.models import ComplianceAction
-from users.models import Merchant, Consumer
+from users.models import Merchant, Consumer, BaseProfileModel
 
 
 class ComplianceActionReadSerializer(serializers.ModelSerializer):
@@ -117,3 +117,20 @@ class ComplianceActionSignoffSerializer(serializers.Serializer):
         if not self.context['request'].user.check_password(value):
             raise ValidationError('User password is incorrect')
         return value
+
+
+class ComplianceRecipientSerializer(serializers.ModelSerializer):
+    label = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Consumer
+        fields = [
+            'id',
+            'is_consumer',
+            'label',
+        ]
+
+    def get_label(self, instance):
+        if instance.is_consumer:
+            return f'Cons. {instance.user.name} ({instance.user.email})'
+        return f'Merch. {instance.user.name} ({instance.user.email})'
