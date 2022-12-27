@@ -12,7 +12,7 @@ type HeadersProps = {
   deletable?: boolean;
 };
 
-const AdvancedTableHeader = ({ headers, deletable }: HeadersProps) => {
+export const AdvancedTableHeader = ({ headers, deletable }: HeadersProps) => {
   return (
     <thead>
     <tr className={styles.tableHeader}>
@@ -84,6 +84,7 @@ const AdvancedTableBody = ({ rows, deletable, onClickRow, hasDetail }: AdvancedT
 type AdvancedTableProps = {
   rows: any[]
   headerRow:any
+  containerStyle?:any
   totalItems:number
   currentPage:number
   paginate?: boolean;
@@ -94,13 +95,13 @@ type AdvancedTableProps = {
 };
 
 
-const AdvancedTable = ({ rows, onPrevious, onClickPage, onNext, deletable , headerRow, totalItems, currentPage}: AdvancedTableProps) => {
+const AdvancedTable = ({ rows, onPrevious, onClickPage, onNext, deletable , headerRow, totalItems, currentPage, containerStyle={}, paginate=true}: AdvancedTableProps) => {
 
   return (
     <div>
 
 
-    <div style={{minHeight:"500px", display:'flex', flexDirection:'column'}}>
+    <div style={{minHeight:"500px", display:'flex', flexDirection:'column', ...containerStyle }}>
       <Table  className={styles.table}>
         <AdvancedTableHeader headers={headerRow} deletable={deletable}/>
         <AdvancedTableBody rows={rows} deletable={deletable} />
@@ -108,18 +109,21 @@ const AdvancedTable = ({ rows, onPrevious, onClickPage, onNext, deletable , head
 
 
     </div>
-      <div>
-        <BackendPagination
-          resultsQty={rows.length}
-          onPrevious={onPrevious}
-          onNext={onNext}
-          allPerPage={PAGE_SIZE}
-          currentPage={currentPage}
-          onClickPage={onClickPage}
-          countDataAll={totalItems}
-          disabledPaginate={false}
-        />
-      </div>
+      {paginate && (
+        <div>
+          <BackendPagination
+            resultsQty={rows.length}
+            onPrevious={onPrevious}
+            onNext={onNext}
+            allPerPage={PAGE_SIZE}
+            currentPage={currentPage}
+            onClickPage={onClickPage}
+            countDataAll={totalItems}
+            disabledPaginate={false}
+          />
+        </div>
+      )}
+
     </div>
 
   )
