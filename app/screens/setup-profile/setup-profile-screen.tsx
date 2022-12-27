@@ -212,7 +212,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		})
 	}
 	const setupMerchant = () => {
-		// if (BusinessImageSource === null) return notifyMessage('You must upload a profile picture')
 		setLoading(true)
 		const profPic = {
 			uri:
@@ -230,30 +229,27 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			type: BackBusinessImageSource?.type,
 			name: BackBusinessImageSource?.fileName
 		}
-
-		let data = {
+		const data = {
 			business_name: BusinessName,
-			profile_picture: profPic,
-			business_story: BusinessStory,
-			background_picture: backPic
+			profile_picture: BusinessImageSource ? profPic : null,
+			background_picture: BackBusinessImageSource ? backPic : null,
+			business_story: BusinessStory
 		}
-
-		const keys = BusinessImageSource === null ? [] : ["profile_picture"]
-		if (BackBusinessImageSource !== null) {
-			keys.push("background_picture")
-			// data.background_picture = backPic
-		}
-
-		loginStore.environment.api.setupMerchant(data, keys)
+		// const keys = imageSource === null ? [] : ["consumer_profile"]
+		console.log('BusinessImageSource ', BusinessImageSource)
+		console.log('BackBusinessImageSource ', BackBusinessImageSource)
+		console.log('data ', data)
+		// "profile_picture", "background_picture"
+		loginStore.environment.api.setupMerchant(data)
 			.then((result: any) => {
-				setLoading(false)
+				console.log('result ', result)
 				if (result.kind === "ok") {
 					setBusinessName('')
 					setBusinessStory('')
-					// setStep('business_type')
+					setStep('business_type')
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					const msg = `${key}: ${result?.errors?.[key]}`
+					const msg = `${key}: ${result?.errors?.[key][0]}`
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()
@@ -261,7 +257,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				} else {
 					notifyMessage(null)
 				}
-			})
+			}).finally(() => 	setLoading(false))
 	}
 	const setupMerchantDetail = () => {
 		setLoading(true)

@@ -49,7 +49,6 @@ export class Api extends ApiBase {
   }
 
   async passwordSet(data: any): Promise<Types.SimplePostResult> {
-    console.log(' data -< ', data)
     return this.simple_post("/users/password_set_mobile/", data)
   }
 
@@ -102,11 +101,11 @@ export class Api extends ApiBase {
   }
 
   async updateProfileConsumer(data: any, keys: any = []): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data_patch(apiv1 + "/my-profile/consumer/", data, keys)
+    return this.patch_multipart_form_data(apiv1 + "/my-profile/consumer/", data, keys)
   }
 
   async updateProfileMerchant(data: any, keys: any = []): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, keys)
+    return this.patch_multipart_form_data(apiv1 + "/my-profile/merchant/", data, keys)
   }
 
   async getCoupons(): Promise<Types.SimpleGetResult> {
