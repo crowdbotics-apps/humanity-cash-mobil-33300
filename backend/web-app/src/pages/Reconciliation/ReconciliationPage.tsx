@@ -35,20 +35,52 @@ const ReconciliationPage: React.FC = observer(() => {
 
 
   const onAddAjustment = ()=>{
-    console.log("adding Adjustment")
+    const data = {
+      type: 'fund_negative',
+      documentation: "Placeholder to fill",
+      amount: 10,
+      profile_is_consumer: false,
+      profile_id: null,
+      password: ""
+    }
+    api.addAdjustment(data)
   }
 
   const onAddAdjustmentAndMint = ()=>{
-    console.log("addAjustmentAndMint...")
+    const data = {
+      type: 'fund_negative',
+      documentation: "Placeholder to fill",
+      amount: 10,
+      profile_is_consumer: false,
+      profile_id: null,
+      password: ""
+    }
+    api.addAdjustmentAndMintTokens(data)
   }
 
 
   const onReconcileAndBurn = ()=>{
-    console.log("reconcileAndBurn...")
+    const data = {
+      type: 'fund_negative',
+      documentation: "Placeholder to fill",
+      amount: 10,
+      profile_is_consumer: false,
+      profile_id: null,
+      password: ""
+    }
+    api.reconcileAndBrnTokens(data)
   }
 
   const onReconcileAndTransfer = ()=>{
-    console.log("reconcileAndBurn...")
+    const data = {
+      type: 'fund_negative',
+      documentation: "Placeholder to fill",
+      amount: 10,
+      profile_is_consumer: false,
+      profile_id: null,
+      password: ""
+    }
+    api.reconcileAndTransferTokens(data)
   }
 
 
