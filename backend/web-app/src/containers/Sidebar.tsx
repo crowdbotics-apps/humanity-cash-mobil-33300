@@ -13,7 +13,7 @@ import {
     DashboardIcon,
     ReconciliationIcon,
     CarsRemoveIcon,
-    CloseIcons
+    CloseIcons, CashoutIcon
 } from '../components/icons'
 import logo_admin from '../assets/images/logo_admin.png';
 import logo_mini from '../assets/images/logo-mini.png';
@@ -45,6 +45,12 @@ export const Sidebar: React.FC<PropsSide> = ({ sideBarStatus, sideBarActions }) 
             path: "/reconciliation",
             name: "Reconciliation Action",
             icons: <ReconciliationIcon />,
+            style: 'pt-3'
+        },
+        {
+            path: "/transaction-status",
+            name: "Transaction Status",
+            icons: <CashoutIcon />,
             style: 'pt-3'
         },
         {

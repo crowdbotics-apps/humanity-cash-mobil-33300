@@ -300,9 +300,26 @@ const OutgoingIcon = ()=>(
     <path d="M27 38.3333L27 15.8933" stroke="#D59B76" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
 )
+
+const CashoutIcon = ()=>(
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 12C22 17.52 17.52 22 12 22C6.48 22 3.11 16.44 3.11 16.44M3.11 16.44H7.63M3.11 16.44V21.44M2 12C2 6.48 6.44 2 12 2C18.67 2 22 7.56 22 7.56M22 7.56V2.56M22 7.56H17.56" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10 12.9899C10 13.7599 10.6 14.3899 11.33 14.3899H12.83C13.47 14.3899 13.99 13.8399 13.99 13.1699C13.99 12.4399 13.67 12.1799 13.2 12.0099L10.8 11.1699C10.32 10.9999 10 10.7399 10 10.0099C10 9.33992 10.52 8.78992 11.16 8.78992H12.66C13.4 8.79992 14 9.41992 14 10.1899" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 14.4399V15.1799" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 8V8.78" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+)
+
+const ChevronDownIcon = ()=>(
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17 10L15.2527 11.763C13.8592 13.1689 13.1625 13.8719 12.3133 13.9801C12.1053 14.0066 11.8947 14.0066 11.6867 13.9801C10.8375 13.8719 10.1408 13.1689 8.74731 11.763L7 10" stroke="#9DA56F" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+
+)
 export {
   IncomingIcon,
   OutgoingIcon,
+  ChevronDownIcon,
   SuccessCheckIcon,
   LinkedIn,
   ArrowBackIcon,
@@ -315,6 +332,7 @@ export {
   CloseActionIcon,
   AttachmentIcon,
    ClockIcon,
+  CashoutIcon,
   CalendarIconBlue,
   StoryIconGreen,
   CalendarIcon,
