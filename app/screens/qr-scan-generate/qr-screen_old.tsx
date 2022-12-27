@@ -36,7 +36,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
   Keyboard.addListener("keyboardDidHide", () => {
     setKeyboardIsOpen(false);
   });
-  
+
   /* boolean states */
   const [TransactionSucceed, setTransactionSucceed] = useState(true)
   const [ShowQR, setShowQR] = useState(false)
@@ -45,7 +45,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
   const [ButtonDisabled, setButtonDisabled] = useState(false)
   const [ScanQR, setScanQR] = useState(false)
   const [Loading, setLoading] = useState(false)
-  
+
   /* modals */
   const [ShowAmountModal, setShowAmountModal] = useState(false)
   const [showConfirmTransactionModal, setShowConfirmTransactionModal] = useState(false);
@@ -163,7 +163,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
   <View style={styles.ROOT_MODAL_PASS}>
     <View style={styles.CONTAINER}>
       <View style={styles.BACK_BUTON_CONTAINER} />
-        
+
       <View style={styles.STEP_CONTAINER}>
         <Text style={[styles.STEP_TITLE_PASS, { color: loginStore.getAccountColor }]}>
           {TransactionSucceed
@@ -261,8 +261,8 @@ export const QRScreen = observer(function QRScreen(props: any) {
     </View>
   </View>
 
-  const viewQR = () => 
-    <UserModal 
+  const viewQR = () =>
+    <UserModal
       visible={ShowQR}
       closeModalAction={() => [setShowQR(false), setPayerSetAmount(false)]}
       username={loginStore.ProfileData.username}
@@ -292,7 +292,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
       username={userToPay.current?.username}
       imgSrc={userToPay.current?.photo}
       type='pay'
-    > 
+    >
       <View>
         <Text
           style={[{color: loginStore.getAccountColor}, styles.CONFIRM_MODAL_AMOUNT]}
@@ -302,14 +302,14 @@ export const QRScreen = observer(function QRScreen(props: any) {
 
         <Text style={styles.CONFIRM_MODAL_GENERIC_TEXT}>or</Text>
         <Text style={[styles.CONFIRM_MODAL_GENERIC_TEXT, styles.CONFIRM_MODAL_TEXT]}>
-          choose to round up and directly donate to the 
+          choose to round up and directly donate to the
           <Text style={styles.TEXT_BOLD}> Community Chest Fund </Text>
           which provides Currents grants to people in the area.
         </Text>
       </View>
 
       <View style={styles.FULL_WIDTH}>
-        <Button 
+        <Button
           buttonStyle={styles.CONFIRM_MODAL_PAY_BUTTON}
           buttonLabel={`Pay C$ ${Amount} `}
           buttonLabelStyle={styles.COLOR_BLACK}
@@ -317,8 +317,8 @@ export const QRScreen = observer(function QRScreen(props: any) {
             setShowConfirmTransactionModal(false), setShowAmountModal(false), setShowPassModal(true)
           ]}
         />
-          <Button 
-            buttonStyle={[{backgroundColor: loginStore.getAccountColor}, styles.CONFIRM_MODAL_PAY_BUTTON_ROUND]} 
+          <Button
+            buttonStyle={[{backgroundColor: loginStore.getAccountColor}, styles.CONFIRM_MODAL_PAY_BUTTON_ROUND]}
             buttonLabel={`Round up to C$ ${RoundedAmount}`}
             onPress={() => [
               setShowConfirmTransactionModal(false), setShowAmountModal(false), setShowPassModal(true),
@@ -350,7 +350,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
           } catch(error) {
             alert(error)
           }
-        } 
+        }
       }
     }
   }, [isFocused])
@@ -393,11 +393,10 @@ export const QRScreen = observer(function QRScreen(props: any) {
         </View>
         {ScanQR
           ? <QRCodeScanner onRead={e => {
-              setQR(e.data) 
-              console.log(' ============>>>>>>>>>>>> ', JSON.stringify(e.data, null, 2))
+              setQR(e.data)
               setShowPassModal(true)
             }}
-            
+
             /> // TODO: action when read
           : inputQR()
         }
@@ -410,4 +409,3 @@ export const QRScreen = observer(function QRScreen(props: any) {
     </Screen>
   )
 })
-  

@@ -31,7 +31,7 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
         ...styles.MODAL_CONTAINER_COUPON,
         height: '50%',
     };
-    
+
     const ContentStyle: ViewStyle = {
         position: 'absolute',
         height: '95%',
@@ -66,7 +66,7 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
         setLoading(true);
         return addConsumerCoupon(couponSelected.id, props, loginStore)
         .then(() => {setLoading(false); props.setCouponsConfig({...props.couponsConfig, ShowConfirmCoupon: !props.visible})})
-        .catch(error => console.log('Algo falló en el POST de cupones: ' + error.message))
+        .catch(error => console.log(error.message))
     }
 
     const deleteCoupon = (): Promise<void[]> => {
@@ -85,9 +85,9 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
     }
 
     return (
-        <Modal 
-          visible 
-          transparent 
+        <Modal
+          visible
+          transparent
           animationType='fade'
         >
             <Pressable style={styles.ROOT_MODAL_COUPON} onPress={props.buttonAction}>
@@ -120,7 +120,7 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
                                 onPressIn={() => props.mode === 'ADD' ? postCoupon() : deleteCoupon()}
                                 disabled={loading}
                             >
-                                <Text style={styles.SUBMIT_BUTTON_LABEL}>{props.mode === 'ADD' ? 'Add this coupon' : 'Delete this from your coupons'}</Text>
+                                <Text style={styles.SUBMIT_BUTTON_LABEL}>{props.mode === 'ADD' ? 'Save this coupon' : 'Delete this from your coupons'}</Text>
                             </TouchableOpacity>
                         )}
                     </Pressable>

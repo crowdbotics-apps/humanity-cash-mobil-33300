@@ -135,15 +135,20 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
         return user
 
     def update(self, request, *args, **kwargs):
-        super().update(request, *args, **kwargs)
         instance = self.get_object()
-        data = request.data.dict()
-        if data.get('consumer_profile', None):
-            data.pop('consumer_profile')
-        data['consumer'] = Consumer.objects.get(user=instance).id
+        data = request.data
+        consumer_profile = data.get('consumer_profile', None)
+        if consumer_profile:
+            consumer_profile = data.pop('consumer_profile')
+        consumer = Consumer.objects.filter(user=instance).first()
+        data['consumer'] = consumer.id
         serializer = self.get_serializer(instance, data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+
+        if consumer_profile:
+            consumer.profile_picture = consumer_profile[0]
+            consumer.save()
 
         if not self.request.user.consumer.dwolla_id:
             # if dwolla_id is not set yet
@@ -166,16 +171,14 @@ class MerchantMyProfileDetailAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView
             return None
 
     def update(self, request, *args, **kwargs):
-        super(MerchantMyProfileDetailAPIView, self).update(request, *args, **kwargs)
         instance = self.get_object()
-        serializer = self.get_serializer(instance.user, data=request.data)
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         if not self.request.user.merchant.dwolla_id:
             # if dwolla_id is not set yet
             create_dwolla_customer_merchant(instance)
-        # serializer.save()
-        return Response(serializer.initial_data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class SetCashierModeView(AuthenticatedAPIView):

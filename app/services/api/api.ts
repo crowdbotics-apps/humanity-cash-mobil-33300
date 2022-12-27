@@ -108,8 +108,8 @@ export class Api extends ApiBase {
     return this.patch_multipart_form_data(apiv1 + "/my-profile/merchant/", data, keys)
   }
 
-  async getCoupons(): Promise<Types.SimpleGetResult> {
-    return this.simple_get(apiv1 + "/coupons/")
+  async getCoupons(data: any = {}): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/coupons/", data)
   }
 
   async postCoupons(data: any, keys: any = []): Promise<Types.SimplePostResult> {

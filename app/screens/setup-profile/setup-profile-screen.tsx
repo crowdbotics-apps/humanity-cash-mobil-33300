@@ -212,7 +212,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		})
 	}
 	const setupMerchant = () => {
-		setLoading(true)
 		const profPic = {
 			uri:
 				Platform.OS === "android"
@@ -231,18 +230,15 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		}
 		const data = {
 			business_name: BusinessName,
-			profile_picture: BusinessImageSource ? profPic : null,
-			background_picture: BackBusinessImageSource ? backPic : null,
+			profile_picture: BusinessImageSource?.uri ? profPic : null,
+			background_picture: BackBusinessImageSource?.uri ? backPic : null,
 			business_story: BusinessStory
 		}
-		// const keys = imageSource === null ? [] : ["consumer_profile"]
-		console.log('BusinessImageSource ', BusinessImageSource)
-		console.log('BackBusinessImageSource ', BackBusinessImageSource)
-		console.log('data ', data)
-		// "profile_picture", "background_picture"
-		loginStore.environment.api.setupMerchant(data)
+		const keys = BusinessImageSource?.uri === null ? [] : ["profile_picture"]
+		if (BackBusinessImageSource?.uri !== null) keys.push("background_picture")
+		setLoading(true)
+		loginStore.environment.api.setupMerchant(data, keys)
 			.then((result: any) => {
-				console.log('result ', result)
 				if (result.kind === "ok") {
 					setBusinessName('')
 					setBusinessStory('')

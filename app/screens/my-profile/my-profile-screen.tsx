@@ -455,16 +455,18 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			last_name: LastName,
 		}
 		const consumerKeys = imageSource?.uri !== null ? ["consumer_profile"] : []
+		const keys = BusinessImageSource?.uri === null ? [] : ["profile_picture"]
+		if (BackBusinessImageSource?.uri !== null) keys.push("background_picture")
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
-				.updateProfileMerchant(MerchantData)
+				.updateProfileMerchant(MerchantData, keys)
 				.then((result: any) => {
 					setLoading(false)
 					if (result.kind === "ok") {
 						runInAction(() => {
-							// loginStore.setMerchantUser(result.response)
+							loginStore.setMerchantUser(result.response)
 							loginStore.setSelectedAccount('merchant')
-							// navigation.navigate("home")
+							navigation.navigate("home")
 						})
 					} else if (result.kind === "bad-data") {
 						const key = Object.keys(result?.errors)[0]

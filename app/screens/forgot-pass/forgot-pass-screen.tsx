@@ -58,7 +58,6 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
     loginStore.environment.api.forgotPassword({ email: Username }).then(result => {
       setUsernameError(false)
       setLoading(false)
-      console.log(' sendVerificationCode ====>>>>> ', JSON.stringify(result, null, 2))
       if (result.kind === "ok") {
         if (result?.response?.detail) notifyMessage(result.response.detail)
         setStep('code')
@@ -85,7 +84,6 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
     loginStore.environment.api
       .passwordSet({ password: Pass, password_confirm: PassConfirm, token: Token, email: Username })
       .then(result => {
-        console.log(' setPassword ====>>>>> ', JSON.stringify(result, null, 2))
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
@@ -105,7 +103,6 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
       .verifyUserResetCode({ verification_code: code ,email: Username })
       .then(result => {
         setLoading(false)
-        console.log(' verifyUserResetCode ====>>>>> ', JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           notifyMessage("Email verified", "success")
           setToken(result.response.token)

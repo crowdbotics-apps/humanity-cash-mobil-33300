@@ -20,7 +20,7 @@ class CouponsView(
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Coupon.objects.filter(active=True)
+    queryset = Coupon.objects.all()
     serializer_class = CounponListSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [SearchFilter]
@@ -34,10 +34,14 @@ class CouponsView(
         return merchant.id == int(merchant_id)
 
     def get_queryset(self):
+        user = self.request.user
         queryset = super(CouponsView, self).get_queryset()
+        query_params = self.request.query_params.get('merchant_id', None)
+        if query_params and self.verify_merchant(user, query_params):
+            return queryset.filter(merchant=user.merchant)
         now = timezone.now()
         qs = queryset.filter(
-            Q(start_date__isnull=True) | Q(start_date__lte=now), Q(end_date__isnull=True) | Q(end_date__gte=now)
+            Q(start_date__isnull=True) | Q(start_date__lte=now), Q(end_date__isnull=True) | Q(end_date__gte=now) | Q(active=False)
         )
         return qs
 

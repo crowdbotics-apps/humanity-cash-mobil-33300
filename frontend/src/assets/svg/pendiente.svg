@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20">
+  <path d="M10,20c5.52,0,10-4.48,10-10S15.52,0,10,0,0,4.48,0,10s4.48,10,10,10h0Z"/>
+  <path d="M10,16.69c.69,0,1.25-.56,1.25-1.25,0-.73-.56-1.25-1.25-1.25s-1.25,.52-1.25,1.25c0,.69,.56,1.25,1.25,1.25h0Z" fill= "#fefefe" stroke= "#fefefe" stroke-miterlimit= "10" stroke-width= ".57px"/>
+  <path d="M10,11.69v-.85c.56,0,1.13-.16,1.61-.48s.89-.81,1.09-1.33c.2-.52,.28-1.13,.16-1.69-.12-.56-.4-1.09-.81-1.49-.4-.4-.93-.69-1.49-.77-.56-.12-1.13-.08-1.69,.16-.52,.2-.97,.56-1.29,1.05-.32,.48-.48,1.05-.48,1.61" fill= "none" stroke= "#fefefe" stroke-linecap= "round" stroke-linejoin= "round" stroke-width= "1.5px"/>
+</svg>

@@ -1,0 +1,29 @@
+
+.image {
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    object-fit: cover;
+}
+
+.name {
+    font-size: 36px!important;
+    color: #000000 !important;
+    font-weight: 500!important;
+    font-family: 'Montserrat', serif!important;
+}
+
+.company {
+    font-size: 18px!important;
+    color: #000000!important;
+    font-weight: 500!important;
+    font-family: 'Montserrat', serif!important;
+}
+
+.companyInfo {
+    font-size: 14px!important;
+    color: rgba(0,0,0,0.5)!important;
+    font-weight: 500!important;
+    font-family: 'Montserrat', serif!important;
+    margin-top: 10px!important;
+}
