@@ -74,7 +74,7 @@ class ComplianceActionCreateSerializer(serializers.Serializer):
     password = serializers.CharField(min_length=8)
     amount = serializers.DecimalField(6, 2)
     profile_is_consumer = serializers.BooleanField()
-    profile_id = serializers.IntegerField(min_value=1)
+    profile_id = serializers.IntegerField(min_value=1, allow_null=True)
     type = serializers.ChoiceField(choices=ComplianceAction.Type.choices)
 
     class Meta:

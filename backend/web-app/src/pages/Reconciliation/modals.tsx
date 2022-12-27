@@ -14,18 +14,18 @@ export enum ReconciliationActions {
   ReconcileAndTransfer = "ReconcileAndTransfer"
 }
 
-export const CredentialsModal = observer((props:any)=>{
+export const CredentialsModal = observer((props: any) => {
   const {showModal, onConfirm, onClose} = props
-  const [DisableCredentialBtn, setDisableCredentialBtn ] = useState<boolean>(true)
-  const [ShowPasword,setShowPassword ] = useState<boolean>(false)
-  const [ShowPasword2,setShowPassword2 ] = useState<boolean>(false)
+  const [DisableCredentialBtn, setDisableCredentialBtn] = useState<boolean>(true)
+  const [ShowPasword, setShowPassword] = useState<boolean>(false)
+  const [ShowPasword2, setShowPassword2] = useState<boolean>(false)
   const [Password, setPassword] = useState<string>("")
   const [Password2, setPassword2] = useState<string>("")
 
 
-  useEffect(()=>{
+  useEffect(() => {
     setDisableCredentialBtn(!Password || Password !== Password2)
-  },[Password2, Password])
+  }, [Password2, Password])
 
 
   return (
@@ -39,13 +39,13 @@ export const CredentialsModal = observer((props:any)=>{
       <Modal.Header closeButton>
         <Modal.Title className='title-modal m-2'>Supervisor Credentials</Modal.Title>
       </Modal.Header>
-      <form >
-        <Modal.Body style={{paddingLeft:30, paddingRight:30}}>
+      <form>
+        <Modal.Body style={{paddingLeft: 30, paddingRight: 30}}>
           <div>
             <h6 className='title-h6'>Enter your credentials to confirm</h6>
           </div>
 
-          <Form.Group className="mb-3 mt-3" >
+          <Form.Group className="mb-3 mt-3">
             <Form.Label className='form-label'>PASSWORD 1</Form.Label>
             <InputGroup className="mb-3">
               <Form.Control
@@ -56,14 +56,14 @@ export const CredentialsModal = observer((props:any)=>{
                 onChange={(e) => setPassword(e.target.value)}
               />
               <Button variant="outline-secondary"
-                      onClick={()=> setShowPassword(prevState => !prevState)}
+                      onClick={() => setShowPassword(prevState => !prevState)}
                       className='eyes-buttons'>
-                <Eyes />
+                <Eyes/>
               </Button>
             </InputGroup>
           </Form.Group>
 
-          <Form.Group className="mb-3" >
+          <Form.Group className="mb-3">
             <Form.Label className='form-label'>PASSWORD 2</Form.Label>
             <InputGroup className="mb-3">
               <Form.Control
@@ -75,8 +75,8 @@ export const CredentialsModal = observer((props:any)=>{
               />
               <Button variant="outline-secondary"
                       className='eyes-buttons'
-                      onClick={()=> setShowPassword2(prevState => !prevState)}>
-                <Eyes />
+                      onClick={() => setShowPassword2(prevState => !prevState)}>
+                <Eyes/>
               </Button>
             </InputGroup>
           </Form.Group>
@@ -85,10 +85,10 @@ export const CredentialsModal = observer((props:any)=>{
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    className={!Password || Password !== Password2?styles.btnDisabled:''}
+                    className={!Password || Password !== Password2 ? styles.btnDisabled : ''}
                     disabled={DisableCredentialBtn}
-                    onClick={()=> onConfirm(Password)}
-                    type="button" >
+                    onClick={() => onConfirm(Password)}
+                    type="button">
               Confirm
             </Button>
           </Stack>
@@ -99,9 +99,10 @@ export const CredentialsModal = observer((props:any)=>{
   )
 })
 
-export const AmountModal = observer((props:any)=>{
+export const AmountModal = observer((props: any) => {
   const {showModal, onConfirm, onClose, title, subTitle, selectRecipient} = props
-   const [Amount, setAmount] = useState<string>("0")
+  const [Amount, setAmount] = useState<string>("0")
+
   return (
     <Modal
       show={showModal}
@@ -110,13 +111,14 @@ export const AmountModal = observer((props:any)=>{
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title className='title-modal m-2 ml-3' style={{width:"500px"}}>{title}</Modal.Title>
+        <Modal.Title className='title-modal m-2 ml-3' style={{width: "500px"}}>{title}</Modal.Title>
       </Modal.Header>
-      <form >
-        <Modal.Body style={{paddingLeft:30, paddingRight:30, marginTop:-25}}>
-          <h6 className='title-h6' style={{fontWeight:400, fontSize:"14px", lineHeight:"unset", width:"100%"}}>{subTitle}</h6>
+      <form>
+        <Modal.Body style={{paddingLeft: 30, paddingRight: 30, marginTop: -25}}>
+          <h6 className='title-h6'
+              style={{fontWeight: 400, fontSize: "14px", lineHeight: "unset", width: "100%"}}>{subTitle}</h6>
 
-          <Form.Group className="mb-3 mt-5" >
+          <Form.Group className="mb-3 mt-5">
             <Form.Label className='form-label'>ENTER AMOUNT</Form.Label>
             <InputGroup className="mb-3">
               <Form.Control
@@ -136,7 +138,7 @@ export const AmountModal = observer((props:any)=>{
 
           {selectRecipient && (
             <Row className={'ps-3 pe-3 mt-4 mb-4'}>
-              <InputGroup className="mb-0 search-button-group"  style={{border:"2px solid var(--headings) !important"}}>
+              <InputGroup className="mb-0 search-button-group" style={{border: "2px solid var(--headings) !important"}}>
 
                 <Form.Control
                   placeholder='search by name, email and wallet address'
@@ -144,7 +146,7 @@ export const AmountModal = observer((props:any)=>{
 
                 />
                 <Button variant="secondary" id="button-addon2" className='search-buttons'>
-                  <SearchIcon />
+                  <SearchIcon/>
                 </Button>
               </InputGroup>
             </Row>
@@ -153,8 +155,11 @@ export const AmountModal = observer((props:any)=>{
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    onClick={()=> onConfirm(parseFloat(Amount))}
-                    type="button" >
+                    onClick={() => {
+                      if (onConfirm)
+                        onConfirm(parseFloat(Amount))
+                    }}
+                    type="button">
               Confirm
             </Button>
           </Stack>
@@ -165,9 +170,8 @@ export const AmountModal = observer((props:any)=>{
 })
 
 
-
-export const ReconciliationConfirmModal = observer((props:any)=> {
-  const {showModal, onConfirm, onClose, title, amount, extraText=null} = props
+export const ReconciliationConfirmModal = observer((props: any) => {
+  const {showModal, onConfirm, onClose, title, amount, extraText = null} = props
   return (
     <Modal
       show={showModal}
@@ -180,13 +184,14 @@ export const ReconciliationConfirmModal = observer((props:any)=> {
       </Modal.Header>
       <form>
         <Modal.Body style={{paddingLeft: 30, paddingRight: 30, marginTop: -25}}>
-          <h6 className='title-h6' style={{fontWeight:600, fontSize:"14px", lineHeight:"unset", width:"100%"}}>${amount} {extraText}</h6>
+          <h6 className='title-h6'
+              style={{fontWeight: 600, fontSize: "14px", lineHeight: "unset", width: "100%"}}>${amount} {extraText}</h6>
         </Modal.Body>
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    onClick={()=> onConfirm()}
-                    type="button" >
+                    onClick={() => onConfirm()}
+                    type="button">
               Confirm
             </Button>
           </Stack>

@@ -107,7 +107,7 @@ class ComplianceActionViewset(
                 type=type,
                 documentation=vdata['documentation'],
                 created_by=user,
-                amount=vdata['ammount'],
+                amount=vdata['amount'],
                 consumer=consumer,
                 merchant=merchant,
             )
