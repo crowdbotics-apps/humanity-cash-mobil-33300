@@ -105,18 +105,6 @@ class ConsumerMyProfileSerializer(serializers.ModelSerializer):
             ret['consumer_profile'] = None
         return ret
 
-    def update(self, instance, validated_data):
-        consumer_profile = validated_data.get('consumer_profile')
-
-        consumer = Consumer.objects.get(user=instance)
-
-        if consumer_profile:
-            consumer.profile_picture = consumer_profile
-            consumer.save()
-
-        return super(ConsumerMyProfileSerializer, self).update(instance, validated_data)
-
-
 class MerchantMyProfileSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(required=False, allow_empty_file=True)
     background_picture = serializers.ImageField(required=False, allow_empty_file=True)
