@@ -16,7 +16,7 @@ type Props = {
 
 const ButtonWithPopover: React.FC<Props> = ({actionList = [], children}) => {
   const [show, setShow] = useState(false)
-  const buttonStyle: CSS.Properties = {width: "85px", borderRadius: "40px", height: "40px"}
+  const buttonStyle: CSS.Properties = {width: "60px", borderRadius: "40px", height: "35px", paddingLeft:"10px", paddingRight:"10px"}
   const buttonColor: CSS.Properties = show ? {background: "#666666"} : {background: "#3B88B6"}
   const popoverStyle: CSS.Properties = {border: "1px solid #3B88B6", borderRadius: "14px", maxWidth: "90vw"}
   const buttonContainerStyle: CSS.Properties = {display: "flex", flexDirection: "column", padding: "1rem", gap: "1rem"}
