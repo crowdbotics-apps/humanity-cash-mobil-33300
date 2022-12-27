@@ -212,6 +212,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		})
 	}
 	const setupMerchant = () => {
+		// if (BusinessImageSource === null) return notifyMessage('You must upload a profile picture')
 		setLoading(true)
 		const profPic = {
 			uri:
@@ -229,21 +230,30 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			type: BackBusinessImageSource?.type,
 			name: BackBusinessImageSource?.fileName
 		}
-		loginStore.environment.api.setupMerchant({
+
+		let data = {
 			business_name: BusinessName,
 			profile_picture: profPic,
-			background_picture: backPic,
-			business_story: BusinessStory
-		})
+			business_story: BusinessStory,
+			background_picture: backPic
+		}
+
+		const keys = BusinessImageSource === null ? [] : ["profile_picture"]
+		if (BackBusinessImageSource !== null) {
+			keys.push("background_picture")
+			// data.background_picture = backPic
+		}
+
+		loginStore.environment.api.setupMerchant(data, keys)
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
 					setBusinessName('')
 					setBusinessStory('')
-					setStep('business_type')
+					// setStep('business_type')
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
-					const msg = `${key}: ${result?.errors?.[key][0]}`
+					const msg = `${key}: ${result?.errors?.[key]}`
 					notifyMessage(msg)
 				} else if (result.kind === "unauthorized") {
 					loginStore.reset()

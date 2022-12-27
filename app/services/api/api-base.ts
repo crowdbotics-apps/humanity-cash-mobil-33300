@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
     ListResult,
     NoResponseGetResult,
@@ -6,10 +7,10 @@ import {
     SimplePostResult,
     SingleResult
 } from "./api.types"
-import {getGeneralApiProblem} from "./api-problem"
+import { getGeneralApiProblem } from "./api-problem"
 import * as Types from "./api.types"
-import {ApiResponse, ApisauceInstance, create} from "apisauce"
-import {ApiConfig, DEFAULT_API_CONFIG} from "./api-config"
+import { ApiResponse, ApisauceInstance, create } from "apisauce"
+import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 
 
 /**
@@ -71,41 +72,40 @@ export class ApiBase {
     }
 
     async single_casted_get_view<T extends SingleResult>(path: string, extra_params: {}, field: string): Promise<T> {
-        const respuesta = await this.simple_get(path,extra_params)
+        const respuesta = await this.simple_get(path, extra_params)
         // casteo a T
         if (respuesta.kind === "ok") {
-            const ret = {kind: "ok"}
+            const ret = { kind: "ok" }
             ret[field] = respuesta.data
             return ret as T
-        } else
-        {return respuesta as T}
+        } else { return respuesta as T }
 
     }
 
     async single_get_view<T extends SingleResult>(path: string, extra_params?: any, axios?: any): Promise<T> {
-        return this.simple_get(path,extra_params, axios)
+        return this.simple_get(path, extra_params, axios)
     }
 
     async single_list_view<T extends ListResult>(path: string, extra_params?: any): Promise<T> {
-        return this.simple_get(path,extra_params)
+        return this.simple_get(path, extra_params)
     }
 
     async noresult_get<T extends NoResponseGetResult>(path: string, extra_params?: any): Promise<T> {
-        const respuesta = await this.simple_get(path,extra_params)
+        const respuesta = await this.simple_get(path, extra_params)
         // casteo a NoResponseGetResult
         return ((respuesta.kind === "ok") ? { kind: "ok" } : respuesta) as T
     }
 
     async simple_get<T extends SimpleGetResult>(path: string, extra_params?: any, axios?: any): Promise<T> {
         if (!this.apisauce) {
-            return {kind: "unknown", temporary: true} as T
+            return { kind: "unknown", temporary: true } as T
         }
         const response: ApiResponse<any> = await this.apisauce.get(path, extra_params, axios)
         if (!response.ok) {
             if (response.status === 400) {
-                return {kind: "bad-data", errors: response.data} as T
+                return { kind: "bad-data", errors: response.data } as T
             } else if (response.status === 401) {
-                return {kind: "unauthorized", errors: response.data} as T
+                return { kind: "unauthorized", errors: response.data } as T
             } else {
                 // TODO
                 // const problem = getGeneralApiProblem(response)
@@ -114,41 +114,41 @@ export class ApiBase {
         }
 
         try {
-            return {kind: "ok", data: response.data} as T
+            return { kind: "ok", data: response.data } as T
         } catch {
-            return {kind: "bad-data"} as T
+            return { kind: "bad-data" } as T
         }
     }
 
     async noresult_post<T extends NoResponsePostResult>(path: string, params?: any): Promise<T> {
-        const respuesta = await this.simple_post(path,params)
+        const respuesta = await this.simple_post(path, params)
         // casteo a NoResponseGetResult
         return ((respuesta.kind === "ok") ? { kind: "ok" } : respuesta) as T
     }
 
     async simple_post<T extends SimplePostResult>(path: string, params?: any, axios?: any): Promise<T> {
         if (!this.apisauce) {
-            return {kind: "unknown", temporary: true} as T
+            return { kind: "unknown", temporary: true } as T
         }
 
         const response: ApiResponse<any> = await this.apisauce.post(path, params, axios)
         if (!response.ok) {
             if (response.status === 400) {
-                return {kind: "bad-data", errors: response.data} as T
+                return { kind: "bad-data", errors: response.data } as T
             } else {
                 const problem = getGeneralApiProblem(response)
-                if (problem) {return problem as T}
+                if (problem) { return problem as T }
             }
         }
 
         try {
-            return {kind: "ok", response: response.data} as T
+            return { kind: "ok", response: response.data } as T
         } catch {
-            return {kind: "bad-data"} as T
+            return { kind: "bad-data" } as T
         }
     }
 
-    async simple_id_save_or_create<T extends SimplePostResult>(pathBase: string, datos: { id?: number}): Promise<T> {
+    async simple_id_save_or_create<T extends SimplePostResult>(pathBase: string, datos: { id?: number }): Promise<T> {
         if (datos.id) {
             return this.simple_patch(`${pathBase}/${datos.id}/`, datos)
         } else {
@@ -158,84 +158,85 @@ export class ApiBase {
 
     async simple_put<T extends SimplePostResult>(path: string, data?: any): Promise<T> {
         if (!this.apisauce) {
-            return {kind: "unknown", temporary: true} as T
+            return { kind: "unknown", temporary: true } as T
         }
 
         const response: ApiResponse<any> = await this.apisauce.put(path, data)
 
         if (!response.ok) {
             if (response.status === 400) {
-                return {kind: "bad-data", errors: response.data} as T
+                return { kind: "bad-data", errors: response.data } as T
             } else {
                 const problem = getGeneralApiProblem(response)
-                if (problem) {return problem as T}
+                if (problem) { return problem as T }
             }
         }
 
         try {
-            return {kind: "ok", response: response.data} as T
+            return { kind: "ok", response: response.data } as T
         } catch {
-            return {kind: "bad-data"} as T
+            return { kind: "bad-data" } as T
         }
     }
 
     async simple_patch<T extends SimplePostResult>(path: string, data?: any): Promise<T> {
         if (!this.apisauce) {
-            return {kind: "unknown", temporary: true} as T
+            return { kind: "unknown", temporary: true } as T
         }
 
         const response: ApiResponse<any> = await this.apisauce.patch(path, data)
 
         if (!response.ok) {
             if (response.status === 400) {
-                return {kind: "bad-data", errors: response.data} as T
+                return { kind: "bad-data", errors: response.data } as T
             } else {
                 const problem = getGeneralApiProblem(response)
-                if (problem) {return problem as T}
+                if (problem) { return problem as T }
             }
         }
 
         try {
-            return {kind: "ok", response: response.data} as T
+            return { kind: "ok", response: response.data } as T
         } catch {
-            return {kind: "bad-data"} as T
+            return { kind: "bad-data" } as T
         }
     }
 
     async simple_delete(path: string): Promise<Types.GenericResponse> {
         if (!this.apisauce) {
-            return {kind: "unknown", temporary: true}
+            return { kind: "unknown", temporary: true }
         }
 
         const response: ApiResponse<any> = await this.apisauce.delete(path)
 
         if (!response.ok) {
             if (response.status === 400) {
-                return {kind: "bad-data", errors: response.data}
+                return { kind: "bad-data", errors: response.data }
             } else {
                 const problem = getGeneralApiProblem(response)
-                if (problem) {return problem}
+                if (problem) { return problem }
             }
         }
 
         try {
-            return {kind: "ok"}
+            return { kind: "ok" }
         } catch {
-            return {kind: "bad-data"}
+            return { kind: "bad-data" }
         }
     }
 
     async post_multipart_form_data(path: string, data: any, keys: any): Promise<Types.SimplePostResult> {
 
         if (!this.apisauce) {
-            return {kind: "unknown", temporary: true}
+            return { kind: "unknown", temporary: true }
         }
+        console.log(' keys ===>>> ', keys)
         let fdata = new FormData()
         for (const key in data) {
             // if you pass an undefined value it will crash
             const name = data[key]['name']
             if (keys.includes(key) && (typeof data[key] === "number" || typeof data[key] === "boolean"
-              || Object.prototype.toString.call(data[key]) === '[object Date]')) {
+                || Object.prototype.toString.call(data[key]) === '[object Date]')) {
                 fdata.append(key, data[key].toString())
             } else if (keys.includes(key) && typeof data[key] === "string") {
                 fdata.append(key, data[key])
@@ -265,21 +266,24 @@ export class ApiBase {
             "Content-Type": "multipart/form-data",
             "Authorization": this.apisauce.headers.Authorization
         }
+
         try {
-            response = await this.apisauce.axiosInstance.post(path, fdata, {headers})
+            response = await this.apisauce.axiosInstance.post(path, fdata, { headers })
 
         } catch (e: any) {
+            console.log(' keys ===>>> ', e)
             if (e.message.indexOf("status code 400") !== -1) {
-                return {kind: "bad-data", errors: e.response.data}
+                return { kind: "bad-data", errors: e.response.data }
             }
             if (e.message.indexOf("status code 403") !== -1) {
-                return {kind: "bad-data", errors: e.response.data}
+                return { kind: "bad-data", errors: e.response.data }
             }
-            response = {status: 500}
+            response = { status: 500, problem: 'SERVER_ERROR' }
         }
+
         if (response.status === 400 || response.status === 403) {
             // @ts-ignore
-            return {kind: "bad-data", errors: response.data}
+            return { kind: "bad-data", errors: response.data }
         } else if (response.status === 401) {
             // this.clearRootStore()
         } else {
@@ -292,19 +296,19 @@ export class ApiBase {
 
         try {
             // @ts-ignore
-            return {kind: "ok", response: response.data}
+            return { kind: "ok", response: response.data }
         } catch {
-            return {kind: "bad-data"}
+            return { kind: "bad-data" }
         }
     }
 
     async patch_multipart_form_data(
-      path: string,
-      data: any,
-      keys: any
+        path: string,
+        data: any,
+        keys: any
     ): Promise<Types.SimplePostResult> {
         if (!this.apisauce) {
-            return {kind: "unknown", temporary: true};
+            return { kind: "unknown", temporary: true };
         }
 
         let fdata = new FormData();
@@ -312,7 +316,7 @@ export class ApiBase {
             // if you pass an undefined value it will crash
             const name = data[key]['name']
             if (keys.includes(key) && (typeof data[key] === "number" || typeof data[key] === "boolean"
-              || Object.prototype.toString.call(data[key]) === '[object Date]')) {
+                || Object.prototype.toString.call(data[key]) === '[object Date]')) {
                 fdata.append(key, data[key].toString())
             } else if (keys.includes(key) && typeof data[key] === "string") {
                 fdata.append(key, data[key])
@@ -343,19 +347,17 @@ export class ApiBase {
             Authorization: this.apisauce.headers.Authorization,
         };
         try {
-            response = await this.apisauce.axiosInstance.patch(path, fdata, {headers});
+            response = await this.apisauce.axiosInstance.patch(path, fdata, { headers });
         } catch (e: any) {
             if (e.message.indexOf("status code 400") !== -1) {
-                return {kind: "bad-data", errors: e.response.data};
+                return { kind: "bad-data", errors: e.response.data };
             }
-            response = {status: 500};
+            response = { status: 500, problem: 'SERVER_ERROR' };
         }
 
         if (response.status === 400) {
             // @ts-ignore
-            return {kind: "bad-data", errors: response.data};
-        } else if (response.status === 401) {
-            this.clearRootStore();
+            return { kind: "bad-data", errors: response.data };
         } else {
             // @ts-ignore
             const problem = getGeneralApiProblem(response);
@@ -366,75 +368,78 @@ export class ApiBase {
 
         try {
             // @ts-ignore
-            return {kind: "ok", response: response.data};
+            return { kind: "ok", response: response.data };
         } catch {
-            return {kind: "bad-data"};
+            return { kind: "bad-data" };
         }
     }
 
     async multipart_form_data(path: string, data: any, keys: any): Promise<Types.SimplePostResult> {
         if (!this.apisauce) {
-            return {kind: "unknown", temporary: true}
+            return { kind: "unknown", temporary: true }
         }
 
-        let fdata = new FormData()
-        for (const key in data) {
-            if (keys.includes(key) && (!data[key] || typeof data[key] === "string")) {
-                continue
-            }
-            if (keys.includes(key)) {
-                fdata.append(key, data[key], "image.png")
-            } else {
-                if (Array.isArray(data[key])) {
-                    fdata.append(key, data[key].join(","))
-                } else {
-                    fdata.append(key, data[key] || "")
-                }
-            }
 
+        let fdata = data
+        if (keys.length > 0) {
+            fdata = new FormData()
+            for (const key in data) {
+                if (keys.includes(key) && (!data[key] || typeof data[key] === "string")) {
+                    continue
+                }
+                if (keys.includes(key)) {
+                    fdata.append(key, data[key], "image.png")
+                } else {
+                    if (Array.isArray(data[key])) {
+                        fdata.append(key, data[key].join(","))
+                    } else {
+                        fdata.append(key, data[key] || "")
+                    }
+                }
+
+            }
         }
         let response
         const headers = {
             "Content-Type": "multipart/form-data",
             "Authorization": this.apisauce.headers.Authorization
         }
+
         try {
             if (data.id) {
                 path += data.id + "/"
-                response = await this.apisauce.axiosInstance.patch(path, fdata, {headers})
+                response = await this.apisauce.axiosInstance.patch(path, fdata, { headers })
             } else {
-                response = await this.apisauce.axiosInstance.post(path, fdata, {headers})
-                console.log('response ', JSON.parse(JSON.stringify(response)))
+                response = await this.apisauce.axiosInstance.post(path, fdata, { headers })
             }
         } catch (e) {
-            console.log('error ', JSON.parse(JSON.stringify(e)))
             if (e.message.indexOf("status code 400") !== -1) {
-                return {kind: "bad-data", errors: e.response.data}
+                return { kind: "bad-data", errors: e.response.data }
             }
-            response = {status: 500, problem: 'SERVER_ERROR'}
+            response = { status: 500, problem: 'SERVER_ERROR' }
         }
 
         if (response.status === 400) {
             // @ts-ignore
-            return {kind: "bad-data", errors: response.data}
+            return { kind: "bad-data", errors: response.data }
         } else {
             // @ts-ignore
             console.log('response error ', JSON.parse(JSON.stringify(response)))
             const problem = getGeneralApiProblem(response)
-            if (problem) {return problem}
+            if (problem) { return problem }
         }
 
         try {
             // @ts-ignore
-            return {kind: "ok", response: response.data}
+            return { kind: "ok", response: response.data }
         } catch {
-            return {kind: "bad-data"}
+            return { kind: "bad-data" }
         }
     }
 
     async multipart_form_data_patch(path: string, data: any, keys: any): Promise<Types.SimplePostResult> {
         if (!this.apisauce) {
-            return {kind: "unknown", temporary: true}
+            return { kind: "unknown", temporary: true }
         }
 
         let fdata = new FormData()
@@ -459,33 +464,33 @@ export class ApiBase {
             "Authorization": this.apisauce.headers.Authorization
         }
         try {
-            response = await this.apisauce.axiosInstance.patch(path, fdata, {headers})
+            response = await this.apisauce.axiosInstance.patch(path, fdata, { headers })
             console.log('response ', response)
         } catch (e) {
             console.log('error ', JSON.parse(JSON.stringify(e)))
             if (e.message.indexOf("status code 400") !== -1) {
-                return {kind: "bad-data", errors: e.response.data}
-            } else if(e.message.indexOf("status code 405") !== -1) {
-                return {kind: "method-not-allowed"}
+                return { kind: "bad-data", errors: e.response.data }
+            } else if (e.message.indexOf("status code 405") !== -1) {
+                return { kind: "method-not-allowed" }
             }
-            response = {status: 500}
+            response = { status: 500, problem: 'SERVER_ERROR' }
         }
 
         if (response.status === 400) {
             // @ts-ignore
-            return {kind: "bad-data", errors: response.data}
+            return { kind: "bad-data", errors: response.data }
         } else {
             // @ts-ignore
             console.log('response error ', JSON.parse(JSON.stringify(response)))
             const problem = getGeneralApiProblem(response)
-            if (problem) {return problem}
+            if (problem) { return problem }
         }
 
         try {
             // @ts-ignore
-            return {kind: "ok", response: response.data}
+            return { kind: "ok", response: response.data }
         } catch {
-            return {kind: "bad-data"}
+            return { kind: "bad-data" }
         }
     }
 
