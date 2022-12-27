@@ -229,14 +229,20 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			type: BackBusinessImageSource?.type,
 			name: BackBusinessImageSource?.fileName
 		}
-		loginStore.environment.api.setupMerchant({
+		const data = {
 			business_name: BusinessName,
-			profile_picture: profPic,
-			background_picture: backPic,
+			profile_picture: BusinessImageSource ? profPic : null,
+			background_picture: BackBusinessImageSource ? backPic : null,
 			business_story: BusinessStory
-		})
+		}
+		// const keys = imageSource === null ? [] : ["consumer_profile"]
+		console.log('BusinessImageSource ', BusinessImageSource)
+		console.log('BackBusinessImageSource ', BackBusinessImageSource)
+		console.log('data ', data)
+		// "profile_picture", "background_picture"
+		loginStore.environment.api.setupMerchant(data)
 			.then((result: any) => {
-				setLoading(false)
+				console.log('result ', result)
 				if (result.kind === "ok") {
 					setBusinessName('')
 					setBusinessStory('')
@@ -251,7 +257,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				} else {
 					notifyMessage(null)
 				}
-			})
+			}).finally(() => 	setLoading(false))
 	}
 	const setupMerchantDetail = () => {
 		setLoading(true)
