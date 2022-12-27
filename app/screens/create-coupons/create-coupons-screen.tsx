@@ -86,6 +86,7 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 			type: PromoImage?.type,
 			name: PromoImage?.fileName
 		}
+		const key = PromoImage === null ? [] : ["promo_image"]
 		loginStore.environment.api.postCoupons({
 			title: Title,
 			start_date: DateFrom.toISOString().split('T')[0],
@@ -95,7 +96,7 @@ export const CreateCouponScreen = observer(function CreateCouponScreen() {
 			description: Description,
 			promo_image: promoImage,
 			merchant: loginStore.getAllData.merchant_id
-		})
+		}, key)
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {

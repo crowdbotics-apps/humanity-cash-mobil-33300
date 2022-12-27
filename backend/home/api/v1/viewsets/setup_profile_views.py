@@ -90,7 +90,7 @@ class SetupMerchantProfileAPIView(AuthenticatedAPIView, CreateAPIView):
     Endpoint to set up Merchant Profile after first log in
     """
     serializer_class = setup_profile_serializers.SetupMerchantProfileSerializer
-    parser_classes = (MultiPartParser, FormParser)
+    # parser_classes = (MultiPartParser, FormParser)
     queryset = Merchant.objects.all()
 
     def perform_create(self, serializer):

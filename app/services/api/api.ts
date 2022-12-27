@@ -68,8 +68,8 @@ export class Api extends ApiBase {
   }
 
   // SETUP
-  async setupConsumer(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data_patch(apiv1 + "/set-up-profile/consumer/", data, ["consumer_profile"])
+  async setupConsumer(data: any, keys: any = []): Promise<Types.SimplePostResult> {
+    return this.post_multipart_form_data(apiv1 + "/set-up-profile/consumer/", data, keys)
   }
 
   async setupConsumerFirstStep(data: any, keys: any = []): Promise<Types.SimplePostResult> {
@@ -84,8 +84,8 @@ export class Api extends ApiBase {
     return this.simple_patch(apiv1 + "/set-up-profile/consumer-detail/", data)
   }
 
-  async setupMerchant(data: any): Promise<Types.SimplePostResult> {
-    return this.post_multipart_form_data(apiv1 + "/set-up-profile/merchant/", data, ["profile_picture", "background_picture"])
+  async setupMerchant(data: any, keys: any = []): Promise<Types.SimplePostResult> {
+    return this.post_multipart_form_data(apiv1 + "/set-up-profile/merchant/", data, keys)
   }
 
   async setupMerchantDetail(data: any): Promise<Types.SimplePostResult> {
@@ -101,20 +101,20 @@ export class Api extends ApiBase {
     return this.simple_get(apiv1 + "/my-profile/merchant/")
   }
 
-  async updateProfileConsumer(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data_patch(apiv1 + "/my-profile/consumer/", data, ["consumer_profile"])
+  async updateProfileConsumer(data: any, keys: any = []): Promise<Types.SimplePostResult> {
+    return this.multipart_form_data_patch(apiv1 + "/my-profile/consumer/", data, keys)
   }
 
-  async updateProfileMerchant(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, ["profile_picture", "background_picture"])
+  async updateProfileMerchant(data: any, keys: any = []): Promise<Types.SimplePostResult> {
+    return this.multipart_form_data_patch(apiv1 + "/my-profile/merchant/", data, keys)
   }
 
   async getCoupons(): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/coupons/")
   }
 
-  async postCoupons(data: any): Promise<Types.SimplePostResult> {
-    return this.multipart_form_data(apiv1 + "/coupons/", data, ["promo_image"])
+  async postCoupons(data: any, keys: any = []): Promise<Types.SimplePostResult> {
+    return this.multipart_form_data(apiv1 + "/coupons/", data, keys)
   }
 
   async getConsumerCoupons(): Promise<Types.SimpleGetResult> {

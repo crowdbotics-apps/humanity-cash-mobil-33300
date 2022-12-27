@@ -429,6 +429,10 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			? (PhoneNumber && PhoneNumber.includes('+1')) ? PhoneNumber : `+1${PhoneNumber}`
 			: ''
 
+		const keys = BusinessImageSource === null ? [] : ["profile_picture"]
+		if (BackBusinessImageSource !== null) keys.push("background_picture")
+
+		const keysConsumer = imageSource === null ? [] : ["consumer_profile"]
 		let MerchantData: any = {
 			business_name: BusinessName,
 			type_of_business: BusinessType,
@@ -448,7 +452,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 		if (PhoneNumber !== '') MerchantData.phone_number = phoneNumber
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api
-				.updateProfileMerchant(MerchantData)
+				.updateProfileMerchant(MerchantData, keys)
 				.then((result: any) => {
 					setLoading(false)
 					if (result.kind === "ok") {
@@ -469,7 +473,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					consumer_profile: pic,
 					first_name: Name,
 					last_name: LastName,
-				})
+				}, keysConsumer)
 				.then((result: any) => {
 					setLoading(false)
 					if (result.kind === "ok") {

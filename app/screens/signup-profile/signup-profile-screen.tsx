@@ -164,10 +164,11 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			type: imageSource?.type,
 			name: imageSource?.fileName
 		}
+		const keys = imageSource === null ? [] : ["consumer_profile"]
 		loginStore.environment.api.setupConsumer({
 			username: Username,
 			consumer_profile: pic
-		}).then((result: any) => {
+		}, keys).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setUsername('');
@@ -234,15 +235,16 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			type: BackBusinessImageSource?.type,
 			name: BackBusinessImageSource?.fileName
 		}
+		const keys = BusinessImageSource === null ? [] : ["profile_picture"]
+		if (BackBusinessImageSource !== null) keys.push("background_picture")
 		loginStore.environment.api.setupMerchant({
 			business_name: BusinessName,
 			profile_picture: profPic,
 			background_picture: backPic,
 			business_story: BusinessStory
-		})
+		}, keys)
 			.then((result: any) => {
 				setLoading(false)
-				setStep('business_type')
 				if (result.kind === "ok") {
 					setStep('business_type')
 				} else if (result.kind === "bad-data") {
