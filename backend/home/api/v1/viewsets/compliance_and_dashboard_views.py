@@ -120,6 +120,8 @@ class ComplianceActionViewset(
             # TODO for now, execute on approval
             ca.execute()
 
+        return Response(status=status.HTTP_200_OK)
+
     @action(detail=True, methods=['post'])
     def signoff(self, request, *args, **kwargs):
         # TODO finish
