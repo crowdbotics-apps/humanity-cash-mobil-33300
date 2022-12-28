@@ -104,54 +104,22 @@ const ReconciliationPage: React.FC = observer(() => {
   const userStore = useUserStore()
 
   // API calls
-  const onAddAjustment = () => {
-    const data: apiSendData = {
-      type: 'fund_negative',
-      documentation: CurrentDocumentation,
-      amount: CurrentAmount,
-      profile_is_consumer: CurrentRecipient ? CurrentRecipient.is_consumer : false,
-      profile_id: CurrentRecipient ? CurrentRecipient.id : null,
-      password: supervisorCredential
-    }
+  const onAddAjustment = (data: apiSendData) => {
     api.addAdjustment(data)
       .then(showMessage)
       .finally(resetData)
   }
-  const onAddAdjustmentAndMint = () => {
-    const data: apiSendData = {
-      type: 'burn_from_negative',
-      documentation: CurrentDocumentation,
-      amount: CurrentAmount,
-      profile_is_consumer: CurrentRecipient ? CurrentRecipient.is_consumer : false,
-      profile_id: CurrentRecipient ? CurrentRecipient.id : null,
-      password: supervisorCredential
-    }
+  const onAddAdjustmentAndMint = (data: apiSendData) => {
     api.addAdjustmentAndMintTokens(data)
       .then(showMessage)
       .finally(resetData)
   }
-  const onReconcileAndBurn = () => {
-    const data: apiSendData = {
-      type: 'mint_to_positive',
-      documentation: CurrentDocumentation,
-      amount: CurrentAmount,
-      profile_is_consumer: CurrentRecipient ? CurrentRecipient.is_consumer : false,
-      profile_id: CurrentRecipient ? CurrentRecipient.id : null,
-      password: supervisorCredential
-    }
+  const onReconcileAndBurn = (data: apiSendData) => {
     api.reconcileAndBrnTokens(data)
       .then(showMessage)
       .finally(resetData)
   }
-  const onReconcileAndTransfer = () => {
-    const data: apiSendData = {
-      type: 'positive_to_user',
-      documentation: CurrentDocumentation,
-      amount: CurrentAmount,
-      profile_is_consumer: CurrentRecipient ? CurrentRecipient.is_consumer : false,
-      profile_id: CurrentRecipient ? CurrentRecipient.id : null,
-      password: supervisorCredential
-    }
+  const onReconcileAndTransfer = (data: apiSendData) => {
     api.reconcileAndTransferTokens(data)
       .then(showMessage)
       .finally(resetData)
@@ -162,6 +130,7 @@ const ReconciliationPage: React.FC = observer(() => {
       title: "Add Adjustment",
       subTitle: "Enter an amount to be transferred from the Reserve Wallet to the Negative Mint Adjustment Account Wallet.",
       next: onAddAjustment,
+      type: 'fund_negative',
       confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
@@ -169,6 +138,7 @@ const ReconciliationPage: React.FC = observer(() => {
       title: "Add Adjustment",
       subTitle: "Enter an amount to be minted to the Positive Mint Adjustment Account Wallet.",
       next: onAddAdjustmentAndMint,
+      type: 'burn_from_negative',
       confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
@@ -176,6 +146,7 @@ const ReconciliationPage: React.FC = observer(() => {
       title: "Reconcile and burn Tokens",
       subTitle: "Enter an amount to be burned from the Negative Adjustment Account Wallet.",
       next: onReconcileAndBurn,
+      type: 'mint_to_positive',
       confirmTitle: "Confirm Burn",
       selectRecipient: false
     },
@@ -184,6 +155,7 @@ const ReconciliationPage: React.FC = observer(() => {
       subTitle: "Enter an amount to be transferred from the Positive Mint Adjustment Account Wallet to the " +
         "Recipient wallet.",
       next: onReconcileAndTransfer,
+      type: 'positive_to_user',
       confirmTitle: "Confirm Recipient",
       selectRecipient: true
     },
@@ -265,6 +237,19 @@ const ReconciliationPage: React.FC = observer(() => {
     setShowConfirmationModal(true)
   }
 
+  const onReconciliationConfirm = () => {
+    setShowConfirmationModal(false)
+    const data: apiSendData = {
+      type: CurrentAction.type,
+      documentation: CurrentDocumentation,
+      amount: CurrentAmount,
+      profile_is_consumer: CurrentRecipient ? CurrentRecipient.is_consumer : false,
+      profile_id: CurrentRecipient ? CurrentRecipient.id : null,
+      password: supervisorCredential
+    }
+    CurrentAction.next(data)
+  }
+
   useEffect(() => {
     userStore.setUp()
     setItems([{
@@ -321,10 +306,7 @@ const ReconciliationPage: React.FC = observer(() => {
         title={CurrentAction.confirmTitle}
         extraText={CurrentAction.selectRecipient ? "John Doe Wallet address 0xasdf234asdf0234" : ""}
         amount={CurrentAmount}
-        onConfirm={() => {
-          setShowConfirmationModal(false)
-          CurrentAction.next()
-        }}
+        onConfirm={onReconciliationConfirm}
         onClose={() => {
           setShowConfirmationModal(false)
         }}

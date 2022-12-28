@@ -22,11 +22,9 @@ export const CredentialsModal = observer((props: any) => {
   const [Password, setPassword] = useState<string>("")
   const [Password2, setPassword2] = useState<string>("")
 
-
   useEffect(() => {
     setDisableCredentialBtn(!Password || Password !== Password2)
   }, [Password2, Password])
-
 
   return (
     <Modal
@@ -187,10 +185,7 @@ export const AmountModal = observer((props: any) => {
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    onClick={() => {
-                      if (onConfirm)
-                        onConfirm(parseFloat(Amount))
-                    }}
+                    onClick={() => onConfirm(parseFloat(Amount))}
                     type="button">
               Confirm
             </Button>
@@ -222,7 +217,7 @@ export const ReconciliationConfirmModal = observer((props: any) => {
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    onClick={() => onConfirm()}
+                    onClick={onConfirm}
                     type="button">
               Confirm
             </Button>
