@@ -9,7 +9,7 @@ import {useApi, useUserStore} from "../../utils";
 import {AmountModal, CredentialsModal, ReconciliationActions, ReconciliationConfirmModal} from "./modals";
 import ButtonWithPopover from "../../components/Popover";
 
-type RecipientType = {
+export type RecipientType = {
   id: number,
   label: string,
   is_consumer: boolean
@@ -40,14 +40,7 @@ const ReconciliationPage: React.FC = observer(() => {
     }
   }
   const searchFn = (searchText: any) => {
-    api.getRecipients(searchText).then(res => {
-      if (res.kind === 'ok') {
-        const {results}: any = res.data;
-        setRecipientsList(results)
-      } else {
-        console.log("There were problems")
-      }
-    }).catch(reason => console.log(reason))
+    return api.getRecipients(searchText)
   }
   const onClickFilter = () => {
   }
@@ -99,7 +92,6 @@ const ReconciliationPage: React.FC = observer(() => {
   const [ShowConfirmationModal, setShowConfirmationModal] = useState<boolean>(false)
   const [ShowAmountModal, setShowAmountModal] = useState<boolean>(false)
   const [CurrentAction, setCurrentAction] = useState<any>({})
-  const [RecipientsList, setRecipientsList] = useState<RecipientType[]>([])
   const api = useApi()
   const userStore = useUserStore()
 
@@ -295,7 +287,6 @@ const ReconciliationPage: React.FC = observer(() => {
                    selectRecipient={CurrentAction.selectRecipient}
                    subTitle={CurrentAction.subTitle}
                    searchFn={searchFn}
-                   results={RecipientsList}
                    onClose={() => {
                      setShowAmountModal(false)
                    }}

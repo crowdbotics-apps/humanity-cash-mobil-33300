@@ -3,9 +3,10 @@ import {Button, Col, Form, ListGroup, Row, Tab} from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import Stack from "react-bootstrap/Stack";
 import styles from "./BlockchainTransactions.module.css";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {observer} from "mobx-react-lite";
 import {Eyes, SearchIcon} from "../../components/icons";
+import {RecipientType} from "./ReconciliationPage";
 
 export enum ReconciliationActions {
   AddAdjustment = 'AddAdjustment',
@@ -98,26 +99,14 @@ export const CredentialsModal = observer((props: any) => {
 })
 
 export const ListResultData = ({data, callback}: any) => {
-  const [hidden, setHidden] = useState(true)
-
   const handleClick = (element: any) => {
-    setHidden(true)
     callback(element)
   }
-
-  useEffect(() => {
-    console.log("hidden", hidden)
-  }, [hidden])
-
-  useEffect(() => {
-    console.log("data", data)
-    setHidden(data.length === 0)
-  }, [])
 
   return (<Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
     <Row>
       <Col sm={12}>
-        <ListGroup hidden={hidden}>
+        <ListGroup>
           {data.map((e: any, k: number) =>
             <ListGroup.Item key={`k_${k}`} onClick={() => handleClick(e)}>
               {e.label}
@@ -130,9 +119,38 @@ export const ListResultData = ({data, callback}: any) => {
 }
 
 export const AmountModal = observer((props: any) => {
-  const {showModal, onConfirm, onClose, title, subTitle, selectRecipient, searchFn, results} = props
+  const {showModal, onConfirm, onClose, title, subTitle, selectRecipient, searchFn} = props
   const [Recipient, setRecipient] = useState<any>(null)
   const [Amount, setAmount] = useState<string>("0")
+  const [RecipientsList, setRecipientsList] = useState<RecipientType[]>([])
+  const [showRecipientsList, setShowRecipientsList] = useState<boolean>(false)
+
+  const searchRecipients = (e: any) => {
+    const searchTxt: string = e.target.value
+    if (searchTxt === "") {
+      setRecipientsList([])
+      setShowRecipientsList(false)
+      return
+    }
+    searchFn(searchTxt).then((res: any) => {
+      if (res.kind === 'ok') {
+        const {results}: any = res.data;
+        setRecipientsList(results)
+        if (results.length === 0) {
+          setShowRecipientsList(false)
+        } else {
+          setShowRecipientsList(true)
+        }
+      } else {
+        setShowRecipientsList(false)
+        console.log("There were problems")
+      }
+    }).catch((reason: any) => console.log(reason))
+  }
+
+  useEffect(() => {
+    console.log("Recipient", Recipient)
+  }, [Recipient])
 
   return (
     <Modal
@@ -169,23 +187,26 @@ export const AmountModal = observer((props: any) => {
 
           {selectRecipient && <Row className={'ps-3 pe-3 mt-4 mb-4'}>
             <InputGroup className="mb-0 search-button-group" style={{border: "2px solid var(--headings) !important"}}>
-
               <Form.Control
                 placeholder='search by name, email and wallet address'
                 type="search" name="search" className='search-button-navbar'
-                onChange={(e) => searchFn(e.target.value)}
+                onChange={searchRecipients}
               />
               <Button variant="secondary" id="button-addon2" className='search-buttons'>
                 <SearchIcon/>
               </Button>
             </InputGroup>
-            <ListResultData data={results} callback={(recipient: any) => setRecipient(recipient)}/>
+            {showRecipientsList && <ListResultData data={RecipientsList} callback={(recipient: any) => {
+              setRecipient(recipient)
+              setShowRecipientsList(false)
+            }}/>}
+            {<span>{Recipient? Recipient.label : null}</span>}
           </Row>}
         </Modal.Body>
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    onClick={() => onConfirm(parseFloat(Amount))}
+                    onClick={() => onConfirm(parseFloat(Amount), Recipient)}
                     type="button">
               Confirm
             </Button>
