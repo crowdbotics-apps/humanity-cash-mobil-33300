@@ -114,19 +114,7 @@ export class Api extends ApiBase {
         return this.simple_get(API_VERSION_PREFIX+`/transaction/${id}/`, data)
     }
 
-    async addAdjustment(data: any): Promise<Types.SimplePostResult> {
-        return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
-    }
-
-    async reconcileAndBrnTokens(data: any): Promise<Types.SimplePostResult> {
-        return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
-    }
-
-    async addAdjustmentAndMintTokens(data: any): Promise<Types.SimplePostResult> {
-        return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
-    }
-
-    async reconcileAndTransferTokens(data: any): Promise<Types.SimplePostResult> {
+    async addCompliance(data: any): Promise<Types.SimplePostResult> {
         return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
     }
 

@@ -96,25 +96,29 @@ const ReconciliationPage: React.FC = observer(() => {
   const userStore = useUserStore()
 
   // API calls
-  const onAddAjustment = (data: apiSendData) => {
-    api.addAdjustment(data)
+  const apiCall = (data: apiSendData) => {
+    api.addCompliance(data)
       .then(showMessage)
       .finally(resetData)
+  }
+
+  const onAddAjustment = (data: apiSendData) => {
+    apiCall(data)
   }
   const onAddAdjustmentAndMint = (data: apiSendData) => {
-    api.addAdjustmentAndMintTokens(data)
-      .then(showMessage)
-      .finally(resetData)
+    apiCall(data)
+  }
+  const onRevertAdjustment = (data: apiSendData) => {
+    apiCall(data)
   }
   const onReconcileAndBurn = (data: apiSendData) => {
-    api.reconcileAndBrnTokens(data)
-      .then(showMessage)
-      .finally(resetData)
+    apiCall(data)
   }
   const onReconcileAndTransfer = (data: apiSendData) => {
-    api.reconcileAndTransferTokens(data)
-      .then(showMessage)
-      .finally(resetData)
+    apiCall(data)
+  }
+  const onRevertMint = (data: apiSendData) => {
+    apiCall(data)
   }
 
   const actions = {
@@ -134,6 +138,14 @@ const ReconciliationPage: React.FC = observer(() => {
       confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
+    [ReconciliationActions.RevertAdjustment]: {
+      title: "Revert Adjustment",
+      subTitle: "Enter an amount to revert a previous action",
+      next: onRevertAdjustment,
+      type: 'revert_fund_negative',
+      confirmTitle: "Confirm Amount",
+      selectRecipient: false
+    },
     [ReconciliationActions.ReconcileAndBurn]: {
       title: "Reconcile and burn Tokens",
       subTitle: "Enter an amount to be burned from the Negative Adjustment Account Wallet.",
@@ -150,6 +162,14 @@ const ReconciliationPage: React.FC = observer(() => {
       type: 'positive_to_user',
       confirmTitle: "Confirm Recipient",
       selectRecipient: true
+    },
+    [ReconciliationActions.RevertMint]: {
+      title: "Revert Mint",
+      subTitle: "Burn tokens to revert previous action",
+      next: onRevertMint,
+      type: 'revert_mint_to_positive',
+      confirmTitle: "Confirm Recipient",
+      selectRecipient: false
     },
   }
   const negativeActionList = [
@@ -172,7 +192,8 @@ const ReconciliationPage: React.FC = observer(() => {
     {
       label: "Revert Adjustment",
       action: () => {
-        alert("Revert Adjustment")
+        setCurrentAction(actions[ReconciliationActions.RevertAdjustment])
+        setShowPasswordModal(true)
       },
       disabled: false
     }
@@ -197,7 +218,8 @@ const ReconciliationPage: React.FC = observer(() => {
     {
       label: "Revert Adjustment & Burn Tokens",
       action: () => {
-        alert("Burn Tokens")
+        setCurrentAction(actions[ReconciliationActions.RevertMint])
+        setShowPasswordModal(true)
       },
       disabled: false
     }

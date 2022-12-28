@@ -11,8 +11,10 @@ import {RecipientType} from "./ReconciliationPage";
 export enum ReconciliationActions {
   AddAdjustment = 'AddAdjustment',
   AddAdjustmentAndMint = "AddAdjustmentAndMint",
+  RevertAdjustment = "RevertAdjustment",
   ReconcileAndBurn = "ReconcileAndBurn",
-  ReconcileAndTransfer = "ReconcileAndTransfer"
+  ReconcileAndTransfer = "ReconcileAndTransfer",
+  RevertMint = "RevertMint"
 }
 
 export const CredentialsModal = observer((props: any) => {
