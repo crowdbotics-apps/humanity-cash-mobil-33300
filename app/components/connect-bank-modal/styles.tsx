@@ -21,7 +21,7 @@ export default StyleSheet.create({
       height: 40,
       justifyContent: 'flex-start',
       marginRight: 30,
-      marginTop: 30,
+      marginTop: 40,
     },
     MODAL_BUTTON: {
       alignSelf: 'center',

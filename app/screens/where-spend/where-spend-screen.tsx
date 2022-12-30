@@ -297,42 +297,50 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                     resizeMode='cover'
                     style={styles.NEWS_IMAGE}
                   />
+                  {console.log('SelectedDetail => ' ,JSON.stringify(SelectedDetail, null ,2 ))}
                   <View style={styles.DETAIL_LINKS}>
-                    {SelectedDetail.website &&
-                      <MaterialCommunityIcons
+                    {SelectedDetail?.website
+                      ? <MaterialCommunityIcons
                         name={"web"}
                         size={25}
                         color={"black"}
                         style={{ marginRight: 8 }}
-                      />
+                      /> : null
                     }
-                    {SelectedDetail.facebook &&
-                      <FontAwesome
+                    {SelectedDetail?.facebook
+                      ? <FontAwesome
                         name={"facebook"}
                         size={25}
                         color={"black"}
                         style={{ marginRight: 8 }}
-                      />
+                      /> : null
                     }
-                    {SelectedDetail.twitter &&
-                      <FontAwesome
+                    {SelectedDetail?.twitter
+                      ? <FontAwesome
                         name={"twitter"}
                         size={25}
                         color={"black"}
                         style={{ marginRight: 8 }}
-                      />
+                      /> : null
                     }
-                    {SelectedDetail.instagram &&
-                      <FontAwesome
+                    {SelectedDetail?.instagram
+                      ? <FontAwesome
                         name={"instagram"}
                         size={25}
                         color={"black"}
                         style={{ marginRight: 8 }}
-                      />
+                      /> : null
                     }
-                    <Text style={styles.SEE_ON_MAP_LABEL}></Text>
+                    <View  style={styles.SEE_ON_MAP_LABEL}>
+
+                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>
+                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>
+                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.zip_code}</Text>
+                    </View>
                   </View>
                 </View>
+
+
                 <View style={styles.INDUSTRY_CONTAINER}>
                   <Text style={styles.INDUSTRY_TITLE}>ALL ACTIVE COUPONS</Text>
                   <View style={styles.LINE} />

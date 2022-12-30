@@ -43,6 +43,7 @@ export const LoginScreen = observer(function LoginScreen() {
       .login({ email: Username, password: Pass })
       .then((result: any) => {
         setLoading(false)
+        console.log(' setPassword ===>>> ', JSON.stringify({ email: Username, password: Pass }, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             loginStore.setUser(result.response)

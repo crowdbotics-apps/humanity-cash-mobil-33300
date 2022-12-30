@@ -144,7 +144,7 @@ export default StyleSheet.create({
 	},
   ROOT_MODAL: {
     alignItems: 'center',
-    backgroundColor: 'rgba(240, 240, 240, 0.90)',
+    backgroundColor: COLOR.PALETTE.modalBackgroundColor,
     flex: 1,
     justifyContent: 'space-around'
   },
