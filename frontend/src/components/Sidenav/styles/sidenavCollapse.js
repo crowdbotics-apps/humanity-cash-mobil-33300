@@ -48,6 +48,7 @@ function collapseItem(theme, ownerState) {
     userSelect: "none",
     whiteSpace: "nowrap",
     boxShadow:  "none",
+    marginBottom: 2,
     [breakpoints.up("xl")]: {
       transition: transitions.create(["box-shadow", "background-color"], {
         easing: transitions.easing.easeInOut,
@@ -82,9 +83,9 @@ function collapseIconBox(theme, ownerState, active) {
     }),
 
     "& svg, svg g": {
-      fill: active ? '#006ebf' : '#999999',
-      stroke: '#ffffff',
-      transform: 'scale(1.2)',
+      // fill: active ? '#3B88B6' : '#000000',
+      stroke: active ? '#3B88B6' : '#000000',
+      // transform: 'scale(1.2)',
       strokeWidth: 0
     },
   };
@@ -114,10 +115,10 @@ function collapseText(theme, ownerState) {
 
     "& span": {
       fontFamily: 'Montserrat',
-      fontWeight: active ? 700 : 400,
+      fontWeight: 400,
       fontSize: 14,
       lineHeight: 0,
-      color: active ? '#006ebf' : '#666665',
+      color: active ? '#3B88B6' : '#000000',
     },
   };
 }

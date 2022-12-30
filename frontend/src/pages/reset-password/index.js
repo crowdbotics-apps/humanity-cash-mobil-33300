@@ -27,6 +27,7 @@ import {showMessage, useApi} from "../../services/helpers";
 import {ROUTES} from "../../services/constants";
 import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
+import Card from "@mui/material/Card";
 
 const logo = require("../../assets/images/logo.png")
 
@@ -73,23 +74,24 @@ function ResetPassword() {
 
   return (
     <ImageContainer>
-      <MDBox pt={4} pb={3} px={3} width={{xs: '100%', md: 500}}>
-        <MDBox mb={2} textAlign={'center'}>
+      <MDBox pt={4} pb={3} px={3} width={{xs: '100%', md: 780}}>
+        <MDBox mb={5} textAlign={'center'}>
           <img
             alt="logo"
             src={logo}
+            style={{width: 370, height: 'auto', objectFit: 'cover'}}
           />
         </MDBox>
-        <MDBox mt={3} mb={5} textAlign="center">
-          <MDTypography
-            color="info"
-            fontWeight="medium"
-            textGradient
-            sx={{fontSize: 36}}
-          >
-            Reset Password
-          </MDTypography>
-        </MDBox>
+        <Card>
+          <MDBox mt={3} mb={5} textAlign="center">
+            <MDTypography color="primary" sx={{fontSize: 32, fontWeight: 400}}>
+              Reset password
+            </MDTypography>
+            <MDTypography color="dark" sx={{fontSize: 16, fontWeight: 400}}>
+              Create new password
+            </MDTypography>
+          </MDBox>
+          <MDBox mb={5} width={{xs: '100%', md: 600}} sx={{alignSelf: 'center'}}>
         <Formik
           innerRef={formikRef}
           enableReinitialize
@@ -108,8 +110,9 @@ function ResetPassword() {
                       <MDInput
                         type="password"
                         label="NEW PASSWORD"
-                        variant="standard"
+                        variant="outlined"
                         fullWidth
+                        password
                         placeholder="************"
                         error={touched.password === true && errors.password !== undefined}
                         helperText={touched.password === true && errors.password && errors.password}
@@ -127,8 +130,9 @@ function ResetPassword() {
                       <MDInput
                         type="password"
                         label="CONFIRM NEW PASSWORD"
-                        variant="standard"
+                        variant="outlined"
                         fullWidth
+                        password
                         placeholder="************"
                         error={touched.new_password2 === true && errors.new_password2 !== undefined}
                         helperText={touched.new_password2 === true && errors.new_password2 && errors.new_password2}
@@ -139,15 +143,24 @@ function ResetPassword() {
                 }
                 }
               </Field>
-              <MDBox mt={6} mb={1} mx={8}>
+              <MDBox mt={6} mb={1} sx={{ display: 'flex', flex: 1 }}>
                 <MDButton
+                  sx={{width: 290}}
+                  color="primary"
+                  size={'large'}
+                  variant={'outlined'}
+                  onClick={() => navigate(ROUTES.LOGIN)}
+                >
+                  Back
+                </MDButton>
+                <MDButton
+                  sx={{width: 290, marginLeft: 'auto'}}
                   loading={loading}
                   disabled={loading || !isValid}
-                  variant="gradient"
                   color="primary"
-                  fullWidth
                   type='submit'
                   size={'large'}
+                  ml={'auto'}
                 >
                   Reset
                 </MDButton>
@@ -155,6 +168,8 @@ function ResetPassword() {
             </Form>
           )}
         </Formik>
+          </MDBox>
+        </Card>
       </MDBox>
     </ImageContainer>
   );

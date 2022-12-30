@@ -7,14 +7,12 @@ import {Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import {CircularProgress, Grid, Input} from "@mui/material";
 import MDInput from "../../components/MDInput";
-import {ReactComponent as Search} from '../../assets/svg/search.svg'
 import Pagination from "../../components/Pagination/Pagination";
 import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 import ModalItem from "../../components/ModalItem";
 import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {NumericFormat} from "react-number-format";
-import {ReactComponent as FiltroIcon} from '../../assets/svg/FunnelSimple.svg'
 
 
 const Services = () => {
@@ -169,7 +167,7 @@ const Services = () => {
       <Grid container>
         <Grid item xs={8}>
           <MDBox sx={{backgroundColor: '#EBEBEB', borderRadius: 20, position: 'relative'}} px={5}>
-            <Search style={{position: 'absolute', bottom: 7, left: 10}}/>
+            {/*<Search style={{position: 'absolute', bottom: 7, left: 10}}/>*/}
             <Input
               ref={searchQueryBarRef}
               inputRef={searchQueryRef}
@@ -181,7 +179,7 @@ const Services = () => {
           </MDBox>
         </Grid>
         <Grid item xs={1} display="flex" alignItems="center" justifyContent="center">
-          {loading ? <CircularProgress size={24} color="primary"/> : <FiltroIcon/>}
+          {/*{loading ? <CircularProgress size={24} color="primary"/> : <FiltroIcon/>}*/}
         </Grid>
         <Grid item xs={3} justifyContent={'flex-end'} display={'flex'}>
           <MDButton ml={'auto'} disabled={loading} variant="gradient" color="primary" onClick={() => setOpen(true)}>

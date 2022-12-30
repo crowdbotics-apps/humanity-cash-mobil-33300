@@ -56,8 +56,8 @@ function SignIn() {
     api.login(data.email, data.password).then((result) => {
       if (result.kind === "ok") {
         runInAction(() => {
-          loginStore.setUser(result.response)
-          loginStore.setApiToken(result.response.token.access_token)
+          loginStore.setUser(result.response.user)
+          loginStore.setApiToken(result.response.access_token)
         })
         getPendingRequests()
         navigate(ROUTES.CALENDAR)
@@ -71,13 +71,13 @@ function SignIn() {
         }
       }
     })
-      .catch(err => showMessage())
+      .catch(err => console.log(err))
       .finally(() => setLoading(false))
   }
 
   const validationSchema =
     Yup.object().shape({
-      email: Yup.string().email().required(),
+      email: Yup.string().required(),
       password: Yup.string().required(),
     })
 
@@ -90,10 +90,11 @@ function SignIn() {
   return (
     <ImageContainer>
       <MDBox pt={4} pb={3} px={3} width={{xs: '100%', md: 780}}>
-        <MDBox mb={2} textAlign={'center'}>
+        <MDBox mb={5} textAlign={'center'}>
           <img
             alt="logo"
             src={logo}
+            style={{width: 370, height: 'auto', objectFit: 'cover'}}
           />
         </MDBox>
         <Card>
@@ -109,6 +110,8 @@ function SignIn() {
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
+              // validateOnChange={false}
+              validateOnBlur={false}
               onSubmit={values => {
                 login(values);
               }}
@@ -118,10 +121,9 @@ function SignIn() {
                   <Field name="email">
                     {({field}) => {
                       return (
-                        <MDBox mb={4}>
+                        <MDBox mb={2}>
                           <MDInput
-                            sx={{borderColor: 'red'}}
-                            type="email"
+                            type="text"
                             label="EMAIL ADDRESS OR USERNAME"
                             variant="outlined"
                             placeholder="john@example.com"
@@ -138,12 +140,13 @@ function SignIn() {
                   <Field name="password">
                     {({field}) => {
                       return (
-                        <MDBox mb={2}>
+                        <MDBox>
                           <MDInput
                             type="password"
                             label="PASSWORD"
                             variant="outlined"
                             fullWidth
+                            password
                             placeholder="************"
                             error={errors.password !== undefined}
                             helperText={errors.password && errors.password}
@@ -165,7 +168,7 @@ function SignIn() {
                       Forgot your password?
                     </MDTypography>
                   </MDBox>
-                  <MDBox mt={2} mb={1} mx={'auto'}>
+                  <MDBox mt={5} mb={1} mx={'auto'}>
                     <MDButton
                       sx={{width: 335}}
                       size={'large'}

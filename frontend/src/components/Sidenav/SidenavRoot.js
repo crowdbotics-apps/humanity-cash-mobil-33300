@@ -19,24 +19,20 @@ import {styled} from "@mui/material/styles";
 
 export default styled(Drawer)(({ theme, ownerState }) => {
   const { palette, boxShadows, transitions, breakpoints, functions } = theme;
-  const { transparentSidenav, whiteSidenav, miniSidenav, darkMode } = ownerState;
+  const { transparentSidenav, miniSidenav } = ownerState;
 
   const sidebarWidth = 250;
-  const { transparent, gradients, white, background } = palette;
+  const { backgroundSideNav } = palette;
   const { xxl } = boxShadows;
-  const { pxToRem, linearGradient } = functions;
+  const { pxToRem } = functions;
 
-  let backgroundValue = '#ffffff';
-
-  if (transparentSidenav) {
-    backgroundValue = transparent.main;
-  } else if (whiteSidenav) {
-    backgroundValue = white.main;
-  }
+  let backgroundValue = backgroundSideNav.default;
 
   // styles for the sidenav when miniSidenav={false}
   const drawerOpenStyles = () => ({
     background: backgroundValue,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
     height: '100vh',
     transform: "translateX(0)",
     transition: transitions.create("transform", {
@@ -59,6 +55,8 @@ export default styled(Drawer)(({ theme, ownerState }) => {
   // styles for the sidenav when miniSidenav={true}
   const drawerCloseStyles = () => ({
     background: backgroundValue,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
     height: '100vh',
     transform: `translateX(${pxToRem(-320)})`,
     transition: transitions.create("transform", {

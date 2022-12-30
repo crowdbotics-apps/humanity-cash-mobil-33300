@@ -24,6 +24,10 @@ const colors = {
     default: "#ffffff",
   },
 
+  backgroundSideNav: {
+    default: '#F7F5F0',
+  },
+
   text: {
     main: "#7b809a",
     focus: "#7b809a",

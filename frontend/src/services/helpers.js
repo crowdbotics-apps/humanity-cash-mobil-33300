@@ -6,6 +6,7 @@ import numeral from "numeral";
 import MDBox from "../components/MDBox";
 import CheckCircle from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import {createTheme} from "@mui/material/styles";
 
 
 export function formatDuration(period, maxgroups = 10) {
@@ -195,10 +196,27 @@ export const validateEmail = (email) => {
     );
 };
 
+const defaultColor = "#ff0000";
+const hoverColor = "#0000ff";
+const focusColor = "#00ff00";
 
-export const customInputStyle = theme => ({
-  notchedOutline: {
-    borderWidth: "2px",
-    borderColor: "#D59B76 !important"
+export const customInputTheme = createTheme({
+  overrides: {
+    MuiOutlinedInput: {
+      root: {
+        // Hover state
+        "&:hover $notchedOutline": {
+          borderColor: hoverColor
+        },
+        // Focused state
+        "&$focused $notchedOutline": {
+          borderColor: focusColor
+        }
+      },
+      // Default State
+      notchedOutline: {
+        borderColor: defaultColor
+      }
+    }
   }
 });

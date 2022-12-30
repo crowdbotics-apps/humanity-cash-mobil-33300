@@ -39,8 +39,6 @@ import ResetPassword from "./pages/reset-password";
 import NotFound from "./pages/not-found";
 import TermsAndCondition from "./pages/terms-and-conditions";
 import PrivacyPolicy from "./pages/privacy-policy";
-import ProfileDetail from "./pages/profile-detail";
-import ProfileEdit from "./pages/profile-edit";
 import {setupRootStore} from "./models";
 
 import icon from './assets/icons/favicon.png';
@@ -48,19 +46,17 @@ import {observer} from "mobx-react";
 
 
 function App() {
-  const [controller, dispatch] = useMaterialUIController();
+  const [controller] = useMaterialUIController();
   const {
     direction,
     layout,
     sidenavColor,
     transparentSidenav,
-    whiteSidenav,
     darkMode,
   } = controller;
   const {pathname} = useLocation();
 
   const [rootStore, setRootStore] = useState(undefined)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
 
   useEffect(() => {
@@ -72,7 +68,6 @@ function App() {
     (async () => {
       setupRootStore().then((rootStore)=>{
         setRootStore(rootStore)
-        setIsLoggedIn(rootStore.loginStore.isLoggedIn)
       })
     })()
   }, [])
@@ -117,7 +112,6 @@ function App() {
         <>
           <Sidenav
             color={sidenavColor}
-            brand={(transparentSidenav && !darkMode)}
             brandName=""
             routes={routes}
           />
@@ -130,11 +124,9 @@ function App() {
         <Route path={ROUTES.SET_NEW_PASSWORD} element={<ResetPassword />} />
         <Route path={ROUTES.TERMS_AND_CONDITIONS} element={<TermsAndCondition />} />
         <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
-        <Route path={ROUTES.MY_PROFILE} element={<ProfileDetail />} />
-        <Route path={ROUTES.EDIT_PROFILE} element={<ProfileEdit />} />
         <Route path={ROUTES.LOGOUT} element={<Logout />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/" element={<Navigate to={ROUTES.CALENDAR} replace />} />
+        {/*<Route path="/" element={<Navigate to={ROUTES.SER} replace />} />*/}
       </Routes>
     </ThemeProvider>
   )

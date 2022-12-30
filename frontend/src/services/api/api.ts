@@ -14,18 +14,18 @@ export class Api extends ApiBase {
   }
 
   async login(username: string, password: string): Promise<Types.SimplePostResult> {
-    return this.simple_post(`/rest-auth/login/`, {
+    return this.simple_post(`/dj-rest-auth/login/`, {
       email: username,
       password,
     })
   }
 
   async forgotPassword(email: string): Promise<Types.GenericResponse> {
-    return this.simple_post(`/rest-auth/password/reset/`, {email: email})
+    return this.simple_post(`/users/password/reset/`, {email: email})
   }
 
   async resetPassword(data: any): Promise<Types.GenericResponse> {
-    return this.simple_post(`/rest-auth/password/reset/confirm/`, data)
+    return this.simple_post(`/users/reset/`, data)
   }
 
   // Appointments

@@ -38,97 +38,119 @@
 
 // Material Dashboard 2 PRO React components
 // @mui icons
-import {ReactComponent as Bell} from './assets/svg/notificacion.svg'
-import {ReactComponent as Calendar} from './assets/svg/calendar.svg'
-import {ReactComponent as People} from './assets/svg/usuarios.svg'
-import {ReactComponent as Edit} from './assets/svg/edit.svg'
-import {ReactComponent as HandPeople} from './assets/svg/cliente.svg'
-import {ReactComponent as Schedule} from './assets/svg/Schedule.svg'
-import {ReactComponent as Briefcase} from './assets/svg/Briefcase.svg'
 import Services from "./pages/services";
-import CalendarPage from "./pages/calendar";
-import PendingRequests from "./pages/pending-requests";
-import Employees from "./pages/employees";
-import Customers from "./pages/customers";
-import Teams from "./pages/teams";
-import Notifications from "./pages/notifications";
-import PendingRequestsNumber from "components/BadgePendingRequests"
-import Frequencies from "./pages/frequencies";
+
+import Logout from "./pages/logout";
+import {ROUTES} from "./services/constants";
+import {
+  BlockChainIcon,
+  CarsRemoveIcon,
+  CashoutIcon,
+  DashboardIcon, DocumentIcon, LogoutIcon,
+  NoteIcon,
+  ReconciliationIcon, SubtAdminIcon,
+  UsersIcons, WalletIcon
+} from "./assets/svg";
 
 
 const routes = [
   {
     type: "collapse",
-    name: "Calendar",
-    key: "calendar",
-    icon: <Calendar />,
-    route: "/calendar/",
-    component: <CalendarPage />,
-    noCollapse: true
-  },
-
-  {
-    type: "collapse",
-    name: "Services",
+    name: "Dashboard",
     key: "services",
     route: "/services/",
     component: <Services/>,
-    icon: <Edit/>,
+    icon: <DashboardIcon />,
     noCollapse: true,
   },
-
   {
     type: "collapse",
-    name: "Customers",
+    name: "Reconciliation Action",
     key: "customers",
     route: "/customers/",
-    component: <Customers/>,
-    icon: <HandPeople/>,
+    component: <Services/>,
+    icon: <ReconciliationIcon/>,
     noCollapse: true,
   },
   {
     type: "collapse",
-    name: "Teams",
+    name: "Transaction Status",
     key: "teams",
     route: "/teams/",
-    component: <Teams/>,
-    icon: <People/>,
+    component: <Services/>,
+    icon: <CashoutIcon/>,
     noCollapse: true,
   },
   {
     type: "collapse",
-    name: "Employees",
+    name: "ACH Transaction",
     key: "employees",
     route: "/employees/",
-    component: <Employees/>,
-    icon: <Briefcase/>,
+    component: <Services/>,
+    icon: <CarsRemoveIcon/>,
     noCollapse: true,
   },
   {
     type: "collapse",
-    name: "Frequencies",
+    name: "Blockchain Transactions",
     key: "frequencies",
     route: "/frequencies/",
-    component: <Frequencies/>,
-    icon: <Schedule/>,
+    component: <Services/>,
+    icon: <BlockChainIcon/>,
     noCollapse: true,
   },
   {
     type: "collapse",
-    name: "Pending Requests",
+    name: "Users",
     key: "pending-requests",
     route: "/pending-requests/",
-    component: <PendingRequests/>,
-    icon: <PendingRequestsNumber />,
+    component: <Services/>,
+    icon: <UsersIcons />,
     noCollapse: true,
   },
   {
     type: "collapse",
-    name: "Notifications",
+    name: "Smart Contracts",
     key: "notifications",
     route: "/notifications/",
-    component: <Notifications/>,
-    icon: <Bell/>,
+    component: <Services/>,
+    icon: <NoteIcon/>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Content",
+    key: "content",
+    route: "/content/",
+    component: <Services/>,
+    icon: <DocumentIcon/>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Admin Employees",
+    key: "admin-emplo",
+    route: "/admin-emplo/",
+    component: <Services/>,
+    icon: <SubtAdminIcon/>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Admin Wallet Control",
+    key: "admin-wallet",
+    route: "/admin-wallet/",
+    component: <Services/>,
+    icon: <WalletIcon/>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Sign out",
+    key: "notifications1",
+    route: ROUTES.LOGOUT,
+    component: <Logout/>,
+    icon: <LogoutIcon/>,
     noCollapse: true,
   },
 ];

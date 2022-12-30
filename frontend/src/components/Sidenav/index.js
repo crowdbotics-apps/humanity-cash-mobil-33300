@@ -46,11 +46,16 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {ROUTES} from "../../services/constants";
 import {observer} from "mobx-react";
 
+
+const logoMini = require("../../assets/images/logo-mini.png")
+const logo = require("../../assets/images/logo_humanity.png")
+
 function Sidenav({color, brand, brandName, routes, ...rest}) {
   const rootStore = useStores()
   const navigate = useNavigate()
   const {loginStore} = rootStore
   const [openCollapse, setOpenCollapse] = useState(false);
+  const [showIcon, setShowIcon] = useState(true);
   const [openNestedCollapse, setOpenNestedCollapse] = useState(false);
   const [controller, dispatch] = useMaterialUIController();
   const {miniSidenav, transparentSidenav, whiteSidenav, darkMode} = controller;
@@ -99,7 +104,7 @@ function Sidenav({color, brand, brandName, routes, ...rest}) {
 
   const iconsStyle = ({palette: {dark, white, text}, functions: {rgba}}) => ({
     color: () => {
-      let colorValue = darkMode ? white.main : dark.main;
+      let colorValue = '#000000';
       return colorValue;
     },
   });
@@ -197,7 +202,6 @@ function Sidenav({color, brand, brandName, routes, ...rest}) {
               key={key}
               onClick={miniSidenav && closeSidenav}
             >
-
               <SidenavCollapse
                 name={name}
                 icon={icon}
@@ -216,7 +220,6 @@ function Sidenav({color, brand, brandName, routes, ...rest}) {
               icon={icon}
               active={key === collapseName}
               open={openCollapse === key}
-              sx={{color: 'rgba(0, 0, 0, 0.8)'}}
               onClick={() => (openCollapse === key ? setOpenCollapse(false) : setOpenCollapse(key))}
             >
               {collapse ? renderCollapse(collapse) : null}
@@ -255,6 +258,13 @@ function Sidenav({color, brand, brandName, routes, ...rest}) {
       return returnValue;
     }
   );
+
+  useEffect(() => {
+    if (!miniSidenav) {
+      setTimeout(() => setShowIcon(!miniSidenav), 100)
+    }
+  }, [miniSidenav])
+
   return (
     <SidenavRoot
       {...rest}
@@ -262,44 +272,31 @@ function Sidenav({color, brand, brandName, routes, ...rest}) {
       ownerState={{transparentSidenav, whiteSidenav, miniSidenav, darkMode}}
     >
       <MDBox textAlign="center">
-        <MDBox display={'flex'} flexDirection={'column'} sx={{height: 100}}>
-          <MDBox pl={2} display={'flex'} alignItems={'center'} justifyContent={'flex-start'} mt={'auto'}>
+        <MDBox display={'flex'} flexDirection={'column'} sx={{height: 80}}>
+          <MDBox pl={4} display={'flex'} alignItems={'center'} justifyContent={'flex-start'} mt={'auto'}>
             <div
-              onClick={() => navigate(ROUTES.MY_PROFILE)}
               style={{
-                width: 64,
                 height: 64,
-                borderRadius: 32,
-                backgroundColor: '#438B44',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                cursor: 'pointer'
             }}>
-              {loginStore.profile_picture ? (
-                <img src={loginStore.profile_picture} alt="" style={{width: 60, height: 60, borderRadius: 30, objectFit: 'cover'}}/>
-              ) : (<AccountCircleIcon color={'white'}  sx={{width: 60, height: 60}}/>)}
+              <img src={logoMini} alt="" style={{height: 27, objectFit: 'cover'}}/>
             </div>
-            <MDTypography sx={[(theme) =>
-              collapseText(theme, {
-                miniSidenav
-              })
-              , {
-                fontSize: 18,
-                color: '#000000',
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis',
-                width: 150
-              }]}>
-              {loginStore.name}
-            </MDTypography>
+            {showIcon && <MDBox ml={1} sx={
+               {
+                height: 64,
+                display: !miniSidenav ? 'flex' : 'none',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <img src={logo} alt="" style={{height: 27, objectFit: 'cover'}}/>
+            </MDBox>}
           </MDBox>
-          <MDBox sx={{height: 2, backgroundColor: '#ebebeb', width: '100%', marginTop: 'auto'}}/>
         </MDBox>
       </MDBox>
       <List>
-        <MDBox display={'flex'} alignItems={'center'} pl={4} mt={5} justifyContent={'flex-start'}>
+        <MDBox display={'flex'} alignItems={'center'} pl={4} mt={4} mb={2} justifyContent={'flex-start'}>
           <IconButton onClick={miniSidenav ? openSideNav : closeSidenav} size="small" disableRipple>
             <Icon fontSize="medium" sx={iconsStyle}>
               {miniSidenav ? "menu_open" : "menu"}
@@ -307,33 +304,6 @@ function Sidenav({color, brand, brandName, routes, ...rest}) {
           </IconButton>
         </MDBox>
         {renderRoutes}
-          <NavLink to={ROUTES.TERMS_AND_CONDITIONS}>
-            <MDTypography mt={8} sx={[(theme) =>
-              collapseText(theme, {
-                miniSidenav
-              })
-            , {fontSize: 15, paddingLeft: 3, color: 'rgba(0, 0, 0, 0.8)'}]}>
-              Terms and Conditions
-            </MDTypography>
-          </NavLink>
-        <NavLink to={ROUTES.PRIVACY_POLICY}>
-          <MDTypography mt={2} sx={[(theme) =>
-            collapseText(theme, {
-              miniSidenav
-            })
-            , {fontSize: 15, paddingLeft: 3, color: 'rgba(0, 0, 0, 0.8)'}]}>
-            Privacy Policy
-          </MDTypography>
-        </NavLink>
-        <NavLink to={ROUTES.LOGOUT}>
-          <MDTypography mt={2} sx={[(theme) =>
-            collapseText(theme, {
-              miniSidenav
-            })
-            , {fontSize: 15, paddingLeft: 3, color: 'rgba(0, 0, 0, 0.8)'}]}>
-            Sign Out
-          </MDTypography>
-        </NavLink>
       </List>
     </SidenavRoot>
   );

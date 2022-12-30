@@ -11,25 +11,16 @@ export const LoginStoreModel = types
   .extend(withEnvironment)
   .props({
     id: types.maybeNull(types.number),
+    username: types.maybeNull(types.string),
     first_name: types.maybeNull(types.string),
     last_name: types.maybeNull(types.string),
+    group: types.maybeNull(types.string),
+    role: types.maybeNull(types.string),
     email: types.maybeNull(types.string),
-    username: types.maybeNull(types.string),
     access_token: types.maybeNull(types.string),
     refresh_token: types.maybeNull(types.string),
-    name: types.maybeNull(types.string),
-    company_name: types.maybeNull(types.string),
-    display_company: types.maybeNull(types.boolean),
-    address: types.maybeNull(types.string),
-    zip_code: types.maybeNull(types.string),
-    phone_number: types.maybeNull(types.string),
-    profile_picture: types.maybeNull(types.string),
-    user_type: types.maybeNull(types.string),
-    frequency: types.maybeNull(types.string),
-    other: types.maybeNull(types.string),
-    notifications_enabled: types.maybeNull(types.boolean),
-    assigned_team: types.maybeNull(types.string),
-    number_of_pending_requests: types.maybeNull(types.number),
+    verified_email: types.maybeNull(types.boolean),
+    merchant_data: types.maybeNull(types.string),
   })
   .views(self => ({
     get isLoggedIn() {
@@ -58,50 +49,30 @@ export const LoginStoreModel = types
       }
 
     },
-    setUser(data: any) {
-      self.id = data.id
-      self.first_name = data.first_name
-      self.last_name = data.last_name
-      self.email = data.email
-      self.access_token = data.token.access_token
-      self.refresh_token = data.token.refresh_token
-      self.name = data.name
-      self.company_name = data.company_name
-      self.display_company = data.display_company
-      self.address = data.address
-      self.zip_code = data.zip_code
-      self.phone_number = data.phone_number
-      self.profile_picture = data.profile_picture
-      self.user_type = data.user_type
-      self.frequency = data.frequency
-      self.other = data.other
-      self.notifications_enabled = data.notifications_enabled
-      self.assigned_team = data.assigned_team
+    setUser(user: any) {
+      self.id = user.id
+      self.username = user.username
+      self.first_name = user.first_name
+      self.last_name = user.last_name
+      self.email = user.email
+      self.group = user.group
+      self.role = user.role
+      self.access_token = user.token.access
+      self.refresh_token = user.token.refresh
+      self.verified_email = user.verified_email
     },
     reset() {
+      const api = self.environment.api.apisauce
+      api?.deleteHeader("Authorization")
       self.id = null
+      self.username = null
       self.first_name = null
       self.last_name = null
       self.email = null
-      self.username = null
       self.access_token = null
       self.refresh_token = null
-      self.name = null
-      self.company_name = null
-      self.display_company = null
-      self.address = null
-      self.zip_code = null
-      self.phone_number = null
-      self.profile_picture = null
-      self.user_type = null
-      self.frequency = null
-      self.other = null
-      self.notifications_enabled = null
-      self.assigned_team = null
+      self.verified_email = null
     },
-    setPendingRequests(count: number) {
-      self.number_of_pending_requests = count;
-    }
   }))
 
 /**
