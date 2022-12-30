@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {observer} from "mobx-react-lite";
 import {Button, Form, Row} from "react-bootstrap";
 import AdminPanelContainer from "../../containers";
@@ -7,84 +7,126 @@ import {SearchIcon} from "../../components/icons";
 import AdvancedTable from "../../components/Table/AdvancedTable";
 import {useApi, useUserStore} from "../../utils";
 import {AmountModal, CredentialsModal, ReconciliationActions, ReconciliationConfirmModal} from "./modals";
-
 import ButtonWithPopover from "../../components/Popover";
 
+export type RecipientType = {
+  id: number,
+  label: string,
+  is_consumer: boolean
+}
+
+type apiSendData = {
+  type: string,
+  documentation: string,
+  amount: number,
+  profile_is_consumer: boolean,
+  profile_id: number | null,
+  password: string | null
+}
 
 const ReconciliationPage: React.FC = observer(() => {
-
-  const [LeftOpen, setLeftOpen] = useState<any>(true);
-  //const [RightOpen, setRightOpen] = useState<any>(true);
+  const resetData = () => {
+    setCurrentDocumentation("Placeholder")
+    setCurrentAmount(0)
+    setCurrentRecipient(null)
+    setSupervisorCredential("")
+  }
+  const showMessage = (res: any) => {
+    if (res.kind === 'ok') {
+      alert("Success")
+      console.log("res", res)
+    } else {
+      alert("Some error occurred")
+    }
+  }
+  const searchFn = (searchText: any) => {
+    return api.getRecipients(searchText)
+  }
+  const onClickFilter = () => {
+  }
+  const onClickPage = (page: number) => {
+    console.log("onclick page", page)
+    setCurrentPage(page)
+  }
+  const onPreviousPage = () => {
+    console.log("onPreviousPage page", Previous)
+    if (Previous) {
+      setCurrentPage(prevState => prevState - 1)
+    }
+  }
+  const onNextPage = () => {
+    console.log("onNextPage page", Next)
+    if (Next) {
+      setCurrentPage(prevState => prevState + 1)
+    }
+  }
+  const SearchInput = () => {
+    return (
+      <InputGroup className="mb-0 search-button-group">
+        <Button variant="outline-secondary" id="button-addon2" className='search-buttons'>
+          <SearchIcon/>
+        </Button>
+        <Form.Control
+          placeholder='Search'
+          type="search" name="search" className='search-button-navbar'
+        />
+      </InputGroup>)
+  }
+  const onSubmit = () => {
+    console.log("onsubmit")
+  }
+  const handleClose = () => {
+    console.log("handle close")
+    setShowPasswordModal(false)
+  }
   const [Items, setItems] = useState<any>([])
-  const [TotalItems, setTotalItems] = useState(0)
-  const [CurrentAmount, setCurrentAmount] = useState(0)
-  const [CurrentRecipient, setCurrentRecipient] = useState("")
-  const [CurrentPage, setCurrentPage] = useState(1)
+  const [TotalItems, setTotalItems] = useState<number>(0)
+  const [CurrentDocumentation, setCurrentDocumentation] = useState<string>("Placeholder")
+  const [CurrentAmount, setCurrentAmount] = useState<number>(0)
+  const [CurrentRecipient, setCurrentRecipient] = useState<RecipientType | null>(null)
+  const [supervisorCredential, setSupervisorCredential] = useState<string | null>(null)
+  const [CurrentPage, setCurrentPage] = useState<number>(1)
   const [Previous, setPrevious] = useState<string | null>(null)
   const [Next, setNext] = useState<string | null>(null)
   const [ShowPasswordModal, setShowPasswordModal] = useState<boolean>(false)
   const [ShowConfirmationModal, setShowConfirmationModal] = useState<boolean>(false)
   const [ShowAmountModal, setShowAmountModal] = useState<boolean>(false)
   const [CurrentAction, setCurrentAction] = useState<any>({})
-  const [supervisorCredential, setSupervisorCredential] = useState("")
-  const [profileIsConsumer, setProfileIsConsumer] = useState(false)
-  const [profileID, setProfileID] = useState(null)
-  const [Documentation, setDocumentation] = useState("Placeholder")
-  const dataRefInitialValue = {
-    type: '',
-    documentation: "Placeholder to fill",
-    amount: 0,
-    profile_is_consumer: false,
-    profile_id: null,
-    password: ""
-  }
-  const dataRef = useRef(dataRefInitialValue)
-
   const api = useApi()
   const userStore = useUserStore()
 
-  const initializeDataRef = () => {
-    setCurrentAmount(0)
-    setProfileIsConsumer(false)
-    setProfileID(null)
-    setSupervisorCredential("")
-    setDocumentation("Placeholder")
-    dataRef.current = dataRefInitialValue
+  // API calls
+  const apiCall = (data: apiSendData) => {
+    api.addCompliance(data)
+      .then(showMessage)
+      .finally(resetData)
   }
 
-  const onAddAjustment = () => {
-    dataRef.current.type = 'fund_negative'
-    api.addAdjustment(dataRef.current)
-      .finally(initializeDataRef)
+  const onAddAjustment = (data: apiSendData) => {
+    apiCall(data)
   }
-
-  const onAddAdjustmentAndMint = () => {
-    dataRef.current.type = 'burn_from_negative'
-    api.addAdjustmentAndMintTokens(dataRef.current)
-      .finally(initializeDataRef)
+  const onAddAdjustmentAndMint = (data: apiSendData) => {
+    apiCall(data)
   }
-
-
-  const onReconcileAndBurn = () => {
-    dataRef.current.type = 'mint_to_positive'
-    api.reconcileAndBrnTokens(dataRef.current)
-      .finally(initializeDataRef)
+  const onRevertAdjustment = (data: apiSendData) => {
+    apiCall(data)
   }
-
-  const onReconcileAndTransfer = () => {
-    dataRef.current.type = 'positive_to_user'
-    dataRef.current.profile_is_consumer = profileIsConsumer
-    dataRef.current.profile_id = profileID
-    api.reconcileAndTransferTokens(dataRef.current)
-      .finally(initializeDataRef)
+  const onReconcileAndBurn = (data: apiSendData) => {
+    apiCall(data)
   }
-
+  const onReconcileAndTransfer = (data: apiSendData) => {
+    apiCall(data)
+  }
+  const onRevertMint = (data: apiSendData) => {
+    apiCall(data)
+  }
 
   const actions = {
     [ReconciliationActions.AddAdjustment]: {
       title: "Add Adjustment",
       subTitle: "Enter an amount to be transferred from the Reserve Wallet to the Negative Mint Adjustment Account Wallet.",
       next: onAddAjustment,
+      type: 'fund_negative',
       confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
@@ -92,6 +134,15 @@ const ReconciliationPage: React.FC = observer(() => {
       title: "Add Adjustment",
       subTitle: "Enter an amount to be minted to the Positive Mint Adjustment Account Wallet.",
       next: onAddAdjustmentAndMint,
+      type: 'burn_from_negative',
+      confirmTitle: "Confirm Amount",
+      selectRecipient: false
+    },
+    [ReconciliationActions.RevertAdjustment]: {
+      title: "Revert Adjustment",
+      subTitle: "Enter an amount to revert a previous action",
+      next: onRevertAdjustment,
+      type: 'revert_fund_negative',
       confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
@@ -99,6 +150,7 @@ const ReconciliationPage: React.FC = observer(() => {
       title: "Reconcile and burn Tokens",
       subTitle: "Enter an amount to be burned from the Negative Adjustment Account Wallet.",
       next: onReconcileAndBurn,
+      type: 'mint_to_positive',
       confirmTitle: "Confirm Burn",
       selectRecipient: false
     },
@@ -107,11 +159,19 @@ const ReconciliationPage: React.FC = observer(() => {
       subTitle: "Enter an amount to be transferred from the Positive Mint Adjustment Account Wallet to the " +
         "Recipient wallet.",
       next: onReconcileAndTransfer,
+      type: 'positive_to_user',
       confirmTitle: "Confirm Recipient",
       selectRecipient: true
     },
+    [ReconciliationActions.RevertMint]: {
+      title: "Revert Mint",
+      subTitle: "Burn tokens to revert previous action",
+      next: onRevertMint,
+      type: 'revert_mint_to_positive',
+      confirmTitle: "Confirm Recipient",
+      selectRecipient: false
+    },
   }
-
   const negativeActionList = [
     {
       label: "Add Adjustment",
@@ -128,9 +188,16 @@ const ReconciliationPage: React.FC = observer(() => {
         setShowPasswordModal(true)
       },
       disabled: false
+    },
+    {
+      label: "Revert Adjustment",
+      action: () => {
+        setCurrentAction(actions[ReconciliationActions.RevertAdjustment])
+        setShowPasswordModal(true)
+      },
+      disabled: false
     }
   ]
-
   const positiveActionList = [
     {
       label: "Add Adjustment & Mint Tokens",
@@ -147,11 +214,17 @@ const ReconciliationPage: React.FC = observer(() => {
         setShowPasswordModal(true)
       },
       disabled: false
+    },
+    {
+      label: "Revert Adjustment & Burn Tokens",
+      action: () => {
+        setCurrentAction(actions[ReconciliationActions.RevertMint])
+        setShowPasswordModal(true)
+      },
+      disabled: false
     }
   ]
-
-
-  const COLUMN_TITLES = [
+  const ColumnsTitles = [
     '',
     'RESERVE WALLET',
     (<div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
@@ -167,17 +240,29 @@ const ReconciliationPage: React.FC = observer(() => {
       </div>
     </div>)]
 
+  const onConfirmAmountModal = (amount: number, recipient?: any) => {
+    if (amount > 0) {
+      setCurrentAmount(amount)
+    }
+    if (recipient) {
+      setCurrentRecipient(recipient)
+    }
+    setShowAmountModal(false)
+    setShowConfirmationModal(true)
+  }
 
-  const [ColumnsTitles, setColumnsTitles] = useState(COLUMN_TITLES)
-
-  useEffect(() => {
-    console.log(CurrentAmount, profileIsConsumer, profileID, supervisorCredential)
-    dataRef.current.amount = CurrentAmount
-    dataRef.current.documentation = Documentation
-    dataRef.current.profile_is_consumer = profileIsConsumer
-    dataRef.current.profile_id = profileID
-    dataRef.current.password = supervisorCredential
-  }, [CurrentAmount, profileIsConsumer, profileID, supervisorCredential, Documentation])
+  const onReconciliationConfirm = () => {
+    setShowConfirmationModal(false)
+    const data: apiSendData = {
+      type: CurrentAction.type,
+      documentation: CurrentDocumentation,
+      amount: CurrentAmount,
+      profile_is_consumer: CurrentRecipient ? CurrentRecipient.is_consumer : false,
+      profile_id: CurrentRecipient ? CurrentRecipient.id : null,
+      password: supervisorCredential
+    }
+    CurrentAction.next(data)
+  }
 
   useEffect(() => {
     userStore.setUp()
@@ -187,72 +272,15 @@ const ReconciliationPage: React.FC = observer(() => {
       negative: <div style={{fontWeight: 500, fontSize: "14px"}}>$ 0.00</div>,
       positive: <div style={{fontWeight: 500, fontSize: "14px"}}>$ 0.00</div>,
     }])
-
   }, [])
-
-  const onClickFilter = () => {
-
-  }
-
-
-  const onClickPage = (page: number) => {
-    console.log("onclick page", page)
-    setCurrentPage(page)
-  }
-
-  const onPreviousPage = () => {
-    console.log("onPreviousPage page", Previous)
-    if (Previous) {
-      setCurrentPage(prevState => prevState - 1)
-    }
-  }
-
-
-  const onNextPage = () => {
-    console.log("onNextPage page", Next)
-    if (Next) {
-      setCurrentPage(prevState => prevState + 1)
-    }
-  }
-
-  const SearchInput = () => {
-    return (
-      <InputGroup className="mb-0 search-button-group">
-        <Button variant="outline-secondary" id="button-addon2" className='search-buttons'>
-          <SearchIcon/>
-        </Button>
-        <Form.Control
-          placeholder='Search'
-          type="search" name="search" className='search-button-navbar'
-        />
-      </InputGroup>)
-  }
-
-  const onSubmit = () => {
-    console.log("onsubmit")
-  }
-
-  const handleClose = () => {
-    console.log("handle close")
-    setShowPasswordModal(false)
-  }
 
   return (
     <AdminPanelContainer
       search={<SearchInput/>}
       onclickFilter={onClickFilter}
       title={"Reconciliation Action"}
-      // filter={   <Filter
-      //   bank={BankFilter}
-      //   support={SupportFilter}
-      //   superAdmin={SuperAdminFilter}
-      //   apply={applyFilter}
-      //   cancel={cancelFilter}
-      //   clearAll={clearFilter}/>}
       navbarTitle={""}
-
     >
-
       <Row className={'main-row'}>
         <div className='content'>
           <AdvancedTable
@@ -280,24 +308,18 @@ const ReconciliationPage: React.FC = observer(() => {
                    title={CurrentAction.title}
                    selectRecipient={CurrentAction.selectRecipient}
                    subTitle={CurrentAction.subTitle}
+                   searchFn={searchFn}
                    onClose={() => {
                      setShowAmountModal(false)
                    }}
-                   onConfirm={(amount: number) => {
-                     setCurrentAmount(amount)
-                     setShowAmountModal(false)
-                     setShowConfirmationModal(true)
-                   }}/>
+                   onConfirm={onConfirmAmountModal}/>
 
       <ReconciliationConfirmModal
         showModal={ShowConfirmationModal}
         title={CurrentAction.confirmTitle}
         extraText={CurrentAction.selectRecipient ? "John Doe Wallet address 0xasdf234asdf0234" : ""}
         amount={CurrentAmount}
-        onConfirm={() => {
-          setShowConfirmationModal(false)
-          CurrentAction.next()
-        }}
+        onConfirm={onReconciliationConfirm}
         onClose={() => {
           setShowConfirmationModal(false)
         }}
