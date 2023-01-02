@@ -25,7 +25,7 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 PRO React contexts
 import {useMaterialUIController} from "context";
 
-function DataTableHeadCell({ width, children, sorted, align, withBorders=true, ...rest }) {
+function DataTableHeadCell({ width, children, sorted, align, withBorders= true, ...rest }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
@@ -38,7 +38,7 @@ function DataTableHeadCell({ width, children, sorted, align, withBorders=true, .
       sx={({ palette: { light }, borders: { borderWidth } }) => {
         if (withBorders)
           return ({
-            borderBottom: `${borderWidth[1]} solid #c9c9c9`,
+            borderBottom: `${borderWidth[1]} solid #3B88B6`,
           })
         else
           return ({
