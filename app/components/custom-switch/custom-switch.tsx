@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import { COLOR } from "../../theme"
 export function CustomSwitch({
@@ -16,6 +16,11 @@ export function CustomSwitch({
     setSelectionMode(val);
     onSelectSwitch(val);
   };
+
+  useEffect(() => {
+    setSelectionMode(selectionMode)
+  }, [selectionMode])
+  
  
   return (
     <View>
@@ -37,14 +42,14 @@ export function CustomSwitch({
           style={{
             flex: 1,
  
-            backgroundColor: getSelectionMode == 1 ? selectionColor : 'white',
+            backgroundColor: getSelectionMode === 1 ? selectionColor : 'white',
             borderRadius: getRoundCorner ? 25 : 0,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
           <Text
             style={{
-              color: getSelectionMode == 1 ? 'white' : selectionColor,
+              color: getSelectionMode === 1 ? 'white' : selectionColor,
             }}>
             {option1}
           </Text>
@@ -56,7 +61,7 @@ export function CustomSwitch({
           style={{
             flex: 1,
  
-            backgroundColor: getSelectionMode == 2 ? selectionColor : 'white',
+            backgroundColor: getSelectionMode === 2 ? selectionColor : 'white',
             borderRadius: getRoundCorner ? 25 : 0,
             justifyContent: 'center',
             alignItems: 'center',

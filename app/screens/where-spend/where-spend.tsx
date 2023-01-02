@@ -74,7 +74,7 @@ export default StyleSheet.create({
   INDUSTRY_CONTAINER: {
     alignSelf: 'center',
     height: 200,
-    marginBottom: 80,
+    marginBottom: 30,
     width: METRICS.screenWidth * 0.95
   },
   INDUSTRY_TITLE: {
@@ -138,8 +138,7 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
     justifyContent: 'space-between',
-    marginBottom: 80,
-    minHeight: METRICS.screenHeight
+    // minHeight: METRICS.screenHeight
   },
   SEARCH_INPUT_ADJUSTMENTS: {
     alignItems: 'center',

@@ -43,12 +43,12 @@ export const LoginScreen = observer(function LoginScreen() {
       .login({ email: Username, password: Pass })
       .then((result: any) => {
         setLoading(false)
-        console.log(' setPassword ===>>> ', JSON.stringify({ email: Username, password: Pass }, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
+            console.log(' setPassword ===>>> ', JSON.stringify(result, null, 2))
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
-            loginStore.setSelectedAccount('consumer')
+            loginStore.setSelectedAccount(result?.response?.user?.consumer_data ? 'consumer' : 'merchant')
             loginStore.setMerchantUser(result?.response?.user?.merchant_data)
             loginStore.setConsumerUser(result?.response?.user)
             if ((result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) &&

@@ -99,7 +99,6 @@ class TransactionSerializer(serializers.ModelSerializer):
         if obj.get_consumer_data:
             return ConsumerProfileDetailSerializer().to_representation(obj.get_consumer_data)
 
-
     @property
     def get_merchant_data(self, obj):
         if obj.get_consumer_data:

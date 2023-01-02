@@ -129,9 +129,10 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
 
     def get_object(self):
         user = self.request.user
-        if not user.consumer.dwolla_id:
-            # if dwolla_id is not set yet
-            create_dwolla_customer_consumer(user)
+        if user.get_consumer_data is not None:
+            if not user.consumer.dwolla_id:
+                # if dwolla_id is not set yet
+                create_dwolla_customer_consumer(user)
         return user
 
     def update(self, request, *args, **kwargs):

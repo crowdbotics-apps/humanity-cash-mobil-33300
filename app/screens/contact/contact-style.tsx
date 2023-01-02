@@ -108,6 +108,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 10,
     marginTop: 10,
+    alignItems: 'center'
   },
   HEADER_ACTIONS: {
     flexDirection: 'row',

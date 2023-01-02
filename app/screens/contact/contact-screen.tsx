@@ -47,6 +47,7 @@ export const ContactScreen = observer(function ContactScreen() {
             to_username: i.username,
             to_profile_photo: i.profile_picture
           }),
+          skip_pass: true
         })}
       >
         <Image
@@ -188,11 +189,11 @@ export const ContactScreen = observer(function ContactScreen() {
           <View style={styles.ROOT_CONTAINER}>
             <View style={styles.CONTAINER}>
               <View style={styles.HEADER_ACTIONS}>
-                <TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-                  <Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+                <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate('home')}>
+                  <Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
                   <Text
                     style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}
-                  >{` Menu`}</Text>
+                  >{` Home`}</Text>
                 </TouchableOpacity>
               </View>
 

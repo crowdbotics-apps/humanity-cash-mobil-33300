@@ -41,7 +41,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
     couponSelected: {},
     ShowConfirmCoupon: false
   });
-  const {couponSelected, ShowConfirmCoupon} = couponConfig;
+  const { couponSelected, ShowConfirmCoupon } = couponConfig;
 
   const getBusiness = () => {
     loginStore.environment.api
@@ -63,10 +63,10 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   }
 
   const openModal = (c: any) => setCouponConfig({
-		...couponConfig, 
-		ShowConfirmCoupon: !ShowConfirmCoupon,
-		couponSelected: c
-	});
+    ...couponConfig,
+    ShowConfirmCoupon: !ShowConfirmCoupon,
+    couponSelected: c
+  });
 
   useEffect(() => {
     if (isFocused) {
@@ -151,7 +151,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
             <View style={styles.LINE} />
             <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
               {category[i].map((b, key2) => (
-                <TouchableOpacity onPress={() =>[ getBusinessDetail(b.id)]} style={styles.BUSINESS} key={key + '' + key2}>
+                <TouchableOpacity onPress={() => [getBusinessDetail(b.id)]} style={styles.BUSINESS} key={key + '' + key2}>
                   <Image
                     source={{ uri: b.background_picture }}
                     resizeMode='cover'
@@ -297,7 +297,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                     resizeMode='cover'
                     style={styles.NEWS_IMAGE}
                   />
-                  {console.log('SelectedDetail => ' ,JSON.stringify(SelectedDetail, null ,2 ))}
+                  {console.log('SelectedDetail => ', JSON.stringify(SelectedDetail, null, 2))}
                   <View style={styles.DETAIL_LINKS}>
                     {SelectedDetail?.website
                       ? <MaterialCommunityIcons
@@ -331,7 +331,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                         style={{ marginRight: 8 }}
                       /> : null
                     }
-                    <View  style={styles.SEE_ON_MAP_LABEL}>
+                    <View style={styles.SEE_ON_MAP_LABEL}>
 
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>
@@ -347,7 +347,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                   <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
 
                     {SelectedDetail?.coupons && SelectedDetail?.coupons.map((b, key2) => (
-                      <TouchableOpacity 
+                      <TouchableOpacity
                         style={styles.BUSINESS} key={key2 + '_coupon'}
                         onPress={() => openModal(b)}
                       >
@@ -357,27 +357,27 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                           style={styles.BUSINESS_IMAGE}
                         />
                         <Text style={styles.BUSINESS_NAME}>{b.title}</Text>
-                        {loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === b.id) && 
-                         <Icon style={styles.FAVORITE_ICON} name={"star"} size={25} color={COLOR.PALETTE.mustard} /> 
+                        {loginStore.getConsumerCoupons.find(coupon => coupon.id_cupon === b.id) &&
+                          <Icon style={styles.FAVORITE_ICON} name={"star"} size={25} color={COLOR.PALETTE.mustard} />
                         }
-                        
+
                       </TouchableOpacity>
                     ))}
 
                   </ScrollView>
 
-                  { ShowConfirmCoupon &&
+                  {ShowConfirmCoupon &&
 
-                  <ConfirmCouponModal 
-                    couponsConfig={couponConfig}
-                    setCouponsConfig={setCouponConfig}
-                    visible={ShowConfirmCoupon} 
-                    buttonAction={() => setCouponConfig({...couponConfig, ShowConfirmCoupon: false})} 
-                    couponSelected={couponSelected}
-                    //@ts-ignore
-                    mode={!loginStore.getConsumerCoupons.some(c => c.id_cupon === couponSelected.id) ? 'ADD' : 'DELETE'}
-                    goBack={async () => [setShowDetail(!ShowDetail), setCouponConfig({...couponConfig, ShowConfirmCoupon: !ShowConfirmCoupon})]}
-                  />
+                    <ConfirmCouponModal
+                      couponsConfig={couponConfig}
+                      setCouponsConfig={setCouponConfig}
+                      visible={ShowConfirmCoupon}
+                      buttonAction={() => setCouponConfig({ ...couponConfig, ShowConfirmCoupon: false })}
+                      couponSelected={couponSelected}
+                      //@ts-ignore
+                      mode={!loginStore.getConsumerCoupons.some(c => c.id_cupon === couponSelected.id) ? 'ADD' : 'DELETE'}
+                      goBack={async () => [setShowDetail(!ShowDetail), setCouponConfig({ ...couponConfig, ShowConfirmCoupon: !ShowConfirmCoupon })]}
+                    />
                   }
                 </View>
               </View>
@@ -402,17 +402,23 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                 {ShowFilter && Filters()}
                 {RenderTopMonth()}
                 {RenderCategories()}
+
               </View>
             }
           </ScrollView>
+
+          {!ShowDetail
+            ? <Button
+              buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+              showBottonMenu
+              hideButton
+              accountType={loginStore.getSelectedAccount}
+            />
+            : null
+          }
         </View>
+
       }
-      <Button
-        buttonLabel={''}
-        hideButton
-        showBottonMenu={false}
-        accountType={loginStore.getSelectedAccount}
-      />
     </Screen>
   )
 })
