@@ -90,7 +90,6 @@ class TransactionSerializer(serializers.ModelSerializer):
                 username = obj.counterpart_merchant.user.username
         return username
 
-
     def get_type(self, obj):
         return obj.get_type_display()
 

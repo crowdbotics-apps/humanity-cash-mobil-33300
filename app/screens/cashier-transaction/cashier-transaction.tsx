@@ -196,16 +196,22 @@ export default StyleSheet.create({
   },
   RETURN_CONTAINER: {
     alignSelf: 'center',
-    backgroundColor: '#F8F6F2',
+    backgroundColor: COLOR.PALETTE.beige,
     height: 140,
     marginVertical: 10,
     width: METRICS.screenWidth * 0.95
+  },
+  RETURN_CONTAINER_MODAL: {
+    alignSelf: 'center',
+    height: 140,
+    marginVertical: 10,
+    width: METRICS.screenWidth * 0.80,
   },
   RETURN_DETAIL_CONTAINER: {
     alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: METRICS.screenWidth * 0.85,
+    width: METRICS.screenWidth * 0.75,
   },
   RETURN_DETAIL_LABEL: { 
     color: COLOR.PALETTE.black,
@@ -239,6 +245,13 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 20
+  },
+  RETURN_ITEM_MODAL: {
+    // bottom: 30,
+    color: COLOR.PALETTE.activeBlue,
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
   RETURN_ITEM_TIME: {
     color:  COLOR.PALETTE.gray,
@@ -314,11 +327,20 @@ export default StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
-
   SUB_TITLE: {
     color: COLOR.PALETTE.black,
     fontSize: 16,
     marginLeft: 10,
     width: METRICS.screenWidth * 0.90,
+  },
+
+  USER_IMAGE_CONTAINER: {
+    alignItems: 'center',
+    backgroundColor: COLOR.PALETTE.transparent,
+    borderRadius: 35,
+    bottom: 35,
+    height: 70,
+    justifyContent: 'center',
+    width: 70
   }
 })
