@@ -104,10 +104,10 @@ function DashboardNavbar({absolute, light, isMini}) {
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, {isMini})}>
-            <MDBox mr={4}>
+            <MDBox mr={2}>
               {!(window.innerWidth < 1200) &&
                 <Grid container>
-                  <MDBox sx={{backgroundColor: '#EBEBEB', borderRadius: 2, position: 'relative'}} px={5} mr={4}>
+                  <MDBox sx={{backgroundColor: '#EBEBEB', borderRadius: 2, position: 'relative'}} px={5}>
                     <Search style={{position: 'absolute', bottom: 8, left: 10}}/>
                     <Input
                       // ref={searchQueryBarRef}
@@ -119,9 +119,6 @@ function DashboardNavbar({absolute, light, isMini}) {
                       // onInputCapture={prepareCall}
                     />
                   </MDBox>
-                  <MDButton variant="standard" color="dark" iconOnly>
-                    <Icon sx={{ fontWeight: "bold" }}>tune</Icon>
-                  </MDButton>
                 </Grid>
                 }
             </MDBox>
@@ -140,16 +137,7 @@ function DashboardNavbar({absolute, light, isMini}) {
             </MDBox>
           </MDBox>
         )}
-
       </Toolbar>
-      <MDBox sx={{
-        marginLeft: isDrawed ? '18%' : '7%',
-        width: isDrawed ? '79%': '92%',
-        transition: '0.3s',
-        height: 2,
-        backgroundColor: '#3B88B6',
-        marginTop: 5
-      }}/>
     </AppBar>
   );
 }

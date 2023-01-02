@@ -120,28 +120,6 @@ function DataTable({
 
   return (
     <TableContainer sx={{boxShadow: "none", background: "transparent"}}>
-      {showHeader && showRecords && (entriesPerPage || canSearch) ? (
-        <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-          {canSearch && (
-            <MDBox width="12rem" ml="auto">
-              <MDInput
-                placeholder="Buscar..."
-                value={search}
-                size="small"
-                fullWidth
-                onChange={({currentTarget}) => {
-                  if (handleSearch) {
-                    handleSearch(currentTarget.value)
-                  } else {
-                    setSearch(search);
-                    onSearchChange(currentTarget.value);
-                  }
-                }}
-              />
-            </MDBox>
-          )}
-        </MDBox>
-      ) : null}
       <Table {...getTableProps()}>
         {showHeader && (<MDBox key={`tablehead__1`} component="thead">
           {headerGroups.map((headerGroup, idx) => (
@@ -153,7 +131,6 @@ function DataTable({
                   width={column.width ? column.width : "auto"}
                   align={column.align ? column.align : "left"}
                   sorted={false}
-                  withBorders={false}
                 >
                   {column.render("Header")}
                 </DataTableHeadCell>
@@ -183,7 +160,7 @@ function DataTable({
       </Table>
 
       {!externalPagination && <TablePagination
-        labelRowsPerPage={"Registros por página"}
+        labelRowsPerPage={"Rows per page"}
         labelDisplayedRows={
           ({from, to, count}) => {
             return `${from} — ${to} de ${count}`

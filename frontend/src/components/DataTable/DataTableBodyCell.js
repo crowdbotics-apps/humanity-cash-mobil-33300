@@ -31,14 +31,14 @@ function DataTableBodyCell({ noBorder, align, children }) {
         fontWeight: '500',
         fontFamily: 'Montserrat',
         fontStyle: 'normal',
-        borderBottom: noBorder ? "none" : `${borderWidth[1]} solid #c9c9c9`,
+        borderBottom: noBorder ? "none" : `${borderWidth[1]} solid #D59B76`
       })}
     >
       <MDBox
         display="inline-block"
         width="max-content"
         color="black"
-        sx={{ verticalAlign: "middle" }}
+        sx={{ verticalAlign: "middle"}}
       >
         {children}
       </MDBox>
