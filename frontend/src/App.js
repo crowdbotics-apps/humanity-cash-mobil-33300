@@ -126,7 +126,7 @@ function App() {
         <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
         <Route path={ROUTES.LOGOUT} element={<Logout />} />
         <Route path="*" element={<NotFound />} />
-        {/*<Route path="/" element={<Navigate to={ROUTES.SER} replace />} />*/}
+        <Route path="/" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
       </Routes>
     </ThemeProvider>
   )

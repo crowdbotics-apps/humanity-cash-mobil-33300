@@ -7,6 +7,7 @@ export const ROUTES = {
   LOGOUT: "/logout",
   LOGIN: "/login",
   ADMIN: process.env.REACT_APP_API_BASE_URL + '/admin/',
+  DASHBOARD: "/dashboard",
   CALENDAR: "/calendar",
   FORGOT_PASSWORD: "/forgot-password",
   SET_NEW_PASSWORD: "/set-new-password/*",
