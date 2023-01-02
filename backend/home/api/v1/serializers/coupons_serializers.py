@@ -2,12 +2,15 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 # from rest_auth.serializers import PasswordResetSerializer
+from home.api.v1.serializers.setup_profile_serializers import MerchantMyProfileSerializer
 from users.models import Coupon, ConsumerCoupon
 
 User = get_user_model()
 
 
 class CounponListSerializer(serializers.ModelSerializer):
+    merchant = MerchantMyProfileSerializer()
+
     class Meta:
         model = Coupon
         fields = [

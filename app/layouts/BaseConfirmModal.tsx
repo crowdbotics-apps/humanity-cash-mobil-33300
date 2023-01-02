@@ -27,7 +27,7 @@ export const BaseConfirmModal = ({
 
   const { loginStore } = useStores()
   const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander];
-  const userText = username.includes('@') ? username.replace('@', '') : username;
+  const userText = username?.includes('@') ? username.replace('@', '') : username;
   const profilePictureSrc = imgSrc !== '' ? {uri: imgSrc} : randomImages[Math.round(Math.random() * 3)];
   
   return (

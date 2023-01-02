@@ -47,7 +47,7 @@ export const LoginScreen = observer(function LoginScreen() {
           runInAction(() => {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
-            loginStore.setSelectedAccount('consumer')
+            loginStore.setSelectedAccount(result?.response?.user?.consumer_data ? 'consumer' : 'merchant')
             loginStore.setMerchantUser(result?.response?.user?.merchant_data)
             loginStore.setConsumerUser(result?.response?.user)
             if ((result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) &&

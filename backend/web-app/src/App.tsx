@@ -26,7 +26,7 @@ import UserDetailPage from "./pages/UserDetail";
 import {SocialMediaPage} from "./pages/SocialMedia/SocialMedia";
 import {AdminWalletControlPage} from "./pages/AdminWalletControl/AdminWalletControl";
 import SmartContracts from "./pages/SmartContracts";
-
+import ReconciliationPage from "./pages/Reconciliation/ReconciliationPage";
 
 // @ts-ignore
 const ProtectedRoute = ({ isAllowed }:{isAllowed:boolean}) => {
@@ -94,6 +94,7 @@ function App() {
             <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
             <Route element={<ProtectedRoute isAllowed={rootStore && rootStore.userStore.isLoggedIn} />} >
                   <Route path={ROUTES.CONTENTS} element={<ContentsPage />} />
+                  <Route path={ROUTES.RECONCILIATION} element={<ReconciliationPage />} />
                   <Route path={ROUTES.CONTRACTS} element={<SmartContracts />} />
                   <Route path={ROUTES.SOCIAL} element={<SocialMediaPage />} />
                   <Route path={ROUTES.WALLET} element={<AdminWalletControlPage />} />

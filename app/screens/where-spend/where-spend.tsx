@@ -7,20 +7,20 @@ export default StyleSheet.create({
     fontSize: 16
   },
   BUSINESS: {
-    marginRight: 15
+    marginRight: 15,
   },
   BUSINESS_CONTAINER: {
     flexDirection: 'row',
   },
   BUSINESS_IMAGE: {
-    //backgroundColor: 'red',
     height: 130,
     width: 90,
   },
   BUSINESS_NAME: {
     color: COLOR.PALETTE.black,
     fontSize: 10,
-    marginTop: 5
+    marginTop: 5,
+    width: 90,
   },
   CLEAR_FILTERS: {
     alignSelf: 'center',
@@ -50,6 +50,12 @@ export default StyleSheet.create({
     fontSize: 16,
     right: 10,
   },
+  FAVORITE_ICON: {
+    bottom: 35, 
+    height: 25,
+    left: 3, 
+    position: 'absolute',
+  },
   FILTER_CONTAINER: {
     alignSelf: 'center',
     width: METRICS.screenWidth * 0.95
@@ -68,7 +74,7 @@ export default StyleSheet.create({
   INDUSTRY_CONTAINER: {
     alignSelf: 'center',
     height: 200,
-    marginBottom: 10,
+    marginBottom: 30,
     width: METRICS.screenWidth * 0.95
   },
   INDUSTRY_TITLE: {
@@ -132,8 +138,7 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.white,
     flex: 1,
     justifyContent: 'space-between',
-    marginBottom: 80,
-    minHeight: METRICS.screenHeight
+    // minHeight: METRICS.screenHeight
   },
   SEARCH_INPUT_ADJUSTMENTS: {
     alignItems: 'center',
@@ -169,8 +174,9 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.blue,
     flex: 1,
     fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'right'
+    height: '75%',
+    justifyContent: 'center',
+    textAlign: 'right',
   },
   STEP_SUB_TITLE: {
     color: COLOR.PALETTE.black,
@@ -186,11 +192,5 @@ export default StyleSheet.create({
   },
   TOP_MONTH: {
     width: METRICS.screenWidth * 0.95 - 150,
-  },
-  FAVORITE_ICON: {
-    bottom: 35, 
-    height: 25,
-    left: 3, 
-    position: 'absolute',
   }
 })

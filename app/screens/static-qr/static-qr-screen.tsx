@@ -27,11 +27,9 @@ export const StaticQRScreen = observer(function StaticQRScreen() {
       },
       email: loginStore.getAllData.email
     }
-    console.log(' 0---->>> ', JSON.stringify(data, null, 2))
     loginStore.environment.api
       .sendQR(data)
       .then((result: any) => {
-        console.log(' =====>>>> ', JSON.stringify(result, null, 2))
         setLoading(false);
         if (result.kind === "ok") {
           runInAction(() => {

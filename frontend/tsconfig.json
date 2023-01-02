@@ -1,0 +1,20 @@
+
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es6",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "jsx": "react",
+    "allowJs": true,
+    "paths": {
+      "*": ["node_modules/*", "@types/*", "src/types/*", "public/src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "lib": ["es2016", "dom"]
+}

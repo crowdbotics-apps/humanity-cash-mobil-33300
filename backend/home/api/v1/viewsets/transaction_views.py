@@ -43,7 +43,7 @@ class TransactionViewSet(mixins.ListModelMixin,
             qs = qs.filter(Q(consumer__user_id=user_id) |
                            Q(merchant__user_id=user_id) |
                            Q(counterpart_consumer__user_id=user_id) |
-                           Q(counterpart_merchant__user_id=user_id) )
+                           Q(counterpart_merchant__user_id=user_id))
         return qs
 
     def get_serializer_class(self):
@@ -74,7 +74,7 @@ class SendMoneyView(AuthenticatedAPIView):
             from_password = body['password']
             amount = float(body.get('amount', 0))
             roundup = float(body.get('roundup', 0))
-            if from_.user.check_password(from_password):
+            if from_.user.check_password(from_password) or from_password is None:
                 total = amount + roundup
                 if amount <= 0 or roundup < 0 or total < 0.01:
                     return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)

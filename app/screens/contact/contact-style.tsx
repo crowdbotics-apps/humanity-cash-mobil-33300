@@ -79,6 +79,9 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     marginRight: 30
   },
+  CONTACT_CONTAINER: {
+    height: METRICS.screenHeight - 350,
+  },
   CONTAINER: {},
   DISTANCES_CONTAINER: {
     alignItems: 'center',
@@ -105,6 +108,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 10,
     marginTop: 10,
+    alignItems: 'center'
   },
   HEADER_ACTIONS: {
     flexDirection: 'row',
@@ -241,9 +245,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     marginBottom: '5%',
+    minHeight: 30,
     position: 'relative',
-    width: '100%', 
-    zIndex: 1000, 
+    width: '100%'
   },
   RETURN_ITEM_AMOUNT: {
     color: COLOR.PALETTE.pink,
@@ -269,7 +273,6 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 20,
-    marginTop: 25
   },
   RETURN_ITEM_MODAL: {
     bottom: 30,
@@ -300,7 +303,7 @@ export default StyleSheet.create({
   },
   ROOT_MODAL: {
     alignItems: 'center',
-    backgroundColor: 'rgba(240, 240, 240, 0.90)',
+    backgroundColor: COLOR.PALETTE.modalBackgroundColor,
     flex: 1,
     justifyContent: 'space-around'
   },

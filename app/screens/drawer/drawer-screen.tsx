@@ -296,7 +296,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
               // consumer
               <TouchableOpacity
                 key={'consumer_profile'}
-                style={styles.USER_CONTAINER_CHANGE}
+                style={[styles.USER_CONTAINER_CHANGE, {display: loginStore?.getProfilesId.consumer ? 'block' : 'none'}]}
                 onPress={() => [
                   loginStore.setSelectedAccount('consumer'),
                   props.navigation.navigate("home"),
