@@ -39,7 +39,7 @@
     font-size: 16px;
     cursor: default;
     font-size: 16px;
-    font-family: Gotham, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     line-height: 75%;
     color: #f8faf6;
 }
@@ -53,7 +53,7 @@
     font-size: 16px;
     cursor: default;
     font-size: 16px;
-    font-family:Gotham, Helvetica, sans-serif;
+    font-family:Arial, Helvetica, sans-serif;
     line-height: 75%;
     background: #fff;
     border: 1.5px solid #3B88B6;
@@ -94,6 +94,7 @@
 }
 
 .input-field {
+    font-family: Arial!important;
     background-color: #EFEFEF;
     border: none;
     border-radius: 3px;
@@ -102,6 +103,7 @@
 }
 
 .input-field:focus {
+
     background-color: #FFF;
     border: 2px solid #D59B76;
     outline: none;
@@ -117,7 +119,7 @@
     text-align: center;
     font-size: 16px;
     padding-bottom: 20px;
-    font-family: Gotham, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     line-height: 20%;
     color: #2e2e2e;
 }
@@ -134,7 +136,7 @@
 
 .inputlabel {
     font-size: 12px;
-    font-family: Gotham, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     line-height: 100%;
     color: #2e2e2e;
 }

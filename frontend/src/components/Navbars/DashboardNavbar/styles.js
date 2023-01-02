@@ -13,13 +13,12 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 function navbar(theme, ownerState) {
-  const { palette, boxShadows, functions, transitions, breakpoints, borders } = theme;
-  const { transparentNavbar, absolute, light, darkMode } = ownerState;
+  const { palette, boxShadows, functions, transitions, breakpoints } = theme;
+  const { transparentNavbar, absolute, light } = ownerState;
 
-  const { dark, white, text, transparent, background } = palette;
+  const { dark, white, text } = palette;
   const { navbarBoxShadow } = boxShadows;
-  const { rgba, pxToRem } = functions;
-  const { borderRadius } = borders;
+  const { pxToRem } = functions;
 
   return {
     boxShadow: transparentNavbar || absolute ? "none" : navbarBoxShadow,
@@ -71,6 +70,7 @@ const navbarContainer = ({ breakpoints }) => ({
   flexDirection: "column",
   alignItems: "flex-start",
   justifyContent: "space-between",
+
 
   [breakpoints.up("md")]: {
     flexDirection: "row",

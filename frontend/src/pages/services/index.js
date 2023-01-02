@@ -157,10 +157,10 @@ const Services = () => {
       getServices(searchQueryRef?.current?.value)
     }, 1000)
   }
-
-  useEffect(() => {
-    getServices("")
-  }, [])
+  //
+  // useEffect(() => {
+  //   getServices("")
+  // }, [])
 
   return (
     <DashboardLayout showCard loginRequired>

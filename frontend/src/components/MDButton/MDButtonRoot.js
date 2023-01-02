@@ -254,6 +254,8 @@ export default styled(Button)(({ theme, ownerState }) => {
       height: sizeValue,
       minHeight: sizeValue,
       padding: paddingValue,
+      borderRadius: 4,
+      backgroundColor: '#EBEBEB',
 
       "& .material-icons": {
         marginTop: 0,
