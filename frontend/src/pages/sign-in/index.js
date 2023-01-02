@@ -40,17 +40,6 @@ function SignIn() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
 
-  const getPendingRequests = () => {
-    api.getPendingRequests('', 1, '').then((result) => {
-      if (result.kind === "ok") {
-        const {count} = result.data
-        loginStore.setPendingRequests(count);
-      }
-    })
-      .catch(err => showMessage())
-      .finally(() => setLoading(false))
-  }
-
   const login = (data) => {
     setLoading(true)
     api.login(data.email, data.password).then((result) => {
@@ -59,8 +48,7 @@ function SignIn() {
           loginStore.setUser(result.response.user)
           loginStore.setApiToken(result.response.access_token)
         })
-        getPendingRequests()
-        navigate(ROUTES.CALENDAR)
+        navigate(ROUTES.DASHBOARD)
       } else {
         if (result.kind === "bad-data") {
           if (result.errors.non_field_errors) {
