@@ -51,6 +51,7 @@ import {
   ReconciliationIcon, SubtAdminIcon,
   UsersIcons, WalletIcon
 } from "./assets/svg";
+import BlockchainTransactions from "./pages/blockchain-transactions";
 
 
 const routes = [
@@ -95,7 +96,7 @@ const routes = [
     name: "Blockchain Transactions",
     key: "blockchain-transactions",
     route: "/blockchain-transactions/",
-    component: <Services/>,
+    component: <BlockchainTransactions/>,
     icon: <BlockChainIcon/>,
     noCollapse: true,
   },

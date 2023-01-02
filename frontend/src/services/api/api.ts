@@ -244,4 +244,89 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/cities/`, data)
   }
 
+  async createEvent(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(API_VERSION_PREFIX+"/event/", data)
+  }
+
+  async editEvent(id:number, data: any): Promise<Types.GenericResponse> {
+    return this.simple_patch(API_VERSION_PREFIX+`/event/${id}/`, data)
+  }
+
+  async getEvents(data: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+"/event/", data)
+  }
+
+  async deleteEvent(id: number): Promise<Types.GenericResponse> {
+    return this.simple_delete(API_VERSION_PREFIX+`/event/${id}/`)
+  }
+
+  async getUsers(data: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+"/user/", data)
+  }
+
+  async getConsumers(data: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+"/consumer/", data)
+  }
+  async getDwollaUsers(data: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+"/dwolla_user/", data)
+  }
+
+  async getUser(id: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+`/user/${id}/`,{})
+  }
+
+  async getDwollaUser(id: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+`/dwolla_user/${id}/`,{})
+  }
+
+  async createUser(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(API_VERSION_PREFIX+"/user/", data)
+  }
+
+
+  // async deleteUser(id: number, callback:Function) {
+  //   this.genericDelete(API_VERSION_PREFIX+`/user/${id}/`).then(value => {
+  //     callback()
+  //   })
+  // }
+
+  async getProblemResult(reactant: string, reagent: number): Promise<Types.SimpleGetResult> {
+    return this.simple_get(`/GenerateProduct.py?PathwayWeb=Yes&reactant=${reactant}&product=*&reagent_id=${reagent}`)
+  }
+
+  async getBlockchainTransactions(data: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+"/transaction/", data)
+  }
+  async getDashboardInfo(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+"/compliance/dashboard/")
+  }
+
+  async getACHTransactions(data: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+"/ach_transaction/", data)
+  }
+
+  async getContracts(data: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+"/contract/", data)
+  }
+
+  async getBlockchainTransaction(id:number, data: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX+`/transaction/${id}/`, data)
+  }
+
+  async addAdjustment(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
+  }
+
+  async reconcileAndBrnTokens(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
+  }
+
+  async addAdjustmentAndMintTokens(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
+  }
+
+  async reconcileAndTransferTokens(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
+  }
+
 }

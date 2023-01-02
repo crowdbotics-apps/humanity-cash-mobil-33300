@@ -43,14 +43,6 @@ function DashboardLayout({children, showCard = false, loginRequired = false, sho
     setLayout(dispatch, "dashboard");
   }, [pathname]);
 
-  const renderCard = (children) => {
-    return (
-      <Card sx={{backgroundColor: 'rgba(255, 255, 255, 0.95)', opacity:1, padding: 3, display: 'flex', flex: 1, minHeight: '75vh'}}>
-        {children}
-      </Card>
-    )
-  }
-
   const renderMainContent = (children) => {
     return (
       <MDBox
@@ -70,7 +62,7 @@ function DashboardLayout({children, showCard = false, loginRequired = false, sho
         {showNavbar && (<DashboardNavbar/>)}
         {fullSize && (
           children
-        )||(
+        ) || (
           <div style={{
             height: '100vh',
             width: '100%',
@@ -80,7 +72,7 @@ function DashboardLayout({children, showCard = false, loginRequired = false, sho
             padding: '11% 3% 2% 3%',
             overflowY: 'scroll'
           }}>
-            {showCard ? renderCard(children) : children}
+            {children}
           </div>
         )}
       </MDBox>
