@@ -196,27 +196,29 @@ export const validateEmail = (email) => {
     );
 };
 
-const defaultColor = "#ff0000";
-const hoverColor = "#0000ff";
-const focusColor = "#00ff00";
+export const truncate = (input, size) => input && input.length > size ? `${input.substring(0, size)}...` : input;
 
-export const customInputTheme = createTheme({
-  overrides: {
-    MuiOutlinedInput: {
-      root: {
-        // Hover state
-        "&:hover $notchedOutline": {
-          borderColor: hoverColor
-        },
-        // Focused state
-        "&$focused $notchedOutline": {
-          borderColor: focusColor
-        }
-      },
-      // Default State
-      notchedOutline: {
-        borderColor: defaultColor
-      }
-    }
+export const getErrorMessages = (err)=>{
+  console.log("error", err)
+  let message = ""
+  for (let k of Object.keys(err)){
+    message +=  err[k].join(". ")
   }
-});
+  return message
+}
+
+export const wrapHash = (txt)=>{
+  txt  = truncate(txt, 23)
+  const  middle = Math.round(txt.length/2) - 1
+  return <div>{txt.slice(0, middle)}<br/>{txt.slice(middle, txt.length)}</div>
+}
+
+export  const createdColumn = (opts) => {
+  return (
+    <div>
+      <span>{moment(opts.created).format('MMMM DD, YYYY')}</span>
+      <br/>
+      <span>{moment(opts.created).format('H:mm a').toUpperCase()}</span>
+    </div>
+  )
+}
