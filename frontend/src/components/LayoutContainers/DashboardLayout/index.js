@@ -64,14 +64,18 @@ function DashboardLayout({children, showCard = false, loginRequired = false, sho
           children
         ) || (
           <div style={{
-            height: '100vh',
             width: '100%',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            backgroundPosition: 'left',
-            padding: '11% 3% 2% 3%',
-            overflowY: 'scroll'
+            overflowY: 'scroll',
+            marginTop: 70,
+            padding: '0 30px 0 30px',
           }}>
+            <MDBox sx={{
+              width: '100%',
+              transition: '0.3s',
+              height: 2,
+              backgroundColor: '#3B88B6',
+              marginTop: 5
+            }}/>
             {children}
           </div>
         )}

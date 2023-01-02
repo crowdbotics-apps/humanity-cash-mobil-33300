@@ -95,13 +95,15 @@ class TransactionSerializer(serializers.ModelSerializer):
         return obj.get_type_display()
 
     def get_consumer_data(self, obj):
-        if obj.get_consumer_data:
-            return ConsumerProfileDetailSerializer().to_representation(obj.get_consumer_data)
+        consumer_data = obj.get_consumer_data
+        if consumer_data:
+            return ConsumerProfileDetailSerializer(consumer_data).data
         return None
 
     def get_merchant_data(self, obj):
-        if obj.get_consumer_data:
-            return MerchantMyProfileSerializer().to_representation(obj.get_merchant_data)
+        merchant_data = obj.get_merchant_data
+        if merchant_data:
+            return MerchantMyProfileSerializer(merchant_data).data
         return None
 
 

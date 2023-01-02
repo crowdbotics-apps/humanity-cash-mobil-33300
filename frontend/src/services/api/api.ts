@@ -294,9 +294,14 @@ export class Api extends ApiBase {
     return this.simple_get(`/GenerateProduct.py?PathwayWeb=Yes&reactant=${reactant}&product=*&reagent_id=${reagent}`)
   }
 
-  async getBlockchainTransactions(data: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+"/transaction/", data)
+  async getBlockchainTransactions(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {
+    const filters = `?page_size=${page_size}&page=${page}&search=${searchData}&ordering=${ordering}`
+    return this.simple_get(`${API_VERSION_PREFIX}/transaction/${filters}`, extraData)
   }
+
+  // async getBlockchainTransactions(data: any): Promise<Types.SimpleGetResult> {
+  //   return this.simple_get(API_VERSION_PREFIX+"/transaction/", data)
+  // }
   async getDashboardInfo(): Promise<Types.SimpleGetResult> {
     return this.simple_get(API_VERSION_PREFIX+"/compliance/dashboard/")
   }

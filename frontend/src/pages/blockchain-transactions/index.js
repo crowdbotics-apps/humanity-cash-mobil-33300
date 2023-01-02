@@ -11,6 +11,8 @@ import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 import ModalItem from "../../components/ModalItem";
 import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
+import MDTypography from "../../components/MDTypography";
+import {Grid} from "@mui/material";
 
 
 const BlockchainTransactions = () => {
@@ -22,77 +24,76 @@ const BlockchainTransactions = () => {
   const [recordList, setRecordList] = useState({...dataTableModel})
   const searchQueryRef = useRef("");
   const lastKeyPressedRef = useRef(null);
-  const [Items, setItems] = useState([])
 
 
   const getBlockchainTransactions = (searchData, page = 1, ordering = "") => {
     setLoading(true)
-    // api.getBlockchainTransactions(searchData, page, ordering, 8).then((result) => {
-    //   if (result.kind === "ok") {
-    //     const {count, results} = result.data
-    //     const tmp = {...dataTableModel}
-    //     tmp.rows = results.map(e => renderTableRow(e))
-    //     setRecordList(tmp)
-    //     setNumberOfItems(count)
-    //   }
-    // })
-    //   .catch(err => showMessage())
-    //   .finally(() => setLoading(false))
+    api.getBlockchainTransactions(searchData, page, ordering, 8).then((result) => {
+      if (result.kind === "ok") {
+        const {count, results} = result.data
+        const tmp = {...dataTableModel}
+        tmp.rows = results.map(e => renderTableRow(e))
+        setRecordList(tmp)
+        setNumberOfItems(count)
+      }
+    })
+      .catch(err => showMessage())
+      .finally(() => setLoading(false))
 
-    let params = {}
     // if (ShowUsername) {
     //   params["show_username"] = true
     //   params["password"] = Password
     // }
 
-    api.getBlockchainTransactions(params).then((result) => {
-      console.log(result)
-      if (result.kind === "ok") {
-        const tableRows = []
-        let index = 0
-        for (let data of result.data.results) {
-          let row = {
-            id: data.id,
-            hash: wrapHash(data.transaction_id),
-            fromUsername: wrapHash(data.from_username),
-            toUsername: <div>
-              <div style={{marginRight: 8}}>a</div>
-              {wrapHash(data.to_username)}</div>,
-            fromAddress: wrapHash(data.from_address),
-            toAddress: wrapHash(data.to_address),
-            type: data.type,
-            createdAt: data.created,
-            amount: data.amount,
-            confirmedBlocks: data.confirmations
-          }
-          // if (userStore.group === UserGroup.BANK.code) {
-          //   row["show"] = (<div>
-          //     <Button type={"button"} onClick={() => {
-          //       setShowUsername(true)
-          //       setShowPasswordModal(true)
-          //       setCurrentItem(row)
-          //       setCurrentIndex(index)
-          //
-          //     }} className={styles.showButton}>show</Button>
-          //   </div>)
-          // }
-          index++;
-          tableRows.push(row)
-        }
-        setItems(tableRows)
-      } else {
-        showMessage(getErrorMessages(result.errors))
-      }
-    })
+    // api.getBlockchainTransactions(params).then((result) => {
+    //   console.log(result)
+    //   if (result.kind === "ok") {
+    //     const tableRows = []
+    //     let index = 0
+    //     for (let data of result.data.results) {
+    //       let row = {
+    //         id: data.id,
+    //         hash: wrapHash(data.transaction_id),
+    //         fromUsername: wrapHash(data.from_username),
+    //         toUsername: <div>
+    //           <div style={{marginRight: 8}}>a</div>
+    //           {wrapHash(data.to_username)}</div>,
+    //         fromAddress: wrapHash(data.from_address),
+    //         toAddress: wrapHash(data.to_address),
+    //         type: data.type,
+    //         createdAt: data.created,
+    //         amount: data.amount,
+    //         confirmedBlocks: data.confirmations
+    //       }
+    //       // if (userStore.group === UserGroup.BANK.code) {
+    //       //   row["show"] = (<div>
+    //       //     <Button type={"button"} onClick={() => {
+    //       //       setShowUsername(true)
+    //       //       setShowPasswordModal(true)
+    //       //       setCurrentItem(row)
+    //       //       setCurrentIndex(index)
+    //       //
+    //       //     }} className={styles.showButton}>show</Button>
+    //       //   </div>)
+    //       // }
+    //       index++;
+    //       tableRows.push(row)
+    //     }
+    //     setItems(tableRows)
+    //     console.log('tableRows ', tableRows)
+    //   } else {
+    //     showMessage(getErrorMessages(result.errors))
+    //   }
+    // })
   }
   const onColumnOrdering = (ordering) => {
     const {column, order} = ordering
     if (column === '') {
-      getBlockchainTransactions(searchQueryRef?.current?.value)
+      getBlockchainTransactions(searchQueryRef?.current)
     } else if (order === 'asce') {
-      getBlockchainTransactions(searchQueryRef?.current?.value, 1, `${column}`)
+      getBlockchainTransactions(searchQueryRef?.current, 1, `${column}`)
     } else {
-      getBlockchainTransactions(searchQueryRef?.current?.value, 1, `-${column}`)
+      getBlockchainTransactions(searchQueryRef?.current, 1, `-${column}`)
     }
   }
 
@@ -108,26 +109,34 @@ const BlockchainTransactions = () => {
   }
 
   useEffect(() => {
-    getBlockchainTransactions()
+    getBlockchainTransactions("")
   }, [])
 
   return (
-    <DashboardLayout showCard loginRequired>
+    <DashboardLayout loginRequired>
       {recordList?.rows.length > 0
         ? (<DataTable table={recordList} onColumnOrdering={onColumnOrdering}/>)
         : <p style={{display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20}}>No
           blockchain transactions found</p>
       }
+      {recordList?.rows.length > 0 && <Grid container mt={5}>
+        <Grid item>
+          <MDBox sx={{color: '#666666', fontSize: 17, width: 300}}>Showing <span style={{color: '#000000'}}>8</span> from <span style={{color: '#000000'}}>{numberOfItems}</span> data</MDBox>
+        </Grid>
+        <Grid item ml={'auto'}>
+          <Pagination
+            currentPage={currentPage}
+            totalCount={numberOfItems}
+            pageSize={8}
+            onPageChange={page => {
+              getBlockchainTransactions('', page)
+              setCurrentPage(page)
+            }}
+          />
+        </Grid>
+      </Grid>}
 
-      <Pagination
-        currentPage={currentPage}
-        totalCount={numberOfItems}
-        pageSize={8}
-        onPageChange={page => {
-          getBlockchainTransactions('', page)
-          setCurrentPage(page)
-        }}
-      />
+
     </DashboardLayout>
   )
 }

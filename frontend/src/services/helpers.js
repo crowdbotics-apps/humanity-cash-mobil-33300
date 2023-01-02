@@ -207,10 +207,10 @@ export const getErrorMessages = (err)=>{
   return message
 }
 
-export const wrapHash = (txt)=>{
-  txt  = truncate(txt, 23)
+export const wrapHash = (txt) =>{
+  txt  = truncate(txt, 16)
   const  middle = Math.round(txt.length/2) - 1
-  return <div>{txt.slice(0, middle)}<br/>{txt.slice(middle, txt.length)}</div>
+  return txt.slice(0, middle) + txt.slice(middle, txt.length)
 }
 
 export  const createdColumn = (opts) => {
