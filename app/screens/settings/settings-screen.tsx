@@ -173,9 +173,7 @@ you back soon. `}
 				if (result.kind === "ok") {
           setLoading(true)
           setModalStep('finish')
-				} else if (result.kind === "bad-data") {
-
-				}
+        }
 			})
 	}
 
@@ -189,7 +187,7 @@ you back soon. `}
       <View style={styles.ROOT}>
         <View style={styles.CONTAINER}>
         <TouchableOpacity style={styles.BACK_BUTON_CONTAINER} onPress={() => navigation.navigate('home')}>
-				<Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+				<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
 				<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 			</TouchableOpacity>
           <View style={styles.STEP_CONTAINER}>

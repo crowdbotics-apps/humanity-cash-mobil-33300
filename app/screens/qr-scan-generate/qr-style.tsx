@@ -97,6 +97,19 @@ export default StyleSheet.create({
     marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },
+  INPUT_STYLE_CONTAINER_ERROR: {
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: `${COLOR.PALETTE.green}25`,
+    borderColor: COLOR.PALETTE.pink,
+    borderRadius: 3,
+    borderWidth: 0.8,
+    flexDirection: 'row',
+    height: 55,
+    justifyContent: 'center',
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.95
+  },
   LINE: {
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.purple,

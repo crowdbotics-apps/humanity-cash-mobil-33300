@@ -10,6 +10,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Image,
+  ScrollView
 } from "react-native"
 import { COLOR, IMAGES, METRICS } from "../../theme"
 import styles from "./contact-style"
@@ -34,43 +35,41 @@ export const ContactScreen = observer(function ContactScreen() {
   const [DetailModalVisible, setDetailModalVisible] = useState(false)
   const [TabIndex, setTabIndex] = React.useState(0)
 
-  const ContactList = ({data}) => {
-     return data.map((i, key2) => (
-        <TouchableOpacity
-          key={key2 + "_values"}
-          style={styles.RETURN_ITEM}
-          onPress={() =>
-            // @ts-ignore
-            [navigation.navigate("qr", {
-              QR: JSON.stringify({
-              to_is_consumer: TabIndex === 0,
-              to: i.id,
-              to_username: i.username, 
-              to_profile_photo: i.profile_picture
-            }),
-            })]
-          }
-        >
-          <Image
-            source={
+  const ContactList = ({ data }) => {
+    return data.map((i, key2) => (
+      <TouchableOpacity
+        key={key2 + "_values"}
+        style={styles.RETURN_ITEM}
+        onPress={() => navigation.navigate("qr", {
+          QR: JSON.stringify({
+            to_is_consumer: TabIndex === 0,
+            to: i.id,
+            to_username: i.username,
+            to_profile_photo: i.profile_picture
+          }),
+          skip_pass: true
+        })}
+      >
+        <Image
+          source={
             i.profile_picture
               ? { uri: i.profile_picture }
               : randomImages[Math.round(Math.random() * 3)]
-            }
-            resizeMode="cover"
-            style={styles.RETURN_IMAGE}
-          />
+          }
+          resizeMode="cover"
+          style={styles.RETURN_IMAGE}
+        />
 
-          <Text style={styles.RETURN_ITEM_CUSTOMER}>
-            {i.first_name && i.first_name !== ""
+        <Text style={styles.RETURN_ITEM_CUSTOMER}>
+          {i.first_name && i.first_name !== ""
             ? i.first_name + " " + i.last_name
             : i.business_name && i.business_name !== ""
-            ? i.business_name
-            : i.username}
-            {i.id}
-          </Text>
-        </TouchableOpacity>
-      ))
+              ? i.business_name
+              : i.username}
+          {i.id}
+        </Text>
+      </TouchableOpacity>
+    ))
   }
 
   const ReturnDetailModal = () => (
@@ -190,11 +189,11 @@ export const ContactScreen = observer(function ContactScreen() {
           <View style={styles.ROOT_CONTAINER}>
             <View style={styles.CONTAINER}>
               <View style={styles.HEADER_ACTIONS}>
-                <TouchableOpacity style={styles.HEADER} onPress={() => navigation.toggleDrawer()}>
-                  <Icon name={"menu"} size={23} color={loginStore.getAccountColor} />
+                <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate('home')}>
+                  <Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
                   <Text
                     style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}
-                  >{` Menu`}</Text>
+                  >{` Home`}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -236,7 +235,7 @@ export const ContactScreen = observer(function ContactScreen() {
                       titleStyle={{ fontSize: 12, color: loginStore.getAccountColor }}
                     />
                   </Tab>
-                  <View>
+                  <ScrollView style={styles.CONTACT_CONTAINER}>
                     { TabIndex === 0 
                       ? (Array.isArray(peopleData) && peopleData.length > 0) 
                         ? <ContactList data={peopleData} />
@@ -246,7 +245,8 @@ export const ContactScreen = observer(function ContactScreen() {
                         ? <ContactList data={businessData} />
                         : <OnEmptyContactList />
                     }
-                  </View>
+                    <View style={styles.RETURN_ITEM} />
+                  </ScrollView>
                 </View>
               </View>
             </View>

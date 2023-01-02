@@ -20,6 +20,7 @@ import Ionicons from "react-native-vector-icons/Ionicons"
 import { BaseConfirmModal as UserModal } from '../../layouts'
 
 // steps = ['tabs', 'amount', 'pass', 'finish']
+const maxAmount = 2000
 
 export const QRScreen = observer(function QRScreen(props: any) {
   const navigation = useNavigation()
@@ -34,6 +35,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
   const [Amount, setAmount] = useState('0')
   const [RoundedAmount, setRoundedAmount] = useState(0);
   const [Loading, setLoading] = useState(false)
+  const [SkipPass, setSkipPass] = useState(false)
   const [Pass, setPass] = useState('')
   const [HidePass, setHidePass] = useState(true)
   const toggleSwitch = () => setScanQR(previousState => !previousState)
@@ -46,6 +48,8 @@ export const QRScreen = observer(function QRScreen(props: any) {
   const [ShowQR, setShowQR] = useState(false)
   const [ShowConfirmationModal, setShowConfirmationModal] = useState(false)
 
+  const [AmountError, setAmountError] = useState(false)
+
   const transferCurrency = () => {
     if (!QR) return
     setLoading(true)
@@ -55,11 +59,10 @@ export const QRScreen = observer(function QRScreen(props: any) {
       "to": QR?.to,
       "from_is_consumer": loginStore.getSelectedAccount === 'consumer',
       "to_is_consumer": QR?.to_is_consumer,
-      "password": Pass,
+      "password": Pass || null,
       "amount": props?.route?.params?.QR ? Amount : QR?.amount,
       "roundup": 0,
     }
-
     loginStore.environment.api
       .sendMoney(data)
       .then((result: any) => {
@@ -131,11 +134,11 @@ export const QRScreen = observer(function QRScreen(props: any) {
         <Button
           buttonStyle={[{ backgroundColor: loginStore.getAccountColor }, styles.CONFIRM_MODAL_PAY_BUTTON_ROUND]}
           buttonLabel={`Round up to C$ ${RoundedAmount}`}
-          onPress={() => [
-            setShowConfirmationModal(false),
-            setStep('pass'),
+          onPress={() => {
+            setShowConfirmationModal(false)
             setAmount(RoundedAmount.toString())
-          ]}
+            SkipPass ? transferCurrency() : setStep('pass')
+          }}
         />
       </View>
       <Text style={styles.CONFIRM_MODAL_SECONDARY_TEXT}>THE ROUND UP IS A NON REFUNDABLE DONATION</Text>
@@ -174,8 +177,11 @@ export const QRScreen = observer(function QRScreen(props: any) {
 
   useEffect(() => {
     if (isFocused) {
-      // if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-      // else setShowBankModal(false)
+
+      loginStore.getSelectedAccount === 'consumer'
+        ? setScanQR(true)
+        : setScanQR(false)
+
       if (props?.route?.params) {
         if (props?.route?.params?.QR) {
           const qrInfo = props?.route?.params?.QR;
@@ -186,6 +192,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
               username: userInfo?.to_username ?? '',
               photo: userInfo?.to_profile_photo ?? '',
             }
+            if (props?.route?.params?.skip_pass) setSkipPass(true)
           } catch (error) {
             alert(error)
           }
@@ -199,7 +206,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
       <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
         <Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
       </View>
-      <View style={styles.INPUT_STYLE_CONTAINER}>
+      <View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
         {/* <Text style={styles.INPUT_LABEL_STYLE}> C$</Text> */}
         <TextInput
           placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
@@ -208,6 +215,10 @@ export const QRScreen = observer(function QRScreen(props: any) {
           onChangeText={t => {
             let temp = t.replace('C', '').replace('$', '').replace(' ', '')
             temp = temp.replace(",", ".")
+            // review max amount
+            if (parseFloat(temp) > maxAmount) setAmountError(true)
+            else setAmountError(false)
+
             setAmount(temp)
           }}
           value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
@@ -221,19 +232,19 @@ export const QRScreen = observer(function QRScreen(props: any) {
       </TouchableOpacity>
       <Button
         buttonStyle={{
-          backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
+          backgroundColor: (ButtonDisabled || AmountError) ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
         }}
         onPress={() => setShowQR(true)}
         buttonLabel={'Next'}
-        disabled={ButtonDisabled}
+        disabled={(ButtonDisabled || AmountError)}
       />
     </View>
   </View>
-  const renderTabs = <>
+  const renderTabs = (scan) => <>
     <View style={styles.STEP_CONTAINER}>
       <View style={styles.SWITCH_CONTAINER}>
         <CustomSwitch
-          selectionMode={2}
+          selectionMode={scan ? 1 : 2}
           roundCorner={true}
           option1={'Pay'}
           option2={'Receive'}
@@ -242,7 +253,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
         />
       </View>
     </View>
-    {ScanQR
+    {scan
       ? <QRCodeScanner onRead={e => readQRAction(e.data)} />
       : inputQR()
     }
@@ -258,7 +269,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
           <Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
           <Text style={styles.INPUT_LABEL_STYLE}>MAX. CURRENTS 2,000</Text>
         </View>
-        <View style={styles.INPUT_STYLE_CONTAINER}>
+        <View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
           <TextInput
             placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
             style={styles.INPUT_STYLE}
@@ -266,6 +277,10 @@ export const QRScreen = observer(function QRScreen(props: any) {
             onChangeText={t => {
               let temp = t.replace('C', '').replace('$', '').replace(' ', '')
               temp = temp.replace(",", ".")
+              // review max amount
+              if (parseFloat(temp) > maxAmount) setAmountError(true)
+              else setAmountError(false)
+
               setAmount(temp)
             }}
             value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
@@ -275,8 +290,9 @@ export const QRScreen = observer(function QRScreen(props: any) {
       </View>
       <View style={styles.CONTAINER}>
         <Button
-          buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+          buttonStyle={{ backgroundColor: (Loading || AmountError) ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
           loading={Loading}
+          disabled={Loading || AmountError}
           onPress={() => setShowConfirmationModal(true)}
           buttonLabel={'Confirm'}
         />
@@ -322,6 +338,9 @@ export const QRScreen = observer(function QRScreen(props: any) {
       <Text style={[styles.STEP_SUB_TITLE, { margin: 10 }]}>{TransactionErrorMsg}</Text>
     </View>
     <View style={styles.CONTAINER}>
+      <TouchableOpacity onPress={() => setStep('amount')} style={styles.NEED_HELP_CONTAINER}>
+        <Text style={styles.NEED_HELP_LINK}>Try a different amount</Text>
+      </TouchableOpacity>
       <Button
         buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
         loading={Loading}
@@ -336,7 +355,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
     let step
     switch (Step) {
       case 'tabs':
-        step = renderTabs
+        step = renderTabs(ScanQR)
         break;
       case 'amount':
         step = renderAmount
@@ -358,6 +377,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
     setScanQR(false)
     switch (Step) {
       case 'tabs':
+        setSkipPass(false)
         navigation.navigate("home")
         break;
       case 'amount':
@@ -365,6 +385,10 @@ export const QRScreen = observer(function QRScreen(props: any) {
         break;
       case 'pass':
         setStep('amount')
+        break;
+      case 'finish':
+        setSkipPass(false)
+        navigation.navigate("home")
         break;
       default:
         setStep('tabs')
@@ -383,7 +407,10 @@ export const QRScreen = observer(function QRScreen(props: any) {
         <View style={styles.CONTAINER}>
           <TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
             <Icon name={"arrow-back"} size={23} color={!(ScanQR && Step === 'tabs') ? '#000' : '#FFF'} />
-            <Text style={[styles.BACK_BUTON_LABEL, { color: !(ScanQR && Step === 'tabs') ? '#000' : '#FFF' }]}>{` Home`}</Text>
+            <Text style={[styles.BACK_BUTON_LABEL, { color: !(ScanQR && Step === 'tabs') ? '#000' : '#FFF' }]}>
+              {(Step === 'tabs' || Step === 'finish') ? ' Home' : ' Back'
+              }
+            </Text>
           </TouchableOpacity>
         </View>
         {renderStep()}

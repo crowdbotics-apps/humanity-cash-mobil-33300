@@ -10,8 +10,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from celo_humanity.humanity_contract_helpers import NoWalletException, get_wallet_balance, transfer_coin, get_wallet, \
     deposit_coin, withdraw_coin, WalletAlreadyCreatedException
-from celo_humanity.web3helpers import get_provider, text2keccak
-from humanity_cash_mobil_33300 import settings
+from celo_humanity.web3helpers import text2keccak
 from users.constants import Industry, UserGroup, UserRole
 
 

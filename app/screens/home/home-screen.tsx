@@ -124,7 +124,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api.getCoupons()
 			.then((result) => {
 				if (result.kind === 'ok') {
-					setCouponsConfig({ ...couponsConfig, coupons: result.data.results })
+					setCouponsConfig({ ...couponsConfig, coupons: result?.data?.results || [] })
 				}
 			})
 			.catch(error => console.log('GET ALL COUPONS ERROR ', error.message))
@@ -178,7 +178,7 @@ export const HomeScreen = observer(function HomeScreen() {
 						<TouchableOpacity
 							style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
 							onPress={() => [
-								loginStore.setSelectedAccount('consumer'),
+								loginStore.setSelectedAccount('merchant'),
 								setShowConfirmLogoutModal(false)
 							]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>

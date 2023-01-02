@@ -12,6 +12,8 @@ import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import Ionicons from "react-native-vector-icons/Ionicons"
 
+const maxAmount = 2000
+
 export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
@@ -30,6 +32,8 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const [HidePass, setHidePass] = useState(true)
 	const [Sucess, setSucess] = useState(true)
 	const [ResponseMenssage, setResponseMenssage] = useState('')
+
+	const [AmountError, setAmountError] = useState(false)
 
 	useEffect(() => {
 		if (isFocused) {
@@ -276,13 +280,17 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 						<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
 					</View>
-					<View style={styles.INPUT_STYLE_CONTAINER}>
+					<View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
 						<TextInput
 							style={styles.INPUT_STYLE}
 							keyboardType='numeric'
 							onChangeText={t => {
 								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
 								temp = temp.replace(",", ".")
+								// review max amount
+								if (parseFloat(temp) > maxAmount) setAmountError(true)
+								else setAmountError(false)
+
 								setAmount(temp)
 							}}
 							value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
@@ -300,8 +308,8 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 				{passModal()}
 			</KeyboardAvoidingView>
 			<Button
-				buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
-				disabled={ButtonDisabled}
+				buttonStyle={{ backgroundColor: (ButtonDisabled || AmountError) ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
+				disabled={(ButtonDisabled || AmountError)}
 				onPress={() => setShowPassModal(true)}
 				buttonLabel={'Load up'}
 			/>

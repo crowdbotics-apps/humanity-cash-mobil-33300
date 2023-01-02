@@ -31,7 +31,7 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
 
   const [Username, setUsername] = useState("")
 
-    const [Pass, setPass] = useState("")
+  const [Pass, setPass] = useState("")
   const [PassConfirm, setPassConfirm] = useState("")
   const [HidePass, setHidePass] = useState(true)
   const [HidePassConfirm, setHidePassConfirm] = useState(true)
@@ -85,8 +85,10 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
       .passwordSet({ password: Pass, password_confirm: PassConfirm, token: Token, email: Username })
       .then(result => {
         setLoading(false)
+        console.log(' setPassword ===>>> ', Username, Pass, JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
+            setStep('email')
             notifyMessage("You’ve successfully changed your password!")
             navigation.navigate('login')
           })
@@ -104,6 +106,12 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
       .then(result => {
         setLoading(false)
         if (result.kind === "ok") {
+          setCode1("")
+          setCode2("")
+          setCode3("")
+          setCode4("")
+          setCode5("")
+          setCode6("")
           notifyMessage("Email verified", "success")
           setToken(result.response.token)
           setStep("new_pass")

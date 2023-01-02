@@ -1,17 +1,20 @@
 import Modal from "react-bootstrap/Modal";
-import {Button, Form, Row} from "react-bootstrap";
+import {Button, Col, Form, ListGroup, Row, Tab} from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import Stack from "react-bootstrap/Stack";
 import styles from "./BlockchainTransactions.module.css";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {observer} from "mobx-react-lite";
 import {Eyes, SearchIcon} from "../../components/icons";
+import {RecipientType} from "./ReconciliationPage";
 
 export enum ReconciliationActions {
   AddAdjustment = 'AddAdjustment',
   AddAdjustmentAndMint = "AddAdjustmentAndMint",
+  RevertAdjustment = "RevertAdjustment",
   ReconcileAndBurn = "ReconcileAndBurn",
-  ReconcileAndTransfer = "ReconcileAndTransfer"
+  ReconcileAndTransfer = "ReconcileAndTransfer",
+  RevertMint = "RevertMint"
 }
 
 export const CredentialsModal = observer((props: any) => {
@@ -22,11 +25,9 @@ export const CredentialsModal = observer((props: any) => {
   const [Password, setPassword] = useState<string>("")
   const [Password2, setPassword2] = useState<string>("")
 
-
   useEffect(() => {
     setDisableCredentialBtn(!Password || Password !== Password2)
   }, [Password2, Password])
-
 
   return (
     <Modal
@@ -99,9 +100,59 @@ export const CredentialsModal = observer((props: any) => {
   )
 })
 
+export const ListResultData = ({data, callback}: any) => {
+  const handleClick = (element: any) => {
+    callback(element)
+  }
+
+  return (<Tab.Container id="list-group-tabs-example" defaultActiveKey="#link1">
+    <Row>
+      <Col sm={12}>
+        <ListGroup>
+          {data.map((e: any, k: number) =>
+            <ListGroup.Item key={`k_${k}`} onClick={() => handleClick(e)}>
+              {e.label}
+            </ListGroup.Item>
+          )}
+        </ListGroup>
+      </Col>
+    </Row>
+  </Tab.Container>)
+}
+
 export const AmountModal = observer((props: any) => {
-  const {showModal, onConfirm, onClose, title, subTitle, selectRecipient} = props
+  const {showModal, onConfirm, onClose, title, subTitle, selectRecipient, searchFn} = props
+  const [Recipient, setRecipient] = useState<any>(null)
   const [Amount, setAmount] = useState<string>("0")
+  const [RecipientsList, setRecipientsList] = useState<RecipientType[]>([])
+  const [showRecipientsList, setShowRecipientsList] = useState<boolean>(false)
+
+  const searchRecipients = (e: any) => {
+    const searchTxt: string = e.target.value
+    if (searchTxt === "") {
+      setRecipientsList([])
+      setShowRecipientsList(false)
+      return
+    }
+    searchFn(searchTxt).then((res: any) => {
+      if (res.kind === 'ok') {
+        const {results}: any = res.data;
+        setRecipientsList(results)
+        if (results.length === 0) {
+          setShowRecipientsList(false)
+        } else {
+          setShowRecipientsList(true)
+        }
+      } else {
+        setShowRecipientsList(false)
+        console.log("There were problems")
+      }
+    }).catch((reason: any) => console.log(reason))
+  }
+
+  useEffect(() => {
+    console.log("Recipient", Recipient)
+  }, [Recipient])
 
   return (
     <Modal
@@ -136,29 +187,28 @@ export const AmountModal = observer((props: any) => {
             </InputGroup>
           </Form.Group>
 
-          {selectRecipient && (
-            <Row className={'ps-3 pe-3 mt-4 mb-4'}>
-              <InputGroup className="mb-0 search-button-group" style={{border: "2px solid var(--headings) !important"}}>
-
-                <Form.Control
-                  placeholder='search by name, email and wallet address'
-                  type="search" name="search" className='search-button-navbar'
-
-                />
-                <Button variant="secondary" id="button-addon2" className='search-buttons'>
-                  <SearchIcon/>
-                </Button>
-              </InputGroup>
-            </Row>
-          )}
+          {selectRecipient && <Row className={'ps-3 pe-3 mt-4 mb-4'}>
+            <InputGroup className="mb-0 search-button-group" style={{border: "2px solid var(--headings) !important"}}>
+              <Form.Control
+                placeholder='search by name, email and wallet address'
+                type="search" name="search" className='search-button-navbar'
+                onChange={searchRecipients}
+              />
+              <Button variant="secondary" id="button-addon2" className='search-buttons'>
+                <SearchIcon/>
+              </Button>
+            </InputGroup>
+            {showRecipientsList && <ListResultData data={RecipientsList} callback={(recipient: any) => {
+              setRecipient(recipient)
+              setShowRecipientsList(false)
+            }}/>}
+            {<span>{Recipient? Recipient.label : null}</span>}
+          </Row>}
         </Modal.Body>
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    onClick={() => {
-                      if (onConfirm)
-                        onConfirm(parseFloat(Amount))
-                    }}
+                    onClick={() => onConfirm(parseFloat(Amount), Recipient)}
                     type="button">
               Confirm
             </Button>
@@ -190,7 +240,7 @@ export const ReconciliationConfirmModal = observer((props: any) => {
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    onClick={() => onConfirm()}
+                    onClick={onConfirm}
                     type="button">
               Confirm
             </Button>

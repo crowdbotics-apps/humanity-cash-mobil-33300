@@ -289,8 +289,9 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			social_security_number: IndentifierType === 'SSN' ? SocialSecurityNumber : '',
 			owner_first_name: BusinessExecName,
 			owner_last_name: BusinessExecLastName,
-			// city: 1988, // TODO: fetch
-			// state: 28, // TODO: fetch
+			instagram: InstagramLink,
+			facebook: FacebookLink,
+			twitter: TwitterLink,
 			city: City,
 			address_1: Address1,
 			address_2: Address2,

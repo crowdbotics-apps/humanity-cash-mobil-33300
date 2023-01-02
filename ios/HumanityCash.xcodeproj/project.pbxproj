@@ -17,8 +17,8 @@
 		2DCD954D1E0B4F2C00145EB5 /* HumanityCashTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* HumanityCashTests.m */; };
 		534E4D4A28EF53130034A1FD /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 534E4D4928EF53130034A1FD /* GoogleService-Info.plist */; };
 		566F80C1685020AB2B9D9743 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD00143C8AA5EF71C17FFB /* ExpoModulesProvider.swift */; };
-		5D64CA4EFD6B25379923A644 /* libPods-HumanityCash-HumanityCashTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 996AFAD009AAF39DC96C9F41 /* libPods-HumanityCash-HumanityCashTests.a */; };
-		9C6B795C07B32E25E279A0FB /* libPods-HumanityCash.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B4E5BA202932F51E0DDFDFC7 /* libPods-HumanityCash.a */; };
+		7C28033EDB1FB8A28C6B9BB7 /* libPods-HumanityCash.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 164321007659410E385AF06E /* libPods-HumanityCash.a */; };
+		91501F9F947ECE698834DB0D /* libPods-HumanityCash-HumanityCashTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DF495A583898B81045D3F52 /* libPods-HumanityCash-HumanityCashTests.a */; };
 		D3BBD1EE28083B32DCCCD9E7 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32BB11C19824A84866ED4603 /* ExpoModulesProvider.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,14 +57,17 @@
 		00E356EE1AD99517003FC87E /* HumanityCashTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HumanityCashTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* HumanityCashTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HumanityCashTests.m; sourceTree = "<group>"; };
+		05A76F5D391FBD397DD923EC /* Pods-HumanityCash-HumanityCashTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HumanityCash-HumanityCashTests.release.xcconfig"; path = "Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests.release.xcconfig"; sourceTree = "<group>"; };
 		0B9BA8499BB048988A832B0A /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		0F7239043CA94FF08D3B3179 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		0FBD120704BF380722695841 /* Pods-HumanityCash-HumanityCashTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HumanityCash-HumanityCashTests.debug.xcconfig"; path = "Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* HumanityCash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HumanityCash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = HumanityCash/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = HumanityCash/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = HumanityCash/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = HumanityCash/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = HumanityCash/main.m; sourceTree = "<group>"; };
+		164321007659410E385AF06E /* libPods-HumanityCash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HumanityCash.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E47B1E0B4A5D006451C7 /* HumanityCash-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HumanityCash-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* HumanityCash-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "HumanityCash-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		32BB11C19824A84866ED4603 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-HumanityCash-HumanityCashTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
@@ -74,19 +77,16 @@
 		534E4D4928EF53130034A1FD /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		53D246E328380C9E00EBE427 /* HumanityCashRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = HumanityCashRelease.entitlements; path = HumanityCash/HumanityCashRelease.entitlements; sourceTree = "<group>"; };
 		53F809C6286B589A00C18DE9 /* HumanityCash.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = HumanityCash.entitlements; path = HumanityCash/HumanityCash.entitlements; sourceTree = "<group>"; };
-		75738ACEDAA3AF67539872F5 /* Pods-HumanityCash.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HumanityCash.release.xcconfig"; path = "Target Support Files/Pods-HumanityCash/Pods-HumanityCash.release.xcconfig"; sourceTree = "<group>"; };
 		7626BE59F50D48CC9E8AFA03 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
-		77622D27209E64891648F33E /* Pods-HumanityCash-HumanityCashTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HumanityCash-HumanityCashTests.debug.xcconfig"; path = "Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests.debug.xcconfig"; sourceTree = "<group>"; };
 		7C41430EC739473C8D9F495F /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		7DF495A583898B81045D3F52 /* libPods-HumanityCash-HumanityCashTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HumanityCash-HumanityCashTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A4C69FE26BF43A2BCCB38D1 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		8BCB2F3523294FE3509161E2 /* Pods-HumanityCash.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HumanityCash.release.xcconfig"; path = "Target Support Files/Pods-HumanityCash/Pods-HumanityCash.release.xcconfig"; sourceTree = "<group>"; };
 		98991A8F86104EBE93CAC5C1 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
-		996AFAD009AAF39DC96C9F41 /* libPods-HumanityCash-HumanityCashTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HumanityCash-HumanityCashTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B43499F6396479BB8CD0A5E /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf"; sourceTree = "<group>"; };
+		9DBE9E4B60B24245D9BB0080 /* Pods-HumanityCash.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HumanityCash.debug.xcconfig"; path = "Target Support Files/Pods-HumanityCash/Pods-HumanityCash.debug.xcconfig"; sourceTree = "<group>"; };
 		9F5ED20AB9DB4B15A2C4B5C8 /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = "../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf"; sourceTree = "<group>"; };
 		A6CAEA5F3D1A4EF9BCBCCF1B /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		AA9742C2FE4BB06DE6260C15 /* Pods-HumanityCash-HumanityCashTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HumanityCash-HumanityCashTests.release.xcconfig"; path = "Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests.release.xcconfig"; sourceTree = "<group>"; };
-		B296A5E27C6F14C5995B02D2 /* Pods-HumanityCash.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HumanityCash.debug.xcconfig"; path = "Target Support Files/Pods-HumanityCash/Pods-HumanityCash.debug.xcconfig"; sourceTree = "<group>"; };
-		B4E5BA202932F51E0DDFDFC7 /* libPods-HumanityCash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HumanityCash.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5CD00143C8AA5EF71C17FFB /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-HumanityCash/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		CCE3ECE3593143C7ABE698B0 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		CDE53B26B1B44EF9B84ECAB6 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
@@ -104,7 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D64CA4EFD6B25379923A644 /* libPods-HumanityCash-HumanityCashTests.a in Frameworks */,
+				91501F9F947ECE698834DB0D /* libPods-HumanityCash-HumanityCashTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,7 +112,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9C6B795C07B32E25E279A0FB /* libPods-HumanityCash.a in Frameworks */,
+				7C28033EDB1FB8A28C6B9BB7 /* libPods-HumanityCash.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,8 +195,8 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				B4E5BA202932F51E0DDFDFC7 /* libPods-HumanityCash.a */,
-				996AFAD009AAF39DC96C9F41 /* libPods-HumanityCash-HumanityCashTests.a */,
+				164321007659410E385AF06E /* libPods-HumanityCash.a */,
+				7DF495A583898B81045D3F52 /* libPods-HumanityCash-HumanityCashTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -221,10 +221,10 @@
 		71ED362ACEA45F9F60DCD285 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				B296A5E27C6F14C5995B02D2 /* Pods-HumanityCash.debug.xcconfig */,
-				75738ACEDAA3AF67539872F5 /* Pods-HumanityCash.release.xcconfig */,
-				77622D27209E64891648F33E /* Pods-HumanityCash-HumanityCashTests.debug.xcconfig */,
-				AA9742C2FE4BB06DE6260C15 /* Pods-HumanityCash-HumanityCashTests.release.xcconfig */,
+				9DBE9E4B60B24245D9BB0080 /* Pods-HumanityCash.debug.xcconfig */,
+				8BCB2F3523294FE3509161E2 /* Pods-HumanityCash.release.xcconfig */,
+				0FBD120704BF380722695841 /* Pods-HumanityCash-HumanityCashTests.debug.xcconfig */,
+				05A76F5D391FBD397DD923EC /* Pods-HumanityCash-HumanityCashTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -289,12 +289,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "HumanityCashTests" */;
 			buildPhases = (
-				7681CA53C655D3602B10D4C5 /* [CP] Check Pods Manifest.lock */,
+				ACB8D67A205E047F42915046 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				3DBB1EA18EF5DCA413F8483E /* [CP] Embed Pods Frameworks */,
-				3E73532D54A94AB83B15CF3D /* [CP] Copy Pods Resources */,
+				7A4123E4428B76B767FDCF9D /* [CP] Embed Pods Frameworks */,
+				48ACBEC8DFAADD4F6695275D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -310,15 +310,15 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "HumanityCash" */;
 			buildPhases = (
-				E8399908C77D89AAED9A08C0 /* [CP] Check Pods Manifest.lock */,
+				099CF763E576935AAD3643C2 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				5310E74328E0B52B00940D63 /* Embed App Extensions */,
-				89A5DE3B69F2ED662A439568 /* [CP] Embed Pods Frameworks */,
-				78576B92012084996926D58D /* [CP] Copy Pods Resources */,
+				33DB29EC501B8CEEAF222831 /* [CP] Embed Pods Frameworks */,
+				45CA99FB589BC1AF42441FEE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -468,6 +468,28 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
+		099CF763E576935AAD3643C2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-HumanityCash-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -482,13 +504,13 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		3DBB1EA18EF5DCA413F8483E /* [CP] Embed Pods Frameworks */ = {
+		33DB29EC501B8CEEAF222831 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-HumanityCash/Pods-HumanityCash-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBAEMKit/FBAEMKit.framework/FBAEMKit",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework/FBSDKCoreKit",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.framework/FBSDKCoreKit_Basics",
@@ -511,86 +533,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HumanityCash/Pods-HumanityCash-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3E73532D54A94AB83B15CF3D /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/GoogleSignIn/GoogleSignIn.bundle",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7681CA53C655D3602B10D4C5 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-HumanityCash-HumanityCashTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		78576B92012084996926D58D /* [CP] Copy Pods Resources */ = {
+		45CA99FB589BC1AF42441FEE /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -644,13 +590,67 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HumanityCash/Pods-HumanityCash-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		89A5DE3B69F2ED662A439568 /* [CP] Embed Pods Frameworks */ = {
+		48ACBEC8DFAADD4F6695275D /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-HumanityCash/Pods-HumanityCash-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/GoogleSignIn/GoogleSignIn.bundle",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7A4123E4428B76B767FDCF9D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests-frameworks.sh",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBAEMKit/FBAEMKit.framework/FBAEMKit",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework/FBSDKCoreKit",
 				"${PODS_XCFRAMEWORKS_BUILD_DIR}/FBSDKCoreKit_Basics/FBSDKCoreKit_Basics.framework/FBSDKCoreKit_Basics",
@@ -673,10 +673,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HumanityCash/Pods-HumanityCash-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-HumanityCash-HumanityCashTests/Pods-HumanityCash-HumanityCashTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E8399908C77D89AAED9A08C0 /* [CP] Check Pods Manifest.lock */ = {
+		ACB8D67A205E047F42915046 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -691,7 +691,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-HumanityCash-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-HumanityCash-HumanityCashTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -793,7 +793,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 77622D27209E64891648F33E /* Pods-HumanityCash-HumanityCashTests.debug.xcconfig */;
+			baseConfigurationReference = 0FBD120704BF380722695841 /* Pods-HumanityCash-HumanityCashTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -818,7 +818,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AA9742C2FE4BB06DE6260C15 /* Pods-HumanityCash-HumanityCashTests.release.xcconfig */;
+			baseConfigurationReference = 05A76F5D391FBD397DD923EC /* Pods-HumanityCash-HumanityCashTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -840,7 +840,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B296A5E27C6F14C5995B02D2 /* Pods-HumanityCash.debug.xcconfig */;
+			baseConfigurationReference = 9DBE9E4B60B24245D9BB0080 /* Pods-HumanityCash.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -871,7 +871,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 75738ACEDAA3AF67539872F5 /* Pods-HumanityCash.release.xcconfig */;
+			baseConfigurationReference = 8BCB2F3523294FE3509161E2 /* Pods-HumanityCash.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

@@ -101,7 +101,9 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [BusinessRegName, setBusinessRegName] = React.useState('');
 	const [BusinessIndustryType, setBusinessIndustryType] = React.useState('');
 	const [SelectIndustryOpen, setSelectIndustryOpen] = useState(false)
-
+	const [FacebookLink, setFacebookLink] = React.useState('');
+	const [InstagramLink, setInstagramLink] = React.useState('');
+	const [TwitterLink, setTwitterLink] = React.useState('');
 
 	const [IndentifierType, setIndentifierType] = useState('')
 	const [EmployerId, setEmployerId] = React.useState('');
@@ -287,7 +289,9 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			address_1: Address1,
 			address_2: Address2,
 			city: City,
-			// state: State?.id,
+			instagram: InstagramLink,
+			facebook: FacebookLink,
+			twitter: TwitterLink,
 			zip_code: PostalCode,
 			phone_number: phoneNumber
 		})
@@ -531,7 +535,42 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					</TouchableOpacity>
 				))}
 			</View>
-
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>INSTAGRAM LINK</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setInstagramLink(t)}
+					value={InstagramLink}
+					placeholder={'Instagram Link'}
+				/>
+			</View>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>FACEBOOK LINK</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setFacebookLink(t)}
+					value={FacebookLink}
+					placeholder={'Facebook Link'}
+				/>
+			</View>
+			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+				<Text style={styles.INPUT_LABEL_STYLE}>TWITTER LINK</Text>
+			</View>
+			<View style={styles.INPUT_STYLE_CONTAINER}>
+				<TextInput
+					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+					style={styles.INPUT_STYLE}
+					onChangeText={t => setTwitterLink(t)}
+					value={TwitterLink}
+					placeholder={'Twitter Link'}
+				/>
+			</View>
 
 		</View>
 	)

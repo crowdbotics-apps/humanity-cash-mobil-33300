@@ -11,7 +11,6 @@ from celo_humanity.web3helpers import get_contract, ContractProxy
 
 
 class Account(models.Model):
-
     name = models.CharField(max_length=70, unique=True)
     dwolla_id = models.CharField(max_length=255, db_index=True)
     bank_name = models.CharField(max_length=70, unique=True)
@@ -71,8 +70,10 @@ class Transaction(models.Model):
     consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL, related_name='transactions')
     merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL, related_name='transactions')
 
-    counterpart_consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL, related_name='counterpart_transactions')
-    counterpart_merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL, related_name='counterpart_transactions')
+    counterpart_consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL,
+                                             related_name='counterpart_transactions')
+    counterpart_merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL,
+                                             related_name='counterpart_transactions')
 
     def __str__(self):
         return f'txn[ {self.transaction_id} ] ({self.method_or_memo})'
@@ -136,7 +137,6 @@ class ACHTransaction(models.Model):
     currency = models.CharField(max_length=5, null=True, blank=True)
     account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
 
-
     def __str__(self):
         return self.ach_id
 
@@ -170,10 +170,18 @@ class ComplianceAction(models.Model):
         executed = 'Executed'
 
     class Type(models.TextChoices):
-        fund_negative_wallet = 'fund_negative'  # 'Fund negative wallet from reserve wallet'
-        burn_from_negative_wallet = 'burn_from_negative'  # 'Burn tokens from negative wallet'
-        mint_to_positive_wallet = 'mint_to_positive'  # 'Mint tokens to positive wallet'
-        transfer_adjustment_to_user = 'positive_to_user'  # 'Transfer funds from positive wallet to user'
+        fund_negative_wallet = 'fund_negative'
+        ######################### 'Fund negative wallet from reserve wallet'
+        revert_fund_negative_wallet = 'revert_fund_negative'
+        ######################### 'Send funds from negative wallet to reserve wallet to revert previous action'
+        burn_from_negative_wallet = 'burn_from_negative'
+        ######################### 'Burn tokens from negative wallet'
+        mint_to_positive_wallet = 'mint_to_positive'
+        ######################### 'Mint tokens to positive wallet'
+        revert_mint_to_positive_wallet = 'revert_mint_to_positive'
+        ######################### 'Burn tokens from positive wallet to revert previous action'
+        transfer_adjustment_to_user = 'positive_to_user'
+        ######################### 'Transfer funds from positive wallet to user'
 
     created_by = models.ForeignKey('users.User', on_delete=models.PROTECT, related_name='compliance_actions')
     status = models.CharField(max_length=16, choices=Status.choices, default=Status.pending)
@@ -184,8 +192,10 @@ class ComplianceAction(models.Model):
     approved_time = models.DateTimeField(null=True)
     executed_time = models.DateTimeField(null=True)
 
-    consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL, related_name='compliance_actions')
-    merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL, related_name='compliance_actions')
+    consumer = models.ForeignKey('users.Consumer', null=True, on_delete=models.SET_NULL,
+                                 related_name='compliance_actions')
+    merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL,
+                                 related_name='compliance_actions')
 
     amount = models.DecimalField(null=True, decimal_places=2, max_digits=14)
 
@@ -213,7 +223,8 @@ class ComplianceAction(models.Model):
             raise Exception('Action not in pending state (required)')
         signoffs = self.signoffs.count()
         if signoffs < configs.NECCESARY_COMPLIANCE_SIGNOFFS:
-            raise Exception(f'Action doesnt have neccesary signoffs to approve ({signoffs} of {configs.NECCESARY_COMPLIANCE_SIGNOFFS})')
+            raise Exception(
+                f'Action doesnt have neccesary signoffs to approve ({signoffs} of {configs.NECCESARY_COMPLIANCE_SIGNOFFS})')
 
         self.status = ComplianceAction.Status.approved
         self.approved_time = datetime.now()
@@ -235,21 +246,38 @@ class ComplianceAction(models.Model):
                     profile=None,
                     counterpart_profile=None,
                 )
-                
+
+            elif self.type == ComplianceAction.Type.revert_fund_negative_wallet:
+                tx = transfer_coin(
+                    from_uid=configs.NEGATIVE_ADJUSTMENT_WALLET_UID,
+                    to_uid=configs.RESERVE_WALLET_UID,
+                    amount=self.amount,
+                    roundup_amount=0,
+                    profile=None,
+                    counterpart_profile=None,
+                )
+
             elif self.type == ComplianceAction.Type.burn_from_negative_wallet:
                 tx = burn_coin(
                     from_uid=configs.NEGATIVE_ADJUSTMENT_WALLET_UID,
                     amount=self.amount,
                     profile=None,
                 )
-                
+
             elif self.type == ComplianceAction.Type.mint_to_positive_wallet:
                 tx = mint_coin(
                     to_uid=configs.POSITIVE_ADJUSTMENT_WALLET_UID,
                     amount=self.amount,
                     profile=None,
                 )
-                
+
+            elif self.type == ComplianceAction.Type.revert_mint_to_positive_wallet:
+                tx = burn_coin(
+                    from_uid=configs.POSITIVE_ADJUSTMENT_WALLET_UID,
+                    amount=self.amount,
+                    profile=None,
+                )
+
             elif self.type == ComplianceAction.Type.transfer_adjustment_to_user:
                 tx = transfer_coin(
                     from_uid=configs.POSITIVE_ADJUSTMENT_WALLET_UID,

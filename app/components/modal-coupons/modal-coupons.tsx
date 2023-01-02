@@ -102,6 +102,7 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
                             <Text style={MarginTextStyle}>To: {dateFormat(couponSelected?.end_date)}</Text>
                         </View>
                         <Text style={TitleStyle}>{couponSelected?.title}</Text>
+                        <Text style={MarginTextStyle}>Business Name: {couponSelected?.merchant?.business_name}</Text>
                         <Text style={MarginTextStyle}>Promo Type: {couponSelected?.type_of_promo}</Text>
                         <Text style={MarginTextStyle}>
                             Promo Discount:
@@ -113,7 +114,6 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
                             Description:
                             {couponSelected?.description ? ` ${couponSelected.description}` : ' No description'}
                         </Text>
-
                         {mustDoAction && (
                             <TouchableOpacity
                                 style={ButtonStyle}
