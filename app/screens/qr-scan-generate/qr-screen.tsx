@@ -408,8 +408,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
           <TouchableOpacity onPress={() => backButtonHandler()} style={styles.BACK_BUTON_CONTAINER}>
             <Icon name={"arrow-back"} size={23} color={!(ScanQR && Step === 'tabs') ? '#000' : '#FFF'} />
             <Text style={[styles.BACK_BUTON_LABEL, { color: !(ScanQR && Step === 'tabs') ? '#000' : '#FFF' }]}>
-              {(Step === 'tabs' || Step === 'finish') ? ' Home' : ' Back'
-              }
+              {(Step === 'tabs' || Step === 'finish') ? ' Home' : ' Back'}
             </Text>
           </TouchableOpacity>
         </View>
