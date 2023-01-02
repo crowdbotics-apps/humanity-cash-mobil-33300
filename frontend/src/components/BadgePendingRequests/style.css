@@ -1,0 +1,15 @@
+.badge-notifications {
+    align-items: center;
+    background-color: #428b44;
+    border-radius: 10px;
+    color: white;
+    position: absolute;
+    display: flex;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    height: 10px;
+    left: 13px;
+    padding: 8px;
+    top: -3px;
+}

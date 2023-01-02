@@ -42,3 +42,18 @@
     padding-bottom: 40px;
     border-bottom: 1px var(--green) solid;
 }
+.tableTitle{
+    color:var(--gray);
+    font-weight:500;
+    font-size:14px;
+}
+.tableData {
+    vertical-align: middle;
+}
+
+.showDetails{
+    height: 100%;
+}
+.hideDetails{
+    height: 0px !important;
+}

@@ -31,7 +31,6 @@ export const HomeScreen = observer(function HomeScreen() {
 			.getProfileConsumer()
 			.then((result: any) => {
 				if (result.kind === "ok") {
-					console.log(' getProfileConsumer ===>>> ', JSON.stringify(result, null, 2))
 					runInAction(() => {
 						loginStore.setConsumerUser(result.data)
 					})
@@ -55,7 +54,6 @@ export const HomeScreen = observer(function HomeScreen() {
 			.then((result: any) => {
 				getProfileConsumer()
 				if (result.kind === "ok") {
-					console.log(' getProfileMerchant ===>>> ', JSON.stringify(result, null, 2))
 					runInAction(() => {
 						loginStore.setMerchantUser(result.data)
 					})
@@ -143,7 +141,7 @@ export const HomeScreen = observer(function HomeScreen() {
 			})
 	}
 	const openModal = (c: any) => setCouponsConfig({
-		...couponsConfig, 
+		...couponsConfig,
 		ShowConfirmCoupon: !ShowConfirmCoupon,
 		couponSelected: c
 	});
@@ -292,12 +290,12 @@ export const HomeScreen = observer(function HomeScreen() {
 
 					{ ShowConfirmCoupon &&
 
-						<ConfirmCouponModal 
+						<ConfirmCouponModal
 							mustDoAction={true}
 							couponsConfig={couponsConfig}
 							setCouponsConfig={setCouponsConfig}
-							visible={ShowConfirmCoupon} 
-							buttonAction={() => setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})} 
+							visible={ShowConfirmCoupon}
+							buttonAction={() => setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})}
 							couponSelected={couponSelected}
 							// @ts-ignore
 							mode={!loginStore.getConsumerCoupons.some(c => c.id_cupon === couponSelected.id) ? 'ADD' : 'DELETE'}

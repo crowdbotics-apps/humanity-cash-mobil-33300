@@ -12,7 +12,8 @@ from home.api.v1.viewsets import setup_profile_views, base_views, security_views
 from home.api.v1.viewsets.ach_transaction_views import ACHTransactionViewSet
 from home.api.v1.viewsets.contract_views import ContractViewSet
 from home.api.v1.viewsets.coupons_views import CouponsView, ConsumerCouponView
-from home.api.v1.viewsets.compliance_and_dashboard_views import DashboardDataView
+from home.api.v1.viewsets.compliance_and_dashboard_views import DashboardDataView, ComplianceActionViewset, \
+    ComplianceRecipientSearchViewset
 from home.api.v1.viewsets.dwolla_webhooks import views as dwolla_webhooks_views
 from home.api.v1.viewsets.event_views import EventViewSet
 from home.api.v1.viewsets.notification_views import SetDeviceView, NotificationViewSet
@@ -32,6 +33,8 @@ router.register("coupons", CouponsView, basename="coupons")
 router.register("consumer-coupons", ConsumerCouponView, basename="consumer_coupons")
 # router.register("signup", SignupViewSet, basename="signup")
 router.register(r'notification', NotificationViewSet, 'notification')
+router.register('compliance_action', ComplianceActionViewset, 'compliance_action')
+router.register('compliance_recipient', ComplianceRecipientSearchViewset, 'compliance_recipient')
 
 urlpatterns = [
     path('set-device/', SetDeviceView.as_view(), name='api.set_device'),

@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import {observer} from "mobx-react-lite";
+import React, {useState} from 'react';
 import {PageWeb} from "../../components";
 import logo from '../../assets/images/logo.png';
 import "./Login.css"
@@ -32,7 +31,7 @@ export const LoginPage: React.FC = () => {
   const formik = useFormik({
     initialValues: {
       email: "",
-      password:"",
+      password: "",
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -42,7 +41,7 @@ export const LoginPage: React.FC = () => {
     }),
     onSubmit: values => {
       // alert(JSON.stringify(values, null, 2));
-      let data = {username:values.email, email:values.email, password:values.password}
+      let data = {username: values.email, email: values.email, password: values.password}
 
       // @ts-ignore
       api.apisauce.deleteHeader(AUTHORIZATION)
@@ -55,7 +54,7 @@ export const LoginPage: React.FC = () => {
           toast.success('Welcome', {
             position: toast.POSITION.TOP_CENTER
           });
-          navigate(ROUTES.DASHBOARD, {replace:true})
+          navigate(ROUTES.DASHBOARD, {replace: true})
         } else {
           toast.error(getErrorMessages(result.errors), {
             position: toast.POSITION.TOP_CENTER
@@ -75,24 +74,24 @@ export const LoginPage: React.FC = () => {
   //   }
   // }, [])
 
-  const handleSubmitFormik = (event:any)=>{
+  const handleSubmitFormik = (event: any) => {
     formik.handleSubmit(event)
     // setValidated(_.isEmpty(formik.errors));
   }
 
   return (
-    <PageWeb header={false}  >
-      <div style={{marginTop:30, marginBottom:20}}>
-        <img src={logo} alt={"logo"} className={"logo img-fluid"} />
+    <PageWeb header={false}>
+      <div style={{marginTop: 30, marginBottom: 20}}>
+        <img src={logo} alt={"logo"} className={"logo img-fluid"}/>
       </div>
       <FormContent>
         <div>
           <Form noValidate className={'pb-5'}
-                onSubmit={handleSubmitFormik} >
-            <Form.Group >
+                onSubmit={handleSubmitFormik}>
+            <Form.Group>
               <h2 className='title-start-form-primary '>Log In</h2>
             </Form.Group>
-            <Form.Group >
+            <Form.Group>
               <h4 className='title-start-form-secondary mb-3'>Welcome back</h4>
             </Form.Group>
             <Row className="mb-3 mt-4">
@@ -126,31 +125,32 @@ export const LoginPage: React.FC = () => {
                   />
                   <Button type={"button"} variant="outline-secondary"
                           onClick={event => {
-                            setPasswordType((value) => value === "password"?"text":"password")
+                            setPasswordType((value) => value === "password" ? "text" : "password")
                           }}
-                          className={'eyes-buttons '+ (formik.errors.password && formik.touched.password ?'eyes-buttons-invalid':'')}>
-                    <Eyes />
+                          className={'eyes-buttons ' + (formik.errors.password && formik.touched.password ? 'eyes-buttons-invalid' : '')}>
+                    <Eyes/>
                   </Button>
                 </InputGroup>
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.password}
                 </Form.Control.Feedback>
               </Form.Group>
-              <Form.Group className="mb-3" >
+              <Form.Group className="mb-3">
                 <div className="forgot-password">
                   <div
-                    onClick={()=>{
+                    onClick={() => {
                       console.log("onclick ", ROUTES.FORGOT_PASSWORD)
-                      navigate(ROUTES.FORGOT_PASSWORD, {replace:false})
+                      navigate(ROUTES.FORGOT_PASSWORD, {replace: false})
                     }}
-                    className='link-primary'>Forgot password?</div>
+                    className='link-primary'>Forgot password?
+                  </div>
                 </div>
               </Form.Group>
             </Row>
             <div className={'mt-1 d-flex flex-row justify-content-center'}>
               {Loading && <><Spinner animation="border" variant="light" size="sm"/><span
                 className={"ms-1"}> Loading...</span></>}
-              {!Loading &&     <Button disabled={Loading}  type="submit" className={'btn-save'} >Log in</Button>}
+              {!Loading && <Button disabled={Loading} type="submit" className={'btn-save'}>Log in</Button>}
 
 
             </div>

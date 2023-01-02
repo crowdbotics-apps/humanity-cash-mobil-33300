@@ -296,6 +296,8 @@ SWAGGER_SETTINGS = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://0.0.0.0:3000',
+    'https://humanity-cash-mobil-33-staging.botics.co',
+    'https://humanity-cash-mobil-33300.botics.co',
 ]
 
 if DEBUG or not (EMAIL_HOST_USER and EMAIL_HOST_PASSWORD):

@@ -1,0 +1,32 @@
+.createdTitle{
+    font-size: 14px;
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.createdSubtitle{
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 500;
+}
+.textTD{
+    font-size: 16px;
+    color: var(--blue);
+}
+
+.toColumn{
+    display: flex;
+    flex-direction: row;
+    width: auto;
+}
+.showButton{
+    width: 120px;
+}
+.popoverBtn{
+    width: 60px;
+    height: 35px;
+    margin-left: 40px;
+}
+.btnDisabled{
+    color:white !important;
+}

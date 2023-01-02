@@ -225,6 +225,155 @@ export class ApiBase {
         }
     }
 
+    async post_multipart_form_data(path: string, data: any, keys: any): Promise<Types.SimplePostResult> {
+
+        if (!this.apisauce) {
+            return {kind: "unknown", temporary: true}
+        }
+        let fdata = new FormData()
+        for (const key in data) {
+            if (data[key] === null || data[key] === undefined) continue
+            const name = data[key]['name']
+            if (keys.includes(key) && (typeof data[key] === "number" || typeof data[key] === "boolean"
+              || Object.prototype.toString.call(data[key]) === '[object Date]')) {
+                fdata.append(key, data[key].toString())
+            } else if (keys.includes(key) && typeof data[key] === "string") {
+                fdata.append(key, data[key])
+            } else {
+                if (typeof data[key] === "object") {
+                    if (Array.from(data[key]).length > 0) {
+                        Array.from(data[key]).map((dataItem: any, idx: any) => {
+                            fdata.append(key, dataItem, `image-${idx}.png`)
+                        })
+                    } else {
+                        fdata.append(key, data[key], name)
+                    }
+                } else if (keys.includes(key)) {
+                    fdata.append(key, data[key], name)
+                } else {
+                    if (Array.isArray(data[key])) {
+                        fdata.append(key, data[key].join(","))
+                    } else {
+                        fdata.append(key, data[key] || "")
+                    }
+                }
+            }
+
+        }
+        let response
+        const headers = {
+            "Content-Type": "multipart/form-data",
+            "Authorization": this.apisauce.headers.Authorization
+        }
+        try {
+            response = await this.apisauce.axiosInstance.post(path, fdata, {headers})
+
+            console.log('axios response ', response)
+
+        } catch (e: any) {
+            if (e.message.indexOf("status code 400") !== -1) {
+                return {kind: "bad-data", errors: e.response.data}
+            }
+            if (e.message.indexOf("status code 403") !== -1) {
+                return {kind: "bad-data", errors: e.response.data}
+            }
+            response = {status: 500, errors: 'SERVER_ERROR', problem: 'SERVER_ERROR'}
+        }
+        if (response.status === 400 || response.status === 403) {
+            // @ts-ignore
+            return {kind: "bad-data", errors: response.data}
+        } else if (response.status === 401) {
+            // this.clearRootStore()
+        } else {
+            // @ts-ignore
+            const problem = getGeneralApiProblem(response)
+            if (problem) {
+                return problem
+            }
+        }
+
+        try {
+            // @ts-ignore
+            return {kind: "ok", response: response.data}
+        } catch {
+            return {kind: "bad-data"}
+        }
+    }
+
+    async patch_multipart_form_data(
+      path: string,
+      data: any,
+      keys: any
+    ): Promise<Types.SimplePostResult> {
+        if (!this.apisauce) {
+            return {kind: "unknown", temporary: true};
+        }
+
+        let fdata = new FormData();
+        for (const key in data) {
+            if (data[key] === null || data[key] === undefined) continue
+            const name = data[key]['name']
+            if (keys.includes(key) && (typeof data[key] === "number" || typeof data[key] === "boolean"
+              || Object.prototype.toString.call(data[key]) === '[object Date]')) {
+                fdata.append(key, data[key].toString())
+            } else if (keys.includes(key) && typeof data[key] === "string") {
+                fdata.append(key, data[key])
+            } else {
+                if (typeof data[key] === "object") {
+                    if (Array.from(data[key]).length > 0) {
+                        Array.from(data[key]).map((dataItem: any, idx: any) => {
+                            fdata.append(key, dataItem, `image-${idx}.png`)
+                        })
+                    } else {
+                        fdata.append(key, data[key], name)
+                    }
+                } else if (keys.includes(key)) {
+                    fdata.append(key, data[key], name)
+                } else {
+                    if (Array.isArray(data[key])) {
+                        fdata.append(key, data[key].join(","))
+                    } else {
+                        fdata.append(key, data[key] || "")
+                    }
+                }
+            }
+
+        }
+        let response;
+        const headers = {
+            "Content-Type": "multipart/form-data",
+            Authorization: this.apisauce.headers.Authorization,
+        };
+        try {
+            response = await this.apisauce.axiosInstance.patch(path, fdata, {headers});
+        } catch (e: any) {
+            if (e.message.indexOf("status code 400") !== -1) {
+                return {kind: "bad-data", errors: e.response.data};
+            }
+            response = {status: 500, errors: 'SERVER_ERROR', problem: 'SERVER_ERROR'}
+        }
+
+        if (response.status === 400) {
+            // @ts-ignore
+            return {kind: "bad-data", errors: response.data};
+        } else if (response.status === 401) {
+            // this.clearRootStore();
+        } else {
+            // @ts-ignore
+            const problem = getGeneralApiProblem(response);
+            if (problem) {
+                return problem;
+            }
+        }
+
+        try {
+            // @ts-ignore
+            return {kind: "ok", response: response.data};
+        } catch {
+            return {kind: "bad-data"};
+        }
+    }
+
     async multipart_form_data(path: string, data: any, keys: any): Promise<Types.SimplePostResult> {
         if (!this.apisauce) {
             return {kind: "unknown", temporary: true}
@@ -257,13 +406,14 @@ export class ApiBase {
                 response = await this.apisauce.axiosInstance.patch(path, fdata, {headers})
             } else {
                 response = await this.apisauce.axiosInstance.post(path, fdata, {headers})
+                console.log('response ', JSON.parse(JSON.stringify(response)))
             }
         } catch (e) {
             console.log('error ', JSON.parse(JSON.stringify(e)))
             if (e.message.indexOf("status code 400") !== -1) {
                 return {kind: "bad-data", errors: e.response.data}
             }
-            response = {status: 500, problem: 'SERVER_ERROR'}
+            response = {status: 500, errors: 'SERVER_ERROR', problem: 'SERVER_ERROR'}
         }
 
         if (response.status === 400) {
@@ -320,7 +470,7 @@ export class ApiBase {
             } else if(e.message.indexOf("status code 405") !== -1) {
                 return {kind: "method-not-allowed"}
             }
-            response = {status: 500}
+            response = {status: 500, errors: 'SERVER_ERROR', problem: 'SERVER_ERROR'}
         }
 
         if (response.status === 400) {

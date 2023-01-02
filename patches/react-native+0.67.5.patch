@@ -1,0 +1,693 @@
+diff --git a/node_modules/react-native/Libraries/BatchedBridge/MessageQueue.js b/node_modules/react-native/Libraries/BatchedBridge/MessageQueue.js
+index c01bbb1..76eb4cb 100644
+--- a/node_modules/react-native/Libraries/BatchedBridge/MessageQueue.js
++++ b/node_modules/react-native/Libraries/BatchedBridge/MessageQueue.js
+@@ -167,25 +167,21 @@ class MessageQueue {
+     return getValue ? getValue() : null;
+   }
+ 
+-  callNativeSyncHook(
+-    moduleID: number,
+-    methodID: number,
+-    params: mixed[],
+-    onFail: ?(...mixed[]) => void,
+-    onSucc: ?(...mixed[]) => void,
+-  ): mixed {
+-    if (__DEV__) {
+-      invariant(
+-        global.nativeCallSyncHook,
+-        'Calling synchronous methods on native ' +
+-          'modules is not supported in Chrome.\n\n Consider providing alternative ' +
+-          'methods to expose this method in debug mode, e.g. by exposing constants ' +
+-          'ahead-of-time.',
+-      );
+-    }
+-    this.processCallbacks(moduleID, methodID, params, onFail, onSucc);
++callNativeSyncHook(
++  moduleID: number,
++  methodID: number,
++  params: any[],
++  onFail: ?Function,
++  onSucc: ?Function,
++): any {
++  const isDebuggingEnabled = (typeof atob !== 'undefined');
++  this.processCallbacks(moduleID, methodID, params, onFail, onSucc);
++  if(!isDebuggingEnabled)
++  {
+     return global.nativeCallSyncHook(moduleID, methodID, params);
+   }
++}
++
+ 
+   processCallbacks(
+     moduleID: number,
+diff --git a/node_modules/react-native/Libraries/Components/Switch/Switch.js b/node_modules/react-native/Libraries/Components/Switch/Switch.js
+index abb7f00..16e7d20 100644
+--- a/node_modules/react-native/Libraries/Components/Switch/Switch.js
++++ b/node_modules/react-native/Libraries/Components/Switch/Switch.js
+@@ -170,7 +170,8 @@ const SwitchWithForwardedRef: React.AbstractComponent<
+     // that the update should be ignored and we should stick with the value
+     // that we have in JS.
+     const jsValue = value === true;
+-    const shouldUpdateNativeSwitch = native.value !== jsValue;
++    const shouldUpdateNativeSwitch =
++      native.value != null && native.value !== jsValue;
+     if (
+       shouldUpdateNativeSwitch &&
+       nativeSwitchRef.current?.setNativeProps != null
+diff --git a/node_modules/react-native/Libraries/Core/ReactNativeVersion.js b/node_modules/react-native/Libraries/Core/ReactNativeVersion.js
+index 67dc908..d4fb47d 100644
+--- a/node_modules/react-native/Libraries/Core/ReactNativeVersion.js
++++ b/node_modules/react-native/Libraries/Core/ReactNativeVersion.js
+@@ -12,6 +12,6 @@
+ exports.version = {
+   major: 0,
+   minor: 67,
+-  patch: 2,
++  patch: 5,
+   prerelease: null,
+ };
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/Multiline/RCTUITextView.m b/node_modules/react-native/Libraries/Text/TextInput/Multiline/RCTUITextView.m
+index 4a94455..979bdb0 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/Multiline/RCTUITextView.m
++++ b/node_modules/react-native/Libraries/Text/TextInput/Multiline/RCTUITextView.m
+@@ -147,21 +147,7 @@ static UIColor *defaultPlaceholderColor()
+ 
+ - (void)setAttributedText:(NSAttributedString *)attributedText
+ {
+-  // Using `setAttributedString:` while user is typing breaks some internal mechanics
+-  // when entering complex input languages such as Chinese, Korean or Japanese.
+-  // see: https://github.com/facebook/react-native/issues/19339
+-
+-  // We try to avoid calling this method as much as we can.
+-  // If the text has changed, there is nothing we can do.
+-  if (![super.attributedText.string isEqualToString:attributedText.string]) {
+-    [super setAttributedText:attributedText];
+-  } else {
+-  // But if the text is preserved, we just copying the attributes from the source string.
+-    if (![super.attributedText isEqualToAttributedString:attributedText]) {
+-      [self copyTextAttributesFrom:attributedText];
+-    }
+-  }
+-
++  [super setAttributedText:attributedText];
+   [self textDidChange];
+ }
+ 
+@@ -311,18 +297,4 @@ static UIColor *defaultPlaceholderColor()
+ 
+ #pragma mark - Utility Methods
+ 
+-- (void)copyTextAttributesFrom:(NSAttributedString *)sourceString
+-{
+-  [self.textStorage beginEditing];
+-
+-  NSTextStorage *textStorage = self.textStorage;
+-  [sourceString enumerateAttributesInRange:NSMakeRange(0, sourceString.length)
+-                                   options:NSAttributedStringEnumerationReverse
+-                                usingBlock:^(NSDictionary<NSAttributedStringKey,id> * _Nonnull attrs, NSRange range, BOOL * _Nonnull stop) {
+-                                  [textStorage setAttributes:attrs range:range];
+-                                }];
+-
+-  [self.textStorage endEditing];
+-}
+-
+ @end
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.m b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.m
+index d75f140..71e36d7 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.m
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.m
+@@ -104,6 +104,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
+   // Similarly, when the user is in the middle of inputting some text in Japanese/Chinese, there will be styling on the
+   // text that we should disregard. See https://developer.apple.com/documentation/uikit/uitextinput/1614489-markedtextrange?language=objc
+   // for more info.
++  // Also, updating the attributed text while inputting Korean language will break input mechanism.
+   // If the user added an emoji, the system adds a font attribute for the emoji and stores the original font in NSOriginalFont.
+   // Lastly, when entering a password, etc., there will be additional styling on the field as the native text view
+   // handles showing the last character for a split second.
+@@ -116,6 +117,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
+ 
+   BOOL shouldFallbackToBareTextComparison =
+     [self.backedTextInputView.textInputMode.primaryLanguage isEqualToString:@"dictation"] ||
++    [self.backedTextInputView.textInputMode.primaryLanguage isEqualToString:@"ko-KR"] ||
+     self.backedTextInputView.markedTextRange ||
+     self.backedTextInputView.isSecureTextEntry ||
+     fontHasBeenUpdatedBySystem;
+diff --git a/node_modules/react-native/React/Base/RCTVersion.m b/node_modules/react-native/React/Base/RCTVersion.m
+index 05cfd06..fea746e 100644
+--- a/node_modules/react-native/React/Base/RCTVersion.m
++++ b/node_modules/react-native/React/Base/RCTVersion.m
+@@ -23,7 +23,7 @@ NSDictionary* RCTGetReactNativeVersion(void)
+     __rnVersion = @{
+                   RCTVersionMajor: @(0),
+                   RCTVersionMinor: @(67),
+-                  RCTVersionPatch: @(2),
++                  RCTVersionPatch: @(5),
+                   RCTVersionPrerelease: [NSNull null],
+                   };
+   });
+diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+index 8fe5537..af6342f 100644
+--- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
++++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+@@ -580,8 +580,9 @@ using namespace facebook::react;
+   // the settings on a dictation.
+   // Similarly, when the user is in the middle of inputting some text in Japanese/Chinese, there will be styling on the
+   // text that we should disregard. See
+-  // https://developer.apple.com/documentation/uikit/uitextinput/1614489-markedtextrange?language=objc for more info. If
+-  // the user added an emoji, the system adds a font attribute for the emoji and stores the original font in
++  // https://developer.apple.com/documentation/uikit/uitextinput/1614489-markedtextrange?language=objc for more info.
++  // Also, updating the attributed text while inputting Korean language will break input mechanism.
++  // If the user added an emoji, the system adds a font attribute for the emoji and stores the original font in
+   // NSOriginalFont. Lastly, when entering a password, etc., there will be additional styling on the field as the native
+   // text view handles showing the last character for a split second.
+   __block BOOL fontHasBeenUpdatedBySystem = false;
+@@ -596,6 +597,7 @@ using namespace facebook::react;
+ 
+   BOOL shouldFallbackToBareTextComparison =
+       [_backedTextInputView.textInputMode.primaryLanguage isEqualToString:@"dictation"] ||
++      [_backedTextInputView.textInputMode.primaryLanguage isEqualToString:@"ko-KR"] ||
+       _backedTextInputView.markedTextRange || _backedTextInputView.isSecureTextEntry || fontHasBeenUpdatedBySystem;
+ 
+   if (shouldFallbackToBareTextComparison) {
+diff --git a/node_modules/react-native/ReactAndroid/gradle.properties b/node_modules/react-native/ReactAndroid/gradle.properties
+index 432839a..1ef5b92 100644
+--- a/node_modules/react-native/ReactAndroid/gradle.properties
++++ b/node_modules/react-native/ReactAndroid/gradle.properties
+@@ -1,4 +1,4 @@
+-VERSION_NAME=0.67.2
++VERSION_NAME=0.67.5
+ GROUP=com.facebook.react
+ 
+ POM_NAME=ReactNative
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/ReactNativeVersion.java b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/ReactNativeVersion.java
+index ff4dd76..dbdf7af 100644
+--- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/ReactNativeVersion.java
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/modules/systeminfo/ReactNativeVersion.java
+@@ -17,6 +17,6 @@ public class ReactNativeVersion {
+   public static final Map<String, Object> VERSION = MapBuilder.<String, Object>of(
+       "major", 0,
+       "minor", 67,
+-      "patch", 2,
++      "patch", 5,
+       "prerelease", null);
+ }
+diff --git a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/ReactTextShadowNode.java b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/ReactTextShadowNode.java
+index 26257eb..bffdfec 100644
+--- a/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/ReactTextShadowNode.java
++++ b/node_modules/react-native/ReactAndroid/src/main/java/com/facebook/react/views/text/ReactTextShadowNode.java
+@@ -343,11 +343,6 @@ public class ReactTextShadowNode extends ReactBaseTextShadowNode {
+               mJustificationMode);
+       uiViewOperationQueue.enqueueUpdateExtraData(getReactTag(), reactTextUpdate);
+     }
+-
+-    if (mAdjustsFontSizeToFit) {
+-      // Nodes with `adjustsFontSizeToFit` enabled need to be remeasured on every relayout.
+-      markUpdated();
+-    }
+   }
+ 
+   @ReactProp(name = "onTextLayout")
+diff --git a/node_modules/react-native/ReactAndroid/src/main/jni/first-party/fbjni/.npmignore b/node_modules/react-native/ReactAndroid/src/main/jni/first-party/fbjni/.gitignore
+similarity index 100%
+rename from node_modules/react-native/ReactAndroid/src/main/jni/first-party/fbjni/.npmignore
+rename to node_modules/react-native/ReactAndroid/src/main/jni/first-party/fbjni/.gitignore
+diff --git a/node_modules/react-native/ReactCommon/cxxreact/ReactNativeVersion.h b/node_modules/react-native/ReactCommon/cxxreact/ReactNativeVersion.h
+index f10f827..a99f81f 100644
+--- a/node_modules/react-native/ReactCommon/cxxreact/ReactNativeVersion.h
++++ b/node_modules/react-native/ReactCommon/cxxreact/ReactNativeVersion.h
+@@ -17,7 +17,7 @@ namespace facebook::react {
+ constexpr struct {
+   int32_t Major = 0;
+   int32_t Minor = 67;
+-  int32_t Patch = 2;
++  int32_t Patch = 5;
+   std::string_view Prerelease = "";
+ } ReactNativeVersion;
+ 
+diff --git a/node_modules/react-native/ReactCommon/hermes/inspector/tools/msggen/.npmignore b/node_modules/react-native/ReactCommon/hermes/inspector/tools/msggen/.gitignore
+similarity index 100%
+rename from node_modules/react-native/ReactCommon/hermes/inspector/tools/msggen/.npmignore
+rename to node_modules/react-native/ReactCommon/hermes/inspector/tools/msggen/.gitignore
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.md5 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.md5
+deleted file mode 100644
+index 35c4dd4..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.md5
++++ /dev/null
+@@ -1 +0,0 @@
+-283c3ad2a09a9b26bcf8632c2d0cc7ab
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.sha1 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.sha1
+deleted file mode 100644
+index 651b892..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-6abbadc0b8174e42fb4f5d9f4a578deac714cc94
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.sha256 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.sha256
+deleted file mode 100644
+index f72f152..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.sha256
++++ /dev/null
+@@ -1 +0,0 @@
+-393697ad0a9bfe604f6f249cb23abc590b32ad3fb36cfc8c5d86327951b82fae
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.sha512 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.sha512
+deleted file mode 100644
+index 848d82f..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar.sha512
++++ /dev/null
+@@ -1 +0,0 @@
+-9fa54c888fd61fce49b65610c0eb3cd6795e5e31683105b3048a5b31c34f59dd749c48e55d5577ba45fcd624bb4041028071cde82a91208d402f9352a70337af
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.md5 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.md5
+deleted file mode 100644
+index 7ebc4b6..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.md5
++++ /dev/null
+@@ -1 +0,0 @@
+-8306d9526b64d13db397518401120c8d
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.sha1 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.sha1
+deleted file mode 100644
+index 68070d5..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-888a319cc189582061bd4bd83be7936b955ef96b
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.sha256 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.sha256
+deleted file mode 100644
+index 3be9d3e..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.sha256
++++ /dev/null
+@@ -1 +0,0 @@
+-e65f086a817ed67457f9d20c1b2458cf50ee5023d9201a27dbd27522ca57f848
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.sha512 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.sha512
+deleted file mode 100644
+index 00ed768..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module.sha512
++++ /dev/null
+@@ -1 +0,0 @@
+-22a3aed0c26fbca4195b524f8f026d35496789b0bdb179e559e11cc26f19c0a585b887873748e88b477c303952a272907131bce579e63031c1de7c5d10c53a59
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.md5 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.md5
+deleted file mode 100644
+index 5e7246f..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.md5
++++ /dev/null
+@@ -1 +0,0 @@
+-ed630b2ddccd5b319a6fbaff2739384d
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.sha1 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.sha1
+deleted file mode 100644
+index 06c2523..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.sha1
++++ /dev/null
+@@ -1 +0,0 @@
+-f9eda3ab5913e1170f7af9d6f0fa3d0cfb100983
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.sha256 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.sha256
+deleted file mode 100644
+index 8d0f839..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.sha256
++++ /dev/null
+@@ -1 +0,0 @@
+-6822a0883d3963ee87d0cfc29cbf7b7ba118c839d3fd452de75c610cc77f1e8b
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.sha512 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.sha512
+deleted file mode 100644
+index b9e69c4..0000000
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom.sha512
++++ /dev/null
+@@ -1 +0,0 @@
+-529f01e0c31fef37fc71c76795f2a4e93f4c022002c0357a9b25975b33b68fe0b967f5e64499148a5c56d8a3485e7fd82163abee2b2a48592c7cdb898e1a30ce
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar
+similarity index 97%
+rename from node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar
+rename to node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar
+index d61a5d4..3051c96 100644
+Binary files a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.aar and b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar differ
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.md5 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.md5
+new file mode 100644
+index 0000000..fc35cbc
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.md5
+@@ -0,0 +1 @@
++53f3a352a9c7ca3ddc53e6d99cc68ee2
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.sha1 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.sha1
+new file mode 100644
+index 0000000..0626d96
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.sha1
+@@ -0,0 +1 @@
++e4bb189b9eafe066f64eebdc9a1fe672b801330c
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.sha256 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.sha256
+new file mode 100644
+index 0000000..7e47395
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.sha256
+@@ -0,0 +1 @@
++36cf587b0893e02b3e1029b1e82b895baa9945f7d51f271f1098a9e6d37b4cbb
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.sha512 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.sha512
+new file mode 100644
+index 0000000..987ed05
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.aar.sha512
+@@ -0,0 +1 @@
++98a3d8554cb5a29ab1899bf895b8f01efc441526c78332ca16b206443f4a47573b99b8ae61437fdeebf71af6324f65903c4f46d2acd77a4a55edfd6ee8efb172
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module
+similarity index 86%
+rename from node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module
+rename to node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module
+index 1562af7..63a143e 100644
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.module
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module
+@@ -3,7 +3,7 @@
+   "component": {
+     "group": "com.facebook.react",
+     "module": "react-native",
+-    "version": "0.67.2",
++    "version": "0.67.5",
+     "attributes": {
+       "org.gradle.status": "release"
+     }
+@@ -131,13 +131,13 @@
+       ],
+       "files": [
+         {
+-          "name": "react-native-0.67.2.aar",
+-          "url": "react-native-0.67.2.aar",
+-          "size": 17805049,
+-          "sha512": "9fa54c888fd61fce49b65610c0eb3cd6795e5e31683105b3048a5b31c34f59dd749c48e55d5577ba45fcd624bb4041028071cde82a91208d402f9352a70337af",
+-          "sha256": "393697ad0a9bfe604f6f249cb23abc590b32ad3fb36cfc8c5d86327951b82fae",
+-          "sha1": "6abbadc0b8174e42fb4f5d9f4a578deac714cc94",
+-          "md5": "283c3ad2a09a9b26bcf8632c2d0cc7ab"
++          "name": "react-native-0.67.5.aar",
++          "url": "react-native-0.67.5.aar",
++          "size": 17805019,
++          "sha512": "98a3d8554cb5a29ab1899bf895b8f01efc441526c78332ca16b206443f4a47573b99b8ae61437fdeebf71af6324f65903c4f46d2acd77a4a55edfd6ee8efb172",
++          "sha256": "36cf587b0893e02b3e1029b1e82b895baa9945f7d51f271f1098a9e6d37b4cbb",
++          "sha1": "e4bb189b9eafe066f64eebdc9a1fe672b801330c",
++          "md5": "53f3a352a9c7ca3ddc53e6d99cc68ee2"
+         }
+       ]
+     },
+@@ -258,13 +258,13 @@
+       ],
+       "files": [
+         {
+-          "name": "react-native-0.67.2.aar",
+-          "url": "react-native-0.67.2.aar",
+-          "size": 17805049,
+-          "sha512": "9fa54c888fd61fce49b65610c0eb3cd6795e5e31683105b3048a5b31c34f59dd749c48e55d5577ba45fcd624bb4041028071cde82a91208d402f9352a70337af",
+-          "sha256": "393697ad0a9bfe604f6f249cb23abc590b32ad3fb36cfc8c5d86327951b82fae",
+-          "sha1": "6abbadc0b8174e42fb4f5d9f4a578deac714cc94",
+-          "md5": "283c3ad2a09a9b26bcf8632c2d0cc7ab"
++          "name": "react-native-0.67.5.aar",
++          "url": "react-native-0.67.5.aar",
++          "size": 17805019,
++          "sha512": "98a3d8554cb5a29ab1899bf895b8f01efc441526c78332ca16b206443f4a47573b99b8ae61437fdeebf71af6324f65903c4f46d2acd77a4a55edfd6ee8efb172",
++          "sha256": "36cf587b0893e02b3e1029b1e82b895baa9945f7d51f271f1098a9e6d37b4cbb",
++          "sha1": "e4bb189b9eafe066f64eebdc9a1fe672b801330c",
++          "md5": "53f3a352a9c7ca3ddc53e6d99cc68ee2"
+         }
+       ]
+     }
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.md5 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.md5
+new file mode 100644
+index 0000000..b6235d0
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.md5
+@@ -0,0 +1 @@
++9229e5cfa484a26511e9909ed916d2f7
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.sha1 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.sha1
+new file mode 100644
+index 0000000..0d9dcda
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.sha1
+@@ -0,0 +1 @@
++b74854dd30218fdbc7f7b62b44a6effa529786b6
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.sha256 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.sha256
+new file mode 100644
+index 0000000..10364d4
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.sha256
+@@ -0,0 +1 @@
++e199af60b0f37dc185a375cdf92b66531ab8c4005592245329b8542e04cc7a96
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.sha512 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.sha512
+new file mode 100644
+index 0000000..ed8008a
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.module.sha512
+@@ -0,0 +1 @@
++e8757be87c7e94d58a9e1028b1f8d368f9278030bf7351bbb5aa326857eb31e983376fdf15c44fb5499c741e80a8c26137299636718033ee75bc06975d818382
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom
+similarity index 99%
+rename from node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom
+rename to node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom
+index 967d3e1..ac0bac2 100644
+--- a/node_modules/react-native/android/com/facebook/react/react-native/0.67.2/react-native-0.67.2.pom
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom
+@@ -9,7 +9,7 @@
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>com.facebook.react</groupId>
+   <artifactId>react-native</artifactId>
+-  <version>0.67.2</version>
++  <version>0.67.5</version>
+   <packaging>aar</packaging>
+   <name>ReactNative</name>
+   <description>A framework for building native apps with React</description>
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.md5 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.md5
+new file mode 100644
+index 0000000..995f1ba
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.md5
+@@ -0,0 +1 @@
++58aba97c7ee8da14b22bb308e0d48ca6
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.sha1 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.sha1
+new file mode 100644
+index 0000000..83918ad
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.sha1
+@@ -0,0 +1 @@
++663125358298b822f61849f5980f5d17ebc3f8e9
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.sha256 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.sha256
+new file mode 100644
+index 0000000..99526d5
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.sha256
+@@ -0,0 +1 @@
++d7366f8553f42da0b000e72ce5dd2e4deb1bd1ee0ce4a14efa8c55d99086fba1
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.sha512 b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.sha512
+new file mode 100644
+index 0000000..1b8b3c7
+--- /dev/null
++++ b/node_modules/react-native/android/com/facebook/react/react-native/0.67.5/react-native-0.67.5.pom.sha512
+@@ -0,0 +1 @@
++5bc85e13c7d168702da53523cc12cd7b7d7c57c779e934880410b367b69f9206c1a594d0b0d8d3999d53c4abd486789dcabf020910af84461539624f8965487a
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml b/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml
+index 6c4e587..62265e6 100644
+--- a/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml
++++ b/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml
+@@ -3,11 +3,11 @@
+   <groupId>com.facebook.react</groupId>
+   <artifactId>react-native</artifactId>
+   <versioning>
+-    <latest>0.67.2</latest>
+-    <release>0.67.2</release>
++    <latest>0.67.5</latest>
++    <release>0.67.5</release>
+     <versions>
+-      <version>0.67.2</version>
++      <version>0.67.5</version>
+     </versions>
+-    <lastUpdated>20220131172717</lastUpdated>
++    <lastUpdated>20221106210050</lastUpdated>
+   </versioning>
+ </metadata>
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.md5 b/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.md5
+index 8031b10..d76bfd2 100644
+--- a/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.md5
++++ b/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.md5
+@@ -1 +1 @@
+-9b0545c6bb0eb1658389321435d5885c
+\ No newline at end of file
++69ff243b382de927e644a91094b594cd
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha1 b/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha1
+index ab7da7c..98ada86 100644
+--- a/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha1
++++ b/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha1
+@@ -1 +1 @@
+-8299afcdcc6a5954b76e55326f1ac55b5c13d078
+\ No newline at end of file
++f05adfad1cae9578961caac6bbdae6c5f277dbe1
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha256 b/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha256
+index 1a273a6..775324a 100644
+--- a/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha256
++++ b/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha256
+@@ -1 +1 @@
+-051604138bb47c3367f02ef0435982f8693194b3217d8681f984f5cbc948ce72
+\ No newline at end of file
++569e210bc6b193ad7d99a0a17c6ca2f5d5fe2b375b07fcab926176556a513dcc
+\ No newline at end of file
+diff --git a/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha512 b/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha512
+index 5356d0f..e4daadf 100644
+--- a/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha512
++++ b/node_modules/react-native/android/com/facebook/react/react-native/maven-metadata.xml.sha512
+@@ -1 +1 @@
+-b16dc6917de8de9b40150e0d9528c07dad2f2a62ae34a6eecad27264f63fa2d26c4f71e146b920a653364a62bbd907e85ae4e11fe5b94b51786795cd14f44d4c
+\ No newline at end of file
++b6ac82bdded2b6dc992bf152dd31c736cf104f4cfcc1740431123bf6116d1147b6eb291df2386442946fc510781f6d83a1d68ef279f5daff773d4a114693759a
+\ No newline at end of file
+diff --git a/node_modules/react-native/react.gradle b/node_modules/react-native/react.gradle
+index 2aefa12..4524854 100644
+--- a/node_modules/react-native/react.gradle
++++ b/node_modules/react-native/react.gradle
+@@ -394,3 +394,17 @@ afterEvaluate {
+         }
+     }
+ }
++
++// Patch needed for https://github.com/facebook/react-native/issues/35210
++// This is a patch to short-circuit the "+" dependencies inside the
++// users' app/build.gradle file and the various .gradle files of libraries.
++// As using plain "+" dependencies causes Gradle to always download the latest,
++// this logic forces Gradle to use latest release in the minor series.
++project.rootProject.allprojects {
++    configurations.all {
++        resolutionStrategy {
++            force "com.facebook.react:react-native:0.67.+"
++            force "com.facebook.react:hermes-engine:0.67.+"
++        }
++    }
++}
+diff --git a/node_modules/react-native/template/Gemfile.lock b/node_modules/react-native/template/Gemfile.lock
+index 285424c..bfc0738 100644
+--- a/node_modules/react-native/template/Gemfile.lock
++++ b/node_modules/react-native/template/Gemfile.lock
+@@ -3,23 +3,23 @@ GEM
+   specs:
+     CFPropertyList (3.0.5)
+       rexml
+-    activesupport (6.1.4.4)
++    activesupport (6.1.7)
+       concurrent-ruby (~> 1.0, >= 1.0.2)
+       i18n (>= 1.6, < 2)
+       minitest (>= 5.1)
+       tzinfo (~> 2.0)
+       zeitwerk (~> 2.3)
+-    addressable (2.8.0)
+-      public_suffix (>= 2.0.2, < 5.0)
++    addressable (2.8.1)
++      public_suffix (>= 2.0.2, < 6.0)
+     algoliasearch (1.27.5)
+       httpclient (~> 2.8, >= 2.8.3)
+       json (>= 1.5.1)
+     atomos (0.1.3)
+     claide (1.1.0)
+-    cocoapods (1.11.2)
++    cocoapods (1.11.3)
+       addressable (~> 2.8)
+       claide (>= 1.0.2, < 2.0)
+-      cocoapods-core (= 1.11.2)
++      cocoapods-core (= 1.11.3)
+       cocoapods-deintegrate (>= 1.0.3, < 2.0)
+       cocoapods-downloader (>= 1.4.0, < 2.0)
+       cocoapods-plugins (>= 1.0.0, < 2.0)
+@@ -34,7 +34,7 @@ GEM
+       nap (~> 1.0)
+       ruby-macho (>= 1.0, < 3.0)
+       xcodeproj (>= 1.21.0, < 2.0)
+-    cocoapods-core (1.11.2)
++    cocoapods-core (1.11.3)
+       activesupport (>= 5.0, < 7)
+       addressable (~> 2.8)
+       algoliasearch (~> 1.0)
+@@ -45,7 +45,7 @@ GEM
+       public_suffix (~> 4.0)
+       typhoeus (~> 1.0)
+     cocoapods-deintegrate (1.0.5)
+-    cocoapods-downloader (1.5.1)
++    cocoapods-downloader (1.6.3)
+     cocoapods-plugins (1.0.0)
+       nap
+     cocoapods-search (1.0.1)
+@@ -54,38 +54,38 @@ GEM
+       netrc (~> 0.11)
+     cocoapods-try (1.2.0)
+     colored2 (3.1.2)
+-    concurrent-ruby (1.1.9)
++    concurrent-ruby (1.1.10)
+     escape (0.0.4)
+-    ethon (0.15.0)
++    ethon (0.16.0)
+       ffi (>= 1.15.0)
+     ffi (1.15.5)
+     fourflusher (2.3.1)
+     fuzzy_match (2.0.4)
+     gh_inspector (1.1.3)
+     httpclient (2.8.3)
+-    i18n (1.9.1)
++    i18n (1.12.0)
+       concurrent-ruby (~> 1.0)
+-    json (2.6.1)
+-    minitest (5.15.0)
++    json (2.6.2)
++    minitest (5.16.3)
+     molinillo (0.8.0)
+     nanaimo (0.3.0)
+     nap (1.1.0)
+     netrc (0.11.0)
+-    public_suffix (4.0.6)
++    public_suffix (4.0.7)
+     rexml (3.2.5)
+     ruby-macho (2.5.1)
+     typhoeus (1.4.0)
+       ethon (>= 0.9.0)
+-    tzinfo (2.0.4)
++    tzinfo (2.0.5)
+       concurrent-ruby (~> 1.0)
+-    xcodeproj (1.21.0)
++    xcodeproj (1.22.0)
+       CFPropertyList (>= 2.3.3, < 4.0)
+       atomos (~> 0.1.3)
+       claide (>= 1.0.2, < 2.0)
+       colored2 (~> 3.1)
+       nanaimo (~> 0.3.0)
+       rexml (~> 3.2.4)
+-    zeitwerk (2.5.4)
++    zeitwerk (2.6.5)
+ 
+ PLATFORMS
+   ruby
+diff --git a/node_modules/react-native/template/package.json b/node_modules/react-native/template/package.json
+index 20121b2..fe7ae1a 100644
+--- a/node_modules/react-native/template/package.json
++++ b/node_modules/react-native/template/package.json
+@@ -11,7 +11,7 @@
+   },
+   "dependencies": {
+     "react": "17.0.2",
+-    "react-native": "0.67.2"
++    "react-native": "0.67.5"
+   },
+   "devDependencies": {
+     "@babel/core": "^7.12.9",

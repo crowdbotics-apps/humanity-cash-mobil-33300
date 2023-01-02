@@ -69,7 +69,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 
 	const getCoupons = () => {
 		loginStore.environment.api
-			.getCoupons()
+			.getCoupons({merchant_id: loginStore.merchant_id})
 			.then((result: any) => {
 				if (result.kind === "ok") {
 					runInAction(() => {
@@ -106,9 +106,9 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		// added
 		if (TransactionType !== 'All' && TransactionType !== '')
 			data = data.filter(d => d.type_of_promo === TransactionType)
-		if (DateFrom && DateTo) 
+		if (DateFrom && DateTo)
 			data = data.filter(d => (DateFrom <= new Date(d.start_date) && new Date(d.end_date) <= DateTo))
-		
+
 		return data
 	}
 
@@ -170,9 +170,9 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 				<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={styles.ENTYPO} />
 			</TouchableOpacity>
 			{transactionTypes.map((t, key) => (
-				<TouchableOpacity 
-				  key={key + 'btype'} 
-				  style={[styles.SELECT_ICON, transactionStyle]} 
+				<TouchableOpacity
+				  key={key + 'btype'}
+				  style={[styles.SELECT_ICON, transactionStyle]}
 				  onPress={() => [setSelectOpen(!SelectOpen), setTransactionType(t), setSearch(Search)]}
 				>
 					<Text style={styles.SELECT_LABEL}>{t}</Text>
@@ -210,8 +210,8 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
 		/>
 
-	const couponInfoModal = () => 
-		<ConfirmCouponModal 
+	const couponInfoModal = () =>
+		<ConfirmCouponModal
 		  visible={showCouponModalInfo}
 		  couponSelected={couponSelected}
 		  buttonAction={() => setCouponsModalConfig({showCouponModalInfo: false, couponSelected: null})}
@@ -235,8 +235,8 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 			style={styles.ROOT}
 		>
 			<View style={styles.HEADER_ACTIONS}>
-				<TouchableOpacity 
-				  style={styles.HEADER} 
+				<TouchableOpacity
+				  style={styles.HEADER}
 				  // @ts-ignore
 				  onPress={() => navigation.navigate('home')}>
 					<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
@@ -271,10 +271,10 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 								</View>
 								{ShowFilter && Filters()}
 								{getDataFiltered(loginStore.getMerchantCoupons, ['title', 'description', 'discount_input'], Search).map((i, key) => (
-									<TouchableOpacity 
+									<TouchableOpacity
 									  onLongPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]}
-									  onPress={() => setCouponsModalConfig({showCouponModalInfo: true, couponSelected: i})} 
-									  key={key + '_values'} 
+									  onPress={() => setCouponsModalConfig({showCouponModalInfo: true, couponSelected: i})}
+									  key={key + '_values'}
 									  style={styles.RETURN_ITEM}
 									>
 										<Image

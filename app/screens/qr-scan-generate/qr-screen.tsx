@@ -144,9 +144,6 @@ export const QRScreen = observer(function QRScreen(props: any) {
 
   const readQRAction = (data: any) => {
     let dataJson
-
-    console.log(' data ===>>> ', typeof data, data)
-
     try {
       dataJson = JSON.parse(data)
     } catch {

@@ -324,6 +324,7 @@ export default StyleSheet.create({
   },
   SMALL_INPUT_STYLE: {
     alignSelf: 'center',
+    color: COLOR.PALETTE.black,
     height: 55,
     width: METRICS.screenWidth * 0.40,
   },

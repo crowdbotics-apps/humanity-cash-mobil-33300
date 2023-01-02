@@ -33,12 +33,10 @@ class ACHTransactionSerializer(serializers.ModelSerializer):
             status = "completed"
         return status
 
-    @property
     def get_consumer_data(self, obj):
         if obj.get_consumer_data:
             return ConsumerProfileDetailSerializer().to_representation(obj.get_consumer_data)
 
-    @property
     def get_merchant_data(self, obj):
         if obj.get_consumer_data:
             return MerchantMyProfileSerializer().to_representation(obj.get_merchant_data)

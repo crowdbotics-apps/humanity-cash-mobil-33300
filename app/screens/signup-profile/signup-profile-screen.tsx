@@ -164,10 +164,11 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			type: imageSource?.type,
 			name: imageSource?.fileName
 		}
+		const keys = imageSource === null ? [] : ["consumer_profile"]
 		loginStore.environment.api.setupConsumer({
 			username: Username,
 			consumer_profile: pic
-		}).then((result: any) => {
+		}, keys).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setUsername('');
@@ -234,15 +235,17 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			type: BackBusinessImageSource?.type,
 			name: BackBusinessImageSource?.fileName
 		}
-		loginStore.environment.api.setupMerchant({
+		const keys = BusinessImageSource === null ? [] : ["profile_picture"]
+		if (BackBusinessImageSource !== null) keys.push("background_picture")
+		const data ={
 			business_name: BusinessName,
-			profile_picture: profPic,
-			background_picture: backPic,
+			profile_picture: BusinessImageSource?.uri ? profPic : null,
+			background_picture: BackBusinessImageSource?.uri ? backPic : null,
 			business_story: BusinessStory
-		})
+		}
+		loginStore.environment.api.setupMerchant(data, keys)
 			.then((result: any) => {
 				setLoading(false)
-				setStep('business_type')
 				if (result.kind === "ok") {
 					setStep('business_type')
 				} else if (result.kind === "bad-data") {
@@ -278,7 +281,8 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	}
 	const setupMerchantDetailComplete = () => {
 		setLoading(true)
-		loginStore.environment.api.setupMerchantDetail({
+
+		const data = {
 			registered_business_name: BusinessRegName,
 			industry: BusinessIndustryType,
 			employer_identification_number: IndentifierType === 'EIN' ? EmployerId : '',
@@ -292,7 +296,8 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			address_2: Address2,
 			zip_code: PostalCode,
 			phone_number: PhoneNumber
-		})
+		}
+		loginStore.environment.api.setupMerchantDetail(data)
 			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
@@ -820,27 +825,27 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					buttonLabel={'Confirm Address'}
 					buttonStyle={[styles.SUBMIT_BUTTON, { marginTop: 20 }]}
 				/>
-				<MapView
-					// provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-					style={styles.MAP}
-					showsUserLocation
-					loadingEnabled
-					zoomEnabled
-					zoomControlEnabled
-					initialRegion={Region}
-				>
-					<Marker
-						draggable
-						onDragEnd={e => {
-							setLatitud(e?.nativeEvent?.coordinate?.latitude)
-							setLongitud(e?.nativeEvent?.coordinate?.longitude)
-							MapInputAddress === 1
-								? setAddress1(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)
-								: setAddress2(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)
-						}}
-						coordinate={{ latitude: Latitud, longitude: Longitud }}
-					/>
-				</MapView>
+				{/*<MapView*/}
+				{/*	// provider={PROVIDER_GOOGLE} // remove if not using Google Maps*/}
+				{/*	style={styles.MAP}*/}
+				{/*	showsUserLocation*/}
+				{/*	loadingEnabled*/}
+				{/*	zoomEnabled*/}
+				{/*	zoomControlEnabled*/}
+				{/*	initialRegion={Region}*/}
+				{/*>*/}
+				{/*	<Marker*/}
+				{/*		draggable*/}
+				{/*		onDragEnd={e => {*/}
+				{/*			setLatitud(e?.nativeEvent?.coordinate?.latitude)*/}
+				{/*			setLongitud(e?.nativeEvent?.coordinate?.longitude)*/}
+				{/*			MapInputAddress === 1*/}
+				{/*				? setAddress1(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)*/}
+				{/*				: setAddress2(`${e?.nativeEvent?.coordinate?.latitude}, ${e?.nativeEvent?.coordinate?.longitude}`)*/}
+				{/*		}}*/}
+				{/*		coordinate={{ latitude: Latitud, longitude: Longitud }}*/}
+				{/*	/>*/}
+				{/*</MapView>*/}
 			</View>
 		</Modal>
 	)
