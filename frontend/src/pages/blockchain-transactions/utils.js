@@ -8,16 +8,16 @@ import Icon from "@mui/material/Icon";
 
 export const dataTableModel = {
   columns: [
-    {Header: "HASH", accessor: "transaction_id", width: '10px'},
-    {Header: "FROM", accessor: "from_username", width: '22px'},
-    {Header: "TO", accessor: "to_username", width: '45%'},
-    {Header: "FROM ADDRESS", accessor: "from_address", width: '20%'},
-    {Header: "TO ADDRESS", accessor: "to_address", width: '20%'},
-    {Header: "TYPE", accessor: "type", width: '20%'},
-    {Header: "CREATED AT", accessor: "created", width: '20%'},
-    {Header: "AMOUNT", accessor: "amount", width: '20%'},
-    {Header: "BLOCKS CONFIRMED", accessor: "confirmations", width: '20%'},
-    {Header: "USERNAME", accessor: "actions", width: '20%', disableOrdering: true}
+    {Header: "HASH", accessor: "transaction_id"},
+    {Header: "FROM", accessor: "from_username"},
+    {Header: "TO", accessor: "to_username"},
+    {Header: "FROM ADDRESS", accessor: "from_address"},
+    {Header: "TO ADDRESS", accessor: "to_address"},
+    {Header: "TYPE", accessor: "type"},
+    {Header: "CREATED AT", accessor: "created"},
+    {Header: "AMOUNT", accessor: "amount"},
+    {Header: "BLOCKS CONFIRMED", accessor: "confirmations"},
+    {Header: "USERNAME", accessor: "actions", disableOrdering: true}
   ],
   rows: [],
 };
@@ -46,7 +46,7 @@ const dateBox = (date) => {
 }
 
 
-export const renderTableRow = (item, onAction = () => null) => {
+export const renderTableRow = (item, onAction ) => {
   item.transaction_id = (hashBox(item.transaction_id))
   item.from_username = (hashBox(item.from_username))
   item.to_username = (hashBox(item.to_username, true))

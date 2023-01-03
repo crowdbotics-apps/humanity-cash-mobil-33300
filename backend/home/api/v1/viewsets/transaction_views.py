@@ -9,9 +9,10 @@ from datetime import datetime
 import qrcode
 
 from django.db.models import Q
-from rest_framework import mixins
+from rest_framework import mixins, filters
 from rest_framework import viewsets, permissions, status
 from rest_framework.filters import SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -28,13 +29,21 @@ from users.models import Consumer, Merchant, Notification
 logger = logging.getLogger('transaction')
 
 
-class TransactionViewSet(mixins.ListModelMixin,
-                         mixins.RetrieveModelMixin,
-                         viewsets.GenericViewSet):
-    queryset = Transaction.objects.filter()
+# class LargeResultsSetPagination(PageNumberPagination):
+#     page_size = 1000
+#     page_size_query_param = 'page_size'
+#     max_page_size = 10000
+
+class TransactionViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet
+):
+    queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
     permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [SearchFilter]
+    pagination_class = PageNumberPagination
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['transaction_id']
 
     def get_queryset(self):
@@ -277,5 +286,3 @@ class SendQRView(AuthenticatedAPIView):
             logger.exception(error)
             return Response('Error sending QR code', status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
-
-

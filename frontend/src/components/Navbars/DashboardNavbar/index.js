@@ -42,7 +42,7 @@ import MDButton from "../../MDButton";
 
 const logo = require("../../../assets/images/logo.png")
 
-function DashboardNavbar({absolute, light, isMini}) {
+function DashboardNavbar({absolute, light, isMini, searchFunc, title, goBack}) {
   const [controller, dispatch] = useMaterialUIController();
   const {miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode, isDrawed} = controller;
   const route = useLocation().pathname.split("/").slice(1);
@@ -97,9 +97,9 @@ function DashboardNavbar({absolute, light, isMini}) {
             fontSize: 32,
             color: '#3B88B6',
             textTransform: 'capitalize',
-            fontWeight: 700,
+            fontWeight: 400,
           }}>
-            {route[0].replace(/-/g, ' ')}
+            {title ? title : route[0].replace(/-/g, ' ')}
           </MDTypography>
         </MDBox>
         {isMini ? null : (
@@ -110,13 +110,11 @@ function DashboardNavbar({absolute, light, isMini}) {
                   <MDBox sx={{backgroundColor: '#EBEBEB', borderRadius: 2, position: 'relative'}} px={5}>
                     <Search style={{position: 'absolute', bottom: 8, left: 10}}/>
                     <Input
-                      // ref={searchQueryBarRef}
-                      // inputRef={searchQueryRef}
                       fullWidth
                       placeholder="Search"
                       type="text"
                       sx={{height: 40, width: 300}}
-                      // onInputCapture={prepareCall}
+                      onChange={(evt) => searchFunc(evt?.target?.value)}
                     />
                   </MDBox>
                 </Grid>
