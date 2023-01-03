@@ -31,7 +31,15 @@ import Card from "@mui/material/Card";
 import {useStores} from "../../../models";
 import {observer} from "mobx-react";
 
-function DashboardLayout({children, showCard = false, loginRequired = false, showNavbar=true, fullSize=false}) {
+function DashboardLayout({
+                           children,
+                           loginRequired = false,
+                           showNavbar = true,
+                           fullSize = false,
+                           searchFunc,
+  title = null,
+  goBack = null
+                         }) {
   const [controller, dispatch] = useMaterialUIController();
   const {miniSidenav} = controller;
   const {pathname} = useLocation();
@@ -49,7 +57,7 @@ function DashboardLayout({children, showCard = false, loginRequired = false, sho
         sx={({breakpoints, transitions, functions: {pxToRem}}) => ({
           p: 0,
           position: "relative",
-          opacity:1,
+          opacity: 1,
           [breakpoints.up("xl")]: {
             marginLeft: miniSidenav ? pxToRem(96) : pxToRem(250),
             transition: transitions.create(["margin-left", "margin-right"], {
@@ -59,7 +67,7 @@ function DashboardLayout({children, showCard = false, loginRequired = false, sho
           },
         })}
       >
-        {showNavbar && (<DashboardNavbar/>)}
+        {showNavbar && (<DashboardNavbar searchFunc={searchFunc} title={title} goBack={goBack}/>)}
         {fullSize && (
           children
         ) || (
