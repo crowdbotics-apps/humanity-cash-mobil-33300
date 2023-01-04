@@ -36,10 +36,12 @@ function DashboardLayout({
                            loginRequired = false,
                            showNavbar = true,
                            fullSize = false,
-                           searchFunc,
-  title = null,
-  goBack = null
+                           searchFunc = null,
+                           loading,
+                           title = null,
+                           goBack = null
                          }) {
+
   const [controller, dispatch] = useMaterialUIController();
   const {miniSidenav} = controller;
   const {pathname} = useLocation();
@@ -67,7 +69,7 @@ function DashboardLayout({
           },
         })}
       >
-        {showNavbar && (<DashboardNavbar searchFunc={searchFunc} title={title} goBack={goBack}/>)}
+        {showNavbar && (<DashboardNavbar searchFunc={searchFunc} title={title} goBack={goBack} loading={loading}/>)}
         {fullSize && (
           children
         ) || (

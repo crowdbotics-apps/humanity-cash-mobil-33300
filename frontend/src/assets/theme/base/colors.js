@@ -73,6 +73,11 @@ const colors = {
     focus: "#fc9d26",
   },
 
+  pink: {
+    main: "#DF9BB8",
+    focus: "#deaabe",
+  },
+
   error: {
     main: "#F44335",
     focus: "#f65f53",

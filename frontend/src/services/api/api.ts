@@ -244,43 +244,42 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/cities/`, data)
   }
 
+  // ===========>
+
   async createEvent(data: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(API_VERSION_PREFIX+"/event/", data)
+    return this.simple_post(API_VERSION_PREFIX + "/event/", data)
   }
 
-  async editEvent(id:number, data: any): Promise<Types.GenericResponse> {
-    return this.simple_patch(API_VERSION_PREFIX+`/event/${id}/`, data)
+  async editEvent(id: number, data: any): Promise<Types.GenericResponse> {
+    return this.simple_patch(API_VERSION_PREFIX + `/event/${id}/`, data)
   }
 
   async getEvents(data: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+"/event/", data)
+    return this.simple_get(API_VERSION_PREFIX + "/event/", data)
   }
 
   async deleteEvent(id: number): Promise<Types.GenericResponse> {
-    return this.simple_delete(API_VERSION_PREFIX+`/event/${id}/`)
+    return this.simple_delete(API_VERSION_PREFIX + `/event/${id}/`)
   }
 
   async getUsers(data: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+"/user/", data)
+    return this.simple_get(API_VERSION_PREFIX + "/user/", data)
   }
 
   async getConsumers(data: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+"/consumer/", data)
-  }
-  async getDwollaUsers(data: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+"/dwolla_user/", data)
+    return this.simple_get(API_VERSION_PREFIX + "/consumer/", data)
   }
 
   async getUser(id: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+`/user/${id}/`,{})
+    return this.simple_get(API_VERSION_PREFIX + `/user/${id}/`, {})
   }
 
   async getDwollaUser(id: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+`/dwolla_user/${id}/`,{})
+    return this.simple_get(API_VERSION_PREFIX + `/dwolla_user/${id}/`, {})
   }
 
   async createUser(data: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(API_VERSION_PREFIX+"/user/", data)
+    return this.simple_post(API_VERSION_PREFIX + "/user/", data)
   }
 
 
@@ -299,39 +298,42 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/transaction/${filters}`, extraData)
   }
 
-  // async getBlockchainTransactions(data: any): Promise<Types.SimpleGetResult> {
-  //   return this.simple_get(API_VERSION_PREFIX+"/transaction/", data)
-  // }
+  async getBlockchainTransaction(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(API_VERSION_PREFIX + `/transaction/${data.id}/show_detail_data/`, data)
+  }
+
+  async getDwollaUsers(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {
+    const filters = `?page_size=${page_size}&page=${page}&search=${searchData}&ordering=${ordering}`
+    return this.simple_get(API_VERSION_PREFIX + `/dwolla_user/${filters}`, extraData)
+  }
+
   async getDashboardInfo(): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+"/compliance/dashboard/")
+    return this.simple_get(API_VERSION_PREFIX + "/compliance/dashboard/")
   }
 
   async getACHTransactions(data: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+"/ach_transaction/", data)
+    return this.simple_get(API_VERSION_PREFIX + "/ach_transaction/", data)
   }
 
-  async getContracts(data: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+"/contract/", data)
-  }
-
-  async getBlockchainTransaction(id:number, data: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX+`/transaction/${id}/`, data)
+  async getContracts(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {
+    const filters = `?page_size=${page_size}&page=${page}&search=${searchData}&ordering=${ordering}`
+    return this.simple_get(API_VERSION_PREFIX + `/contract/${filters}`, extraData)
   }
 
   async addAdjustment(data: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
+    return this.simple_post(API_VERSION_PREFIX + "/compliance_action/", data)
   }
 
   async reconcileAndBrnTokens(data: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
+    return this.simple_post(API_VERSION_PREFIX + "/compliance_action/", data)
   }
 
   async addAdjustmentAndMintTokens(data: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
+    return this.simple_post(API_VERSION_PREFIX + "/compliance_action/", data)
   }
 
   async reconcileAndTransferTokens(data: any): Promise<Types.SimplePostResult> {
-    return this.simple_post(API_VERSION_PREFIX+"/compliance_action/", data)
+    return this.simple_post(API_VERSION_PREFIX + "/compliance_action/", data)
   }
 
 }
