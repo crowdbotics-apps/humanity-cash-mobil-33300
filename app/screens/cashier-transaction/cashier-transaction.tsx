@@ -65,6 +65,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-end',
     flexDirection: 'row',
+    height: 50,
     justifyContent: 'flex-start',
     marginRight: 30
   },

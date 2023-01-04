@@ -19,24 +19,24 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 			{
 				item: 'Customer sale',
 				time: '7 min ago',
-				credit: '10.00'
+				amount: '10.00',
 			},
 			{
 				item: 'Carr Hardware',
 				time: '3:51, Jun 17, 2021',
-				debit: '10.00'
+				amount: '10.00',
 			},
 			{
 				item: 'Cash out',
 				time: '4:51, Jun 17, 2021',
-				debit: '10.00'
+				amount: '10.00',
 			},
 		],
 		YESTERDAY: [
 			{
 				item: 'Customer return',
 				time: '3:51, Jun 16, 2021',
-				debit: '10.00'
+				amount: '10.00',
 			},
 		]
 	}
@@ -70,45 +70,45 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 		<View style={styles.LINE} />
 	</View>
 
-const ReturnDetailModal = () => <Modal transparent visible={DetailModalVisible}>
-<View style={styles.ROOT_MODAL}>
-	<TouchableOpacity
-		onPress={() => setDetailModalVisible(false)}
-		style={styles.CLOSE_MODAL_BUTTON}
-	>
-		<Text style={[styles.BACK_BUTON_LABEL, {color: 'black'}]}>{`Close `}</Text>
-		<Icon name={"close"} size={20} color={'#0D0E21'} />
-	</TouchableOpacity>
-	<View style={styles.MODAL_CONTAINER}>
-		{/* <View style={styles.USER_IMAGE_CONTAINER}>
+	const ReturnDetailModal = () => <Modal transparent visible={DetailModalVisible}>
+		<View style={styles.ROOT_MODAL}>
+			<TouchableOpacity
+				onPress={() => setDetailModalVisible(false)}
+				style={styles.CLOSE_MODAL_BUTTON}
+			>
+				<Text style={[styles.BACK_BUTON_LABEL, { color: 'black' }]}>{`Close `}</Text>
+				<Icon name={"close"} size={20} color={'#0D0E21'} />
+			</TouchableOpacity>
+			<View style={styles.MODAL_CONTAINER}>
+				{/* <View style={styles.USER_IMAGE_CONTAINER}>
 			<Image
 				resizeMode="cover"
 				source={{ uri: SelectedReturn.image }}
 				style={styles.USER_IMAGE}
 			/>
 		</View> */}
-		<Text style={[styles.RETURN_ITEM_MODAL, { color: loginStore.getAccountColor }]}>{SelectedReturn.item}</Text>
-		<View style={styles.RETURN_CONTAINER_MODAL}>
-			<Text style={[styles.RETURN_AMOUNT, { color: loginStore.getAccountColor }]}>C$ {SelectedReturn.amount}</Text>
-			<View style={styles.RETURN_DETAIL_CONTAINER}>
-				<Text style={styles.RETURN_DETAIL_LABEL}>TRANSACTION ID</Text>
-				<Text style={styles.RETURN_DETAIL_LABEL}>0567882HDJH2JE20</Text>
+				<Text style={[styles.RETURN_ITEM_MODAL, { color: loginStore.getAccountColor }]}>{SelectedReturn.item}</Text>
+				<View style={styles.RETURN_CONTAINER_MODAL}>
+					<Text style={[styles.RETURN_AMOUNT, { color: loginStore.getAccountColor }]}>C$ {SelectedReturn.amount}</Text>
+					<View style={styles.RETURN_DETAIL_CONTAINER}>
+						<Text style={styles.RETURN_DETAIL_LABEL}>TRANSACTION ID</Text>
+						<Text style={styles.RETURN_DETAIL_LABEL}>0567882HDJH2JE20</Text>
+					</View>
+					<View style={styles.RETURN_DETAIL_CONTAINER}>
+						<Text style={styles.RETURN_DETAIL_LABEL}>TYPE</Text>
+						<Text style={styles.RETURN_DETAIL_LABEL}>CUSTOMER SALE</Text>
+					</View>
+					<View style={styles.RETURN_DETAIL_CONTAINER}>
+						<Text style={styles.RETURN_DETAIL_LABEL}>DATE</Text>
+						<Text style={styles.RETURN_DETAIL_LABEL}>4:22 , JUN 17, 2021</Text>
+					</View>
+				</View>
+				<Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor }]}>{loginStore.ProfileData.username}</Text>
+				<Text style={styles.LINK}>I want to make a return</Text>
 			</View>
-			<View style={styles.RETURN_DETAIL_CONTAINER}>
-				<Text style={styles.RETURN_DETAIL_LABEL}>TYPE</Text>
-				<Text style={styles.RETURN_DETAIL_LABEL}>CUSTOMER SALE</Text>
-			</View>
-			<View style={styles.RETURN_DETAIL_CONTAINER}>
-				<Text style={styles.RETURN_DETAIL_LABEL}>DATE</Text>
-				<Text style={styles.RETURN_DETAIL_LABEL}>4:22 , JUN 17, 2021</Text>
-			</View>
+			<View />
 		</View>
-		<Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor }]}>{loginStore.ProfileData.username}</Text>
-		<Text style={styles.LINK}>I want to make a return</Text>
-	</View>
-	<View />
-</View>
-</Modal>
+	</Modal>
 
 	const ReturnIndex = () =>
 		<View style={styles.CONTAINER}>
@@ -140,9 +140,9 @@ const ReturnDetailModal = () => <Modal transparent visible={DetailModalVisible}>
 							<Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text>
 						</View>
 						<View style={styles.CONTAINER}>
-							{i.credit
-								? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.credit}`}</Text>
-								: <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
+							{!i.credit
+								? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.amount}`}</Text>
+								: <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.amount}`}</Text>
 							}
 
 						</View>
