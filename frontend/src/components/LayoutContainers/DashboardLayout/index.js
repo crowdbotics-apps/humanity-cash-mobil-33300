@@ -31,7 +31,17 @@ import Card from "@mui/material/Card";
 import {useStores} from "../../../models";
 import {observer} from "mobx-react";
 
-function DashboardLayout({children, showCard = false, loginRequired = false, showNavbar=true, fullSize=false}) {
+function DashboardLayout({
+                           children,
+                           loginRequired = false,
+                           showNavbar = true,
+                           fullSize = false,
+                           searchFunc = null,
+                           loading,
+                           title = null,
+                           goBack = null
+                         }) {
+
   const [controller, dispatch] = useMaterialUIController();
   const {miniSidenav} = controller;
   const {pathname} = useLocation();
@@ -43,21 +53,13 @@ function DashboardLayout({children, showCard = false, loginRequired = false, sho
     setLayout(dispatch, "dashboard");
   }, [pathname]);
 
-  const renderCard = (children) => {
-    return (
-      <Card sx={{backgroundColor: 'rgba(255, 255, 255, 0.95)', opacity:1, padding: 3, display: 'flex', flex: 1, minHeight: '75vh'}}>
-        {children}
-      </Card>
-    )
-  }
-
   const renderMainContent = (children) => {
     return (
       <MDBox
         sx={({breakpoints, transitions, functions: {pxToRem}}) => ({
           p: 0,
           position: "relative",
-          opacity:1,
+          opacity: 1,
           [breakpoints.up("xl")]: {
             marginLeft: miniSidenav ? pxToRem(96) : pxToRem(250),
             transition: transitions.create(["margin-left", "margin-right"], {
@@ -67,20 +69,24 @@ function DashboardLayout({children, showCard = false, loginRequired = false, sho
           },
         })}
       >
-        {showNavbar && (<DashboardNavbar/>)}
+        {showNavbar && (<DashboardNavbar searchFunc={searchFunc} title={title} goBack={goBack} loading={loading}/>)}
         {fullSize && (
           children
-        )||(
+        ) || (
           <div style={{
-            height: '100vh',
             width: '100%',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover',
-            backgroundPosition: 'left',
-            padding: '11% 3% 2% 3%',
-            overflowY: 'scroll'
+            overflowY: 'scroll',
+            marginTop: 70,
+            padding: '0 30px 0 30px',
           }}>
-            {showCard ? renderCard(children) : children}
+            <MDBox sx={{
+              width: '100%',
+              transition: '0.3s',
+              height: 2,
+              backgroundColor: '#3B88B6',
+              marginTop: 5
+            }}/>
+            {children}
           </div>
         )}
       </MDBox>

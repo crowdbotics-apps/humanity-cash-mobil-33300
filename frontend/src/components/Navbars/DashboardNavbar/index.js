@@ -36,13 +36,10 @@ import {setMiniSidenav, setTransparentNavbar, useMaterialUIController,} from "co
 import {navbar, navbarContainer, navbarMobileMenu, navbarRow} from "./styles";
 import MDTypography from "../../../components/MDTypography";
 import {observer} from "mobx-react";
-import {Grid, Input} from "@mui/material";
-import {Search} from "@mui/icons-material";
-import MDButton from "../../MDButton";
+import {CircularProgress, Grid, Input} from "@mui/material";
+import {ArrowBack, Search} from "@mui/icons-material";
 
-const logo = require("../../../assets/images/logo.png")
-
-function DashboardNavbar({absolute, light, isMini}) {
+function DashboardNavbar({absolute, light, isMini, searchFunc, title, goBack, loading = false}) {
   const [controller, dispatch] = useMaterialUIController();
   const {miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode, isDrawed} = controller;
   const route = useLocation().pathname.split("/").slice(1);
@@ -93,35 +90,31 @@ function DashboardNavbar({absolute, light, isMini}) {
           color="inherit"
           mb={{xs: 1, md: 0}}
           sx={[(theme) => navbarRow(theme, {isMini}), {marginLeft: isDrawed ? '18%' : '7%', transition: '0.3s'}]}>
+          {goBack && <ArrowBack color={'primary'} sx={{transform: 'scale(1.5)', marginRight: 3, cursor: 'pointer'}} onClick={() => goBack()}/>}
           <MDTypography sx={{
-            fontSize: 32,
+            fontSize: goBack ? 25 : 32,
             color: '#3B88B6',
             textTransform: 'capitalize',
-            fontWeight: 700,
+            fontWeight: 400,
           }}>
-            {route[0].replace(/-/g, ' ')}
+            {title ? title : route[0].replace(/-/g, ' ')}
           </MDTypography>
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, {isMini})}>
-            <MDBox mr={4}>
-              {!(window.innerWidth < 1200) &&
+            <MDBox mr={2}>
+              {!(window.innerWidth < 1200) && searchFunc !== null &&
                 <Grid container>
-                  <MDBox sx={{backgroundColor: '#EBEBEB', borderRadius: 2, position: 'relative'}} px={5} mr={4}>
-                    <Search style={{position: 'absolute', bottom: 8, left: 10}}/>
+                  <MDBox sx={{backgroundColor: '#EBEBEB', borderRadius: 2, position: 'relative'}} px={5}>
+                    {loading === false ? <Search style={{position: 'absolute', bottom: 8, left: 10}}/> : <CircularProgress sx={{position: 'absolute', bottom: 10, left: 10}} size={20} color="primary" /> }
                     <Input
-                      // ref={searchQueryBarRef}
-                      // inputRef={searchQueryRef}
                       fullWidth
                       placeholder="Search"
                       type="text"
                       sx={{height: 40, width: 300}}
-                      // onInputCapture={prepareCall}
+                      onChange={(evt) => searchFunc(evt?.target?.value)}
                     />
                   </MDBox>
-                  <MDButton variant="standard" color="dark" iconOnly>
-                    <Icon sx={{ fontWeight: "bold" }}>tune</Icon>
-                  </MDButton>
                 </Grid>
                 }
             </MDBox>
@@ -140,16 +133,7 @@ function DashboardNavbar({absolute, light, isMini}) {
             </MDBox>
           </MDBox>
         )}
-
       </Toolbar>
-      <MDBox sx={{
-        marginLeft: isDrawed ? '18%' : '7%',
-        width: isDrawed ? '79%': '92%',
-        transition: '0.3s',
-        height: 2,
-        backgroundColor: '#3B88B6',
-        marginTop: 5
-      }}/>
     </AppBar>
   );
 }

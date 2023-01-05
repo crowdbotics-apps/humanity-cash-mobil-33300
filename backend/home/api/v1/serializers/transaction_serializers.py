@@ -47,7 +47,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         return address
 
     def get_from_username(self, obj):
-        data = self.context['request'].GET
+        data = self.context['request'].data
         username = '-'
         show_username, password_is_valid = self.validate_params(data)
         if not show_username:
@@ -65,17 +65,16 @@ class TransactionSerializer(serializers.ModelSerializer):
         show_username = False
         password_is_valid = False
         if 'show_username' in data.keys():
-            show_username = data['show_username'] == "true"
+            show_username = data['show_username']
         if 'password' in data.keys():
             password_is_valid = self.context['request'].user.check_password(data['password'])
-
             if show_username and not password_is_valid:
-                raise ValidationError(detail={"errors":["You are not allowed to see usernames"]}, code=status.HTTP_401_UNAUTHORIZED)
+                raise ValidationError("You are not allowed to see usernames", code=status.HTTP_401_UNAUTHORIZED)
         return show_username, password_is_valid
 
 
     def get_to_username(self, obj):
-        data = self.context['request'].GET
+        data = self.context['request'].data
         username = '-'
         show_username, password_is_valid = self.validate_params(data)
 
@@ -93,15 +92,17 @@ class TransactionSerializer(serializers.ModelSerializer):
     def get_type(self, obj):
         return obj.get_type_display()
 
-    @property
     def get_consumer_data(self, obj):
-        if obj.get_consumer_data:
-            return ConsumerProfileDetailSerializer().to_representation(obj.get_consumer_data)
+        consumer_data = obj.get_consumer_data
+        if consumer_data:
+            return ConsumerProfileDetailSerializer(consumer_data).data
+        return None
 
-    @property
     def get_merchant_data(self, obj):
-        if obj.get_consumer_data:
-            return MerchantMyProfileSerializer().to_representation(obj.get_merchant_data)
+        merchant_data = obj.get_merchant_data
+        if merchant_data:
+            return MerchantMyProfileSerializer(merchant_data).data
+        return None
 
 
 class SendQRSerializer(serializers.Serializer):
