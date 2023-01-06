@@ -17,7 +17,7 @@ export const dataTableModel = {
     {Header: "CREATED AT", accessor: "created"},
     {Header: "AMOUNT", accessor: "amount"},
     {Header: "BLOCKS CONFIRMED", accessor: "confirmations"},
-    {Header: "ACTION", accessor: "actions", disableOrdering: true}
+    {Header: "USERNAME", accessor: "actions", disableOrdering: true}
   ],
   rows: [],
 };
@@ -55,7 +55,7 @@ export const renderTableRow = (item, onAction ) => {
   item.created = (dateBox(item.created))
   item.actions = (
     <MDButton color={"primary"} size={"small"} onClick={() => onAction(item)}>
-      Detail
+      Show
     </MDButton>
   )
   return item

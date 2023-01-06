@@ -6,15 +6,16 @@ import MDButton from "../MDButton";
 
 
 const ConfirmDialogInputModal = ({
-                              title,
-                              description,
-                              cancelText = 'Cancel',
-                              confirmText = 'Confirm',
-                              open,
-                              handleClose,
-                              handleConfirm,
-                              children = null
-                            }) => {
+                                   title,
+                                   description,
+                                   cancelText = 'Cancel',
+                                   confirmText = 'Confirm',
+                                   open,
+                                   handleClose,
+                                   handleConfirm,
+                                   children = null,
+                                   disabledConfirm = false
+                                 }) => {
   return (
     <Modal
       open={open}
@@ -49,7 +50,7 @@ const ConfirmDialogInputModal = ({
             </MDButton>
           </Grid>
           <Grid item xs={5} ml={2}>
-            <MDButton color="primary" fullWidth onClick={handleConfirm}>
+            <MDButton color="primary" fullWidth onClick={handleConfirm} disabled={disabledConfirm}>
               {confirmText}
             </MDButton>
           </Grid>

@@ -37,7 +37,7 @@ function DataTable({
                      entriesPerPage,
                      table,
                      noEndBorder,
-                     onColumnOrdering,
+                     onColumnOrdering = null,
                      showHeader = true,
                      showRecords = true,
                      currentPage,
@@ -82,7 +82,9 @@ function DataTable({
   }
 
   useEffect(() => {
-    onColumnOrdering(sortedByColumn)
+    if (onColumnOrdering){
+      onColumnOrdering(sortedByColumn)
+    }
   }, [sortedByColumn])
 
   return (
@@ -99,7 +101,7 @@ function DataTable({
                       onClick={() => getDataSortedByColumn(column)}
                       width={column.width ? column.width : "auto"}
                       align={column.align ? column.align : "left"}
-                      sorted={column?.disableOrdering ? false : 'none'}
+                      sorted={onColumnOrdering !== null ?  column?.disableOrdering ? false : 'none' : false}
                     >
                       {column.render("Header")}
                     </DataTableHeadCell>

@@ -66,6 +66,7 @@ MDButton.propTypes = {
     "success",
     "warning",
     "error",
+    "pink",
     "light",
     "dark",
   ]),

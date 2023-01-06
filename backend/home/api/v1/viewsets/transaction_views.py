@@ -11,7 +11,8 @@ import qrcode
 from django.db.models import Q
 from rest_framework import mixins, filters
 from rest_framework import viewsets, permissions, status
-from rest_framework.filters import SearchFilter
+from rest_framework.exceptions import ValidationError
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -36,7 +37,6 @@ logger = logging.getLogger('transaction')
 
 class TransactionViewSet(
     mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
     viewsets.GenericViewSet
 ):
     queryset = Transaction.objects.all()
@@ -58,6 +58,16 @@ class TransactionViewSet(
     def get_serializer_class(self):
         res = super(TransactionViewSet, self).get_serializer_class()
         return res
+
+    @action(detail=True, methods=['post'])
+    def show_detail_data(self, request, *args, **kwargs):
+        try:
+            transaction = self.get_object()
+            serializer = self.get_serializer(instance=transaction, context={'request': request})
+            data = serializer.data
+            return Response(data , status=status.HTTP_200_OK)
+        except (AttributeError, KeyError, ValueError):
+            raise ValidationError('Invalid request')
 
 
 class SendMoneyView(AuthenticatedAPIView):

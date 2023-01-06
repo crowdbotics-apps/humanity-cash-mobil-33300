@@ -52,6 +52,9 @@ import {
   UsersIcons, WalletIcon
 } from "./assets/svg";
 import BlockchainTransactions from "./pages/blockchain-transactions";
+import SmartContracts from "./pages/smart-contracts";
+import Users from "./pages/users";
+import AdminPortal from "./pages/admin-portal";
 
 
 const routes = [
@@ -105,7 +108,7 @@ const routes = [
     name: "Users",
     key: "users",
     route: "/users/",
-    component: <Services/>,
+    component: <Users/>,
     icon: <UsersIcons />,
     noCollapse: true,
   },
@@ -114,7 +117,7 @@ const routes = [
     name: "Smart Contracts",
     key: "smart-contracts",
     route: "/smart-contracts/",
-    component: <Services/>,
+    component: <SmartContracts/>,
     icon: <NoteIcon/>,
     noCollapse: true,
   },
@@ -132,7 +135,7 @@ const routes = [
     name: "Admin Employees",
     key: "admin-employees",
     route: "/admin-employees/",
-    component: <Services/>,
+    component: <AdminPortal/>,
     icon: <SubtAdminIcon/>,
     noCollapse: true,
   },
