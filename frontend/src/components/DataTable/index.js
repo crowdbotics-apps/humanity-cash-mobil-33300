@@ -22,7 +22,7 @@ import PropTypes from "prop-types";
 import {useAsyncDebounce, useGlobalFilter, usePagination, useSortBy, useTable} from "react-table";
 
 // @mui material components
-import {Table, TableBody, TableContainer, TablePagination, TableRow} from "@mui/material";
+import {Grid, Table, TableBody, TableContainer, TablePagination, TableRow} from "@mui/material";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
@@ -31,21 +31,21 @@ import MDInput from "components/MDInput";
 // Material Dashboard 2 PRO React examples
 import DataTableHeadCell from "./DataTableHeadCell";
 import DataTableBodyCell from "./DataTableBodyCell";
+import Pagination from "../Pagination/Pagination";
 
 function DataTable({
                      entriesPerPage,
                      table,
                      noEndBorder,
-                     recordsCount,
-                     canSearch = false,
-                     externalPagination = true,
-                     controller,
-                     setController,
-                     setFilters,
-                     setWaitSearchTyping,
-                     onColumnOrdering,
+                     onColumnOrdering = null,
                      showHeader = true,
-                     showRecords = true
+                     showRecords = true,
+                     currentPage,
+                     numberOfItems,
+                     numberOfItemsPage,
+                     pageSize,
+                     onPageChange
+
                    }) {
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
@@ -65,40 +65,7 @@ function DataTable({
     prepareRow,
     rows,
     page,
-    setGlobalFilter,
-    state: {globalFilter},
   } = tableInstance;
-  // Search input value state
-  const [search, setSearch] = useState(globalFilter);
-
-  // Search input state handle
-  const onSearchChange = useAsyncDebounce((value) => {
-    setGlobalFilter(value || undefined);
-  }, 100);
-
-  const handleSearch = (search) => {
-    setWaitSearchTyping(true)
-    setFilters(f => {
-      const newFilter = {...f}
-      newFilter.search = search
-      return newFilter
-    })
-  }
-
-  const handlePageChange = (event, newPage) => {
-    setController({
-      ...controller,
-      page: newPage
-    });
-  }
-
-  const handleChangeRowsPerPage = (event) => {
-    setController({
-      ...controller,
-      rowsPerPage: parseInt(event.target.value, 10),
-      page: 0
-    });
-  }
 
   const getDataSortedByColumn = (column) => {
     if (column.disableOrdering) {
@@ -115,66 +82,69 @@ function DataTable({
   }
 
   useEffect(() => {
-    onColumnOrdering(sortedByColumn)
+    if (onColumnOrdering){
+      onColumnOrdering(sortedByColumn)
+    }
   }, [sortedByColumn])
 
   return (
-    <TableContainer sx={{boxShadow: "none", background: "transparent"}}>
-      <Table {...getTableProps()}>
-        {showHeader && (<MDBox key={`tablehead__1`} component="thead">
-          {headerGroups.map((headerGroup, idx) => (
-            <TableRow key={`tablerow__${idx}`} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, idx3) => (
-                <DataTableHeadCell
-                  key={`tablecell__${idx3}`}
-                  onClick={() => getDataSortedByColumn(column)}
-                  width={column.width ? column.width : "auto"}
-                  align={column.align ? column.align : "left"}
-                  sorted={false}
-                >
-                  {column.render("Header")}
-                </DataTableHeadCell>
-              ))}
-            </TableRow>
-          ))}
-        </MDBox>)}
-        {showRecords && <TableBody key={`tablebody__2`} {...getTableBodyProps()}>
-          {page.map((row, key) => {
-            prepareRow(row);
-            return (
-              <TableRow key={`tablerow2__${key}`} {...row.getRowProps()}>
-                {row.cells.map((cell, idx2) => (
-                  <DataTableBodyCell
-                    key={`tablecell__${idx2}`}
-                    noBorder={noEndBorder && rows.length - 1 === key}
-                    align={cell.column.align ? cell.column.align : "left"}
-                    {...cell.getCellProps()}
-                  >
-                    {cell.render("Cell")}
-                  </DataTableBodyCell>
-                ))}
+    <>
+      <TableContainer sx={{boxShadow: "none", background: "transparent"}}>
+        <Table {...getTableProps()}>
+          {showHeader && (<MDBox key={`tablehead__1`} component="thead">
+            {headerGroups.map((headerGroup, idx) => (
+              <TableRow key={`tablerow__${idx}`} {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, idx3) => {
+                  return (
+                    <DataTableHeadCell
+                      key={`tablecell__${idx3}`}
+                      onClick={() => getDataSortedByColumn(column)}
+                      width={column.width ? column.width : "auto"}
+                      align={column.align ? column.align : "left"}
+                      sorted={onColumnOrdering !== null ?  column?.disableOrdering ? false : 'none' : false}
+                    >
+                      {column.render("Header")}
+                    </DataTableHeadCell>
+                  )
+                })}
               </TableRow>
-            );
-          })}
-        </TableBody>}
-      </Table>
-
-      {!externalPagination && <TablePagination
-        labelRowsPerPage={"Rows per page"}
-        labelDisplayedRows={
-          ({from, to, count}) => {
-            return `${from} — ${to} de ${count}`
-          }
-        }
-        component="div"
-        onPageChange={handlePageChange}
-        page={controller ? controller.page : 0}
-        count={controller ? recordsCount : 0}
-        rowsPerPage={controller ? controller.rowsPerPage : 25}
-        rowsPerPageOptions={entriesPerPage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />}
-    </TableContainer>
+            ))}
+          </MDBox>)}
+          {showRecords && <TableBody key={`tablebody__2`} {...getTableBodyProps()}>
+            {page.map((row, key) => {
+              prepareRow(row);
+              return (
+                <TableRow key={`tablerow2__${key}`} {...row.getRowProps()}>
+                  {row.cells.map((cell, idx2) => (
+                    <DataTableBodyCell
+                      key={`tablecell__${idx2}`}
+                      noBorder={noEndBorder && rows.length - 1 === key}
+                      align={cell.column.align ? cell.column.align : "left"}
+                      {...cell.getCellProps()}
+                    >
+                      {cell.render("Cell")}
+                    </DataTableBodyCell>
+                  ))}
+                </TableRow>
+              );
+            })}
+          </TableBody>}
+        </Table>
+      </TableContainer>
+      {rows.length > 0 && <Grid container mt={5}>
+        <Grid item>
+          <MDBox sx={{color: '#666666', fontSize: 17, width: 300}}>Showing <span style={{color: '#000000'}}>{numberOfItemsPage}</span> from <span style={{color: '#000000'}}>{numberOfItems}</span> data</MDBox>
+        </Grid>
+        <Grid item ml={'auto'}>
+          <Pagination
+            currentPage={currentPage}
+            totalCount={numberOfItems}
+            pageSize={pageSize}
+            onPageChange={onPageChange}
+          />
+        </Grid>
+      </Grid>}
+    </>
   );
 }
 

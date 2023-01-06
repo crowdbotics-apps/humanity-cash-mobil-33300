@@ -22,13 +22,7 @@ import Icon from "@mui/material/Icon";
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 
-// Material Dashboard 2 PRO React contexts
-import {useMaterialUIController} from "context";
-
 function DataTableHeadCell({ width, children, sorted, align, withBorders= true, ...rest }) {
-  const [controller] = useMaterialUIController();
-  const { darkMode } = controller;
-
   return (
     <MDBox
       component="th"
@@ -53,13 +47,17 @@ function DataTableHeadCell({ width, children, sorted, align, withBorders= true, 
         textAlign={align}
         opacity={0.7}
         color="#8a8a8a"
-        sx={({ typography: { size, fontWeightBold } }) => ({
+        sx={() => ({
           fontSize: '13px',
           fontWeight: '600',
           opacity: '100%',
           fontFamily: 'Montserrat',
           cursor: sorted && "pointer",
           userSelect: sorted && "none",
+          paddingRight: sorted && "10px",
+          height: 40,
+          // display: 'flex',
+          // alignItems: 'flex-end'
         })}
       >
         {children}
@@ -67,7 +65,7 @@ function DataTableHeadCell({ width, children, sorted, align, withBorders= true, 
           <MDBox
             position="absolute"
             top={0}
-            right={align !== "right" ? "16px" : 0}
+            right={align !== "right" ? "5px" : 0}
             left={align === "right" ? "-5px" : "unset"}
             sx={({ typography: { size } }) => ({
               fontSize: size.lg,

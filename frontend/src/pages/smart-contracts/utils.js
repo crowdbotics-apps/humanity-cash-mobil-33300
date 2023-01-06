@@ -1,6 +1,4 @@
-import {money_fmt, truncate} from "../../services/helpers";
-import pencilIcon from "../../assets/icons/pencil_btn.png";
-import trashIcon from "../../assets/icons/delete_btn.png";
+import {truncate} from "../../services/helpers";
 import MDBox from "../../components/MDBox";
 import moment from "moment";
 import MDButton from "../../components/MDButton";
@@ -8,15 +6,10 @@ import Icon from "@mui/material/Icon";
 
 export const dataTableModel = {
   columns: [
-    {Header: "HASH", accessor: "transaction_id"},
-    {Header: "FROM", accessor: "from_username"},
-    {Header: "TO", accessor: "to_username"},
-    {Header: "FROM ADDRESS", accessor: "from_address"},
-    {Header: "TO ADDRESS", accessor: "to_address"},
-    {Header: "TYPE", accessor: "type"},
-    {Header: "CREATED AT", accessor: "created"},
-    {Header: "AMOUNT", accessor: "amount"},
-    {Header: "BLOCKS CONFIRMED", accessor: "confirmations"},
+    {Header: "NAME", accessor: "contract_name"},
+    {Header: "VERSION", accessor: "version"},
+    {Header: "ADDRESS", accessor: "deployed_address"},
+    {Header: "DEPLOYED AT", accessor: "created"},
     {Header: "ACTION", accessor: "actions", disableOrdering: true}
   ],
   rows: [],
@@ -47,15 +40,14 @@ const dateBox = (date) => {
 
 
 export const renderTableRow = (item, onAction ) => {
-  item.transaction_id = (hashBox(item.transaction_id))
-  item.from_username = (hashBox(item.from_username))
-  item.to_username = (hashBox(item.to_username, true))
-  item.from_address = (hashBox(item.from_address))
-  item.to_address = (hashBox(item.to_address))
+  item.contract_name = (hashBox(item.contract_name))
+  item.deployed_address = (hashBox(item.deployed_address))
   item.created = (dateBox(item.created))
   item.actions = (
-    <MDButton color={"primary"} size={"small"} onClick={() => onAction(item)}>
-      Detail
+    item.active ? <MDButton color={"primary"} size={"small"} onClick={() => onAction(item)}>
+      Active
+    </MDButton> : <MDButton color={"pink"} size={"small"} onClick={() => onAction(item)}>
+      Paused
     </MDButton>
   )
   return item

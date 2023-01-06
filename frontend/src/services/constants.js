@@ -15,4 +15,6 @@ export const ROUTES = {
   PRIVACY_POLICY: "/privacy-policy",
   MY_PROFILE: "/my-profile",
   EDIT_PROFILE: "/edit-profile",
+  BLOCKCHAIN_TRANSACTIONS: "/blockchain-transactions",
+  BLOCKCHAIN_TRANSACTION: (id) =>  `/blockchain-transactions/${id}`,
 }

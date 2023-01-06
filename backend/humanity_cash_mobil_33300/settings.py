@@ -224,7 +224,7 @@ SIMPLE_JWT = {
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 9,
+    'PAGE_SIZE': 8,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
@@ -295,6 +295,7 @@ SWAGGER_SETTINGS = {
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    'http://localhost:3001',
     'http://0.0.0.0:3000',
     'https://humanity-cash-mobil-33-staging.botics.co',
     'https://humanity-cash-mobil-33300.botics.co',

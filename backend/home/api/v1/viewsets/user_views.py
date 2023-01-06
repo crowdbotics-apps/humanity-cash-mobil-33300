@@ -1,6 +1,7 @@
 import django_filters
 from django.contrib.auth import get_user_model
 from rest_framework import serializers, viewsets, status, permissions, mixins
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -74,7 +75,8 @@ class DwollaUserView(mixins.ListModelMixin,
     queryset = DwollaUser.objects.all()
     serializer_class = DwollaUserSerializer
     permission_classes = [permissions.IsAuthenticated]
-    # filter_backends = [filters.SearchFilter]
-    # search_fields = ['^name']
+    pagination_class = PageNumberPagination
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['name', 'account_type', 'address', 'dwolla_id', 'email']
 
 

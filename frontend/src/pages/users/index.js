@@ -7,7 +7,7 @@ import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
 
 
-const BlockchainTransactions = () => {
+const Users = () => {
   const api = useApi()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
@@ -17,10 +17,11 @@ const BlockchainTransactions = () => {
   const [recordList, setRecordList] = useState({...dataTableModel})
   const searchQueryRef = useRef("");
 
-  const getBlockchainTransactions = (searchData, page = 1, ordering = "") => {
+  const getDwollaUsers = (searchData, page = 1, ordering = "") => {
     setLoading(true)
-    api.getBlockchainTransactions(searchData, page, ordering, 8).then((result) => {
+    api.getDwollaUsers(searchData, page, ordering, 8).then((result) => {
       if (result.kind === "ok") {
+        console.log('result ', result)
         const {count, results} = result.data
         const tmp = {...dataTableModel}
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
@@ -35,27 +36,27 @@ const BlockchainTransactions = () => {
   const onColumnOrdering = (ordering) => {
     const {column, order} = ordering
     if (column === '') {
-      getBlockchainTransactions(searchQueryRef?.current)
+      getDwollaUsers(searchQueryRef?.current)
     } else if (order === 'asce') {
-      getBlockchainTransactions(searchQueryRef?.current, 1, `${column}`)
+      getDwollaUsers(searchQueryRef?.current, 1, `${column}`)
     } else {
-      getBlockchainTransactions(searchQueryRef?.current, 1, `-${column}`)
+      getDwollaUsers(searchQueryRef?.current, 1, `-${column}`)
     }
   }
 
   const setDetailToShow = (item) => {
-    navigate(ROUTES.BLOCKCHAIN_TRANSACTION(item.id))
+    console.log('items')
   }
 
   useEffect(() => {
-    getBlockchainTransactions("")
+    getDwollaUsers("")
   }, [])
 
   return (
     <DashboardLayout
       loginRequired
       loading={loading}
-      searchFunc={getBlockchainTransactions}
+      searchFunc={getDwollaUsers}
     >
       {recordList?.rows.length > 0
         ? (<DataTable
@@ -66,15 +67,15 @@ const BlockchainTransactions = () => {
           numberOfItemsPage={numberOfItemsPage}
           pageSize={8}
           onPageChange={page => {
-            getBlockchainTransactions('', page)
+            getDwollaUsers('', page)
             setCurrentPage(page)
           }}
         />)
         : <p style={{display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20}}>No
-          blockchain transactions found</p>
+          users found</p>
       }
     </DashboardLayout>
   )
 }
 
-export default BlockchainTransactions
+export default Users
