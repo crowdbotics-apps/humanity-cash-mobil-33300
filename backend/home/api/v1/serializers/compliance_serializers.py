@@ -25,12 +25,12 @@ class ComplianceActionReadSerializer(serializers.ModelSerializer):
             'transaction_id',
             'action_from',
             'action_to',
-            'amount'
-            'created_at',
+            'amount',
+            'created_time',
         ]
 
     def get_signoffs(self, instance):
-        return ' and '.join(sgo.user for sgo in instance.signoffs.all())
+        return ' and '.join(sgo.user.username for sgo in instance.signoffs.all())
 
     def get_transaction_id(self, instance):
         if instance.transaction:
