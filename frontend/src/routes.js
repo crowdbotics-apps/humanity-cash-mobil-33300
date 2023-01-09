@@ -55,6 +55,7 @@ import BlockchainTransactions from "./pages/blockchain-transactions";
 import SmartContracts from "./pages/smart-contracts";
 import Users from "./pages/users";
 import AdminPortal from "./pages/admin-portal";
+import TransactionStatus from "./pages/transactions-status";
 
 
 const routes = [
@@ -81,7 +82,7 @@ const routes = [
     name: "Transaction Status",
     key: "transaction-status",
     route: "/transaction-status/",
-    component: <Services/>,
+    component: <TransactionStatus/>,
     icon: <CashoutIcon/>,
     noCollapse: true,
   },
