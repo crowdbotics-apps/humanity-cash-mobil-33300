@@ -39,7 +39,6 @@ const ReconciliationActionsPage = () => {
   const [supervisorCredential, setSupervisorCredential] = useState(null)
 
   const [Password, setPassword] = useState("")
-  const [Password2, setPassword2] = useState("")
   const [Amount, setAmount] = useState("")
 
 
@@ -89,9 +88,8 @@ const ReconciliationActionsPage = () => {
   const apiCall = (data) => {
     api.addAdjustment(data)
     .then((result) => {
-      console.log(' result -> ', result)
       if (result.kind === "ok") {
-        showMessage(result.message)
+        showMessage('Action executed successfully', 'success')
       } else if (result.kind === "bad-data") {
         const key = Object.keys(result?.errors)[0]
         const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -270,7 +268,6 @@ const ReconciliationActionsPage = () => {
   }
 
   const onConfirmAmountModal = (Amount, recipient) => {
-    console.log(' aca estoy ', Amount, recipient)
     if (Amount > 0) {
       setCurrentAmount(Amount)
     }
