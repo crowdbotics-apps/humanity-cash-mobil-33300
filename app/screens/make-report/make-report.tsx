@@ -199,7 +199,7 @@ export default StyleSheet.create({
   },
   RETURN_CONTAINER: {
     alignSelf: 'center',
-    backgroundColor: '#F8F6F2',
+    backgroundColor: COLOR.PALETTE.beige,
     height: 140,
     marginVertical: 10,
     width: METRICS.screenWidth * 0.95

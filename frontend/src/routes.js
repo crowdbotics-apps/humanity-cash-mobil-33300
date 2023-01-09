@@ -52,6 +52,7 @@ import {
   UsersIcons, WalletIcon
 } from "./assets/svg";
 import BlockchainTransactions from "./pages/blockchain-transactions";
+import ReconciliationActionsPage from "./pages/reconciliation-actions";
 import SmartContracts from "./pages/smart-contracts";
 import Users from "./pages/users";
 import AdminPortal from "./pages/admin-portal";
@@ -73,7 +74,7 @@ const routes = [
     name: "Reconciliation Action",
     key: "reconciliation",
     route: "/reconciliation/",
-    component: <Services/>,
+    component: <ReconciliationActionsPage/>,
     icon: <ReconciliationIcon/>,
     noCollapse: true,
   },

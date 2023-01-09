@@ -16,6 +16,7 @@ export class Api extends ApiBase {
   async login(username: string, password: string): Promise<Types.SimplePostResult> {
     return this.simple_post(`/dj-rest-auth/login/`, {
       email: username,
+      // username,
       password,
     })
   }
@@ -327,6 +328,11 @@ export class Api extends ApiBase {
 
   async addAdjustment(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post(API_VERSION_PREFIX + "/compliance_action/", data)
+  }
+
+  async getAdjustment(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {
+    const filters = `?page_size=${page_size}&page=${page}&search=${searchData}&ordering=${ordering}`
+    return this.simple_get(`${API_VERSION_PREFIX} + "/compliance_action/${filters}`, extraData)
   }
 
   async reconcileAndBrnTokens(data: any): Promise<Types.SimplePostResult> {

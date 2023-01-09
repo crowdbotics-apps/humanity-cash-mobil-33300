@@ -101,9 +101,13 @@ function DataTable({
                       onClick={() => getDataSortedByColumn(column)}
                       width={column.width ? column.width : "auto"}
                       align={column.align ? column.align : "left"}
+                      style={{ alignItems: column.align ? column.align : "center"}}
+                      display={'flex'}
+                      justifyContent={'space-between'}
                       sorted={onColumnOrdering !== null ?  column?.disableOrdering ? false : 'none' : false}
                     >
                       {column.render("Header")}
+                      {column?.component}
                     </DataTableHeadCell>
                   )
                 })}
