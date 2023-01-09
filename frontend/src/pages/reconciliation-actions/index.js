@@ -55,14 +55,18 @@ const ReconciliationActionsPage = () => {
     api.getAdjustment(searchData, page, ordering, 8).then((result) => {
       console.log(' result -> ', result)
       if (result.kind === "ok") {
-        const { count, results } = result.data
+        let { count, results } = result.data
         const tmp = { ...dataTableModel }
-        tmp.rows = [{
+
+        // TODO: remove that when index works
+        results = [{
           title: <div style={{ color: "var(--green-dark)", fontWeight: "bold" }}>Today's Date</div>,
           reserve: <div style={{ fontWeight: 500, fontSize: "14px" }}>$ 100,000.00</div>,
           negative: <div style={{ fontWeight: 500, fontSize: "14px" }}>$ 0.00</div>,
           positive: <div style={{ fontWeight: 500, fontSize: "14px" }}>$ 0.00</div>,
-        }].map(e => renderTableRow(e, setDetailToShow))
+        }]
+
+        tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
         setRecordList(tmp)
         setNumberOfItems(count)
         setNumberOfItemsPage(results?.length || 0)
@@ -238,7 +242,7 @@ const ReconciliationActionsPage = () => {
   const dataTableModel = {
     columns: [
       { Header: "", accessor: "title", disableOrdering: true },
-      { Header: `RESERVE WALLET`, accessor: "reserve", align: 'center', disableOrdering: true },
+      { Header: `RESERVE WALLET`, accessor: "reserve", disableOrdering: true },
       {
         Header: "NEGATIVE ADJUSTMENT ACCOUNT", accessor: "negative", disableOrdering: true,
         component: <MDButtonPopover
@@ -309,6 +313,7 @@ const ReconciliationActionsPage = () => {
         description={'Enter your credentials to confirm'}
         open={ShowPasswordModal}
         handleClose={() => setShowPasswordModal(false)}
+        disabledConfirm={!Password || Password === ''}
         handleConfirm={() => {
           setSupervisorCredential(Password)
           setShowPasswordModal(false)
@@ -332,6 +337,7 @@ const ReconciliationActionsPage = () => {
         title={CurrentAction.title}
         description={CurrentAction.subTitle}
         open={ShowAmountModal}
+        disabledConfirm={!Amount || Amount === ''}
         handleClose={() => setShowAmountModal(false)}
         handleConfirm={() => onConfirmAmountModal(Amount)}
       >
