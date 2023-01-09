@@ -77,7 +77,7 @@ function DashboardLayout({
             width: '100%',
             overflowY: 'scroll',
             marginTop: 70,
-            padding: '0 30px 0 30px',
+            padding: '0 30px 0 50px',
           }}>
             <MDBox sx={{
               width: '100%',
