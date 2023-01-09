@@ -34,6 +34,7 @@ export default styled(Drawer)(({ theme, ownerState }) => {
     borderTopRightRadius: 20,
     borderBottomRightRadius: 20,
     height: '100vh',
+    width: '280px !important',
     transform: "translateX(0)",
     transition: transitions.create("transform", {
       easing: transitions.easing.sharp,

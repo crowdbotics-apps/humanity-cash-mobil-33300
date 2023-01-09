@@ -84,7 +84,17 @@ const ReconciliationActionsPage = () => {
 
   const apiCall = (data) => {
     api.addAdjustment(data)
-      .then(showMessage)
+    .then((result) => {
+      console.log(' result -> ', result)
+      if (result.kind === "ok") {
+        showMessage(result.message)
+      } else if (result.kind === "bad-data") {
+        const key = Object.keys(result?.errors)[0]
+        const msg = `${key}: ${result?.errors?.[key][0]}`
+        showMessage(msg)
+      }
+    })
+      .catch(err => showMessage(err))
       .finally(resetData)
   }
 
@@ -300,30 +310,20 @@ const ReconciliationActionsPage = () => {
         open={ShowPasswordModal}
         handleClose={() => setShowPasswordModal(false)}
         handleConfirm={() => {
-          setSupervisorCredential('asd')
+          setSupervisorCredential(Password)
           setShowPasswordModal(false)
           setShowAmountModal(true)
         }}
       >
         <MDInput
           type="password"
-          label="PASSWORD 1"
+          label="PASSWORD"
           variant="outlined"
           fullWidth
           password
-          placeholder="input your password 1"
+          placeholder="input your password"
           value={Password}
           onChange={(evt) => setPassword(evt.target.value)}
-        />
-        <MDInput
-          type="password"
-          label="PASSWORD 1"
-          variant="outlined"
-          fullWidth
-          password
-          placeholder="input your password 2"
-          value={Password2}
-          onChange={(evt) => setPassword2(evt.target.value)}
         />
       </ConfirmDialogInputModal>
       {/*  */}
