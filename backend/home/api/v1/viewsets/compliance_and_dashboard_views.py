@@ -9,7 +9,7 @@ from django.db import IntegrityError, transaction
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
-from rest_framework import status, mixins, viewsets
+from rest_framework import status, mixins, viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
@@ -84,8 +84,8 @@ class ComplianceActionViewset(
                     viewsets.GenericViewSet):
     queryset = ComplianceAction.objects.all()
     permission_classes = [IsAuthenticated] # TODO is admin permission
-    # filter_backends = [SearchFilter]
-    # search_fields = ['title', 'description']
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['status', 'created_by__username', 'created_by__email', 'documentation']
 
     def get_serializer_class(self):
         if self.action in ['retrieve', 'list']:
@@ -112,7 +112,7 @@ class ComplianceActionViewset(
                 consumer=consumer,
                 merchant=merchant,
             )
-            ca.signoffs.create(user=user)
+            # ca.signoffs.create(user=user)
 
         if ca.signoffs.count() >= configs.NECCESARY_COMPLIANCE_SIGNOFFS:  # in case of 1 signoff required
             ca.approve()
@@ -124,18 +124,17 @@ class ComplianceActionViewset(
 
     @action(detail=True, methods=['post'])
     def signoff(self, request, *args, **kwargs):
-        # TODO finish
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
             action = self.get_object()
             user = request.user
-            # password_is_valid = user.check_password(serializer.validated_data['password'])
+            password_is_valid = user.check_password(serializer.validated_data['password'])
 
             if action.status != ComplianceAction.Status.pending:
                 raise ValidationError('Action in incorrect state, must be pending for signoff')
-            # if not password_is_valid:
-            #     raise ValidationError('User password incorrect, signoff not completed')
+            if not password_is_valid:
+                raise ValidationError('User password incorrect, signoff not completed')
 
             action.signoffs.create(user=user)  # may fail due to duplicated signoff
 
