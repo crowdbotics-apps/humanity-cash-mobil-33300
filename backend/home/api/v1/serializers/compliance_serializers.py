@@ -13,6 +13,7 @@ class ComplianceActionReadSerializer(serializers.ModelSerializer):
     action_to = serializers.SerializerMethodField()
     signoffs = serializers.SerializerMethodField()
     transaction_id = serializers.SerializerMethodField()
+    created_by = serializers.CharField(source='created_by.username')
 
     class Meta:
         model = ComplianceAction
@@ -25,12 +26,13 @@ class ComplianceActionReadSerializer(serializers.ModelSerializer):
             'transaction_id',
             'action_from',
             'action_to',
-            'amount'
-            'created_at',
+            'amount',
+            'created_time',
+            'created_by',
         ]
 
     def get_signoffs(self, instance):
-        return ' and '.join(sgo.user for sgo in instance.signoffs.all())
+        return ' and '.join(sgo.user.username for sgo in instance.signoffs.all())
 
     def get_transaction_id(self, instance):
         if instance.transaction:

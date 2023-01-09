@@ -26,7 +26,7 @@ const ConfirmDialogInputModal = ({
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        minWidth: 500,
+        width: 500,
         minHeight: 200,
         bgcolor: 'background.paper',
         boxShadow: 24,

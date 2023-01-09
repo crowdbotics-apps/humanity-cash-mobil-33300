@@ -1,12 +1,12 @@
 import Modal from "react-bootstrap/Modal";
-import {Button, Col, Form, ListGroup, Row, Tab} from "react-bootstrap";
+import { Button, Col, Form, ListGroup, Row, Tab } from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import Stack from "react-bootstrap/Stack";
 import styles from "./BlockchainTransactions.module.css";
-import React, {useEffect, useRef, useState} from "react";
-import {observer} from "mobx-react-lite";
-import {Eyes, SearchIcon} from "../../components/icons";
-import {RecipientType} from "./ReconciliationPage";
+import React, { useEffect, useRef, useState } from "react";
+import { observer } from "mobx-react-lite";
+import { Eyes, SearchIcon } from "../../components/icons";
+import { RecipientType } from "./ReconciliationPage";
 
 export enum ReconciliationActions {
   AddAdjustment = 'AddAdjustment',
@@ -18,7 +18,7 @@ export enum ReconciliationActions {
 }
 
 export const CredentialsModal = observer((props: any) => {
-  const {showModal, onConfirm, onClose} = props
+  const { showModal, onConfirm, onClose } = props
   const [DisableCredentialBtn, setDisableCredentialBtn] = useState<boolean>(true)
   const [ShowPasword, setShowPassword] = useState<boolean>(false)
   const [ShowPasword2, setShowPassword2] = useState<boolean>(false)
@@ -37,11 +37,12 @@ export const CredentialsModal = observer((props: any) => {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
+      {console.log(' aca estoy')}
       <Modal.Header closeButton>
         <Modal.Title className='title-modal m-2'>Supervisor Credentials</Modal.Title>
       </Modal.Header>
       <form>
-        <Modal.Body style={{paddingLeft: 30, paddingRight: 30}}>
+        <Modal.Body style={{ paddingLeft: 30, paddingRight: 30 }}>
           <div>
             <h6 className='title-h6'>Enter your credentials to confirm</h6>
           </div>
@@ -57,9 +58,9 @@ export const CredentialsModal = observer((props: any) => {
                 onChange={(e) => setPassword(e.target.value)}
               />
               <Button variant="outline-secondary"
-                      onClick={() => setShowPassword(prevState => !prevState)}
-                      className='eyes-buttons'>
-                <Eyes/>
+                onClick={() => setShowPassword(prevState => !prevState)}
+                className='eyes-buttons'>
+                <Eyes />
               </Button>
             </InputGroup>
           </Form.Group>
@@ -75,9 +76,9 @@ export const CredentialsModal = observer((props: any) => {
                 onChange={(e) => setPassword2(e.target.value)}
               />
               <Button variant="outline-secondary"
-                      className='eyes-buttons'
-                      onClick={() => setShowPassword2(prevState => !prevState)}>
-                <Eyes/>
+                className='eyes-buttons'
+                onClick={() => setShowPassword2(prevState => !prevState)}>
+                <Eyes />
               </Button>
             </InputGroup>
           </Form.Group>
@@ -86,10 +87,11 @@ export const CredentialsModal = observer((props: any) => {
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    className={!Password || Password !== Password2 ? styles.btnDisabled : ''}
-                    disabled={DisableCredentialBtn}
-                    onClick={() => onConfirm(Password)}
-                    type="button">
+              className={!Password || Password !== Password2 ? styles.btnDisabled : ''}
+              style={{ paddingTop: '15px' }}
+              disabled={DisableCredentialBtn}
+              onClick={() => onConfirm(Password)}
+              type="button">
               Confirm
             </Button>
           </Stack>
@@ -100,7 +102,7 @@ export const CredentialsModal = observer((props: any) => {
   )
 })
 
-export const ListResultData = ({data, callback}: any) => {
+export const ListResultData = ({ data, callback }: any) => {
   const handleClick = (element: any) => {
     callback(element)
   }
@@ -121,7 +123,7 @@ export const ListResultData = ({data, callback}: any) => {
 }
 
 export const AmountModal = observer((props: any) => {
-  const {showModal, onConfirm, onClose, title, subTitle, selectRecipient, searchFn} = props
+  const { showModal, onConfirm, onClose, title, subTitle, selectRecipient, searchFn } = props
   const [Recipient, setRecipient] = useState<any>(null)
   const [Amount, setAmount] = useState<string>("0")
   const [RecipientsList, setRecipientsList] = useState<RecipientType[]>([])
@@ -136,7 +138,7 @@ export const AmountModal = observer((props: any) => {
     }
     searchFn(searchTxt).then((res: any) => {
       if (res.kind === 'ok') {
-        const {results}: any = res.data;
+        const { results }: any = res.data;
         setRecipientsList(results)
         if (results.length === 0) {
           setShowRecipientsList(false)
@@ -162,12 +164,12 @@ export const AmountModal = observer((props: any) => {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title className='title-modal m-2 ml-3' style={{width: "500px"}}>{title}</Modal.Title>
+        <Modal.Title className='title-modal m-2 ml-3' style={{ width: "500px" }}>{title}</Modal.Title>
       </Modal.Header>
       <form>
-        <Modal.Body style={{paddingLeft: 30, paddingRight: 30, marginTop: -25}}>
+        <Modal.Body style={{ paddingLeft: 30, paddingRight: 30, marginTop: -25 }}>
           <h6 className='title-h6'
-              style={{fontWeight: 400, fontSize: "14px", lineHeight: "unset", width: "100%"}}>{subTitle}</h6>
+            style={{ fontWeight: 400, fontSize: "14px", lineHeight: "unset", width: "100%" }}>{subTitle}</h6>
 
           <Form.Group className="mb-3 mt-5">
             <Form.Label className='form-label'>ENTER AMOUNT</Form.Label>
@@ -188,28 +190,29 @@ export const AmountModal = observer((props: any) => {
           </Form.Group>
 
           {selectRecipient && <Row className={'ps-3 pe-3 mt-4 mb-4'}>
-            <InputGroup className="mb-0 search-button-group" style={{border: "2px solid var(--headings) !important"}}>
+            <InputGroup className="mb-0 search-button-group" style={{ border: "2px solid var(--headings) !important" }}>
               <Form.Control
                 placeholder='search by name, email and wallet address'
                 type="search" name="search" className='search-button-navbar'
                 onChange={searchRecipients}
               />
               <Button variant="secondary" id="button-addon2" className='search-buttons'>
-                <SearchIcon/>
+                <SearchIcon />
               </Button>
             </InputGroup>
             {showRecipientsList && <ListResultData data={RecipientsList} callback={(recipient: any) => {
               setRecipient(recipient)
               setShowRecipientsList(false)
-            }}/>}
-            {<span>{Recipient? Recipient.label : null}</span>}
+            }} />}
+            {<span>{Recipient ? Recipient.label : null}</span>}
           </Row>}
         </Modal.Body>
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    onClick={() => onConfirm(parseFloat(Amount), Recipient)}
-                    type="button">
+              onClick={() => onConfirm(parseFloat(Amount), Recipient)}
+              type="button"
+              style={{ paddingTop: '15px' }}>
               Confirm
             </Button>
           </Stack>
@@ -221,7 +224,7 @@ export const AmountModal = observer((props: any) => {
 
 
 export const ReconciliationConfirmModal = observer((props: any) => {
-  const {showModal, onConfirm, onClose, title, amount, extraText = null} = props
+  const { showModal, onConfirm, onClose, title, amount, extraText = null } = props
   return (
     <Modal
       show={showModal}
@@ -230,18 +233,19 @@ export const ReconciliationConfirmModal = observer((props: any) => {
       centered
     >
       <Modal.Header closeButton>
-        <Modal.Title className='title-modal m-2 ml-3' style={{width: "500px"}}>{title}</Modal.Title>
+        <Modal.Title className='title-modal m-2 ml-3' style={{ width: "500px" }}>{title}</Modal.Title>
       </Modal.Header>
       <form>
-        <Modal.Body style={{paddingLeft: 30, paddingRight: 30, marginTop: -25}}>
+        <Modal.Body style={{ paddingLeft: 30, paddingRight: 30, marginTop: -25 }}>
           <h6 className='title-h6'
-              style={{fontWeight: 600, fontSize: "14px", lineHeight: "unset", width: "100%"}}>${amount} {extraText}</h6>
+            style={{ fontWeight: 600, fontSize: "14px", lineHeight: "unset", width: "100%" }}>${amount} {extraText}</h6>
         </Modal.Body>
         <Modal.Footer>
           <Stack gap={2} className="col-md-5 mx-auto modal-button mb-4">
             <Button variant="primary"
-                    onClick={onConfirm}
-                    type="button">
+              onClick={onConfirm}
+              type="button"
+              style={{ paddingTop: '15px' }}>
               Confirm
             </Button>
           </Stack>

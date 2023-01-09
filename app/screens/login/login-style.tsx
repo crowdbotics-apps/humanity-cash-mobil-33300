@@ -71,6 +71,7 @@ export default StyleSheet.create({
   NEED_HELP_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
+    marginBottom: 20,
     width: METRICS.screenWidth * 0.80
   },
   NEED_HELP_LINK: {

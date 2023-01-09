@@ -66,8 +66,8 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 						result?.data?.results.map((r: any) => {
 							if (!temp.includes(r)) {
 								r.ach = true
-								temp.push(r) 
-							} 
+								temp.push(r)
+							}
 						})
 						loginStore.setTransactions(temp)
 					})
@@ -91,8 +91,8 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 						result?.data?.results.map((r: any) => {
 							if (!temp.includes(r)) {
 								r.ach = false
-								temp.push(r) 
-							} 
+								temp.push(r)
+							}
 						})
 						loginStore.setTransactions(temp)
 					})
@@ -114,7 +114,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		initialData.map(d => {
 			keys.map(k => {
 				try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
-				catch {}
+				catch { }
 			})
 		})
 		return data
@@ -244,11 +244,11 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 
 	const bankModal = () =>
 		<ConnectBankModal
-	visible={ShowBankModal}
-	buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
-	buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
-	onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
-/>
+			visible={ShowBankModal}
+			buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
+		/>
 
 	return (
 		<Screen
@@ -258,28 +258,23 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 			unsafe={true}
 			style={styles.ROOT}
 		>
-				<View style={styles.HEADER_ACTIONS}>
-								<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate('home')}>
-									<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
-									<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
+			<View style={styles.HEADER_ACTIONS}>
+				<TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate('home')}>
+					<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
+					<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 
-								</TouchableOpacity>
-							</View>
+				</TouchableOpacity>
+			</View>
 			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
-
-						
-
 							<View style={styles.STEP_CONTAINER}>
-
-								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor}]}>My Transactions</Text>
+								<Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>My Transactions</Text>
 								<View style={styles.AMOUNT_CONTAINER}>
 									<View style={{ flexDirection: 'row' }}>
 										<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>C$ 0</Text>
 									</View>
-
 								</View>
 								<View style={styles.LINE} />
 								<View style={styles.SEARCH_INPUT_CONTAINER}>
@@ -318,7 +313,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 														? <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
 														: <Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{`+ C$ ${i.cash_out || ''}`}</Text>
 												} */}
-													<Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.amount}`}</Text>
+												<Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.amount}`}</Text>
 											</View>
 										</TouchableOpacity>
 									))
