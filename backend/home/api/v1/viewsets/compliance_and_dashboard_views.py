@@ -4,13 +4,13 @@ import logging
 import traceback
 from decimal import Decimal
 
-from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from rest_framework import status, mixins, viewsets, filters
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -86,6 +86,13 @@ class ComplianceActionViewset(
     permission_classes = [IsAuthenticated] # TODO is admin permission
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['status', 'created_by__username', 'created_by__email', 'documentation']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        transaction_status = self.request.query_params.get('transaction_status', None)
+        if transaction_status is not None:
+            queryset = queryset.filter(status=transaction_status)
+        return queryset
 
     def get_serializer_class(self):
         if self.action in ['retrieve', 'list']:
