@@ -1,0 +1,136 @@
+/* Palte*/
+$primary: #3B88B6;
+$secondary: #FFFFFF;
+$color: #c6538c;
+/* Tipografia*/
+
+
+$theme-colors: (
+    primary:$primary,
+    secondary:$secondary,
+);
+
+$typography: Gotham;
+
+@import "bootstrap";
+@import "./buttons";
+@import "./text";
+@import "./sidebar";
+@import "./nav";
+@import "./paginate";
+@import "./tableBadge";
+@import "./modal";
+@import "fonts.css";
+
+body {
+    background: #F7F5F0;
+}
+
+.form-label {
+    color: #666666;
+    font-weight: 700;
+    font-family: Arial!important;
+}
+
+.input-large {
+    height: 50px;
+    border-radius: 14px;
+    border-color: #D59B76;
+    font-family: Arial!important;
+}
+
+//seachr
+.input-large-search {
+    height: 50px;
+    border-radius: 8px;
+    border-color: #F4F4F2;
+    background: #F4F4F2;
+}
+
+.link-primary {
+    color: #D59B76;
+}
+
+.background-paper {
+    background: #FFFFFF;
+    width: 604px;
+    border-radius: 20px;
+    padding: 2%;
+}
+
+//logo de login,rese,dah
+.logo {
+    display: block;
+    padding-block-start: 21px;
+    padding-block-end: 35px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 350px;
+}
+
+.line-primary {
+    border-bottom: 1px solid var(--blue);
+    border-radius: 28px;
+}
+
+
+.custom-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link {
+    color: red;
+}
+
+.content-children {
+    padding-left: 50px;
+    padding-right: 30px;
+    min-height: 100vh;
+    background: white;
+    padding-bottom: 20px;
+}
+
+
+// .collapse:not(.show) {
+//     display: block;
+// }
+
+//table
+#layout .content {
+    overflow: auto;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.table-row {
+    border-bottom: 1px solid rgba(213, 155, 118, 1);
+}
+body{
+    font-family: 'Gotham';
+}
+
+.btn-filter{
+    background: var(--background);
+}
+.btn-filter svg{
+    fill:var(--dark);
+}
+
+.btn-filter:hover , .btn-filter:visited, .btn-filter:focus, .btn-filter:visited{
+    background: var(--blue);
+}
+
+.btn-filter:hover svg, .btn-filter:focus svg, .btn-filter:active svg, .btn-filter:visited svg{
+    fill:var(--white) !important;
+}
+.navbar-filter-checkbox > input:checked{
+    background-color: var(--green);
+    border-color: var(--green);
+}
+
+.navbar-filter-divider{
+    height: 1px;
+    border: blue;
+}
+
+#user-detail-tab-blockchain_transactions{
+    width: 300px !important;
+}
+

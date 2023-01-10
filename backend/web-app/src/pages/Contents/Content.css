@@ -1,4 +1,4 @@
-@import "../../utils/theme.css";
+@import "../../theme.css";
 /* HEADER ROW */
 .header-row{
     display: flex;
@@ -32,7 +32,6 @@
     flex-direction: row;
     align-items: center;
     align-content: center;
-    justify-content: space-between;
 }
 
 
@@ -63,10 +62,8 @@
 }
 
 .create-btn{
-    background: var(--blue) !important;
-    width: 300px !important;
-    color: white !important;
-/* background: red !important; */
+    background: var(--blue);
+    width: 100%;
 }
 
 
@@ -197,7 +194,6 @@ td[role=presentation], th[role=presentation],  th[role=columnheader]{
     border: 1px solid var(--orange);
     padding:20px;
     border-radius: 10px;
-    width: 75%;
     z-index: 1 !important;
 }
 
@@ -205,10 +201,10 @@ td[role=presentation], th[role=presentation],  th[role=columnheader]{
     background: var(--background);
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
+    /*margin-left: -30px;*/
     padding-left: 0px;
     padding-top:25px;
-    width: 25%;
-    flex: 1;
+    height: 100%;
 }
 
 .fc-theme-standard .fc-scrollgrid {

@@ -1,0 +1,53 @@
+.createdTitle{
+    font-size: 14px;
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.createdSubtitle{
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 500;
+}
+.textTD{
+    font-size: 16px;
+    color: var(--blue);
+}
+
+.toColumn{
+    display: flex;
+    flex-direction: row;
+    width: auto;
+}
+.showButton{
+    width: 120px;
+}
+.decoratedSpan{
+    border-radius: 4px;
+    color:var(--white);
+    padding: 5px 10px 5px 10px;
+}
+
+.th{
+    color: var(--gray);
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+}
+
+.tableContainer{
+    margin-top: 30px;
+    border: 1px var(--headings) solid;
+    padding: 0px 10px 0px 10px;
+    border-radius: 14px;
+}
+
+.table {
+    border: none;
+}
+
+.balance{
+    color: var(--green);
+    text-align: right;
+    margin-right: 15px;
+}

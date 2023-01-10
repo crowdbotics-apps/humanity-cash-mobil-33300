@@ -1,0 +1,149 @@
+.input-steps {
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background-color: hsl(0, 0%, 100%);
+    border-color: hsl(0, 0%, 80%);
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    cursor: default;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    min-height: 38px;
+    outline: 0 !important;
+    position: relative;
+    -webkit-transition: all 100ms;
+    transition: all 100ms;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.submit-button {
+    width: 330px !important;
+    height: 50px;
+    background: #3C88B7;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: default;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 75%;
+    color: #f8faf6;
+}
+
+.submit-button-outline {
+    width: 330px !important;
+    height: 50px;
+    color: #3C88B7;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: default;
+    font-size: 16px;
+    font-family:Arial, Helvetica, sans-serif;
+    line-height: 75%;
+    background: #fff;
+    border: 1.5px solid #3B88B6;
+    border-radius: 40px;
+}
+
+.submit-button:hover {
+    background: #3C88B780
+}
+
+.submit-button-outline:hover {
+    background: #eee
+}
+
+.start-form-content-container {
+    background: #FFFFFF;
+    border-radius: 20px !important;
+    border: none;
+}
+
+
+.main-container {
+    justify-content: center;
+}
+
+.login-wrapper {
+    flex-direction: column;
+    display: flex;
+    justify-content: space-around;
+}
+
+.form-group {
+    align-items: center;
+    display: block;
+    padding: 5px;
+    width: 443px;
+    align-self: center;
+}
+
+.input-field {
+    font-family: Arial!important;
+    background-color: #EFEFEF;
+    border: none;
+    border-radius: 3px;
+    height: 55px;
+    width: 443px;
+}
+
+.input-field:focus {
+
+    background-color: #FFF;
+    border: 2px solid #D59B76;
+    outline: none;
+}
+
+.login-label {
+    text-align: center;
+    color: #3C88B7;
+    font-size: 32px;
+}
+
+.login-sub {
+    text-align: center;
+    font-size: 16px;
+    padding-bottom: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 20%;
+    color: #2e2e2e;
+}
+
+.forgot-password {
+    text-align: right;
+    vertical-align: top;
+    font-size: 16px;
+    text-decoration: underline;
+    color: #d59b76;
+    margin-top: 25px;
+    cursor: default;
+}
+
+.inputlabel {
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 100%;
+    color: #2e2e2e;
+}
+
+.eyes-buttons-invalid, .eyes-buttons-invalid:hover{
+    border-top-color: var(--error);
+    border-right-color: var(--error);
+    border-bottom-color: var(--error);
+}
+
