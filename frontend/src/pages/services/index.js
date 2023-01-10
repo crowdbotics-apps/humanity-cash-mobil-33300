@@ -1,20 +1,20 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
-import {useEffect, useRef, useState} from "react"
+import { useEffect, useRef, useState } from "react"
 import MDButton from "../../components/MDButton"
-import {showMessage, useApi} from "../../services/helpers"
+import { showMessage, useApi } from "../../services/helpers"
 import MDBox from "../../components/MDBox";
-import {Field, Form, Formik} from "formik";
+import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import {CircularProgress, Grid, Input} from "@mui/material";
+import { CircularProgress, Grid, Input } from "@mui/material";
 import MDInput from "../../components/MDInput";
 import Pagination from "../../components/Pagination/Pagination";
 import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 import ModalItem from "../../components/ModalItem";
-import {dataTableModel, renderTableRow} from "./utils";
+import { dataTableModel, renderTableRow } from "./utils";
 import DataTable from "../../components/DataTable";
-import {NumericFormat} from "react-number-format";
-import {useNavigate} from "react-router-dom";
-import {ROUTES} from "../../services/constants";
+import { NumericFormat } from "react-number-format";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../services/constants";
 
 
 const Services = () => {
@@ -24,15 +24,15 @@ const Services = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
   const [numberOfItemsPage, setNumberOfItemsPage] = useState(0);
-  const [recordList, setRecordList] = useState({...dataTableModel})
+  const [recordList, setRecordList] = useState({ ...dataTableModel })
   const searchQueryRef = useRef("");
 
   const getTransactions = (searchData, page = 1, ordering = "") => {
     setLoading(true)
-    api.getTransactions(searchData, page, ordering, 8).then((result) => {
+    api.getComplianceBalances(searchData, page, ordering, 8).then((result) => {
       if (result.kind === "ok") {
-        const {count, results} = result.data
-        const tmp = {...dataTableModel}
+        const { count, results } = result.data
+        const tmp = { ...dataTableModel }
         tmp.rows = []
         setRecordList(tmp)
         setNumberOfItems(0)
@@ -43,7 +43,7 @@ const Services = () => {
       .finally(() => setLoading(false))
   }
   const onColumnOrdering = (ordering) => {
-    const {column, order} = ordering
+    const { column, order } = ordering
     if (column === '') {
       getTransactions(searchQueryRef?.current)
     } else if (order === 'asce') {
@@ -60,6 +60,7 @@ const Services = () => {
   useEffect(() => {
     getTransactions("")
   }, [])
+
   return (
     <DashboardLayout
       loginRequired
@@ -79,7 +80,7 @@ const Services = () => {
             setCurrentPage(page)
           }}
         />)
-        : <p style={{display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20}}>No transactions found</p>
+        : <p style={{ display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20 }}>No transactions found</p>
       }
     </DashboardLayout>
   )

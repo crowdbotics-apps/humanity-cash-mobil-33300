@@ -156,7 +156,7 @@ class BankAccountSerializer(serializers.ModelSerializer):
 
 
 class DatedBalanceSerializer(serializers.ModelSerializer):
-    date = serializers.DateField(source='created')
+    date = serializers.DateTimeField(source='created')
     banks = serializers.SerializerMethodField()
     details = serializers.SerializerMethodField()
 

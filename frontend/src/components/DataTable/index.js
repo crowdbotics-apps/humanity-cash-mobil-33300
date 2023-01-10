@@ -44,8 +44,8 @@ function DataTable({
                      numberOfItems,
                      numberOfItemsPage,
                      pageSize,
-                     onPageChange
-
+                     onPageChange,
+                     showTotalEntries = true
                    }) {
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
@@ -135,7 +135,7 @@ function DataTable({
           </TableBody>}
         </Table>
       </TableContainer>
-      {rows.length > 0 && <Grid container mt={5}>
+      {(rows.length > 0 && showTotalEntries) && <Grid container mt={5}>
         <Grid item>
           <MDBox sx={{color: '#666666', fontSize: 17, width: 300}}>Showing <span style={{color: '#000000'}}>{numberOfItemsPage}</span> from <span style={{color: '#000000'}}>{numberOfItems}</span> data</MDBox>
         </Grid>
