@@ -1,6 +1,6 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
 import {useEffect, useRef, useState} from "react"
-import {showMessage, useApi} from "../../services/helpers"
+import {money_fmt, showMessage, useApi} from "../../services/helpers"
 import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
@@ -15,7 +15,24 @@ const AdminWalletControl = () => {
   const api = useApi()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [communityAmount, setCommunityAmount] = useState(0)
+  const [humanityAmount, setHumanityAmount] = useState(0)
+  const getWalletBalances = () => {
+    setLoading(true)
+    api.getWalletBalances().then((result) => {
+      if (result.kind === "ok") {
+        let { community, humanity } = result.data
+        setCommunityAmount(community)
+        setHumanityAmount(humanity)
+      }
+    })
+      .catch(err => showMessage())
+      .finally(() => setLoading(false))
+  }
 
+  useEffect(() => {
+    getWalletBalances()
+  }, [])
 
   return (
     <DashboardLayout
@@ -48,7 +65,7 @@ const AdminWalletControl = () => {
           </MDBox>
           <MDBox display={'flex'} flexDirection={'column'} flex={1} p={5}>
             <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={16}>TOTAL ROUND UP SAVINGS</MDTypography>
-            <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23} mt={3}>0$</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23} mt={3}>{money_fmt(communityAmount)}</MDTypography>
             <MDBox display={'flex'} mt={'auto'} alignItems={'center'}>
               <MDBox
                 sx={{backgroundColor: 'rgba(252,113,0,0.2)', borderRadius: 4, width: 54, height: 54}}
@@ -102,7 +119,7 @@ const AdminWalletControl = () => {
           </MDBox>
           <MDBox display={'flex'} flexDirection={'column'} flex={1} p={5}>
             <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={16}>CASH OUT FEES SAVINGS</MDTypography>
-            <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23} mt={3}>0$</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23} mt={3}>{money_fmt(humanityAmount)}</MDTypography>
             <MDBox display={'flex'} mt={'auto'} alignItems={'center'}>
               <MDBox
                 sx={{backgroundColor: 'rgba(252,113,0,0.2)', borderRadius: 4, width: 54, height: 54}}

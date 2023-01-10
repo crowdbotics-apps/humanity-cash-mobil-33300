@@ -1,6 +1,6 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
 import { useEffect, useRef, useState } from "react"
-import { showMessage, useApi } from "../../services/helpers"
+import {money_fmt, showMessage, useApi} from "../../services/helpers"
 import { renderTableRow } from "./utils";
 import DataTable from "../../components/DataTable";
 import { useNavigate } from "react-router-dom";
@@ -49,19 +49,19 @@ const ReconciliationActionsPage = () => {
     setSupervisorCredential("")
   }
 
-  const getAdjustments = (searchData, page = 1, ordering = "asc") => {
+  const getWalletBalances = () => {
     setLoading(true)
-    api.getAdjustment(searchData, page, ordering, 8).then((result) => {
+    api.getWalletBalances().then((result) => {
       if (result.kind === "ok") {
-        let { count, results } = result.data
+        let { count, results, reserve, positive, negative } = result.data
         const tmp = { ...dataTableModel }
 
         // TODO: remove that when index works
         results = [{
           title: <div style={{ color: "var(--green-dark)", fontWeight: "bold" }}>Today's Date</div>,
-          reserve: <div style={{ fontWeight: 500, fontSize: "14px" }}>$ 100,000.00</div>,
-          negative: <div style={{ fontWeight: 500, fontSize: "14px" }}>$ 0.00</div>,
-          positive: <div style={{ fontWeight: 500, fontSize: "14px" }}>$ 0.00</div>,
+          reserve: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(reserve)}</div>,
+          negative: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(negative)}</div>,
+          positive: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(positive)}</div>,
         }]
 
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
@@ -72,16 +72,6 @@ const ReconciliationActionsPage = () => {
     })
       .catch(err => showMessage())
       .finally(() => setLoading(false))
-  }
-  const onColumnOrdering = (ordering) => {
-    const { column, order } = ordering
-    if (column === '') {
-      getAdjustments(searchQueryRef?.current)
-    } else if (order === 'asce') {
-      getAdjustments(searchQueryRef?.current, 1, `${column}`)
-    } else {
-      getAdjustments(searchQueryRef?.current, 1, `-${column}`)
-    }
   }
 
   const apiCall = (data) => {
@@ -278,25 +268,21 @@ const ReconciliationActionsPage = () => {
   }
 
   useEffect(() => {
-    getAdjustments("")
+    getWalletBalances()
   }, [])
 
   return (
     <DashboardLayout
       loginRequired
-      loading={loading}
-      searchFunc={getAdjustments}
     >
       {recordList?.rows?.length > 0
         ? (<DataTable
           table={recordList}
-          onColumnOrdering={onColumnOrdering}
           currentPage={currentPage}
           numberOfItems={numberOfItems}
           numberOfItemsPage={numberOfItemsPage}
           pageSize={8}
           onPageChange={page => {
-            getAdjustments('', page)
             setCurrentPage(page)
           }}
         />)
