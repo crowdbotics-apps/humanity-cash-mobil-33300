@@ -5,6 +5,8 @@ import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import ConfirmDialogInputModal from "../../components/ConfirmDialogInputModal";
 import MDInput from "../../components/MDInput";
+import MDButton from "../../components/MDButton";
+import MDBox from "../../components/MDBox";
 
 
 const TransactionStatus = () => {
@@ -18,11 +20,12 @@ const TransactionStatus = () => {
   const [selectedItem, setSelectedItem] = useState(null)
   const [ShowConfirmationModal, setShowConfirmationModal] = useState(false)
   const [userPassword, setUserPassword] = useState('')
+  const [transactionStatus, setTransactionStatus] = useState('Pending')
   const searchQueryRef = useRef("");
 
   const getTransactions = (searchData, page = 1, ordering = "") => {
     setLoading(true)
-    api.getTransactions(searchData, page, ordering, 8).then((result) => {
+    api.getTransactions(searchData, page, ordering, 8, {transaction_status: transactionStatus}).then((result) => {
       if (result.kind === "ok") {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
@@ -43,9 +46,7 @@ const TransactionStatus = () => {
         showMessage('Action executed successfully', 'success')
         clearDetail()
       } else if (result.kind === "bad-data") {
-        const key = Object.keys(result?.errors)[0]
-        const msg = `${key}: ${result?.errors?.[key][0]}`
-        showMessage(msg)
+        showMessage(result?.errors)
       }
     })
       .catch(err => showMessage())
@@ -123,7 +124,7 @@ const TransactionStatus = () => {
 
   useEffect(() => {
     getTransactions("")
-  }, [])
+  }, [transactionStatus])
 
   return (
     <DashboardLayout
@@ -131,6 +132,15 @@ const TransactionStatus = () => {
       loading={loading}
       searchFunc={getTransactions}
     >
+      <MDButton color={transactionStatus === "Pending" ? "primary" : "secondary"} variant={"text"} onClick={() => setTransactionStatus('Pending')}>PENDING</MDButton>
+      <MDButton color={transactionStatus === "Approved" ? "primary" : "secondary"}  variant={"text"} onClick={() => setTransactionStatus('Approved')}>APPROVED</MDButton>
+      <MDButton color={transactionStatus === "Executed" ? "primary" : "secondary"}  variant={"text"} onClick={() => setTransactionStatus('Executed')}>EXECUTED</MDButton>
+      <MDBox sx={{
+        width: '100%',
+        transition: '0.3s',
+        height: 2,
+        backgroundColor: '#3B88B6',
+      }}/>
       {recordList?.rows.length > 0
         ? (<DataTable
           table={recordList}
