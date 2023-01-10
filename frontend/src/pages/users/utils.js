@@ -6,10 +6,10 @@ import Icon from "@mui/material/Icon";
 
 export const dataTableModel = {
   columns: [
-    {Header: "FULL NAME", accessor: "name"},
-    {Header: "EMAIL", accessor: "email"},
-    {Header: "USER DWOLLA ID", accessor: "dwolla_id"},
-    {Header: "BALANCE", accessor: "balance"},
+    { Header: "FULL NAME", accessor: "name" },
+    { Header: "EMAIL", accessor: "email" },
+    { Header: "USER DWOLLA ID", accessor: "dwolla_id" },
+    { Header: "BALANCE", accessor: "balance"},
     {Header: "LAST LOGIN", accessor: "last_login"},
     {Header: "WALLET ADDRESS", accessor: "crypto_wallet_id"},
     {Header: "PHYSICAL ADDRESS", accessor: "address"},
