@@ -53,6 +53,7 @@ import {
 } from "./assets/svg";
 import BlockchainTransactions from "./pages/blockchain-transactions";
 import ReconciliationActionsPage from "./pages/reconciliation-actions";
+import ContentsPage from "./pages/contents";
 import SmartContracts from "./pages/smart-contracts";
 import Users from "./pages/users";
 import AdminPortal from "./pages/admin-portal";
@@ -130,7 +131,7 @@ const routes = [
     name: "Content",
     key: "content",
     route: "/content/",
-    component: <Services/>,
+    component: <ContentsPage/>,
     icon: <DocumentIcon/>,
     noCollapse: true,
   },
