@@ -15,10 +15,10 @@ HUMANITY_CHEST_ACHIEVEMENTS2 = ConfigKey(
     verbose_name='Humanity chest achievements line 2'
 )
 
-DWOLLA_ACCOUNT_DESTINATION = ConfigKey(
-    value="https://api-sandbox.dwolla.com/funding-sources/707177c3-bf15-4e7e-b37c-55c3898d9bf4",
-    verbose_name='Dwolla account destination for withdraw'
-)
+# DWOLLA_ACCOUNT_DESTINATION = ConfigKey(
+#     value="https://api-sandbox.dwolla.com/funding-sources/707177c3-bf15-4e7e-b37c-55c3898d9bf4",
+#     verbose_name='Dwolla account destination for withdraw'
+# )
 
 RESERVE_WALLET_UID = ConfigKey(
     # uid = text2keccak('reserveWallet')

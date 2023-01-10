@@ -139,6 +139,8 @@ class ACHTransaction(models.Model):
     amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=14)
     currency = models.CharField(max_length=5, null=True, blank=True)
     account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
+    bank_account = models.ForeignKey('home.BankAccount', null=True, on_delete=models.SET_NULL,
+                                     related_name='ach_transactions', blank=True)
 
     def __str__(self):
         return self.ach_id
