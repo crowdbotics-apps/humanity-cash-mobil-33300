@@ -14,7 +14,9 @@ const ConfirmDialogInputModal = ({
                                    handleClose,
                                    handleConfirm,
                                    children = null,
-                                   disabledConfirm = false
+                                   disabledConfirm = false,
+                                   width = 500,
+                                   hideButtons = false
                                  }) => {
   return (
     <Modal
@@ -26,7 +28,7 @@ const ConfirmDialogInputModal = ({
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 500,
+        width,
         minHeight: 200,
         bgcolor: 'background.paper',
         boxShadow: 24,
@@ -43,6 +45,7 @@ const ConfirmDialogInputModal = ({
           {description}
         </Typography>
         {children}
+        {!hideButtons &&
         <Grid container display={'flex'} justifyContent={'center'} mt={2}>
           <Grid item xs={5}>
             <MDButton color="primary" variant={'outlined'} fullWidth onClick={handleClose}>
@@ -55,7 +58,7 @@ const ConfirmDialogInputModal = ({
             </MDButton>
           </Grid>
         </Grid>
-
+                                 }
       </Box>
     </Modal>
   )
