@@ -339,6 +339,10 @@ export class Api extends ApiBase {
     return this.simple_post(API_VERSION_PREFIX + `/compliance_action/${data.id}/signoff/`, data)
   }
 
+  async getWalletBalances(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX + "/compliance_action/balances/")
+  }
+
   async reconcileAndBrnTokens(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post(API_VERSION_PREFIX + "/compliance_action/", data)
   }

@@ -17,7 +17,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from base import configs
-from celo_humanity.humanity_contract_helpers import get_wallet_balance
+from celo_humanity.humanity_contract_helpers import get_wallet_balance, get_community_balance, get_humanity_balance
 from celo_humanity.models import Transaction, ACHTransaction, ComplianceActionSignoff, ComplianceAction
 from home.api.v1.serializers.compliance_serializers import ComplianceActionReadSerializer, \
     ComplianceActionCreateSerializer, ComplianceActionSignoffSerializer, ComplianceRecipientSerializer
@@ -167,6 +167,8 @@ class ComplianceActionViewset(
             reserve=get_wallet_balance(configs.RESERVE_WALLET_UID),
             positive=get_wallet_balance(configs.POSITIVE_ADJUSTMENT_WALLET_UID),
             negative=get_wallet_balance(configs.NEGATIVE_ADJUSTMENT_WALLET_UID),
+            community=get_community_balance(),
+            humanity=get_humanity_balance(),
         ), status=status.HTTP_200_OK)
 
 
