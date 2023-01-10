@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from home.models import Event, DwollaEvent
+from home.models import Event, DwollaEvent, BankAccount, DatedSystemBalanceBankBalances, DatedSystemBalance
 from users.models import Consumer, Merchant, DwollaUser, Notification, UserDevice
 
 
@@ -38,5 +38,20 @@ class NotificationAdmin(admin.ModelAdmin):
 
 @admin.register(UserDevice)
 class UserDeviceAdmin(admin.ModelAdmin):
+    ...
+
+
+@admin.register(BankAccount)
+class BankAccountAdmin(admin.ModelAdmin):
+    ...
+
+
+@admin.register(DatedSystemBalance)
+class DatedSystemBalanceAdmin(admin.ModelAdmin):
+    ...
+
+
+@admin.register(DatedSystemBalanceBankBalances)
+class DatedSystemBalanceBankBalancesAdmin(admin.ModelAdmin):
     ...
 

@@ -25,6 +25,7 @@ from home.api.v1.serializers.transaction_serializers import TransactionSerialize
 from home.clients.dwolla_api import DwollaClient
 from home.helpers import AuthenticatedAPIView, send_notifications, send_email_with_template_attach_element, \
     send_email_with_template
+from home.models.bank import choose_bank_account_for_transaction
 from users.models import Consumer, Merchant, Notification
 
 logger = logging.getLogger('transaction')
@@ -65,7 +66,7 @@ class TransactionViewSet(
             transaction = self.get_object()
             serializer = self.get_serializer(instance=transaction, context={'request': request})
             data = serializer.data
-            return Response(data , status=status.HTTP_200_OK)
+            return Response(data, status=status.HTTP_200_OK)
         except (AttributeError, KeyError, ValueError):
             raise ValidationError('Invalid request')
 
@@ -140,10 +141,11 @@ class WithdrawView(AuthenticatedAPIView):
                 user.withdraw(amount)
 
                 destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
-                origin_source = configs.DWOLLA_ACCOUNT_DESTINATION
+                bank_account = choose_bank_account_for_transaction(credit=False)
+                origin_source = bank_account.dwolla_account
 
                 transfer = dwolla_client.create_transfer(origin_source, destination_source, amount)
-                create_ach_transaction(transfer, True, user)
+                create_ach_transaction(transfer, True, user, bank_account)
 
                 return Response(status=status.HTTP_200_OK)
             else:
@@ -179,10 +181,11 @@ class DepositView(AuthenticatedAPIView):
                     return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
 
                 origin_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
-                destination_source = configs.DWOLLA_ACCOUNT_DESTINATION
+                bank_account = choose_bank_account_for_transaction(credit=True)
+                destination_source = bank_account.dwolla_account
 
-                transfer = dwolla_client.create_transfer(destination_source, origin_source, amount)
-                create_ach_transaction(transfer, False, user)
+                transfer = dwolla_client.create_transfer(origin_source, destination_source, amount)
+                create_ach_transaction(transfer, False, user, bank_account)
 
                 return Response(status=status.HTTP_200_OK)
             else:
@@ -198,7 +201,7 @@ class DepositView(AuthenticatedAPIView):
             return Response('Error while depositing, please try again', status=status.HTTP_400_BAD_REQUEST)
 
 
-def create_ach_transaction(dwolla_trn, withdraw, profile):
+def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account):
     try:
         ach_transaction = ACHTransaction.objects.create(transaction_id=dwolla_trn.id,
                                                         amount=dwolla_trn.amount.value,
@@ -211,7 +214,7 @@ def create_ach_transaction(dwolla_trn, withdraw, profile):
                                                         merchant=profile if profile.is_merchant else None,
                                                         type=(
                                                             ACHTransaction.Type.withdraw if withdraw else ACHTransaction.Type.deposit),
-
+                                                        bank_account=bank_account
                                                         )
 
         send_notifications([profile.user],
