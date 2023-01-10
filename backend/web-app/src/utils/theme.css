@@ -1,0 +1,100 @@
+@import "colors.css";
+
+.text-green{
+    color: var(--green);
+}
+
+.text-blue{
+    color: var(--blue)
+}
+.text-pink{
+    color: var(--pink)
+}
+.text-gray{
+    color: var(--gray)
+}
+
+.border-green{
+    border:1px solid var(--green)
+}
+
+.border-orange{
+    border:1px solid var(--headings)
+}
+
+
+.border-blue{
+    border: 1px solid  var(--blue);
+}
+
+.btn-outline-primary:hover {
+    color: var(--blue-dark);
+    background-color: white;
+    border-color: var(--blue-dark);
+}
+
+.btn-primary:hover, .btn-primary:active {
+    color: var(--white);
+}
+
+.form-control{
+    border: 1px solid var(--headings);
+    border-radius:14px;
+    /*height: 40px;*/
+}
+.search-button-navbar{
+    border: none;
+    background-color: var(--light-grey);
+    border-radius: 6px;
+}
+
+.search-button-navbar:focus {
+     box-shadow:unset;
+    background: var(--light-grey);
+     /*border: 1px solid var(--background);*/
+     /*box-shadow: 0 0 0 0.25rem var(--background);*/
+}
+
+.btn-check:focus + .btn-primary, .btn-primary:focus {
+    color: #ffffff;
+    background-color: #589ac1;
+    border-color: #4f94bd;
+    box-shadow: 0 0 0 0.25rem rgb(50 116 155 / 50%);
+}
+/*@font-face {*/
+/*    font-family: 'Gotham';*/
+/*    font-style: normal;*/
+/*    font-weight: 400;*/
+/*    src: local('Gotham'), url('./assets/fonts/GothamBook.woff') format('woff');*/
+/*}*/
+
+.input-password{
+    border-right: none;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+
+
+    /*margin-right: 100px;*/
+
+}
+.input-password:focus{
+    border-right: none;
+    clip-path: inset(-15px 0px -15px -15px);
+    /*box-shadow: unset;*/
+}
+
+
+.input-password:focus ~ .eyes-buttons{
+    border-top: 1px #9dc4db solid;
+    border-right: 1px #9dc4db solid;
+    border-bottom: 1px #9dc4db solid;
+    box-shadow: 0 0 0 0.25rem rgb(59 136 182 / 25%);
+    clip-path: inset(-15px -15px -15px 0px);
+}
+.input-password.is-invalid:focus ~ .eyes-buttons{
+    border-top: 1px #dc3545 solid;
+    border-right: 1px #dc3545 solid;
+    border-bottom: 1px #dc3545 solid;
+    box-shadow: 0 0 0 0.25rem rgb(220 53 69 / 25%);
+    clip-path: inset(-15px -15px -15px 0px);
+}

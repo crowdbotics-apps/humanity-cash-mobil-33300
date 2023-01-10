@@ -62,6 +62,13 @@ export default StyleSheet.create({
     width: 50
   },
   CONTAINER: {},
+  HAD_CODE_CONTAINER: {
+    alignItems: 'flex-start',
+    alignSelf: 'center',
+    justifyContent: 'flex-end',
+    marginTop: 20,
+    width: METRICS.screenWidth * 0.95,
+  },
   INPUT_LABEL_ERROR: {
     color: COLOR.PALETTE.pink,
     fontSize: 10,

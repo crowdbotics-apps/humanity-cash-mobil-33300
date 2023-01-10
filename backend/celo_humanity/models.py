@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime
 
+from django.conf import settings
 from django.db import models
 
 from base import configs
@@ -80,6 +81,8 @@ class Transaction(models.Model):
 
     @property
     def confirmations(self):
+        if settings.DEBUG:
+            return 0
         from celo_humanity.humanity_contract_helpers import get_transaction_confirmations
         return get_transaction_confirmations(self.transaction_id)
 

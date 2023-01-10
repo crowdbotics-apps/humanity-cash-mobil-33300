@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import {TextInput, View, TouchableOpacity, Image, ScrollView, Alert, Platform} from "react-native"
+import { TextInput, View, TouchableOpacity, Image, ScrollView, Alert, Platform } from "react-native"
 import { Text, Button, Screen, Checkbox, TextInputComponent } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -208,6 +208,35 @@ export const LoginScreen = observer(function LoginScreen() {
       });
   }
 
+  const socialMediaLogin = <View style={styles.LOGIN_OPTIONS_CONTAINER}>
+    <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
+    <View style={styles.STEP_CONTAINER}>
+      <View style={styles.LOGIN_TYPES_CONTAINER}>
+        {Platform.OS === 'ios' && <TouchableOpacity onPress={() => onAppleButtonPress()}>
+          <Image
+            source={IMAGES.apple_icon}
+            resizeMode="contain"
+            style={styles.LOGIN_TYPE}
+          />
+        </TouchableOpacity>}
+        <TouchableOpacity onPress={() => loginGoogle()}>
+          <Image
+            source={IMAGES.googleIcon}
+            resizeMode="contain"
+            style={styles.LOGIN_TYPE}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => loginFacebook()}>
+          <Image
+            source={IMAGES.facebookIcon}
+            resizeMode="contain"
+            style={styles.LOGIN_TYPE}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  </View>
+
   return (
     <Screen
       preset="fixed"
@@ -254,40 +283,13 @@ export const LoginScreen = observer(function LoginScreen() {
             </TouchableOpacity>}
           />
         </View>
-        <View style={styles.LOGIN_OPTIONS_CONTAINER}>
-          <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
-          <View style={styles.STEP_CONTAINER}>
-            <View style={styles.LOGIN_TYPES_CONTAINER}>
-              {Platform.OS === 'ios' && <TouchableOpacity onPress={() => onAppleButtonPress()}>
-                <Image
-                  source={IMAGES.apple_icon}
-                  resizeMode="contain"
-                  style={styles.LOGIN_TYPE}
-                />
-              </TouchableOpacity>}
-              <TouchableOpacity onPress={() => loginGoogle()}>
-                <Image
-                  source={IMAGES.googleIcon}
-                  resizeMode="contain"
-                  style={styles.LOGIN_TYPE}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => loginFacebook()}>
-                <Image
-                  source={IMAGES.facebookIcon}
-                  resizeMode="contain"
-                  style={styles.LOGIN_TYPE}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <TouchableOpacity onPress={() => navigation.navigate("forgotPass")} style={styles.NEED_HELP_CONTAINER}>
-            <Text style={styles.NEED_HELP_LINK}>
-              Forgot password
-            </Text>
-          </TouchableOpacity>
-        </View>
+        {/* {socialMediaLogin} */}
       </ScrollView>
+      <TouchableOpacity onPress={() => navigation.navigate("forgotPass")} style={styles.NEED_HELP_CONTAINER}>
+        <Text style={styles.NEED_HELP_LINK}>
+          Forgot password
+        </Text>
+      </TouchableOpacity>
       <Button
         buttonStyle={{
           backgroundColor: Loading ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green

@@ -47,7 +47,7 @@ class TransactionSerializer(serializers.ModelSerializer):
         return address
 
     def get_from_username(self, obj):
-        data = self.context['request'].GET
+        data = self.context['request'].data
         username = '-'
         show_username, password_is_valid = self.validate_params(data)
         if not show_username:
@@ -65,17 +65,16 @@ class TransactionSerializer(serializers.ModelSerializer):
         show_username = False
         password_is_valid = False
         if 'show_username' in data.keys():
-            show_username = data['show_username'] == "true"
+            show_username = data['show_username']
         if 'password' in data.keys():
             password_is_valid = self.context['request'].user.check_password(data['password'])
-
             if show_username and not password_is_valid:
-                raise ValidationError(detail={"errors":["You are not allowed to see usernames"]}, code=status.HTTP_401_UNAUTHORIZED)
+                raise ValidationError("You are not allowed to see usernames", code=status.HTTP_401_UNAUTHORIZED)
         return show_username, password_is_valid
 
 
     def get_to_username(self, obj):
-        data = self.context['request'].GET
+        data = self.context['request'].data
         username = '-'
         show_username, password_is_valid = self.validate_params(data)
 
@@ -89,7 +88,6 @@ class TransactionSerializer(serializers.ModelSerializer):
             if obj.counterpart_merchant_id:
                 username = obj.counterpart_merchant.user.username
         return username
-
 
     def get_type(self, obj):
         return obj.get_type_display()

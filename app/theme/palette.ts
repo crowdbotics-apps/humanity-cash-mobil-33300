@@ -31,7 +31,7 @@ export const PALETTE = {
   whiteBackground: "#E5E5E5",
   whiteTextInput: "#EFEFEF",
   success: "#FCCB4E",
-
+  beige: "#F8F6F2",
   primary: "#58AEBF",
   primaryDisabled: "#A6D4DD",
   angry: "#B00020",

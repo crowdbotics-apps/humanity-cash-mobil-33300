@@ -9,12 +9,6 @@ from home.api.v1.serializers.setup_profile_serializers import ConsumerProfileDet
 User = get_user_model()
 
 class ACHTransactionSerializer(serializers.ModelSerializer):
-    # from_address = serializers.SerializerMethodField()
-    # to_address = serializers.SerializerMethodField()
-    # from_username = serializers.SerializerMethodField()
-    # to_username = serializers.SerializerMethodField()
-    # type = serializers.SerializerMethodField()
-
     status = serializers.SerializerMethodField()
     consumer_data = serializers.SerializerMethodField()
     merchant_data = serializers.SerializerMethodField()
@@ -22,9 +16,8 @@ class ACHTransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = ACHTransaction
         fields = [
-            'id', 'transaction_id', 'created_at', 'ach_id',
-            'status', 'type', 'consumer', 'merchant',
-            'confirmed_at', 'amount', 'consumer_data', 'merchant_data'
+            'id', 'transaction_id', 'created_at', 'ach_id', 'status', 'type', 'consumer', 'merchant', 'confirmed_at',
+            'amount', 'consumer_data', 'merchant_data'
         ]
 
     def get_status(self, obj):
@@ -36,7 +29,9 @@ class ACHTransactionSerializer(serializers.ModelSerializer):
     def get_consumer_data(self, obj):
         if obj.get_consumer_data:
             return ConsumerProfileDetailSerializer().to_representation(obj.get_consumer_data)
+        return None
 
     def get_merchant_data(self, obj):
         if obj.get_consumer_data:
             return MerchantMyProfileSerializer().to_representation(obj.get_merchant_data)
+        return None

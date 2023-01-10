@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { TextInput, View, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Alert } from "react-native"
-import {Text, Screen, Button, TextInputComponent, MaskInput} from "../../components"
+import { Text, Screen, Button, TextInputComponent, MaskInput } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
 import Ionicons from "react-native-vector-icons/Ionicons"
@@ -13,7 +13,7 @@ import { notifyMessage } from "../../utils/helpers"
 import { COLOR } from '../../theme';
 import { CheckBox } from 'react-native-elements'
 import TouchID from 'react-native-touch-id'
-import {Masks} from "react-native-mask-input";
+import { Masks } from "react-native-mask-input";
 
 const steps = [
   "email",
@@ -227,26 +227,13 @@ export const SignupScreen = observer(function SignupScreen() {
         value={Email}
         placeholder={"myname@mail.com"}
       />
-      <View style={styles.LABEL_CONTAINER}>
-        <Text style={styles.LABEL}>PHONE NUMBER</Text>
-        {(PhoneNumberErrorMessage !== '') &&
-          <Text style={styles.LABEL_ERROR}>
-            {PhoneNumberError ? PhoneNumberErrorMessage : ''}
+      {EmailErrorMessage !== "" && (
+        <View style={styles.HAD_CODE_CONTAINER}>
+          <Text onPress={() => setStep("verify_email")} style={styles.NEED_HELP_LINK}>
+            I have received the code
           </Text>
-        }
-      </View>
-      <MaskInput
-        value={Phone}
-        mask={Masks.USA_PHONE}
-        name="ssn"
-        placeholder="(XXX)-XXX-XXXX"
-        keyboardType="number-pad"
-        onChange={(masked, unmasked) => {
-          setPhoneNumberError(false)
-          setPhone(unmasked)
-        }}
-        style={styles.INPUT_STYLE_CONTAINER}
-      />
+        </View>
+      )}
     </View>
   )
   const LegalStep = () => (

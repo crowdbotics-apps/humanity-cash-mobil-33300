@@ -70,14 +70,15 @@ class DwollaUserSerializer(serializers.ModelSerializer):
                   'crypto_wallet_id', 'last_login', 'date_joined', 'account_type']
 
     def get_balance(self, obj):
-        user = User.objects.get(pk=obj.pk)
-        if hasattr(user, 'merchant'):
-            return user.merchant.balance
+        try:
+            user = User.objects.get(pk=obj.pk)
+            if hasattr(user, 'merchant'):
+                return user.merchant.balance
 
-        if hasattr(user, 'consumer'):
-            return user.consumer.balance
-
-        return 0
+            if hasattr(user, 'consumer'):
+                return user.consumer.balance
+        except TimeoutError as error:
+            return '-'
 
 
 
