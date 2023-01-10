@@ -52,7 +52,6 @@ const ReconciliationActionsPage = () => {
   const getAdjustments = (searchData, page = 1, ordering = "asc") => {
     setLoading(true)
     api.getAdjustment(searchData, page, ordering, 8).then((result) => {
-      console.log(' result -> ', result)
       if (result.kind === "ok") {
         let { count, results } = result.data
         const tmp = { ...dataTableModel }

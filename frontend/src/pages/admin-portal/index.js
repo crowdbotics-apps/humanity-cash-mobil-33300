@@ -21,7 +21,6 @@ const AdminPortal = () => {
     setLoading(true)
     api.getDwollaUsers(searchData, page, ordering, 8).then((result) => {
       if (result.kind === "ok") {
-        console.log('result ', result)
         const {count, results} = result.data
         const tmp = {...dataTableModel}
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
