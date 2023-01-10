@@ -22,7 +22,7 @@ import PropTypes from "prop-types";
 import {useAsyncDebounce, useGlobalFilter, usePagination, useSortBy, useTable} from "react-table";
 
 // @mui material components
-import {Grid, Table, TableBody, TableContainer, TablePagination, TableRow} from "@mui/material";
+import {Grid, Table, TableBody, TableContainer, TablePagination, TableRow, TableCell} from "@mui/material";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
@@ -118,18 +118,28 @@ function DataTable({
             {page.map((row, key) => {
               prepareRow(row);
               return (
-                <TableRow key={`tablerow2__${key}`} {...row.getRowProps()}>
-                  {row.cells.map((cell, idx2) => (
-                    <DataTableBodyCell
-                      key={`tablecell__${idx2}`}
-                      noBorder={noEndBorder && rows.length - 1 === key}
-                      align={cell.column.align ? cell.column.align : "left"}
-                      {...cell.getCellProps()}
-                    >
-                      {cell.render("Cell")}
-                    </DataTableBodyCell>
-                  ))}
-                </TableRow>
+                <>
+                  <TableRow key={`tablerow2__${key}`} {...row.getRowProps()}>
+                    {row.cells.map((cell, idx2) => (
+                      <DataTableBodyCell
+                        key={`tablecell__${idx2}`}
+                        noBorder={noEndBorder && rows.length - 1 === key}
+                        align={cell.column.align ? cell.column.align : "left"}
+                        {...cell.getCellProps()}
+                      >
+                        {console.log(' ===>>> ', { ...cell.getCellProps() })}
+                        {cell.render("Cell")}
+                      </DataTableBodyCell>
+                    ))}
+                  </TableRow>
+                  {row?.original?.children &&
+                    <TableRow key={`tablerow2__children__${key}`}>
+                      <TableCell colSpan={row.cells.length} style={{ "text-align": "center" }}>
+                        {row?.original?.children}
+                      </TableCell>
+                    </TableRow>
+                  }
+                </>
               );
             })}
           </TableBody>}
@@ -137,7 +147,7 @@ function DataTable({
       </TableContainer>
       {(rows.length > 0 && showTotalEntries) && <Grid container mt={5}>
         <Grid item>
-          <MDBox sx={{color: '#666666', fontSize: 17, width: 300}}>Showing <span style={{color: '#000000'}}>{numberOfItemsPage}</span> from <span style={{color: '#000000'}}>{numberOfItems}</span> data</MDBox>
+          <MDBox sx={{ color: '#666666', fontSize: 17, width: 300 }}>Showing <span style={{ color: '#000000' }}>{numberOfItemsPage}</span> from <span style={{ color: '#000000' }}>{numberOfItems}</span> data</MDBox>
         </Grid>
         <Grid item ml={'auto'}>
           <Pagination

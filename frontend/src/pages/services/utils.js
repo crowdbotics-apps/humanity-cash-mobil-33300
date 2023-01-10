@@ -6,7 +6,7 @@ import Icon from "@mui/material/Icon";
 
 export const dataTableModel = {
   columns: [
-    {Header: "DATE", accessor: "created_time"},
+    {Header: "", accessor: "date_title"},
     {Header: "AMOUNT", accessor: "amount"},
     {Header: "TRANSACTION ID", accessor: "transaction_id"},
     {Header: "FROM", accessor: "action_from"},

@@ -10,12 +10,26 @@ import MDInput from "../../components/MDInput";
 import Pagination from "../../components/Pagination/Pagination";
 import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 import ModalItem from "../../components/ModalItem";
-import { dataTableModel, renderTableRow } from "./utils";
+import { renderTableRow } from "./utils";
 import DataTable from "../../components/DataTable";
 import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../services/constants";
+import moment from "moment";
 
+const dataTableModel = {
+  columns: [
+    {Header: "", accessor: "date_title"},
+    {Header: "AMOUNT", accessor: "amount"},
+    {Header: "TRANSACTION ID", accessor: "transaction_id"},
+    {Header: "FROM", accessor: "action_from"},
+    {Header: "TO", accessor: "action_to"},
+    {Header: "DOCUMENTATION", accessor: "documentation"},
+    {Header: "REQUESTED BY", accessor: "created_by"},
+    {Header: "ACTION", accessor: "actions", disableOrdering: true}
+  ],
+  rows: [],
+};
 
 const Services = () => {
   const api = useApi()
@@ -27,35 +41,83 @@ const Services = () => {
   const [recordList, setRecordList] = useState({ ...dataTableModel })
   const searchQueryRef = useRef("");
 
+  const [DetailVisible, setDetailVisible] = useState(false);
+
+  const formatDate = (date_) => {
+    let date
+
+    return date
+  }
+
+  const getFormatedData = (initialData) => {
+    // init columns
+    let columns = [{Header: "", accessor: "date_title", disableOrdering: true}]
+    
+    let data = []
+    // init row
+    initialData.map(d => {
+      let row = {
+        tokens_burned: d.tokens_burned,
+        tokens_minted: d.tokens_minted,
+        outstanding: parseFloat(d.tokens_burned) - parseFloat(d.tokens_minted),
+        date: d.date,
+        date_title: <MDBox onClick={() => {
+          setDetailVisible(!DetailVisible)
+          console.log(' aca', DetailVisible)
+        }}
+          style={{ color: "var(--green-dark)", fontWeight: "bold", height: 50, alignItems: 'center', display: 'flex' }}>
+          {moment(d.date).format('MMMM DD, YYYY')}</MDBox>,
+        comments: d.comments,
+        // children: {
+        //   children_columns: ['A', 'B'],
+        //   children_rows: [{a: 'asd', b: 'asd'}, {a: 'asd', b: 'asd'}, {a: 'asd', b: 'asd'}]
+        // }
+        children: <MDBox style={{ height: DetailVisible ? 100 : 1, background: 'red'}} />
+      }
+      // banks net diference
+      let banksTotal = 0
+      d.banks.map(b => {
+        // add bank name to columns
+        columns.push({ Header: b.name, accessor: `bank_${b.id}`, disableOrdering: true })
+        // bank net difference
+        row[`bank_${b.id}`] = parseFloat(d.details[b.id].credits_settled) - parseFloat(d.details[b.id].debits_settled)
+        // banks net difference
+        banksTotal += row[`bank_${b.id}`]
+      })
+      // finish row
+      row['total'] = banksTotal
+      row['diference'] = banksTotal - row.outstanding
+      row['positive_result'] = row.diference > 0 ? 'Yes' : 'No'
+
+      //
+      data.push(row)
+    })
+
+    // finish columns
+    columns.push({Header: "TOTAL", accessor: "total", disableOrdering: true},
+      {Header: "B$ Outstanding", accessor: "outstanding", disableOrdering: true},
+      {Header: "RESERVE >= TOKENS?", accessor: "positive_result", disableOrdering: true},
+      {Header: "DIFERENCE", accessor: "diference", disableOrdering: true},
+      {Header: "COMMENTS", accessor: "comments", disableOrdering: true},
+    )
+
+    return { rows: data, columns}
+  }
+
   const getTransactions = (searchData, page = 1, ordering = "") => {
     setLoading(true)
     api.getComplianceBalances(searchData, page, ordering, 8).then((result) => {
       if (result.kind === "ok") {
-        const { count, results } = result.data
-        const tmp = { ...dataTableModel }
-        tmp.rows = []
-        setRecordList(tmp)
-        setNumberOfItems(0)
-        setNumberOfItemsPage(0)
+
+        const data = getFormatedData(result.data)
+
+        setRecordList(data)
       }
     })
       .catch(err => showMessage())
       .finally(() => setLoading(false))
   }
-  const onColumnOrdering = (ordering) => {
-    const { column, order } = ordering
-    if (column === '') {
-      getTransactions(searchQueryRef?.current)
-    } else if (order === 'asce') {
-      getTransactions(searchQueryRef?.current, 1, `${column}`)
-    } else {
-      getTransactions(searchQueryRef?.current, 1, `-${column}`)
-    }
-  }
 
-  const setDetailToShow = (item) => {
-    navigate(ROUTES.BLOCKCHAIN_TRANSACTION(item.id))
-  }
 
   useEffect(() => {
     getTransactions("")
@@ -70,11 +132,11 @@ const Services = () => {
       {recordList?.rows.length > 0
         ? (<DataTable
           table={recordList}
-          onColumnOrdering={onColumnOrdering}
           currentPage={currentPage}
           numberOfItems={numberOfItems}
           numberOfItemsPage={numberOfItemsPage}
           pageSize={8}
+          showTotalEntries={false}
           onPageChange={page => {
             getTransactions('', page)
             setCurrentPage(page)
