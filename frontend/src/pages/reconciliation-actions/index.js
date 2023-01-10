@@ -66,7 +66,7 @@ const ReconciliationActionsPage = () => {
 
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
         setRecordList(tmp)
-        setNumberOfItems(count)
+        setNumberOfItems(1)
         setNumberOfItemsPage(results?.length || 0)
       }
     })
@@ -276,7 +276,7 @@ const ReconciliationActionsPage = () => {
     <DashboardLayout
       loginRequired
     >
-      {recordList?.rows?.length > 0
+      {numberOfItems > 0
         ? (<DataTable
           table={recordList}
           currentPage={currentPage}

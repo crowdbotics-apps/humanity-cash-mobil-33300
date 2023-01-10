@@ -17,4 +17,5 @@ export const ROUTES = {
   EDIT_PROFILE: "/edit-profile",
   BLOCKCHAIN_TRANSACTIONS: "/blockchain-transactions",
   BLOCKCHAIN_TRANSACTION: (id) =>  `/blockchain-transactions/${id}`,
+  USERS: (id) =>  `/users/${id}`,
 }

@@ -44,6 +44,7 @@ import {setupRootStore} from "./models";
 import icon from './assets/icons/favicon.png';
 import {observer} from "mobx-react";
 import BlockchainTransaction from "./pages/blockchain-transaction";
+import Users from "./pages/users";
 
 
 function App() {
@@ -127,6 +128,7 @@ function App() {
         <Route path={ROUTES.PRIVACY_POLICY} element={<PrivacyPolicy />} />
         <Route path={ROUTES.LOGOUT} element={<Logout />} />
         <Route path={ROUTES.BLOCKCHAIN_TRANSACTION(':id')} element={<BlockchainTransaction />} />
+        <Route path={ROUTES.USERS(':id')} element={<Users />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
       </Routes>

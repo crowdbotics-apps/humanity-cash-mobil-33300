@@ -9,6 +9,7 @@ from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 
 # from rest_auth.serializers import PasswordResetSerializer
+from celo_humanity.humanity_contract_helpers import NoWalletException
 from users.models import Consumer, DwollaUser
 
 User = get_user_model()
@@ -77,7 +78,7 @@ class DwollaUserSerializer(serializers.ModelSerializer):
 
             if hasattr(user, 'consumer'):
                 return user.consumer.balance
-        except TimeoutError as error:
+        except (TimeoutError, NoWalletException) as error:
             return '-'
 
 
