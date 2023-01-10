@@ -58,6 +58,8 @@ import SmartContracts from "./pages/smart-contracts";
 import Users from "./pages/users";
 import AdminPortal from "./pages/admin-portal";
 import TransactionStatus from "./pages/transactions-status";
+import ACHTransactions from "./pages/ach-transactions";
+import AdminWalletControl from "./pages/admin-wallet";
 
 
 const routes = [
@@ -93,7 +95,7 @@ const routes = [
     name: "ACH Transaction",
     key: "ach-transactions",
     route: "/ach-transactions/",
-    component: <Services/>,
+    component: <ACHTransactions/>,
     icon: <CarsRemoveIcon/>,
     noCollapse: true,
   },
@@ -147,7 +149,7 @@ const routes = [
     name: "Admin Wallet Control",
     key: "admin-wallet",
     route: "/admin-wallet/",
-    component: <Services/>,
+    component: <AdminWalletControl/>,
     icon: <WalletIcon/>,
     noCollapse: true,
   },

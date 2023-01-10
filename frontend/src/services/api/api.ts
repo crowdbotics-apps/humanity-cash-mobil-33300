@@ -316,9 +316,9 @@ export class Api extends ApiBase {
   async getDashboardInfo(): Promise<Types.SimpleGetResult> {
     return this.simple_get(API_VERSION_PREFIX + "/compliance/dashboard/")
   }
-
-  async getACHTransactions(data: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX + "/ach_transaction/", data)
+  async getACHTransactions(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {
+    const filters = `?page_size=${page_size}&page=${page}&search=${searchData}&ordering=${ordering}`
+    return this.simple_get(  `${API_VERSION_PREFIX}/ach_transaction/${filters}`, extraData)
   }
 
   async getContracts(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {
@@ -332,7 +332,15 @@ export class Api extends ApiBase {
 
   async getAdjustment(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {
     const filters = `?page_size=${page_size}&page=${page}&search=${searchData}&ordering=${ordering}`
-    return this.simple_get(`${API_VERSION_PREFIX} + "/compliance_action/${filters}`, extraData)
+    return this.simple_get(`${API_VERSION_PREFIX}/compliance_action/${filters}`, extraData)
+  }
+
+  async signoffTransaction(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(API_VERSION_PREFIX + `/compliance_action/${data.id}/signoff/`, data)
+  }
+
+  async getWalletBalances(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX + "/compliance_action/balances/")
   }
 
   async reconcileAndBrnTokens(data: any): Promise<Types.SimplePostResult> {

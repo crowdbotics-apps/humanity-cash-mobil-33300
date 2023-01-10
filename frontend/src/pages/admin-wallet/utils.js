@@ -1,4 +1,6 @@
 import {money_fmt, truncate} from "../../services/helpers";
+import pencilIcon from "../../assets/icons/pencil_btn.png";
+import trashIcon from "../../assets/icons/delete_btn.png";
 import MDBox from "../../components/MDBox";
 import moment from "moment";
 import MDButton from "../../components/MDButton";
@@ -6,13 +8,15 @@ import Icon from "@mui/material/Icon";
 
 export const dataTableModel = {
   columns: [
-    {Header: "DATE", accessor: "created_time"},
+    {Header: "HASH", accessor: "transaction_id"},
+    {Header: "FROM", accessor: "from_username"},
+    {Header: "TO", accessor: "to_username"},
+    {Header: "FROM ADDRESS", accessor: "from_address"},
+    {Header: "TO ADDRESS", accessor: "to_address"},
+    {Header: "TYPE", accessor: "type"},
+    {Header: "CREATED AT", accessor: "created"},
     {Header: "AMOUNT", accessor: "amount"},
-    {Header: "TRANSACTION ID", accessor: "transaction_id"},
-    {Header: "FROM", accessor: "action_from"},
-    {Header: "TO", accessor: "action_to"},
-    {Header: "DOCUMENTATION", accessor: "documentation"},
-    {Header: "REQUESTED BY", accessor: "created_by"},
+    {Header: "BLOCKS CONFIRMED", accessor: "confirmations"},
     {Header: "ACTION", accessor: "actions", disableOrdering: true}
   ],
   rows: [],
@@ -23,7 +27,7 @@ const hashBox = (text, to = false) => {
     <MDBox
       sx={{ display: 'block', wordWrap: 'break-word', width: to ? 120 : 100, color: '#3B88B6', position: 'relative', paddingLeft: to ? '20px': 0}}>
       {to && <Icon sx={{ position: 'absolute', color: '#8D955D', transform: 'scale(1.3)', top: 15, left: -10}}>east</Icon>}
-      {truncate(text, 100)}
+      {truncate(text, 22)}
     </MDBox>
   )
 }
@@ -44,15 +48,14 @@ const dateBox = (date) => {
 
 export const renderTableRow = (item, onAction ) => {
   item.transaction_id = (hashBox(item.transaction_id))
-  item.amount = money_fmt(item.amount)
-  item.action_from = (hashBox(item.action_from))
-  item.action_to = (hashBox(item.action_to, true))
+  item.from_username = (hashBox(item.from_username))
+  item.to_username = (hashBox(item.to_username, true))
   item.from_address = (hashBox(item.from_address))
   item.to_address = (hashBox(item.to_address))
-  item.created_time = (dateBox(item.created_time))
+  item.created = (dateBox(item.created))
   item.actions = (
     <MDButton color={"primary"} size={"small"} onClick={() => onAction(item)}>
-      Sign Off
+      Detail
     </MDButton>
   )
   return item
