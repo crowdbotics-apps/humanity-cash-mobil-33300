@@ -44,7 +44,7 @@ const Users = () => {
   }
 
   const setDetailToShow = (item) => {
-    console.log('items')
+    navigate(ROUTES.USERS(item.id))
   }
 
   useEffect(() => {

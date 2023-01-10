@@ -59,14 +59,14 @@ const ReconciliationActionsPage = () => {
         // TODO: remove that when index works
         results = [{
           title: <div style={{ color: "var(--green-dark)", fontWeight: "bold" }}>Today's Date</div>,
-          reserve: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(reserve)}</div>,
-          negative: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(negative)}</div>,
-          positive: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(positive)}</div>,
+          reserve: <div style={{ fontWeight: 500, fontSize: "14px" }}>{reserve}</div>, // reserve: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(reserve)}</div>,
+          negative: <div style={{ fontWeight: 500, fontSize: "14px" }}>{negative}</div>, // negative: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(negative)}</div>,
+          positive: <div style={{ fontWeight: 500, fontSize: "14px" }}>{positive}</div>, // positive: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(positive)}</div>,
         }]
 
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
         setRecordList(tmp)
-        setNumberOfItems(count)
+        setNumberOfItems(1)
         setNumberOfItemsPage(results?.length || 0)
       }
     })
@@ -275,7 +275,7 @@ const ReconciliationActionsPage = () => {
     <DashboardLayout
       loginRequired
     >
-      {recordList?.rows?.length > 0
+      {numberOfItems > 0
         ? (<DataTable
           table={recordList}
           currentPage={currentPage}

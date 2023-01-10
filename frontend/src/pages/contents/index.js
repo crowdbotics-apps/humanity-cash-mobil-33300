@@ -38,6 +38,8 @@ const BlockchainTransactions = () => {
   const CalendarEl = useRef(null);
   const [loading, setLoading] = useState(false)
 
+  const { innerWidth: width, innerHeight: height } = window;
+  const [CalendarHeight, setCalendarHeight] = useState(height * 0.7)
   const [calendarApi, setCalendarApi] = useState(null)
   const [show, setShow] = useState(false);
   const [Title, setTitle] = useState('')
@@ -56,6 +58,7 @@ const BlockchainTransactions = () => {
 
   const initCalendar = () => {
     // @ts-ignore
+    if (!CalendarEl?.current) return
     let api = CalendarEl.current.getApi()
     setCalendarApi(api)
     setTitle(api.currentDataManager.data.viewTitle)
@@ -201,6 +204,26 @@ const BlockchainTransactions = () => {
     return moment(date).format('HH a').toUpperCase()
   }
 
+  const renderEventContent = (eventInfo) => {
+    const eventType =  eventInfo.event._def.extendedProps.eventType
+    const eventHour =  moment(eventInfo.event._def.extendedProps.startDate).format("hh:mm A")
+
+    const isOverlaping =  eventInfo.event._def.extendedProps.isOverlapping
+
+    const Overlapping = (event)=> (<div className={'dot my-event-overlapped my-event-overlapped-'+eventType} />)
+    return (
+      <>
+        {isOverlaping 
+        ?<Overlapping event={eventInfo.event} />
+        : <div className={'my-event my-event-'+eventType} >
+            <h5 className={'my-event-title'}>{eventInfo.event.title.slice(0,12) }</h5>
+            <h5 className={'my-event-subtitle'}>{eventHour}</h5>
+          </div>
+        }
+      </>
+    )
+  }
+
   const renderDayContent = (value, index) => {
     return (
       <div
@@ -336,8 +359,8 @@ const BlockchainTransactions = () => {
               // start: 'prev, title,next' // will normally be on the right. if RTL, will be on the left
             }}
             eventColor={"transparent"}
-            // eventContent={renderEventContent}
-            // height={CalendarHeight}
+            eventContent={renderEventContent}
+            height={CalendarHeight}
             dayHeaderFormat={{
               weekday: 'long'
             }}
@@ -351,7 +374,7 @@ const BlockchainTransactions = () => {
             eventClick={(arg)=>{
               handleDateClick(arg)
             }}
-            // events={CalendarEvents}
+            events={CalendarEvents}
             initialView="dayGridMonth"
           />
         </div>
