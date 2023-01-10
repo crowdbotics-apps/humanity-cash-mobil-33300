@@ -1,0 +1,20 @@
+
+
+.thead {
+    font-size: 13px!important;
+    color: #8a8a8a !important;
+    font-weight: 600!important;
+    font-family: 'Montserrat', serif!important;
+    border-color: #c9c9c9 !important;
+}
+
+
+
+.rowItem {
+    font-size: 11px!important;
+    color: #000000!important;
+    font-weight: 500!important;
+    font-family: 'Montserrat', serif!important;
+    font-style: normal!important;
+    border-color: #c9c9c9 !important;
+}
