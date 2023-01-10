@@ -22,6 +22,7 @@ const Users = () => {
     api.getDwollaUsers(searchData, page, ordering, 8).then((result) => {
       if (result.kind === "ok") {
         const {count, results} = result.data
+        console.log('results ', results)
         const tmp = {...dataTableModel}
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
         setRecordList(tmp)
@@ -44,7 +45,8 @@ const Users = () => {
   }
 
   const setDetailToShow = (item) => {
-    navigate(ROUTES.USER(item.id))
+    console.log('item ', item)
+    navigate(ROUTES.USER(item.id), {state: {type: item.account_type}})
   }
 
   useEffect(() => {

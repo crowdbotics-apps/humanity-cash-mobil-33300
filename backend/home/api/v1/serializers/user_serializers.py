@@ -9,6 +9,8 @@ from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 
 # from rest_auth.serializers import PasswordResetSerializer
+from rest_framework.exceptions import ValidationError
+
 from celo_humanity.humanity_contract_helpers import NoWalletException
 from users.models import Consumer, DwollaUser
 
@@ -81,7 +83,15 @@ class DwollaUserSerializer(serializers.ModelSerializer):
         except (TimeoutError, NoWalletException) as error:
             return '-'
 
+class DwollaUserDetailVerifySerializer(serializers.Serializer):
+    password = serializers.CharField()
+    type = serializers.CharField()
 
+    class Meta:
+        fields = ('password',)
 
-
+    def validate_password(self, value):
+        if not self.context['request'].user.check_password(value):
+            raise ValidationError('User password is incorrect')
+        return value
 

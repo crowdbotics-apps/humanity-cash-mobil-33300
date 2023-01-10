@@ -118,7 +118,7 @@ class ComplianceActionCreateSerializer(serializers.Serializer):
 
 
 class ComplianceActionSignoffSerializer(serializers.Serializer):
-    password = serializers.CharField(min_length=8)
+    password = serializers.CharField()
 
     class Meta:
         fields = ('password',)

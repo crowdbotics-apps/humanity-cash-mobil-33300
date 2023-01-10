@@ -305,7 +305,7 @@ export class Api extends ApiBase {
   }
 
   async getDwollaUser(data: any): Promise<Types.SimplePostResult> {
-    return this.simple_post( `${API_VERSION_PREFIX}/dwolla_user/${data.id}/`, data)
+    return this.simple_post( `${API_VERSION_PREFIX}/dwolla_user/${data.id}/details/`, data)
   }
 
   async getTransactions(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {

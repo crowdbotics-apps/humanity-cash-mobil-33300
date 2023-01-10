@@ -127,7 +127,6 @@ function DataTable({
                         align={cell.column.align ? cell.column.align : "left"}
                         {...cell.getCellProps()}
                       >
-                        {console.log(' ===>>> ', { ...cell.getCellProps() })}
                         {cell.render("Cell")}
                       </DataTableBodyCell>
                     ))}
