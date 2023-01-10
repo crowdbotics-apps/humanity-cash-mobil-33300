@@ -20,11 +20,23 @@ from base import configs
 from celo_humanity.humanity_contract_helpers import get_wallet_balance, get_community_balance, get_humanity_balance
 from celo_humanity.models import Transaction, ACHTransaction, ComplianceActionSignoff, ComplianceAction
 from home.api.v1.serializers.compliance_serializers import ComplianceActionReadSerializer, \
-    ComplianceActionCreateSerializer, ComplianceActionSignoffSerializer, ComplianceRecipientSerializer
+    ComplianceActionCreateSerializer, ComplianceActionSignoffSerializer, ComplianceRecipientSerializer, \
+    DatedBalanceSerializer
 from home.helpers import AuthenticatedAPIView
+from home.models import DatedSystemBalance, get_current_system_balance
 from users.models import Merchant, Consumer
 
 logger = logging.getLogger('compliance')
+
+class ComplianceDashboardView(APIView):
+    # TODO if admin (permission)
+    # permission_classes = [IsAuthenticated & IsNotCashier]
+
+    def get(self, request, *args, **kwargs):
+        today = get_current_system_balance()
+        balances = [today] + DatedSystemBalance.objects.order_by('-created')[:10]
+        serializer = DatedBalanceSerializer(instance=balances, many=True)
+        return Response(serializer.data)
 
 
 class DashboardDataView(APIView): #AuthenticatedAPIView):

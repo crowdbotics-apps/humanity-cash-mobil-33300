@@ -60,6 +60,8 @@ def get_wallet(uid, create=True, profile=None):
 
 
 def get_wallet_balance(uid, param_types='bytes32'):
+    if param_types == 'bytes32':
+        get_wallet(uid, create=False)
     amount = get_humanity_contract().proxy.balanceOfWallet(uid, param_types=param_types)
     # TODO wrap exceptions
     return crypto2usd(amount)
