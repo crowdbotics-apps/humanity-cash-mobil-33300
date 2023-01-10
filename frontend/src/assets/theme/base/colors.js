@@ -64,8 +64,8 @@ const colors = {
   },
 
   success: {
-    main: "#4CAF50",
-    focus: "#67bb6a",
+    main: "#9DA56F",
+    focus: "#a5a980",
   },
 
   warning: {
@@ -89,8 +89,8 @@ const colors = {
   },
 
   dark: {
-    main: "#344767",
-    focus: "#2c3c58",
+    main: "#000000",
+    focus: "#000000",
   },
 
   grey: {
@@ -147,8 +147,8 @@ const colors = {
     },
 
     dark: {
-      main: "#42424a",
-      state: "#191919",
+      main: "#000000",
+      state: "#000000",
     },
   },
 
@@ -216,8 +216,8 @@ const colors = {
 
   badgeColors: {
     primary: {
-      background: "#f8b3ca",
-      text: "#cc084b",
+      background: "#DF9BB8",
+      text: "#ffffff",
     },
 
     secondary: {
@@ -226,18 +226,18 @@ const colors = {
     },
 
     info: {
-      background: "#aecef7",
-      text: "#095bc6",
+      background: "#3B88B6",
+      text: "#ffffff",
     },
 
     success: {
-      background: "#bce2be",
-      text: "#339537",
+      background: "#8D955D",
+      text: "#ffffff",
     },
 
     warning: {
-      background: "#ffd59f",
-      text: "#c87000",
+      background: "#D2A824",
+      text: "#ffffff",
     },
 
     error: {
