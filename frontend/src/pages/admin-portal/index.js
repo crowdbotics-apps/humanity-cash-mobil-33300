@@ -5,6 +5,9 @@ import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
+import MDTypography from "../../components/MDTypography";
+import MDButton from "../../components/MDButton";
+import MDBox from "../../components/MDBox";
 
 
 const AdminPortal = () => {
@@ -58,6 +61,20 @@ const AdminPortal = () => {
       loading={loading}
       searchFunc={getDwollaUsers}
     >
+      <MDBox display={'flex'} flex={1} alignItems={'center'} mt={5}>
+        <MDTypography  color={'primary'} sx={{fontWeight: 400}} fontSize={24} >
+          Admin Portal Access Management
+        </MDTypography>
+        <MDBox ml={'auto'}>
+          <MDButton
+            color={"primary"}
+            variant={"contained"}
+            sx={{width: 200}}
+          >
+            Add User
+          </MDButton>
+        </MDBox>
+      </MDBox>
       {recordList?.rows.length > 0
         ? (<DataTable
           table={recordList}
