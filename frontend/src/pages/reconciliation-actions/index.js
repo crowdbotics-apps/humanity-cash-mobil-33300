@@ -21,7 +21,6 @@ const ReconciliationActions = {
 const initialData = {
   columns: [
     { Header: "", accessor: "title", disableOrdering: true },
-    { Header: `HUMANITY WALLET`, accessor: "humanity", disableOrdering: true },
     { Header: `RESERVE WALLET`, accessor: "reserve", disableOrdering: true },
     {
       Header: "NEGATIVE ADJUSTMENT ACCOUNT", accessor: "negative", disableOrdering: true,
@@ -87,7 +86,7 @@ const ReconciliationActionsPage = () => {
 
         results = [{
           title: <div style={{ color: "var(--green-dark)", fontWeight: "bold",  height: 50, alignItems: 'center', display: 'flex'}}>Today's Date</div>,
-          humanity: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(humanity)}</div>,
+          // humanity: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(humanity)}</div>,
           reserve: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(reserve)}</div>,
           negative: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(negative)}</div>,
           positive: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(positive)}</div>,
@@ -258,7 +257,6 @@ const ReconciliationActionsPage = () => {
   const dataTableModel = {
     columns: [
       { Header: "", accessor: "title", disableOrdering: true },
-      { Header: `HUMANITY WALLET`, accessor: "humanity", disableOrdering: true },
       { Header: `RESERVE WALLET`, accessor: "reserve", disableOrdering: true },
       {
         Header: "NEGATIVE ADJUSTMENT ACCOUNT", accessor: "negative", disableOrdering: true,
