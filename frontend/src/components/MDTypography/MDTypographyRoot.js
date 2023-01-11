@@ -59,6 +59,7 @@ export default styled(Typography)(({ theme, ownerState }) => {
     textTransform,
     verticalAlign,
     textDecoration: "none",
+    overflowWrap: 'break-word',
     color: colorValue,
     fontWeight: fontWeights[fontWeight] && fontWeights[fontWeight],
     ...(textGradient && gradientStyles()),
