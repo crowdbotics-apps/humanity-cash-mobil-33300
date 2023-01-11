@@ -11,7 +11,7 @@ import Pagination from "../../components/Pagination/Pagination";
 import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 import ModalItem from "../../components/ModalItem";
 import { renderTableRow } from "./utils";
-import DataTable from "../../components/DataTable";
+import DataTableDropdown from "../../components/DataTableDropdown";
 import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../services/constants";
@@ -61,18 +61,10 @@ const Services = () => {
         tokens_minted: d.tokens_minted,
         outstanding: parseFloat(d.tokens_burned) - parseFloat(d.tokens_minted),
         date: d.date,
-        date_title: <MDBox onClick={() => {
-          setDetailVisible(!DetailVisible)
-          console.log(' aca', DetailVisible)
-        }}
-          style={{ color: "var(--green-dark)", fontWeight: "bold", height: 50, alignItems: 'center', display: 'flex' }}>
+        date_title: <MDBox style={{ color: "var(--green-dark)", fontWeight: "bold", height: 50, alignItems: 'center', display: 'flex' }}>
           {moment(d.date).format('MMMM DD, YYYY')}</MDBox>,
         comments: d.comments,
-        // children: {
-        //   children_columns: ['A', 'B'],
-        //   children_rows: [{a: 'asd', b: 'asd'}, {a: 'asd', b: 'asd'}, {a: 'asd', b: 'asd'}]
-        // }
-        children: <MDBox style={{ height: DetailVisible ? 100 : 1, background: 'red'}} />
+        children: <MDBox style={{ height: 100, background: 'red'}} />
       }
       // banks net diference
       let banksTotal = 0
@@ -90,6 +82,8 @@ const Services = () => {
       row['positive_result'] = row.diference > 0 ? 'Yes' : 'No'
 
       //
+      data.push(row)
+      data.push(row)
       data.push(row)
     })
 
@@ -111,7 +105,7 @@ const Services = () => {
 
         const data = getFormatedData(result.data)
 
-        setRecordList(data)
+        setRecordList({...data})
       }
     })
       .catch(err => showMessage())
@@ -130,7 +124,7 @@ const Services = () => {
       searchFunc={getTransactions}
     >
       {recordList?.rows.length > 0
-        ? (<DataTable
+        ? (<DataTableDropdown
           table={recordList}
           currentPage={currentPage}
           numberOfItems={numberOfItems}
