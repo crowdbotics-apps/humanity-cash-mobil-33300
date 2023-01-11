@@ -49,6 +49,10 @@ const Services = () => {
     return date
   }
 
+  const getChildrenDetail = (data) => {
+
+  }
+
   const getFormatedData = (initialData) => {
     // init columns
     let columns = [{Header: "", accessor: "date_title", disableOrdering: true}]
@@ -64,22 +68,46 @@ const Services = () => {
         date_title: <MDBox style={{ color: "var(--green-dark)", fontWeight: "bold", height: 50, alignItems: 'center', display: 'flex' }}>
           {moment(d.date).format('MMMM DD, YYYY')}</MDBox>,
         comments: d.comments,
-        children: <MDBox style={{ height: 100, background: 'red'}} />
       }
       // banks net diference
       let banksTotal = 0
-      d.banks.map(b => {
+
+      console.log(' row -> ', d)
+      let col_children = [
+        {date_title: 'Total Deposits settled to date' },
+        { date_title: 'Total Withdrawals settled to date' },
+        { date_title: 'Net Deposits settled' }
+      ]
+      let totalBanksCredit = 0
+      let totalBanksDebit = 0
+
+      d.banks.map((b) => {
         // add bank name to columns
         columns.push({ Header: b.name, accessor: `bank_${b.id}`, disableOrdering: true })
         // bank net difference
         row[`bank_${b.id}`] = parseFloat(d.details[b.id].credits_settled) - parseFloat(d.details[b.id].debits_settled)
+
+        // set amount detail by bank
+        col_children[0][`bank_${b.id}`] = parseFloat(d.details[b.id].credits_settled)
+        col_children[1][`bank_${b.id}`] = parseFloat(d.details[b.id].debits_settled)
+        col_children[2][`bank_${b.id}`] = row[`bank_${b.id}`]
         // banks net difference
+        totalBanksCredit += parseFloat(d.details[b.id].credits_settled)
+        totalBanksDebit += parseFloat(d.details[b.id].debits_settled)
         banksTotal += row[`bank_${b.id}`]
       })
       // finish row
       row['total'] = banksTotal
       row['diference'] = banksTotal - row.outstanding
       row['positive_result'] = row.diference > 0 ? 'Yes' : 'No'
+
+      console.log(' row -> ', col_children)
+
+      col_children[0]['total'] = totalBanksCredit
+      col_children[1]['total'] = totalBanksDebit
+      col_children[2]['total'] = banksTotal
+
+      row['children'] = col_children
 
       //
       data.push(row)

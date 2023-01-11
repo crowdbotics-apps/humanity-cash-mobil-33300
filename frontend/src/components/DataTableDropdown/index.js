@@ -13,16 +13,16 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */
 
-import {useEffect, useMemo, useState} from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
 // react-table components
-import {useAsyncDebounce, useGlobalFilter, usePagination, useSortBy, useTable} from "react-table";
+import { useAsyncDebounce, useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
 
 // @mui material components
-import {Grid, Table, TableBody, TableContainer, TablePagination, TableRow, TableCell} from "@mui/material";
+import { Grid, Table, TableBody, TableContainer, TablePagination, TableRow, TableCell } from "@mui/material";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
@@ -35,27 +35,27 @@ import Pagination from "../Pagination/Pagination";
 import { display } from "@mui/system";
 
 const DataTableDropdown = ({
-                     entriesPerPage,
-                     table,
-                     noEndBorder,
-                     onColumnOrdering = null,
-                     showHeader = true,
-                     showRecords = true,
-                     currentPage,
-                     numberOfItems,
-                     numberOfItemsPage,
-                     pageSize,
-                     onPageChange,
-                     showTotalEntries = true
-                   }) => {
+  entriesPerPage,
+  table,
+  noEndBorder,
+  onColumnOrdering = null,
+  showHeader = true,
+  showRecords = true,
+  currentPage,
+  numberOfItems,
+  numberOfItemsPage,
+  pageSize,
+  onPageChange,
+  showTotalEntries = true
+}) => {
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
-  const [sortedByColumn, setSortedByColumn] = useState({column: '', order: 'none'})
+  const [sortedByColumn, setSortedByColumn] = useState({ column: '', order: 'none' })
 
   const [ShowDetailChildren, setShowDetailChildren] = useState(null)
 
   const tableInstance = useTable(
-    {columns, data, initialState: {pageIndex: 0, pageSize: entriesPerPage.sort((a, b) => a - b).slice(-1)}},
+    { columns, data, initialState: { pageIndex: 0, pageSize: entriesPerPage.sort((a, b) => a - b).slice(-1) } },
     useGlobalFilter,
     useSortBy,
     usePagination
@@ -76,16 +76,16 @@ const DataTableDropdown = ({
     }
     const columnName = column.id
     if (sortedByColumn.column !== columnName) {
-      setSortedByColumn({column: columnName, order: 'asce'})
+      setSortedByColumn({ column: columnName, order: 'asce' })
     } else if (sortedByColumn.order === 'asce') {
-      setSortedByColumn({column: columnName, order: 'desc'})
+      setSortedByColumn({ column: columnName, order: 'desc' })
     } else {
-      setSortedByColumn({column: '', order: 'none'})
+      setSortedByColumn({ column: '', order: 'none' })
     }
   }
 
   useEffect(() => {
-    if (onColumnOrdering){
+    if (onColumnOrdering) {
       onColumnOrdering(sortedByColumn)
     }
   }, [sortedByColumn])
@@ -98,7 +98,7 @@ const DataTableDropdown = ({
 
   return (
     <>
-      <TableContainer sx={{boxShadow: "none", background: "transparent"}}>
+      <TableContainer sx={{ boxShadow: "none", background: "transparent" }}>
         <Table {...getTableProps()}>
           {showHeader && (<MDBox key={`tablehead__1`} component="thead">
             {headerGroups.map((headerGroup, idx) => (
@@ -110,10 +110,10 @@ const DataTableDropdown = ({
                       onClick={() => getDataSortedByColumn(column)}
                       width={column.width ? column.width : "auto"}
                       align={column.align ? column.align : "left"}
-                      style={{ alignItems: column.align ? column.align : "center"}}
+                      style={{ alignItems: column.align ? column.align : "center" }}
                       display={'flex'}
                       justifyContent={'space-between'}
-                      sorted={onColumnOrdering !== null ?  column?.disableOrdering ? false : 'none' : false}
+                      sorted={onColumnOrdering !== null ? column?.disableOrdering ? false : 'none' : false}
                     >
                       {column.render("Header")}
                       {column?.component}
@@ -128,7 +128,7 @@ const DataTableDropdown = ({
               prepareRow(row);
               return (
                 <>
-                  <TableRow key={`tablerow2__${key}`} {...row.getRowProps()} onClick={() => toggleDetailVisibility(key)} style={{ cursor: 'pointer'}}>
+                  <TableRow key={`tablerow2__${key}`} {...row.getRowProps()} onClick={() => toggleDetailVisibility(key)} style={{ cursor: 'pointer' }}>
                     {row.cells.map((cell, idx2) => (
                       <DataTableBodyCell
                         key={`tablecell__${idx2}`}
@@ -141,14 +141,21 @@ const DataTableDropdown = ({
                     ))}
                   </TableRow>
 
-                  {(row?.original?.children && ShowDetailChildren == key) &&
-                    // <TableRow key={`tablerow2__children__${key}`} style={{display: ShowDetailChildren[key] ? 'block' : 'none'}}>
-                    <TableRow key={`tablerow2__children__${key}`}>
-                      <TableCell colSpan={row.cells.length} style={{ "text-align": "center" }}>
-
-                        {row?.original?.children}
-                      </TableCell>
-                    </TableRow>
+                  {(row?.original?.children && ShowDetailChildren === key) &&
+                    row?.original?.children.map((t, key2) =>
+                      <TableRow key={`tablerow2__${key}__${key2}`} {...row.getRowProps()}>
+                        {columns.map((c, key3) =>
+                          <DataTableBodyCell
+                            key={`tablecell__${key2}__${key3}`}
+                            noBorder={noEndBorder && rows.length - 1 === key}
+                          //  align={cell.column.align ? cell.column.align : "left"}
+                          //  {...cell.getCellProps()}
+                          >
+                            {t[c.accessor]}
+                          </DataTableBodyCell>
+                        )}
+                      </TableRow>
+                    )
                   }
                 </>
               );
@@ -178,7 +185,7 @@ DataTableDropdown.defaultProps = {
   entriesPerPage: [10, 25, 50, 100],
   canSearch: false,
   showTotalEntries: true,
-  pagination: {variant: "gradient", color: "info"},
+  pagination: { variant: "gradient", color: "info" },
   isSorted: true,
   noEndBorder: false,
 };
