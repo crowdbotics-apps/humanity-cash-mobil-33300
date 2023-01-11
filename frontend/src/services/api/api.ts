@@ -275,10 +275,6 @@ export class Api extends ApiBase {
     return this.simple_get(API_VERSION_PREFIX + `/user/${id}/`, {})
   }
 
-  async getDwollaUser(id: any): Promise<Types.SimpleGetResult> {
-    return this.simple_get(API_VERSION_PREFIX + `/dwolla_user/${id}/`, {})
-  }
-
   async createUser(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post(API_VERSION_PREFIX + "/user/", data)
   }
@@ -305,7 +301,11 @@ export class Api extends ApiBase {
 
   async getDwollaUsers(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {
     const filters = `?page_size=${page_size}&page=${page}&search=${searchData}&ordering=${ordering}`
-    return this.simple_get(API_VERSION_PREFIX + `/dwolla_user/${filters}`, extraData)
+    return this.simple_get(`${API_VERSION_PREFIX}/dwolla_user/${filters}`, extraData)
+  }
+
+  async getDwollaUser(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post( `${API_VERSION_PREFIX}/dwolla_user/${data.id}/details/`, data)
   }
 
   async getTransactions(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {
@@ -355,4 +355,7 @@ export class Api extends ApiBase {
     return this.simple_post(API_VERSION_PREFIX + "/compliance_action/", data)
   }
 
+  async getComplianceBalances(): Promise<Types.SimpleGetResult> {
+    return this.simple_get(API_VERSION_PREFIX + "/compliance/balances/")
+  }
 }

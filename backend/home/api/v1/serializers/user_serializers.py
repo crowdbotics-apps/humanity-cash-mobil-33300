@@ -9,6 +9,11 @@ from allauth.account.utils import setup_user_email
 from rest_framework import serializers
 
 # from rest_auth.serializers import PasswordResetSerializer
+from rest_framework.exceptions import ValidationError
+
+from celo_humanity.humanity_contract_helpers import NoWalletException
+from home.api.v1.serializers.ach_transaction_serializers import ACHTransactionSerializer
+from home.api.v1.serializers.transaction_serializers import TransactionSerializer
 from users.models import Consumer, DwollaUser
 
 User = get_user_model()
@@ -77,10 +82,59 @@ class DwollaUserSerializer(serializers.ModelSerializer):
 
             if hasattr(user, 'consumer'):
                 return user.consumer.balance
-        except TimeoutError as error:
+        except (TimeoutError, NoWalletException) as error:
             return '-'
 
 
+class DwollaUserDetailVerifySerializer(serializers.Serializer):
+    password = serializers.CharField()
+    type = serializers.CharField()
+
+    class Meta:
+        fields = ('password',)
+
+    def validate_password(self, value):
+        if not self.context['request'].user.check_password(value):
+            raise ValidationError('User password is incorrect')
+        return value
 
 
 
+class DwollaUserDetailSerializer(serializers.ModelSerializer):
+    balance = serializers.SerializerMethodField()
+    blockchain_transactions = serializers.SerializerMethodField()
+    ach_transactions = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DwollaUser
+        fields = ['id', 'balance', 'name', 'address', 'email', 'dwolla_id', 'blockchain_transactions','ach_transactions',
+                  'crypto_wallet_id', 'last_login', 'date_joined', 'account_type']
+
+    def get_balance(self, obj):
+        try:
+            user = User.objects.get(pk=obj.pk)
+            if hasattr(user, 'merchant'):
+                return user.merchant.balance
+
+            if hasattr(user, 'consumer'):
+                return user.consumer.balance
+        except (TimeoutError, NoWalletException) as error:
+            return '-'
+
+    def get_blockchain_transactions(self, obj):
+        user = User.objects.get(pk=obj.pk)
+        transactions = []
+        if hasattr(user, 'merchant'):
+            transactions = user.merchant.transactions.all()
+        if hasattr(user, 'consumer'):
+            transactions = user.consumer.transactions.all()
+        return TransactionSerializer(instance=transactions, many=True, context={'request': self.context['request']}).data
+
+    def get_ach_transactions(self, obj):
+        user = User.objects.get(pk=obj.pk)
+        transactions = []
+        if hasattr(user, 'merchant'):
+            transactions = user.merchant.ach_transactions.all()
+        if hasattr(user, 'consumer'):
+            transactions = user.consumer.ach_transactions.all()
+        return ACHTransactionSerializer(instance=transactions, many=True, context={'request': self.context['request']}).data

@@ -118,7 +118,7 @@ class ComplianceActionCreateSerializer(serializers.Serializer):
 
 
 class ComplianceActionSignoffSerializer(serializers.Serializer):
-    password = serializers.CharField(min_length=8)
+    password = serializers.CharField()
 
     class Meta:
         fields = ('password',)
@@ -156,7 +156,7 @@ class BankAccountSerializer(serializers.ModelSerializer):
 
 
 class DatedBalanceSerializer(serializers.ModelSerializer):
-    date = serializers.DateField(source='created')
+    date = serializers.DateTimeField(source='created')
     banks = serializers.SerializerMethodField()
     details = serializers.SerializerMethodField()
 
