@@ -93,6 +93,11 @@ const colors = {
     focus: "#000000",
   },
 
+  gray: {
+    main: "rgba(0,0,0,0.5)",
+    focus: "rgba(0,0,0,0.5)",
+  },
+
   grey: {
     100: "#f8f9fa",
     200: "#f0f2f5",
