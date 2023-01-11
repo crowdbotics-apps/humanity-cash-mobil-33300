@@ -34,7 +34,7 @@ class ComplianceDashboardView(APIView):
 
     def get(self, request, *args, **kwargs):
         today = get_current_system_balance()
-        balances = [today] + DatedSystemBalance.objects.order_by('-created')[:10]
+        balances = [today] + list(DatedSystemBalance.objects.order_by('-created')[:10])
         serializer = DatedBalanceSerializer(instance=balances, many=True)
         return Response(serializer.data)
 

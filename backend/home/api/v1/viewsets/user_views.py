@@ -2,14 +2,13 @@ import django_filters
 from django.contrib.auth import get_user_model
 from rest_framework import serializers, viewsets, status, permissions, mixins
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers.signup_signin_serializers import UserDetailSerializer
-from home.api.v1.serializers.user_serializers import ConsumerSerializer
-from home.helpers import AuthenticatedAPIView
+from home.api.v1.serializers.user_serializers import ConsumerSerializer, DwollaUserDetailVerifySerializer
 from home.api.v1.serializers.user_serializers import ConsumerSerializer, DwollaUserSerializer
 from users.constants import UserGroup, UserRole
 from rest_framework import filters
@@ -69,9 +68,7 @@ class GetBalancesView(APIView):
         ), status=status.HTTP_200_OK)
 
 
-class DwollaUserView(mixins.ListModelMixin,
-                      mixins.RetrieveModelMixin,
-                      viewsets.GenericViewSet):
+class DwollaUserView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = DwollaUser.objects.all()
     serializer_class = DwollaUserSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -79,4 +76,15 @@ class DwollaUserView(mixins.ListModelMixin,
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'account_type', 'address', 'dwolla_id', 'email']
 
+    def get_serializer_class(self):
+        if self.action in ['list']:
+            return DwollaUserSerializer
+        if self.action == 'details':
+            return DwollaUserDetailVerifySerializer
 
+    @action(detail=True, methods=['post'])
+    def details(self, request, pk=None, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = self.queryset.filter(id=pk, account_type=serializer.validated_data['type']).first()
+        return Response(status=status.HTTP_200_OK)
