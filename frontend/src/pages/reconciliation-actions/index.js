@@ -43,11 +43,7 @@ const initialData = {
     },
   ],
   rows: [{
-    title: <div style={{ color: "var(--green-dark)", fontWeight: "bold",  height: 50, alignItems: 'center', display: 'flex'}}>Today's Date</div>,
-    humanity: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(0)}</div>,
-    reserve: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(0)}</div>,
-    negative: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(0)}</div>,
-    positive: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(0)}</div>,
+    title: <div style={{ color: "var(--green-dark)", fontWeight: "bold",  height: 50, alignItems: 'center', display: 'flex'}}>Today's Date</div>
   }],
 };
 
