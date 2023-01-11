@@ -18,6 +18,39 @@ const ReconciliationActions = {
   RevertMint: "RevertMint"
 }
 
+const initialData = {
+  columns: [
+    { Header: "", accessor: "title", disableOrdering: true },
+    { Header: `HUMANITY WALLET`, accessor: "humanity", disableOrdering: true },
+    { Header: `RESERVE WALLET`, accessor: "reserve", disableOrdering: true },
+    {
+      Header: "NEGATIVE ADJUSTMENT ACCOUNT", accessor: "negative", disableOrdering: true,
+      component: <MDButtonPopover
+        color="primary"
+        size={'small'}
+        style={{ minWidth: 0 }}
+        actionList={[]}
+      >+</MDButtonPopover>
+    },
+    {
+      Header: "POSITIVE ADJUSTMENT", accessor: "positive", disableOrdering: true,
+      component: <MDButtonPopover
+        color="primary"
+        size={'small'}
+        style={{ minWidth: 0 }}
+        actionList={[]}
+      >+</MDButtonPopover>
+    },
+  ],
+  rows: [{
+    title: <div style={{ color: "var(--green-dark)", fontWeight: "bold",  height: 50, alignItems: 'center', display: 'flex'}}>Today's Date</div>,
+    humanity: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(0)}</div>,
+    reserve: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(0)}</div>,
+    negative: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(0)}</div>,
+    positive: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(0)}</div>,
+  }],
+};
+
 const ReconciliationActionsPage = () => {
   const api = useApi()
   const navigate = useNavigate()
@@ -25,7 +58,7 @@ const ReconciliationActionsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
   const [numberOfItemsPage, setNumberOfItemsPage] = useState(0);
-  const [recordList, setRecordList] = useState({})
+  const [recordList, setRecordList] = useState(initialData)
   const searchQueryRef = useRef("");
 
   const [CurrentAction, setCurrentAction] = useState({})
@@ -276,20 +309,10 @@ const ReconciliationActionsPage = () => {
     <DashboardLayout
       loginRequired
     >
-      {numberOfItems > 0
-        ? (<DataTable
+<DataTable
           table={recordList}
-          currentPage={currentPage}
-          numberOfItems={numberOfItems}
-          numberOfItemsPage={numberOfItemsPage}
           showTotalEntries={false}
-          onPageChange={page => {
-            setCurrentPage(page)
-          }}
-        />)
-        : <p style={{ display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20 }}>No
-          blockchain transactions found</p>
-      }
+        />
       {/* PASS MODAL */}
       <ConfirmDialogInputModal
         title={'Supervisor Credentials'}
