@@ -69,6 +69,7 @@ MDButton.propTypes = {
     "pink",
     "light",
     "dark",
+    "gray",
   ]),
   circular: PropTypes.bool,
   iconOnly: PropTypes.bool,
