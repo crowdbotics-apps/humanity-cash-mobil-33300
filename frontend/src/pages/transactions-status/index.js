@@ -132,9 +132,30 @@ const TransactionStatus = () => {
       loading={loading}
       searchFunc={getTransactions}
     >
-      <MDButton color={transactionStatus === "Pending" ? "primary" : "secondary"} variant={"text"} onClick={() => setTransactionStatus('Pending')}>PENDING</MDButton>
-      <MDButton color={transactionStatus === "Approved" ? "primary" : "secondary"}  variant={"text"} onClick={() => setTransactionStatus('Approved')}>APPROVED</MDButton>
-      <MDButton color={transactionStatus === "Executed" ? "primary" : "secondary"}  variant={"text"} onClick={() => setTransactionStatus('Executed')}>EXECUTED</MDButton>
+      <MDButton
+        color={transactionStatus === "Pending" ? "primary" : "gray"}
+        variant={"text"}
+        onClick={() => setTransactionStatus('Pending')}
+        sx={{borderBottom: transactionStatus === "Pending" ? '2px solid #3B88B6' : '2px solid #ffffff', borderRadius: 0, minWidth: 300, fontWeight: 600, marginTop: 3}}
+      >
+        PENDING
+      </MDButton>
+      <MDButton
+        color={transactionStatus === "Approved" ? "primary" : "gray"}
+        variant={"text"}
+        onClick={() => setTransactionStatus('Approved')}
+        sx={{borderBottom: transactionStatus === "Approved" ? '2px solid #3B88B6' : '2px solid #ffffff', borderRadius: 0, minWidth: 300, fontWeight: 600, marginTop: 3}}
+      >
+        APPROVED
+      </MDButton>
+      <MDButton
+        color={transactionStatus === "Executed" ? "primary" : "gray"}
+        variant={"text"}
+        onClick={() => setTransactionStatus('Executed')}
+        sx={{borderBottom: transactionStatus === "Executed" ? '2px solid #3B88B6' : '2px solid #ffffff', borderRadius: 0, minWidth: 300, fontWeight: 600, marginTop: 3}}
+      >
+        EXECUTED
+      </MDButton>
       <MDBox sx={{
         width: '100%',
         transition: '0.3s',

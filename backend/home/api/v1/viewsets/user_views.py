@@ -8,12 +8,13 @@ from rest_framework.views import APIView
 
 from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers.signup_signin_serializers import UserDetailSerializer
-from home.api.v1.serializers.user_serializers import ConsumerSerializer, DwollaUserDetailVerifySerializer
+from home.api.v1.serializers.user_serializers import ConsumerSerializer, DwollaUserDetailVerifySerializer, \
+    DwollaUserDetailSerializer
 from home.api.v1.serializers.user_serializers import ConsumerSerializer, DwollaUserSerializer
 from users.constants import UserGroup, UserRole
 from rest_framework import filters
 
-from users.models import Consumer, Merchant
+from users.models import Merchant
 from users.models import Consumer, DwollaUser
 
 User = get_user_model()
@@ -86,5 +87,7 @@ class DwollaUserView(mixins.ListModelMixin, viewsets.GenericViewSet):
     def details(self, request, pk=None, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = self.queryset.filter(id=pk, account_type=serializer.validated_data['type']).first()
-        return Response(status=status.HTTP_200_OK)
+        account_type = serializer.validated_data['type']
+        user = self.queryset.filter(id=pk, account_type=account_type).first()
+        data = DwollaUserDetailSerializer(user, context={'request': request}).data
+        return Response(data, status=status.HTTP_200_OK)
