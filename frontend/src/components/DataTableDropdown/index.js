@@ -123,15 +123,16 @@ const DataTableDropdown = ({
               </TableRow>
             ))}
           </MDBox>)}
+
           {showRecords && <TableBody key={`tablebody__2`} {...getTableBodyProps()}>
             {page.map((row, key) => {
               prepareRow(row);
               return (
-                <>
+                [
                   <TableRow key={`tablerow2__${key}`} {...row.getRowProps()} onClick={() => toggleDetailVisibility(key)} style={{ cursor: 'pointer' }}>
                     {row.cells.map((cell, idx2) => (
                       <DataTableBodyCell
-                        key={`tablecell__${idx2}`}
+                        key={`tablecell__${idx2}_body`}
                         noBorder={noEndBorder && rows.length - 1 === key}
                         align={cell.column.align ? cell.column.align : "left"}
                         {...cell.getCellProps()}
@@ -139,11 +140,11 @@ const DataTableDropdown = ({
                         {cell.render("Cell")}
                       </DataTableBodyCell>
                     ))}
-                  </TableRow>
+                  </TableRow>,
 
-                  {(row?.original?.children && ShowDetailChildren === key) &&
+                  (row?.original?.children && ShowDetailChildren === key) &&
                     row?.original?.children.map((t, key2) =>
-                      <TableRow key={`tablerow2__${key}__${key2}`} {...row.getRowProps()}>
+                      <TableRow {...row.getRowProps()} key={`tablerow_detail__${key}__${key2}`} >
                         {columns.map((c, key3) =>
                           <DataTableBodyCell
                             key={`tablecell__${key2}__${key3}`}
@@ -156,8 +157,8 @@ const DataTableDropdown = ({
                         )}
                       </TableRow>
                     )
-                  }
-                </>
+                  
+                ]
               );
             })}
           </TableBody>}

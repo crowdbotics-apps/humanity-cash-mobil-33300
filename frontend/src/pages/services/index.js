@@ -36,22 +36,9 @@ const Services = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
-  const [numberOfItems, setNumberOfItems] = useState(0);
-  const [numberOfItemsPage, setNumberOfItemsPage] = useState(0);
   const [recordList, setRecordList] = useState({ ...dataTableModel })
   const searchQueryRef = useRef("");
 
-  const [DetailVisible, setDetailVisible] = useState(false);
-
-  const formatDate = (date_) => {
-    let date
-
-    return date
-  }
-
-  const getChildrenDetail = (data) => {
-
-  }
 
   const getFormatedData = (initialData) => {
     // init columns
@@ -72,7 +59,6 @@ const Services = () => {
       // banks net diference
       let banksTotal = 0
 
-      console.log(' row -> ', d)
       let col_children = [
         { date_title: <MDBox style={{ color: "var(--green)", marginLeft: 20, height: 40, alignItems: 'center', display: 'flex' }}>
           Total Deposits settled to date</MDBox> },
@@ -94,6 +80,7 @@ const Services = () => {
         col_children[0][`bank_${b.id}`] = parseFloat(d.details[b.id].credits_settled)
         col_children[1][`bank_${b.id}`] = parseFloat(d.details[b.id].debits_settled)
         col_children[2][`bank_${b.id}`] = row[`bank_${b.id}`]
+
         // banks net difference
         totalBanksCredit += parseFloat(d.details[b.id].credits_settled)
         totalBanksDebit += parseFloat(d.details[b.id].debits_settled)
@@ -104,8 +91,7 @@ const Services = () => {
       row['diference'] = banksTotal - row.outstanding
       row['positive_result'] = row.diference > 0 ? 'Yes' : 'No'
 
-      console.log(' row -> ', col_children)
-
+      // col children totals
       col_children[0]['total'] = totalBanksCredit
       col_children[1]['total'] = totalBanksDebit
       col_children[2]['total'] = banksTotal
@@ -158,8 +144,6 @@ const Services = () => {
         ? (<DataTableDropdown
           table={recordList}
           currentPage={currentPage}
-          numberOfItems={numberOfItems}
-          numberOfItemsPage={numberOfItemsPage}
           pageSize={8}
           showTotalEntries={false}
           onPageChange={page => {
