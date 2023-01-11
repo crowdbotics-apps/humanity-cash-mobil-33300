@@ -1,29 +1,40 @@
-
 /**
  =========================================================
  * Material Dashboard 2 PRO React - v2.1.0
  =========================================================
+
  * Product Page: https://www.creative-tim.com/product/material-dashboard-pro-react
  * Copyright 2022 Creative Tim (https://www.creative-tim.com)
+
  Coded by www.creative-tim.com
+
  =========================================================
+
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */
+
 import { useEffect, useMemo, useState } from "react";
+
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
+
 // react-table components
 import { useAsyncDebounce, useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
+
 // @mui material components
-import { Grid, Table, TableBody, TableContainer, TablePagination, TableRow } from "@mui/material";
+import { Grid, Table, TableBody, TableContainer, TablePagination, TableRow, TableCell } from "@mui/material";
+
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
 import MDInput from "components/MDInput";
+
 // Material Dashboard 2 PRO React examples
 import DataTableHeadCell from "./DataTableHeadCell";
 import DataTableBodyCell from "./DataTableBodyCell";
 import Pagination from "../Pagination/Pagination";
-function DataTable({
+import { display } from "@mui/system";
+
+const DataTableDropdown = ({
   entriesPerPage,
   table,
   noEndBorder,
@@ -34,17 +45,22 @@ function DataTable({
   numberOfItems,
   numberOfItemsPage,
   pageSize,
-  onPageChange
-}) {
+  onPageChange,
+  showTotalEntries = true
+}) => {
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
   const [sortedByColumn, setSortedByColumn] = useState({ column: '', order: 'none' })
+
+  const [ShowDetailChildren, setShowDetailChildren] = useState(null)
+
   const tableInstance = useTable(
     { columns, data, initialState: { pageIndex: 0, pageSize: entriesPerPage.sort((a, b) => a - b).slice(-1) } },
     useGlobalFilter,
     useSortBy,
     usePagination
   );
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -53,6 +69,7 @@ function DataTable({
     rows,
     page,
   } = tableInstance;
+
   const getDataSortedByColumn = (column) => {
     if (column.disableOrdering) {
       return
@@ -66,11 +83,19 @@ function DataTable({
       setSortedByColumn({ column: '', order: 'none' })
     }
   }
+
   useEffect(() => {
     if (onColumnOrdering) {
       onColumnOrdering(sortedByColumn)
     }
   }, [sortedByColumn])
+
+  const toggleDetailVisibility = (key) => {
+    ShowDetailChildren == key
+      ? setShowDetailChildren(null)
+      : setShowDetailChildren(key)
+  }
+
   return (
     <>
       <TableContainer sx={{ boxShadow: "none", background: "transparent" }}>
@@ -102,24 +127,43 @@ function DataTable({
             {page.map((row, key) => {
               prepareRow(row);
               return (
-                <TableRow key={`tablerow2__${key}`} {...row.getRowProps()}>
-                  {row.cells.map((cell, idx2) => (
-                    <DataTableBodyCell
-                      key={`tablecell__${idx2}`}
-                      noBorder={noEndBorder && rows.length - 1 === key}
-                      align={cell.column.align ? cell.column.align : "left"}
-                      {...cell.getCellProps()}
-                    >
-                      {cell.render("Cell")}
-                    </DataTableBodyCell>
-                  ))}
-                </TableRow>
+                <>
+                  <TableRow key={`tablerow2__${key}`} {...row.getRowProps()} onClick={() => toggleDetailVisibility(key)} style={{ cursor: 'pointer' }}>
+                    {row.cells.map((cell, idx2) => (
+                      <DataTableBodyCell
+                        key={`tablecell__${idx2}`}
+                        noBorder={noEndBorder && rows.length - 1 === key}
+                        align={cell.column.align ? cell.column.align : "left"}
+                        {...cell.getCellProps()}
+                      >
+                        {cell.render("Cell")}
+                      </DataTableBodyCell>
+                    ))}
+                  </TableRow>
+
+                  {(row?.original?.children && ShowDetailChildren === key) &&
+                    row?.original?.children.map((t, key2) =>
+                      <TableRow key={`tablerow2__${key}__${key2}`} {...row.getRowProps()}>
+                        {columns.map((c, key3) =>
+                          <DataTableBodyCell
+                            key={`tablecell__${key2}__${key3}`}
+                            noBorder={noEndBorder && rows.length - 1 === key}
+                          //  align={cell.column.align ? cell.column.align : "left"}
+                          //  {...cell.getCellProps()}
+                          >
+                            {t[c.accessor]}
+                          </DataTableBodyCell>
+                        )}
+                      </TableRow>
+                    )
+                  }
+                </>
               );
             })}
           </TableBody>}
         </Table>
       </TableContainer>
-      {rows.length > 0 && <Grid container mt={5}>
+      {(rows.length > 0 && showTotalEntries) && <Grid container mt={5}>
         <Grid item>
           <MDBox sx={{ color: '#666666', fontSize: 17, width: 300 }}>Showing <span style={{ color: '#000000' }}>{numberOfItemsPage}</span> from <span style={{ color: '#000000' }}>{numberOfItems}</span> data</MDBox>
         </Grid>
@@ -135,8 +179,9 @@ function DataTable({
     </>
   );
 }
-// Setting default values for the props of DataTable
-DataTable.defaultProps = {
+
+// Setting default values for the props of DataTableDropdown
+DataTableDropdown.defaultProps = {
   entriesPerPage: [10, 25, 50, 100],
   canSearch: false,
   showTotalEntries: true,
@@ -144,8 +189,9 @@ DataTable.defaultProps = {
   isSorted: true,
   noEndBorder: false,
 };
-// Typechecking props for the DataTable
-DataTable.propTypes = {
+
+// Typechecking props for the DataTableDropdown
+DataTableDropdown.propTypes = {
   entriesPerPage: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.number),
     PropTypes.bool,
@@ -169,4 +215,5 @@ DataTable.propTypes = {
   isSorted: PropTypes.bool,
   noEndBorder: PropTypes.bool,
 };
-export default DataTable;
+
+export default DataTableDropdown;
