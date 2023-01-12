@@ -232,7 +232,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					</View>
 					<View style={styles.LINE} />
 
-					{(!loginStore.getAllData.first_name && loginStore.getSelectedAccount === 'merchant') &&
+					{!(!loginStore.getAllData.first_name && loginStore.getSelectedAccount === 'merchant') &&
 						<TouchableOpacity
 							style={[styles.WARNING_CONTAINER, {marginBottom: 10}]}
 							onPress={() => navigation.navigate('signupProfile', { profile_type: profileTypes[0] })}

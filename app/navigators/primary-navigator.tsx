@@ -109,45 +109,6 @@ export function PrimaryNavigator() {
           }
         }}
       />
-        {/*<Tab.Screen*/}
-        {/*    name="Reservations"*/}
-        {/*    component={ReservationScreen}*/}
-        {/*    options={{*/}
-        {/*        tabBarIcon: ({color}) => {*/}
-        {/*            return (*/}
-        {/*            <Icon icon={ color === COLOR.PALETTE.marina_light ? 'calendar' : 'calendarActive'}*/}
-        {/*                  style={{width: TAB_ICON_SIZE, }} />*/}
-        {/*            );*/}
-        {/*        },*/}
-        {/*    }}*/}
-        {/*/>*/}
-        {/*<Tab.Screen*/}
-        {/*    name="Messages"*/}
-        {/*    component={Lobby}*/}
-        {/*    options={{*/}
-        {/*        tabBarIcon: ({color}) => {*/}
-        {/*            return (*/}
-        {/*            <Icon icon={ color === COLOR.PALETTE.marina_light ? 'message' : 'messageActive'}*/}
-        {/*                  style={{width: TAB_ICON_SIZE}} />*/}
-        {/*            );*/}
-        {/*        },*/}
-        {/*    }}*/}
-        {/*/>*/}
-
-        {/*<Tab.Screen*/}
-        {/*    name="lobbyScreen"*/}
-        {/*    component={LobbyScreen}*/}
-        {/*    options={{*/}
-        {/*        tabBarIcon: ({color, focused}) => {*/}
-        {/*            // console.log("focused", focused)*/}
-        {/*            return (*/}
-        {/*                <Icon icon={ color === COLOR.PALETTE.marina_light ? 'money' : 'moneyActive'}*/}
-        {/*                      style={{width: TAB_ICON_SIZE}} />*/}
-        {/*            );*/}
-        {/*        },*/}
-
-        {/*    }}*/}
-        {/*/>*/}
 
         <Tab.Screen
             name="Files"
@@ -161,22 +122,6 @@ export function PrimaryNavigator() {
                 },
             }}
         />
-
-
-        {/*<Tab.Screen*/}
-        {/*    name="Calendar"*/}
-        {/*    component={MessagesScreen}*/}
-        {/*    options={{*/}
-        {/*        tabBarIcon: ({color}) => {*/}
-        {/*            const selectedColor = color === '#B56A3C' ? '#B56A3C' : '#1d1d1d';*/}
-        {/*            const borderBottomColor = color === '#B56A3C' ? 'white' : '#1d1d1d';*/}
-        {/*            return (*/}
-
-        {/*                <Icon name={'calendar'} size={15} color={COLOR.PALETTE.primary} />*/}
-        {/*            );*/}
-        {/*        },*/}
-        {/*    }}*/}
-        {/*/>*/}
     </Tab.Navigator>
   );
 }
