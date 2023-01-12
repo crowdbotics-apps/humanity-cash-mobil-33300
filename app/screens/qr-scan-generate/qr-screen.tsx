@@ -35,7 +35,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
   const [Amount, setAmount] = useState('0')
   const [RoundedAmount, setRoundedAmount] = useState(0);
   const [Loading, setLoading] = useState(false)
-  const [SkipPass, setSkipPass] = useState(false)
+  const [SkipPass, setSkipPass] = useState(true) // set true to skip pass
   const [Pass, setPass] = useState('')
   const [HidePass, setHidePass] = useState(true)
   const toggleSwitch = () => setScanQR(previousState => !previousState)
@@ -75,8 +75,6 @@ export const QRScreen = observer(function QRScreen(props: any) {
           setStep('finish')
           const errors = result.errors
           setTransactionErrorMsg(errors)
-        } else if (result.kind === "unauthorized") {
-          notifyMessage('bad password')
         }
       }).catch((err) => notifyMessage(err))
   }
@@ -85,7 +83,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
     <UserModal
       visible={ShowQR}
       closeModalAction={() => [setShowQR(false), setPayerSetAmount(false)]}
-      username={loginStore.ProfileData.username}
+      username={loginStore.getSelectedAccount === 'consumer' ? loginStore.ProfileData.full_name : loginStore.getAllData.business_name}
       imgSrc={loginStore.ProfileData.profile_picture}
     >
       <QRCode
@@ -128,7 +126,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
           buttonLabelStyle={styles.COLOR_BLACK}
           onPress={() => [
             setShowConfirmationModal(false),
-            setStep('pass')
+            SkipPass ? transferCurrency() : setStep('pass')
           ]}
         />
         <Button
@@ -171,7 +169,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
         const rounded = Math.round(parseFloat(Amount));
         setRoundedAmount(rounded);
       } else setRoundedAmount(parseFloat(Amount));
-    }
+    } else setAmountError(true)
     setButtonDisabled(!(Number(Amount) > 0));
   }, [Amount]);
 
@@ -192,7 +190,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
               username: userInfo?.to_username ?? '',
               photo: userInfo?.to_profile_photo ?? '',
             }
-            if (props?.route?.params?.skip_pass) setSkipPass(true)
+            // if (props?.route?.params?.skip_pass) setSkipPass(true) // remove to always skip pass
           } catch (error) {
             alert(error)
           }
@@ -240,6 +238,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
       />
     </View>
   </View>
+
   const renderTabs = (scan) => <>
     <View style={styles.STEP_CONTAINER}>
       <View style={styles.SWITCH_CONTAINER}>
@@ -344,7 +343,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
       <Button
         buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
         loading={Loading}
-        onPress={() => setStep('tabs')}
+        onPress={() => setStep('amount')}
         buttonLabel={'Close'}
       />
     </View>
@@ -377,17 +376,17 @@ export const QRScreen = observer(function QRScreen(props: any) {
     setScanQR(false)
     switch (Step) {
       case 'tabs':
-        setSkipPass(false)
+        // setSkipPass(false) // removed to skip pass
         navigation.navigate("home")
         break;
       case 'amount':
-        setStep('tabs')
+        props?.route?.params?.QR ? navigation.navigate('contact') : setStep('tabs')
         break;
       case 'pass':
         setStep('amount')
         break;
       case 'finish':
-        setSkipPass(false)
+        // setSkipPass(false) // removed to skip pass
         navigation.navigate("home")
         break;
       default:

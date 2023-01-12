@@ -364,7 +364,8 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 						key={'send_personal_button'}
 						buttonStyle={{ backgroundColor: ButtonDisabled ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
 						disabled={ButtonDisabled}
-						onPress={() => setShowPassModal(true)}
+						// onPress={() => setShowPassModal(true)} // removed to skip pass
+						onPress={() => [setShowModal(true), setShowPassModal(false), setHidePass(true)]}
 						buttonLabel={'Confirm'}
 						showBottonMenu
 						hideButton={Step === 'select'}

@@ -23,32 +23,6 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		'Discount dollar amount',
 		'Special Offer',
 	];
-	// const coupons: object[] = [
-	// 	{
-	// 		title: 'Super Promo',
-	// 		start_date: '12/31/2022',
-	// 		end_date: '12/31/2023',
-	// 		type_of_promo: 'Discount percentage',
-	// 		discount_input: '10%',
-	// 		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-	// 	},
-	// 	{
-	// 		title: 'Super Promo 2',
-	// 		start_date: '12/31/2022',
-	// 		end_date: '12/31/2023',
-	// 		type_of_promo: 'Discount dollar amount',
-	// 		discount_input: '$20',
-	// 		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-	// 	},
-	// 	{
-	// 		title: 'Super Promo 3',
-	// 		start_date: '12/31/2022',
-	// 		end_date: '12/31/2023',
-	// 		type_of_promo: 'Special Offer',
-	// 		discount_input: 'Free Wine',
-	// 		image: 'https://st.depositphotos.com/1010710/2187/i/600/depositphotos_21878395-stock-photo-spice-store-owner.jpg'
-	// 	},
-	// ];
 
 	const [ShowIndex, setShowIndex] = useState(true)
 	const [Search, setSearch] = useState('')
@@ -88,7 +62,6 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	}, [isFocused])
 
 	const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
-
 		if (initialData === [] || !initialData) return []
 		if (keys === [] || !keys) return initialData
 		if (filter === "" || !filter) return initialData

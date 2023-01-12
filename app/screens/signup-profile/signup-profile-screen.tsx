@@ -169,6 +169,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			username: Username,
 			consumer_profile: pic
 		}, keys).then((result: any) => {
+			console.log(' ========>>>>>>>>>>>>>>>>> ', JSON.stringify(result, null, 2))
 			setLoading(false)
 			if (result.kind === "ok") {
 				setUsername('');

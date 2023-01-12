@@ -310,7 +310,8 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 			<Button
 				buttonStyle={{ backgroundColor: (ButtonDisabled || AmountError) ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor }}
 				disabled={(ButtonDisabled || AmountError)}
-				onPress={() => setShowPassModal(true)}
+				// onPress={() => setShowPassModal(true)} // remove to skip password
+				onPress={() => [setShowModal(true), setShowPassModal(false), setHidePass(true)]} 
 				buttonLabel={'Load up'}
 			/>
 		</Screen>

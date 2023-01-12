@@ -59,14 +59,13 @@ export const ContactScreen = observer(function ContactScreen() {
           resizeMode="cover"
           style={styles.RETURN_IMAGE}
         />
-
         <Text style={styles.RETURN_ITEM_CUSTOMER}>
-          {i.first_name && i.first_name !== ""
+        {(i.first_name && i.first_name !== "") || (i.last_name && i.last_name !== "")
             ? i.first_name + " " + i.last_name
             : i.business_name && i.business_name !== ""
               ? i.business_name
-              : i.username}
-          {i.id}
+              : i.username
+          }
         </Text>
       </TouchableOpacity>
     ))
