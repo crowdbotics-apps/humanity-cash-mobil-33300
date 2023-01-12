@@ -38,7 +38,7 @@
 
 // Material Dashboard 2 PRO React components
 // @mui icons
-import Services from "./pages/services";
+import Services from "./pages/dashboard";
 
 import Logout from "./pages/logout";
 import {ROUTES} from "./services/constants";
