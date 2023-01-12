@@ -297,7 +297,6 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                     resizeMode='cover'
                     style={styles.NEWS_IMAGE}
                   />
-                  {console.log('SelectedDetail => ', JSON.stringify(SelectedDetail, null, 2))}
                   <View style={styles.DETAIL_LINKS}>
                     {SelectedDetail?.website
                       ? <MaterialCommunityIcons

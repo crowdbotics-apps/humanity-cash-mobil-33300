@@ -285,7 +285,6 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
       backgroundColor={loginStore.getSelectedAccount === 'consumer' ? COLOR.PALETTE.background : loginStore.getAccountColor}
       headerStyle={[styles.HEADER, { backgroundColor: loginStore.getSelectedAccount === 'consumer' ? COLOR.PALETTE.background : loginStore.getAccountColor }]}
     >
-      {console.log(' loginStore.getAllData ======+>>>>>>> ', JSON.stringify(loginStore.getAllData, null , 2))}
       <View style={[styles.ROOT, { backgroundColor: loginStore.getSelectedAccount === 'consumer' ? COLOR.PALETTE.background : loginStore.getAccountColor }]}>
         <View style={styles.HEADER}>
           <TouchableOpacity onPress={() => props.navigation.closeDrawer()} style={styles.BACK_BUTON_CONTAINER}>

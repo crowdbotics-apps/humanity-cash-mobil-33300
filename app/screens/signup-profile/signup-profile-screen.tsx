@@ -877,7 +877,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
 					<Button
 						onPressIn={() => navigation.navigate('linkBank')}
-						buttonLabel={'Link my personal bank account'}
+						buttonLabel={`Link my ${loginStore.getSelectedAccount === 'consumer' ? 'personal' : 'business'} bank account`}
 						buttonStyle={styles.SUBMIT_BUTTON}
 					/>
 				</View>

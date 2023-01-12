@@ -64,7 +64,10 @@ def verify_reset_code(request):
 @api_view(['POST'])
 def password_set(request):
     user = User.objects.get(email=request.data.get('email'), is_active=True)
-    user.set_password(request.data.get('password'))
+    password = request.data.get('password')
+    if user.check_password(password):
+        return Response({"password": "The new password cannot be the same as the old one"}, status=status.HTTP_400_BAD_REQUEST)
+    user.set_password(password)
     user.save()
     request.user = user
     return Response(status=status.HTTP_200_OK)
