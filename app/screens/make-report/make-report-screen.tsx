@@ -10,6 +10,7 @@ import { useStores } from "../../models";
 import DatePicker from 'react-native-date-picker'
 import Entypo from "react-native-vector-icons/Entypo"
 import { notifyMessage } from "../../utils/helpers"
+import { ScrollView } from "react-native-gesture-handler";
 
 export const MakeReportScreen = observer(function MakeReportScreen() {
 	const navigation = useNavigation()
@@ -211,7 +212,7 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 						<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 							<Text style={styles.INPUT_LABEL_STYLE}>TYPE OF TRANSACTIONS</Text>
 						</View>
-						<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
+						<ScrollView style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
 							<TouchableOpacity style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType('')]}>
 								<Text style={styles.SELECT_LABEL}>{TransactionType || 'All'}</Text>
 								<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
@@ -221,7 +222,7 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 									<Text style={styles.SELECT_LABEL}>{t}</Text>
 								</TouchableOpacity>
 							))}
-						</View>
+						</ScrollView>
 					</View>
 					<Text style={styles.LINE} />
 				</View>

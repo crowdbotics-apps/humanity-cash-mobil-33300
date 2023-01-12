@@ -36,6 +36,8 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
   const [HidePass, setHidePass] = useState(true)
   const [HidePassConfirm, setHidePassConfirm] = useState(true)
   const [MatchPassword, setMatchPassword] = useState(true)
+  const [PasswordError, setPasswordError] = useState(true)
+  const [PasswordErrorMessage, setPasswordErrorMessage] = useState('')
   const [Token, setToken] = useState('')
 
   // const [PassError, setPassError] = useState(false)
@@ -85,7 +87,6 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
       .passwordSet({ password: Pass, password_confirm: PassConfirm, token: Token, email: Username })
       .then(result => {
         setLoading(false)
-        console.log(' setPassword ===>>> ', Username, Pass, JSON.stringify(result, null, 2))
         if (result.kind === "ok") {
           runInAction(() => {
             setStep('email')
@@ -93,7 +94,10 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
             navigation.navigate('login')
           })
         } else if (result.kind === "bad-data") {
-          notifyMessage(result?.errors?.shift())
+          if (result?.errors?.password) {
+            setPasswordError(true)
+            setPasswordErrorMessage(result?.errors?.password)
+          } else notifyMessage(result?.errors?.shift())
         }
       })
   }
@@ -252,16 +256,15 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
       <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
         <Text style={styles.INPUT_LABEL_STYLE}>CONFIRM PASSWORD</Text>
         <Text style={styles.INPUT_LABEL_ERROR}>
-          {!MatchPassword ? "NO MATCH" : ""}
+          {!MatchPassword
+            ? "NO MATCH"
+            : PasswordError
+              ? PasswordErrorMessage
+              : ""
+          }
         </Text>
       </View>
-      <View
-        style={
-          !MatchPassword
-            ? styles.INPUT_STYLE_CONTAINER_ERROR
-            : styles.INPUT_STYLE_CONTAINER
-        }
-      >
+      <View style={(!MatchPassword || PasswordError) ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
         <TextInput
           style={styles.PASS_INPUT_STYLE}
           onChangeText={t => [setPassConfirm(t)]}
@@ -305,6 +308,8 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
     if (Step === 'email') sendVerificationCode()
     if (Step === 'code') verifyUserResetCode()
     if (Step === 'new_pass') {
+      setPasswordError(false)
+      setPasswordErrorMessage('')
       if (Pass !== PassConfirm) {
         setMatchPassword(false)
       } else {

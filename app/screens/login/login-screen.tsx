@@ -6,17 +6,12 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from "./login-style"
 import { COLOR, IMAGES } from "../../theme"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
 import { getErrorMessage, notifyMessage } from "../../utils/helpers"
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin'
-import {
-  appleAuth
-} from '@invertase/react-native-apple-authentication'
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin'
+import { appleAuth } from '@invertase/react-native-apple-authentication'
 
 import { AccessToken, LoginManager } from 'react-native-fbsdk-next'
 
@@ -25,6 +20,8 @@ import TouchID from 'react-native-touch-id'
 export const LoginScreen = observer(function LoginScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
+	const isFocused = useIsFocused()
+
   const { loginStore } = rootStore
 
   const [Username, setUsername] = useState("")
@@ -37,6 +34,13 @@ export const LoginScreen = observer(function LoginScreen() {
   const [PassError, setPassError] = useState(false)
   const [PassErrorMessage, setPassErrorMessage] = useState("")
 
+  useEffect(() => {
+		if (!isFocused) {
+			setUsername('')
+            setPass('')
+		}
+	}, [isFocused])
+
   const login = () => {
     setLoading(true)
     loginStore.environment.api
@@ -45,6 +49,8 @@ export const LoginScreen = observer(function LoginScreen() {
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
+            setUsername('')
+            setPass('')
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount(result?.response?.user?.consumer_data ? 'consumer' : 'merchant')
@@ -285,7 +291,7 @@ export const LoginScreen = observer(function LoginScreen() {
         </View>
         {/* {socialMediaLogin} */}
       </ScrollView>
-      <TouchableOpacity onPress={() => navigation.navigate("forgotPass")} style={styles.NEED_HELP_CONTAINER}>
+      <TouchableOpacity onPress={() => [navigation.navigate("forgotPass"), setUsername(''), setPass('')]} style={styles.NEED_HELP_CONTAINER}>
         <Text style={styles.NEED_HELP_LINK}>
           Forgot password
         </Text>

@@ -32,6 +32,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # path("modules/", include("modules.urls")),
     path("api/v1/", include("home.api.v1.urls")),
+    path("api/v1/", include("users.api.v1.urls")),
     path("api/v1/admin/", include("admin.api.v1.urls")),
     path("admin/", admin.site.urls),
     path('users/password_reset/', password_reset, name='password_reset'),
