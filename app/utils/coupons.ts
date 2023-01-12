@@ -31,9 +31,9 @@ export const addConsumerCoupon =  (coupon_id: number, props, loginStore): Promis
             active: true
         })
         .then((res) => res.kind === 'ok' && [refreshCouponState(loginStore)])
-        .catch(error => console.log(`Ocurrió un error al agregar un cupón del consumer: ${error.message}`))
+        .catch(error => console.log(`There was an error: ${error.message}`))
 
-    ).catch(error => console.log(`Ocurrió un error al querer conseguir la información del consumer: ${error.message}`))
+    ).catch(error => console.log(`There was an error: ${error.message}`))
 }
 
 export const deleteConsumerCoupon = (coupon_id: number, props, loginStore ): Promise<void> => {
@@ -45,7 +45,7 @@ export const deleteConsumerCoupon = (coupon_id: number, props, loginStore ): Pro
             const {id} = couponToDelete;
             loginStore.environment.api.deleteConsumerCoupon(id)
             .then(res => res.kind === 'ok' && [refreshCouponState(loginStore)])
-            .catch(error => console.log(`Ocurrió un error al querer eliminar el cupón del consumer: ${error.message}`))
+            .catch(error => console.log(`There was an error: ${error.message}`))
         }
-    }).catch(error => console.log(`Ocurrió un error al querer conseguir los cupones del consumer: ${error.message}`))
+    }).catch(error => console.log(`There was an error: ${error.message}`))
 }

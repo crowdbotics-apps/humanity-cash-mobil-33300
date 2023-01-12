@@ -50,7 +50,7 @@ class SetupConsumerProfileSecondStepAPIView(AuthenticatedAPIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class SetupConsumerProfileAPIView(AuthenticatedAPIView, UpdateAPIView):
+class SetupConsumerProfileAPIView(AuthenticatedAPIView, UpdateAPIView, CreateAPIView):
     """
     Endpoint to set up Consumer Profile after first log in
     """

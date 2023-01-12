@@ -226,6 +226,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 			showHeader
 			preset="fixed"
 			statusBar={'dark-content'}
+			style={styles.ROOT}
 			unsafe={true}
 		>
 			<KeyboardAvoidingView
@@ -297,7 +298,8 @@ export const CashOutScreen = observer(function CashOutScreen() {
 			<Button
 				buttonStyle={{ backgroundColor: (AmountError || !Amount || Number(Amount) === 0) ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor }}
 				disabled={(AmountError || !Amount || Number(Amount) === 0)}
-				onPress={() => setShowPassModal(true)}
+				// onPress={() => setShowPassModal(true)} // remove to skip password
+				onPress={() => [setShowModal(true), setPass(''), setShowPassModal(false)]} 
 				buttonLabel={'Confirm'}
 			/>
 		</Screen>

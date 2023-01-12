@@ -314,6 +314,7 @@ export default StyleSheet.create({
     borderColor: COLOR.PALETTE.orange,
     borderRadius: 3,
     borderWidth: 0.8,
+    height: 220,
     marginTop: 10,
     width: METRICS.screenWidth * 0.95,
   },

@@ -307,7 +307,6 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 							closeOnClick
 							searchAction={fetchCity}
 						/> */}
-
 					</View>
 				</View>
 				<View style={styles.CONTAINER}>

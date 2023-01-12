@@ -20,9 +20,10 @@ const AdminPortal = () => {
   const [recordList, setRecordList] = useState({...dataTableModel})
   const searchQueryRef = useRef("");
 
-  const getDwollaUsers = (searchData, page = 1, ordering = "") => {
+  const getAdminUsers = (searchData, page = 1, ordering = "") => {
     setLoading(true)
-    api.getDwollaUsers(searchData, page, ordering, 8).then((result) => {
+    api.getAdminUsers(searchData, page, ordering, 8).then((result) => {
+      console.log('result ==> ', result)
       if (result.kind === "ok") {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
@@ -38,11 +39,11 @@ const AdminPortal = () => {
   const onColumnOrdering = (ordering) => {
     const {column, order} = ordering
     if (column === '') {
-      getDwollaUsers(searchQueryRef?.current)
+      getAdminUsers(searchQueryRef?.current)
     } else if (order === 'asce') {
-      getDwollaUsers(searchQueryRef?.current, 1, `${column}`)
+      getAdminUsers(searchQueryRef?.current, 1, `${column}`)
     } else {
-      getDwollaUsers(searchQueryRef?.current, 1, `-${column}`)
+      getAdminUsers(searchQueryRef?.current, 1, `-${column}`)
     }
   }
 
@@ -51,7 +52,7 @@ const AdminPortal = () => {
   }
 
   useEffect(() => {
-    getDwollaUsers("")
+    getAdminUsers("")
   }, [])
 
   return (
@@ -59,7 +60,7 @@ const AdminPortal = () => {
       loginRequired
       title={'Admin Employees / Sub - Admins'}
       loading={loading}
-      searchFunc={getDwollaUsers}
+      searchFunc={getAdminUsers}
     >
       <MDBox display={'flex'} flex={1} alignItems={'center'} mt={5}>
         <MDTypography  color={'primary'} sx={{fontWeight: 400}} fontSize={24} >
@@ -84,7 +85,7 @@ const AdminPortal = () => {
           numberOfItemsPage={numberOfItemsPage}
           pageSize={8}
           onPageChange={page => {
-            getDwollaUsers('', page)
+            getAdminUsers('', page)
             setCurrentPage(page)
           }}
         />)

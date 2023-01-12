@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { observer } from "mobx-react-lite"
-import { View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, Image } from "react-native"
+import { View, TextInput, TouchableOpacity, KeyboardAvoidingView, ScrollView, Linking, Image } from "react-native"
 import { Text, Button, Screen, TextInputComponent, ConfirmCouponModal } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 // import styles from "./where-spend-style"
@@ -297,13 +297,13 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                     resizeMode='cover'
                     style={styles.NEWS_IMAGE}
                   />
-                  {console.log('SelectedDetail => ', JSON.stringify(SelectedDetail, null, 2))}
                   <View style={styles.DETAIL_LINKS}>
                     {SelectedDetail?.website
                       ? <MaterialCommunityIcons
                         name={"web"}
                         size={25}
                         color={"black"}
+                        onPress={() => Linking.openURL(SelectedDetail?.website)}
                         style={{ marginRight: 8 }}
                       /> : null
                     }
@@ -312,6 +312,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                         name={"facebook"}
                         size={25}
                         color={"black"}
+                        onPress={() => Linking.openURL(SelectedDetail?.facebook)}
                         style={{ marginRight: 8 }}
                       /> : null
                     }
@@ -320,6 +321,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                         name={"twitter"}
                         size={25}
                         color={"black"}
+                        onPress={() => Linking.openURL(SelectedDetail?.twitter)}
                         style={{ marginRight: 8 }}
                       /> : null
                     }
@@ -328,6 +330,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                         name={"instagram"}
                         size={25}
                         color={"black"}
+                        onPress={() => Linking.openURL(SelectedDetail?.instagram)}
                         style={{ marginRight: 8 }}
                       /> : null
                     }
