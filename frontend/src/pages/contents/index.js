@@ -174,7 +174,7 @@ const BlockchainTransactions = () => {
       } else {
         setLoading(false)
         getEventsRequest()
-        showMessage('Deleted successfully');
+        showMessage('Deleted successfully','success');
         setDetails(Details.filter(value => value.id !== id))
         setShowStoryModal(false)
       }
@@ -197,7 +197,7 @@ const BlockchainTransactions = () => {
       console.log(" api.editEvent", result)
       if (result.kind === "ok") {
 
-        showMessage("Created successfully.");
+        showMessage("Created successfully.", 'success');
         setDetails(Details.map(value => value.id === event.id?event:value))
         getEventsRequest()
         setShowStoryModal(false)
@@ -213,7 +213,7 @@ const BlockchainTransactions = () => {
     api.createEvent(event).then((result: any) => {
       console.log(" api.createEvent", result)
       if (result.kind === "ok") {
-        showMessage("Saved successfully.");
+        showMessage("Saved successfully.", 'success');
         getEventsRequest()
         setShowStoryModal(false)
       } else {
@@ -265,7 +265,7 @@ const BlockchainTransactions = () => {
       createEvent(event)
     }
   }
-  
+
   useEffect(() => {
     getEventsRequest()
     initCalendar()
