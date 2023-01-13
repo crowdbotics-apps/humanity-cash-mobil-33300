@@ -68,12 +68,16 @@ class GetBalancesView(APIView):
             merchant=m.balance if m else 0,
         ), status=status.HTTP_200_OK)
 
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 8
+    page_size_query_param = 'page_size'
+    max_page_size = 1000000
 
 class DwollaUserView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = DwollaUser.objects.all()
     serializer_class = DwollaUserSerializer
     permission_classes = [permissions.IsAuthenticated]
-    pagination_class = PageNumberPagination
+    pagination_class = LargeResultsSetPagination
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'account_type', 'address', 'dwolla_id', 'email']
 
