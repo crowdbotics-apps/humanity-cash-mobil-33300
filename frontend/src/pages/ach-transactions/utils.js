@@ -14,7 +14,7 @@ export const dataTableModel = {
     {Header: "BANK", accessor: "bank"},
     {Header: "CONFIRMED AT", accessor: "confirmed_at"},
     {Header: "STATUS", accessor: "status"},
-    {Header: "ACTION", accessor: "actions", disableOrdering: true}
+    // {Header: "ACTION", accessor: "actions", disableOrdering: true}
   ],
   rows: [],
 };
