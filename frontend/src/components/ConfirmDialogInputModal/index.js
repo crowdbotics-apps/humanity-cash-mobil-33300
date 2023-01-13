@@ -41,9 +41,9 @@ const ConfirmDialogInputModal = ({
         <Typography variant="h5" textAlign={'left'} mb={2} fontWeight={700} color={'primary'}>
           {title}
         </Typography>
-        <Typography variant="text" textAlign={'left'} mb={4} fontWeight={500} fontSize={14}>
+        {description !== '' && <Typography variant="text" textAlign={'left'} mb={4} fontWeight={500} fontSize={14}>
           {description}
-        </Typography>
+        </Typography>}
         {children}
         {!hideButtons &&
         <Grid container display={'flex'} justifyContent={'center'} mt={2}>
