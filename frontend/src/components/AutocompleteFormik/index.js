@@ -61,8 +61,10 @@ import MDBox from "../MDBox";
 import Autocomplete from "@mui/material/Autocomplete";
 import MDInput from "../MDInput";
 import React from "react";
+import TextField from "@mui/material/TextField";
+import MDInputAutocomplete from "../MDInputAutocomplete";
 
-export const AutocompleteFormik = (opts)=> {
+export const AutocompleteFormik = (opts) => {
   const {
     onChange,
     options,
@@ -79,7 +81,7 @@ export const AutocompleteFormik = (opts)=> {
   } = opts
 
   return (
-    <MDBox >
+    <MDBox>
       <Autocomplete
         {...params}
         id={field.name}
@@ -87,21 +89,21 @@ export const AutocompleteFormik = (opts)=> {
         options={options}
         onChange={(e, value) => {
           setFieldValue(field.name, value !== null ? value : initialValue)
-          if(onChange){
+          if (onChange) {
             onChange(e, value)
           }
         }}
         defaultValue={initialValue}
-        getOptionLabel={option => option[labelFieldName]??""}
+        getOptionLabel={option => option[labelFieldName] ?? ""}
         isOptionEqualToValue={isOptionEqualToValue || ((option, value) => true)}
         renderInput={(params) => (
-          <MDInput
+          <MDInputAutocomplete
             type="text"
             label={label}
-            variant="standard"
+            variant="outlined"
             name={field.name}
             fullWidth
-            onChange={(e)=>{
+            onChange={(e) => {
               setFieldValue(field.name, e.target.value)
             }}
             error={touched[field.name] === true && errors[field.name] !== undefined}

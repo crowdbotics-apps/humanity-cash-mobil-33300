@@ -3,12 +3,33 @@ import {useEffect, useRef, useState} from "react"
 import {showMessage, useApi} from "../../services/helpers"
 import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
 import MDBox from "../../components/MDBox";
+import ConfirmDialogInputModal from "../../components/ConfirmDialogInputModal";
+import MDInput from "../../components/MDInput";
+import * as Yup from "yup";
+import {Field, Form, Formik} from "formik";
+import {Autocomplete} from "@mui/material";
+import {AutocompleteFormik} from "../../components/AutocompleteFormik";
 
+
+const groups = [
+  {id: 'BANK', title: 'Bank'},
+  {id: 'MANAGER', title: 'Program manager'},
+]
+
+const rolesBank = [
+  {id: 'EMPLOYEE', title: 'Employee'},
+  {id: 'SUPERVISOR', title: 'Supervisor'},
+]
+
+const rolesManager = [
+  {id: 'ADMIN', title: 'Admin'},
+  {id: 'SUPERADMIN', title: 'Super admin'},
+]
 
 const AdminPortal = () => {
   const api = useApi()
@@ -19,6 +40,11 @@ const AdminPortal = () => {
   const [numberOfItemsPage, setNumberOfItemsPage] = useState(0);
   const [recordList, setRecordList] = useState({...dataTableModel})
   const searchQueryRef = useRef("");
+  const [showUserFormModal, setShowUserFormModal] = useState(false)
+  const [roles, setRoles] = useState([])
+  const [selectedGroup, setSelectedGroup] = useState(null)
+
+
 
   const getAdminUsers = (searchData, page = 1, ordering = "") => {
     setLoading(true)
@@ -51,6 +77,48 @@ const AdminPortal = () => {
     console.log('items')
   }
 
+  const clearDetail = () => {
+    setShowUserFormModal(false)
+    // setSelectedItem(null)
+    // setUserPassword('')
+  }
+
+  const confirmAction = () => {
+    // const data = {
+    //   id,
+    //   show_username: true,
+    //   password: userPassword
+    // }
+    // getBlockchainTransactions(data)
+  }
+
+  const validationSchema =
+    Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string().email().required(),
+      group: Yup.string().required(),
+      role: Yup.string().required(),
+    })
+
+  const initialValues = {
+    name: "",
+    email: "",
+    role: null,
+    group: null,
+  };
+
+  useEffect(() => {
+    if (selectedGroup) {
+      if(selectedGroup.id === 'BANK') {
+        setRoles(rolesBank)
+      } else {
+        setRoles(rolesManager)
+      }
+    }
+
+  }, [selectedGroup])
+
+
   useEffect(() => {
     getAdminUsers("")
   }, [])
@@ -68,6 +136,7 @@ const AdminPortal = () => {
         </MDTypography>
         <MDBox ml={'auto'}>
           <MDButton
+            onClick={() => setShowUserFormModal(true)}
             color={"primary"}
             variant={"contained"}
             sx={{width: 200}}
@@ -76,6 +145,101 @@ const AdminPortal = () => {
           </MDButton>
         </MDBox>
       </MDBox>
+      <ConfirmDialogInputModal
+        title={'Add user'}
+        description={'Admin user create form'}
+        open={showUserFormModal}
+        handleClose={() => clearDetail()}
+        handleConfirm={() => confirmAction()}
+        // disabledConfirm={userPassword === ''}
+      >
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={values => {
+            // login(values);
+            console.log('values ', values)
+          }}
+        >
+          {({errors, touched, setFieldValue}) => (
+            <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+              <Field name="name">
+                {({field}) => {
+                  return (
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        label="USER FULL NAME"
+                        variant="outlined"
+                        placeholder="john Doe"
+                        fullWidth
+                        error={errors.name !== undefined}
+                        helperText={errors.name && errors.name}
+                        {...field}
+                      />
+                    </MDBox>
+                  )
+                }
+                }
+              </Field>
+              <Field name="email">
+                {({field}) => {
+                  return (
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        label="USER EMAIL"
+                        variant="outlined"
+                        placeholder="john@example.com"
+                        fullWidth
+                        error={errors.email !== undefined}
+                        helperText={errors.email && errors.email}
+                        {...field}
+                      />
+                    </MDBox>
+                  )
+                }
+                }
+              </Field>
+              <MDBox display={'flex'} flex={1} mb={2}>
+                <MDBox sx={{width: "50%"}} mr={1}>
+                  <Field name="group">
+                    {({field}) => (
+                      <AutocompleteFormik
+                        options={groups}
+                        labelFieldName={"title"}
+                        field={field}
+                        setFieldValue={(val) => setFieldValue(val.id)}
+                        initialValue={initialValues.group}
+                        touched={touched}
+                        errors={errors}
+                        label={"GROUP"}
+                        onChange={(e, val) => setSelectedGroup(val)}
+                      />
+                    )}
+                  </Field>
+                </MDBox>
+                <MDBox sx={{width: "50%"}} ml={1}>
+                  <Field name="role">
+                    {({field}) => (
+                      <AutocompleteFormik
+                        options={roles}
+                        labelFieldName={"title"}
+                        field={field}
+                        setFieldValue={(val) => setFieldValue(val.id)}
+                        initialValue={initialValues.role}
+                        touched={touched}
+                        errors={errors}
+                        label={"ROLE"}
+                      />
+                    )}
+                  </Field>
+                </MDBox>
+              </MDBox>
+            </Form>
+          )}
+        </Formik>
+      </ConfirmDialogInputModal>
       {recordList?.rows.length > 0
         ? (<DataTable
           table={recordList}
