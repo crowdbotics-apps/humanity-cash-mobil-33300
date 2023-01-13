@@ -484,7 +484,7 @@ const BlockchainTransactions = () => {
             {RightEvents.map((value, index) => {
               return renderDayContent(value, index)
             })}
-          </FakeScroll>``
+          </FakeScroll>
         </div>
       </MDBox>
       {createModal}
