@@ -15,6 +15,7 @@ import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
 import moment from 'moment'
 import MDButton from "components/MDButton";
 import ConfirmDialogInputModal from "components/ConfirmDialogInputModal";
+import {AddEventForm, AddStoryForm} from "./forms";
 
 // keep at the end
 import './Content.css';
@@ -173,7 +174,7 @@ const BlockchainTransactions = () => {
       } else {
         setLoading(false)
         getEventsRequest()
-        showMessage('Deleted successfully');
+        showMessage('Deleted successfully','success');
         setDetails(Details.filter(value => value.id !== id))
         setShowStoryModal(false)
       }
@@ -188,6 +189,80 @@ const BlockchainTransactions = () => {
       setShowStoryModal(true)
     }else{
       setShowEventModal(true)
+    }
+  }
+
+  const patchEvent = (event:any)=>{
+    api.editEvent(event.id, event).then((result: any) => {
+      console.log(" api.editEvent", result)
+      if (result.kind === "ok") {
+
+        showMessage("Created successfully.", 'success');
+        setDetails(Details.map(value => value.id === event.id?event:value))
+        getEventsRequest()
+        setShowStoryModal(false)
+      } else {
+        // showMessage(getErrorMessages(result.errors), {
+        //   position: toast.POSITION.TOP_CENTER
+        // });
+      }
+    }).catch(err => showMessage())
+  }
+
+  const createEvent = (event:any)=>{
+    api.createEvent(event).then((result: any) => {
+      console.log(" api.createEvent", result)
+      if (result.kind === "ok") {
+        showMessage("Saved successfully.", 'success');
+        getEventsRequest()
+        setShowStoryModal(false)
+      } else {
+        // showMessage(getErrorMessages(result.errors), {
+        //   position: toast.POSITION.TOP_CENTER
+        // });
+      }
+    }).catch(err => showMessage())
+  }
+
+  const saveEvent = (data)=>{
+    console.log("saveEvent", data)
+    setCurrentEvent(null)
+    let event = {
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      event_type: data.eventType,
+      start_date: data.startDate,
+      location: data.location,
+      end_date: data.endDate,
+      image: null,
+      link:data.link
+    }
+    console.log(data)
+    if(data.id){
+      patchEvent(event)
+    }else{
+      createEvent(event)
+    }
+    setShowEventModal(false)
+  }
+
+  const saveStory = (data:any)=>{
+    setCurrentEvent(null)
+    let event = {
+      id: data.id,
+      title: data.title,
+      link: data.link,
+      description: data.description,
+      event_type: data.eventType,
+      start_date: data.date,
+      image: null
+    }
+    console.log(data)
+    if(data.id){
+      patchEvent(event)
+    }else{
+      createEvent(event)
     }
   }
 
@@ -274,7 +349,7 @@ const BlockchainTransactions = () => {
           <div style={{ marginLeft: 15, fontSize: 15 }} className={'text-gray'}>STORIES </div>
         </MDBox>
         <MDBox className={'col-4'}>
-          <MDButton variant="primary" className={'create-btn'} onClick={handleShow}>
+          <MDButton className={'create-btn'} onClick={handleShow}>
             Create
           </MDButton>
         </MDBox>
@@ -323,7 +398,7 @@ const BlockchainTransactions = () => {
     </MDBox>
   </ConfirmDialogInputModal>
 
-  const eventModal = <ConfirmDialogInputModal
+  const eventDetailModal = <ConfirmDialogInputModal
     title={'Details'}
     description={DetailsTitle}
     open={showDetailModal}
@@ -336,6 +411,31 @@ const BlockchainTransactions = () => {
         return <ContentEventDetail delete={deleteEvent} key={"detail-" + index} edit={editEvent} event={value} />
       })}
     </div>
+  </ConfirmDialogInputModal>
+
+  const eventModal = <ConfirmDialogInputModal
+    title={CurrentEvent && CurrentEvent.id !== null ? 'Edit Event': 'Add New Event'}
+    description={'Lorem ipsum dolor sit amet'}
+    open={showEventModal}
+    width={800}
+    hideButtons
+    handleClose={() => setShowEventModal(false)}
+  >
+    <AddEventForm event={CurrentEvent} save={(data) => saveEvent(data)} />
+  </ConfirmDialogInputModal>
+
+  const storyModal = <ConfirmDialogInputModal
+    title={CurrentEvent ? "Edit Story" : "Add New Story"}
+    description={'Lorem ipsum dolor sit amet'}
+    open={showStoryModal}
+    width={800}
+    hideButtons
+    handleClose={() => {
+      setCurrentEvent(null)
+      setShowStoryModal(false)
+    }}
+  >
+    <AddStoryForm event={CurrentEvent} save={(data) => saveStory(data)} />
   </ConfirmDialogInputModal>
 
 
@@ -384,11 +484,13 @@ const BlockchainTransactions = () => {
             {RightEvents.map((value, index) => {
               return renderDayContent(value, index)
             })}
-          </FakeScroll>
+          </FakeScroll>``
         </div>
       </MDBox>
       {createModal}
+      {eventDetailModal}
       {eventModal}
+      {storyModal}
     </DashboardLayout>
   )
 }

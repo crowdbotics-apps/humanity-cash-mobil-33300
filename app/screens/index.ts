@@ -29,3 +29,4 @@ export * from "./create-coupons/create-coupons-screen";
 export * from "./forgot-pass/forgot-pass-screen";
 export * from "./send-personal/send-personal-screen";
 export * from "./static-qr/static-qr-screen"
+export * from "./make-return/make-return-screen"

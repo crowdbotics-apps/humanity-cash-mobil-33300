@@ -164,7 +164,7 @@ export default StyleSheet.create({
     borderRadius: 27.5,
     height: 55,
     justifyContent: 'center',
-    marginBottom: 20,
+    // marginBottom: 20,
     width: METRICS.screenWidth * 0.70
   },
   MODAL_CONTAINER: {
@@ -178,6 +178,14 @@ export default StyleSheet.create({
     backgroundColor: COLOR.PALETTE.white,
     borderRadius: 8,
     height: 330,
+    justifyContent: 'space-evenly',
+    padding: 10,
+    width: METRICS.screenWidth * 0.80
+  },
+  MODAL_RETURN_CONTENT: {
+    backgroundColor: COLOR.PALETTE.white,
+    borderRadius: 8,
+    height: 350,
     justifyContent: 'space-evenly',
     padding: 10,
     width: METRICS.screenWidth * 0.80
