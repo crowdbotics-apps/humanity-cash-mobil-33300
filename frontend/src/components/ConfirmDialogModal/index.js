@@ -35,20 +35,20 @@ const ConfirmDialogModal = ({
         flexDirection: 'column',
         flex: 1
       }}>
-        <Typography variant="h5" textAlign={'center'} mb={2}>
+        <Typography variant="h5" textAlign={'left'} mb={2} fontWeight={700} color={'primary'}>
           {title}
         </Typography>
-        <Typography variant="text" textAlign={'center'} mb={2}>
+        <Typography variant="text" textAlign={'left'} mb={4} fontWeight={500} fontSize={14}>
           {description}
         </Typography>
         <Grid container display={'flex'} justifyContent={'center'} mt={2}>
           <Grid item xs={5}>
-            <MDButton variant="gradient" color="primary" fullWidth onClick={handleClose}>
+            <MDButton variant="outlined" color="primary" fullWidth onClick={handleClose}>
               {cancelText}
             </MDButton>
           </Grid>
           <Grid item xs={5} ml={2}>
-            <MDButton variant="gradient" color="error" fullWidth onClick={handleConfirm}>
+            <MDButton variant="contained" color="primary" fullWidth onClick={handleConfirm}>
               {confirmText}
             </MDButton>
           </Grid>
