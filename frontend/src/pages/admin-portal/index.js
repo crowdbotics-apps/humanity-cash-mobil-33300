@@ -12,7 +12,6 @@ import ConfirmDialogInputModal from "../../components/ConfirmDialogInputModal";
 import MDInput from "../../components/MDInput";
 import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
-import {Autocomplete} from "@mui/material";
 import {AutocompleteFormik} from "../../components/AutocompleteFormik";
 
 
@@ -34,6 +33,7 @@ const rolesManager = [
 const AdminPortal = () => {
   const api = useApi()
   const navigate = useNavigate()
+  const formikRef = useRef();
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
@@ -45,11 +45,10 @@ const AdminPortal = () => {
   const [selectedGroup, setSelectedGroup] = useState(null)
 
 
-
   const getAdminUsers = (searchData, page = 1, ordering = "") => {
     setLoading(true)
     api.getAdminUsers(searchData, page, ordering, 8).then((result) => {
-      console.log('result ==> ', result)
+      console.log('result ', result)
       if (result.kind === "ok") {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
@@ -62,6 +61,25 @@ const AdminPortal = () => {
       .catch(err => showMessage())
       .finally(() => setLoading(false))
   }
+
+  const createAdminUser = (data) => {
+    setLoading(true)
+    api.createAdminUser(data).then((result) => {
+      if (result.kind === 'ok') {
+        clearDetail()
+        getAdminUsers("")
+        showMessage('Admin user added successfully', 'success')
+      } else if (result.kind === 'bad-data') {
+        formikRef.current.setErrors(result.errors)
+        showMessage('Validation errors found')
+      } else {
+        showMessage()
+      }
+    })
+      .catch(err => showMessage())
+      .finally(() => setLoading(false))
+  }
+
   const onColumnOrdering = (ordering) => {
     const {column, order} = ordering
     if (column === '') {
@@ -79,17 +97,13 @@ const AdminPortal = () => {
 
   const clearDetail = () => {
     setShowUserFormModal(false)
-    // setSelectedItem(null)
-    // setUserPassword('')
+    setRoles([])
   }
 
   const confirmAction = () => {
-    // const data = {
-    //   id,
-    //   show_username: true,
-    //   password: userPassword
-    // }
-    // getBlockchainTransactions(data)
+    if (formikRef.current) {
+      formikRef.current.handleSubmit()
+    }
   }
 
   const validationSchema =
@@ -103,8 +117,8 @@ const AdminPortal = () => {
   const initialValues = {
     name: "",
     email: "",
-    role: null,
-    group: null,
+    role: "",
+    group: "",
   };
 
   useEffect(() => {
@@ -117,7 +131,6 @@ const AdminPortal = () => {
     }
 
   }, [selectedGroup])
-
 
   useEffect(() => {
     getAdminUsers("")
@@ -151,17 +164,16 @@ const AdminPortal = () => {
         open={showUserFormModal}
         handleClose={() => clearDetail()}
         handleConfirm={() => confirmAction()}
-        // disabledConfirm={userPassword === ''}
       >
         <Formik
+          innerRef={formikRef}
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={values => {
-            // login(values);
-            console.log('values ', values)
+            createAdminUser(values)
           }}
         >
-          {({errors, touched, setFieldValue}) => (
+          {({errors, touched, setFieldValue, values}) => (
             <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
               <Field name="name">
                 {({field}) => {
@@ -209,7 +221,9 @@ const AdminPortal = () => {
                         options={groups}
                         labelFieldName={"title"}
                         field={field}
-                        setFieldValue={(val) => setFieldValue(val.id)}
+                        setFieldValue={(field, value) => {
+                          setFieldValue(field, value.id)
+                        }}
                         initialValue={initialValues.group}
                         touched={touched}
                         errors={errors}
@@ -226,7 +240,8 @@ const AdminPortal = () => {
                         options={roles}
                         labelFieldName={"title"}
                         field={field}
-                        setFieldValue={(val) => setFieldValue(val.id)}
+                        disabled={values.group === ''}
+                        setFieldValue={(field, value) => setFieldValue(field, value.id)}
                         initialValue={initialValues.role}
                         touched={touched}
                         errors={errors}

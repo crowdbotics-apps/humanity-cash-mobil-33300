@@ -107,7 +107,7 @@ export const AutocompleteFormik = (opts) => {
               setFieldValue(field.name, e.target.value)
             }}
             error={touched[field.name] === true && errors[field.name] !== undefined}
-            helperText={touched[field.name] === true && errors[field.name] && errors[field.name][labelFieldName]}
+            helperText={touched[field.name] === true && errors[field.name] && errors[field.name]}
             {...field}
             {...params}
           />
