@@ -16,13 +16,12 @@ export class Api extends ApiBase {
   async login(username: string, password: string): Promise<Types.SimplePostResult> {
     return this.simple_post(`/dj-rest-auth/login/`, {
       email: username,
-      // username,
       password,
     })
   }
 
   async forgotPassword(email: string): Promise<Types.GenericResponse> {
-    return this.simple_post(`/users/password/reset/`, {email: email})
+    return this.simple_post(`${API_VERSION_PREFIX}/reset-password/`, {email: email})
   }
 
   async resetPassword(data: any): Promise<Types.GenericResponse> {
@@ -309,6 +308,13 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/user-admin/${filters}`, extraData)
   }
 
+  async createAdminUser(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post( `${API_VERSION_PREFIX}/user-admin/`, data)
+  }
+
+  async deleteAdminUser(id: number): Promise<Types.GenericResponse> {
+    return this.simple_delete( `${API_VERSION_PREFIX}/user-admin/${id}/`)
+  }
 
   async getDwollaUser(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post( `${API_VERSION_PREFIX}/dwolla_user/${data.id}/details/`, data)

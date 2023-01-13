@@ -5,7 +5,10 @@ from email.mime.image import MIMEImage
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-# from django.contrib.auth.backends import UserModel
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from allauth.account.adapter import get_adapter
+from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 from django.db.models import QuerySet
@@ -215,3 +218,17 @@ def send_email_with_template_attach_element(subject, email, context, template_to
     mail.attach(image)
 
     return mail.send()
+
+def send_reset_email(user, request):
+    temp_key = default_token_generator.make_token(user)
+    current_site = f"{request.scheme}://{request.get_host()}"
+    url = f"{request.scheme}://{request.get_host()}/set-new-password/{urlsafe_base64_encode(force_bytes(user.pk))}/{temp_key}"
+    context = {
+        "current_site": current_site,
+        "user": user,
+        "password_reset_url": url,
+        "request": request,
+    }
+    get_adapter(request).send_mail(
+        "account/email/password_reset_key", user.email, context
+    )

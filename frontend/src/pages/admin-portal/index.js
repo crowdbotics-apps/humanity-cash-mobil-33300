@@ -3,27 +3,54 @@ import {useEffect, useRef, useState} from "react"
 import {showMessage, useApi} from "../../services/helpers"
 import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
 import MDBox from "../../components/MDBox";
+import ConfirmDialogInputModal from "../../components/ConfirmDialogInputModal";
+import MDInput from "../../components/MDInput";
+import * as Yup from "yup";
+import {Field, Form, Formik} from "formik";
+import {AutocompleteFormik} from "../../components/AutocompleteFormik";
+import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 
+
+const groups = [
+  {id: 'BANK', title: 'Bank'},
+  {id: 'MANAGER', title: 'Program manager'},
+]
+
+const rolesBank = [
+  {id: 'EMPLOYEE', title: 'Employee'},
+  {id: 'SUPERVISOR', title: 'Supervisor'},
+]
+
+const rolesManager = [
+  {id: 'ADMIN', title: 'Admin'},
+  {id: 'SUPERADMIN', title: 'Super admin'},
+]
 
 const AdminPortal = () => {
   const api = useApi()
-  const navigate = useNavigate()
+  const formikRef = useRef();
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
   const [numberOfItemsPage, setNumberOfItemsPage] = useState(0);
   const [recordList, setRecordList] = useState({...dataTableModel})
   const searchQueryRef = useRef("");
+  const [showUserFormModal, setShowUserFormModal] = useState(false)
+  const [showUserDeleteModal, setShowUserDeleteModal] = useState(false)
+  const [roles, setRoles] = useState([])
+  const [selectedGroup, setSelectedGroup] = useState(null)
+  const [selectedItem, setSelectedItem] = useState(null)
+
 
   const getAdminUsers = (searchData, page = 1, ordering = "") => {
     setLoading(true)
     api.getAdminUsers(searchData, page, ordering, 8).then((result) => {
-      console.log('result ==> ', result)
+      console.log('result ', result)
       if (result.kind === "ok") {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
@@ -36,6 +63,40 @@ const AdminPortal = () => {
       .catch(err => showMessage())
       .finally(() => setLoading(false))
   }
+
+  const createAdminUser = (data) => {
+    setLoading(true)
+    api.createAdminUser(data).then((result) => {
+      if (result.kind === 'ok') {
+        clearDetail()
+        getAdminUsers("")
+        showMessage('Admin user added successfully', 'success')
+      } else if (result.kind === 'bad-data') {
+        formikRef.current.setErrors(result.errors)
+        showMessage('Validation errors found')
+      } else {
+        showMessage()
+      }
+    })
+      .catch(err => showMessage())
+      .finally(() => setLoading(false))
+  }
+
+  const deleteAdminUser = () => {
+    setLoading(true)
+    api.deleteAdminUser(selectedItem.id).then((result) => {
+      if (result.kind === 'ok') {
+        clearDetail()
+        getAdminUsers("")
+        showMessage('Admin user deleted successfully', 'success')
+      } else {
+        showMessage()
+      }
+    })
+      .catch(err => showMessage())
+      .finally(() => setLoading(false))
+  }
+
   const onColumnOrdering = (ordering) => {
     const {column, order} = ordering
     if (column === '') {
@@ -48,8 +109,48 @@ const AdminPortal = () => {
   }
 
   const setDetailToShow = (item) => {
-    console.log('items')
+    setSelectedItem(item)
+    setShowUserDeleteModal(true)
   }
+
+  const clearDetail = () => {
+    setShowUserFormModal(false)
+    setShowUserDeleteModal(false)
+    setSelectedItem(null)
+    setRoles([])
+  }
+
+  const confirmAction = () => {
+    if (formikRef.current) {
+      formikRef.current.handleSubmit()
+    }
+  }
+
+  const validationSchema =
+    Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string().email().required(),
+      group: Yup.string().required(),
+      role: Yup.string().required(),
+    })
+
+  const initialValues = {
+    name: "",
+    email: "",
+    role: "",
+    group: "",
+  };
+
+  useEffect(() => {
+    if (selectedGroup) {
+      if(selectedGroup.id === 'BANK') {
+        setRoles(rolesBank)
+      } else {
+        setRoles(rolesManager)
+      }
+    }
+
+  }, [selectedGroup])
 
   useEffect(() => {
     getAdminUsers("")
@@ -68,6 +169,7 @@ const AdminPortal = () => {
         </MDTypography>
         <MDBox ml={'auto'}>
           <MDButton
+            onClick={() => setShowUserFormModal(true)}
             color={"primary"}
             variant={"contained"}
             sx={{width: 200}}
@@ -76,6 +178,112 @@ const AdminPortal = () => {
           </MDButton>
         </MDBox>
       </MDBox>
+      <ConfirmDialogModal
+        title={'Delete user'}
+        description={`Do you want to delete this user?`}
+        open={showUserDeleteModal}
+        handleClose={() => clearDetail()}
+        handleConfirm={() => deleteAdminUser()}
+        cancelText={'Cancel'}
+        confirmText={'Delete'}
+      />
+      <ConfirmDialogInputModal
+        title={'Add user'}
+        description={'Admin user create form'}
+        open={showUserFormModal}
+        handleClose={() => clearDetail()}
+        handleConfirm={() => confirmAction()}
+      >
+        <Formik
+          innerRef={formikRef}
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={values => {
+            createAdminUser(values)
+          }}
+        >
+          {({errors, touched, setFieldValue, values}) => (
+            <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
+              <Field name="name">
+                {({field}) => {
+                  return (
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        label="USER FULL NAME"
+                        variant="outlined"
+                        placeholder="john Doe"
+                        fullWidth
+                        error={errors.name !== undefined}
+                        helperText={errors.name && errors.name}
+                        {...field}
+                      />
+                    </MDBox>
+                  )
+                }
+                }
+              </Field>
+              <Field name="email">
+                {({field}) => {
+                  return (
+                    <MDBox mb={2}>
+                      <MDInput
+                        type="text"
+                        label="USER EMAIL"
+                        variant="outlined"
+                        placeholder="john@example.com"
+                        fullWidth
+                        error={errors.email !== undefined}
+                        helperText={errors.email && errors.email}
+                        {...field}
+                      />
+                    </MDBox>
+                  )
+                }
+                }
+              </Field>
+              <MDBox display={'flex'} flex={1} mb={2}>
+                <MDBox sx={{width: "50%"}} mr={1}>
+                  <Field name="group">
+                    {({field}) => (
+                      <AutocompleteFormik
+                        options={groups}
+                        labelFieldName={"title"}
+                        field={field}
+                        setFieldValue={(field, value) => {
+                          setFieldValue(field, value.id)
+                        }}
+                        initialValue={initialValues.group}
+                        touched={touched}
+                        errors={errors}
+                        label={"GROUP"}
+                        onChange={(e, val) => setSelectedGroup(val)}
+                      />
+                    )}
+                  </Field>
+                </MDBox>
+                <MDBox sx={{width: "50%"}} ml={1}>
+                  <Field name="role">
+                    {({field}) => (
+                      <AutocompleteFormik
+                        options={roles}
+                        labelFieldName={"title"}
+                        field={field}
+                        disabled={values.group === ''}
+                        setFieldValue={(field, value) => setFieldValue(field, value.id)}
+                        initialValue={initialValues.role}
+                        touched={touched}
+                        errors={errors}
+                        label={"ROLE"}
+                      />
+                    )}
+                  </Field>
+                </MDBox>
+              </MDBox>
+            </Form>
+          )}
+        </Formik>
+      </ConfirmDialogInputModal>
       {recordList?.rows.length > 0
         ? (<DataTable
           table={recordList}

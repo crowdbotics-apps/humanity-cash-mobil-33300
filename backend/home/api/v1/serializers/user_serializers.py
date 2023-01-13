@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth import get_user_model
 from django.http import HttpRequest
 from django.utils.translation import ugettext_lazy as _
@@ -10,6 +12,7 @@ from rest_framework import serializers
 
 # from rest_auth.serializers import PasswordResetSerializer
 from rest_framework.exceptions import ValidationError
+from websockets.exceptions import ConnectionClosedOK
 
 from celo_humanity.humanity_contract_helpers import NoWalletException
 from home.api.v1.serializers.ach_transaction_serializers import ACHTransactionSerializer
@@ -17,6 +20,7 @@ from home.api.v1.serializers.transaction_serializers import TransactionSerialize
 from users.models import Consumer, DwollaUser
 
 User = get_user_model()
+logger = logging.getLogger('django')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -68,11 +72,13 @@ class ConsumerSerializer(serializers.ModelSerializer):
 
 class DwollaUserSerializer(serializers.ModelSerializer):
     balance = serializers.SerializerMethodField()
+    username = serializers.SerializerMethodField()
+    profile_picture = serializers.SerializerMethodField()
 
     class Meta:
         model = DwollaUser
         fields = ['id', 'balance', 'name', 'address', 'email', 'dwolla_id',
-                  'crypto_wallet_id', 'last_login', 'date_joined', 'account_type']
+                  'crypto_wallet_id', 'last_login', 'date_joined', 'account_type', 'username', 'profile_picture']
 
     def get_balance(self, obj):
         try:
@@ -82,8 +88,25 @@ class DwollaUserSerializer(serializers.ModelSerializer):
 
             if hasattr(user, 'consumer'):
                 return user.consumer.balance
-        except (TimeoutError, NoWalletException) as error:
+        except (TimeoutError, NoWalletException, RuntimeError, ConnectionClosedOK) as error:
+            logger.exception('Contract Error: {}'.format(error))
             return '-'
+
+    def get_username(self, obj):
+        user = User.objects.get(pk=obj.pk)
+        if hasattr(user, 'merchant'):
+            return user.merchant.business_name
+        if hasattr(user, 'consumer'):
+            return user.username
+
+    def get_profile_picture(self, obj):
+        user = User.objects.get(pk=obj.pk)
+        if hasattr(user, 'merchant'):
+            return user.merchant.profile_picture.url if user.merchant.profile_picture else None
+        if hasattr(user, 'consumer'):
+            return user.consumer.profile_picture.url if user.consumer.profile_picture else None
+
+
 
 
 class DwollaUserDetailVerifySerializer(serializers.Serializer):

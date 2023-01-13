@@ -1,58 +1,47 @@
-import {money_fmt, truncate} from "../../services/helpers";
+import {truncate} from "../../services/helpers";
 import MDBox from "../../components/MDBox";
-import moment from "moment";
 import MDButton from "../../components/MDButton";
-import Icon from "@mui/material/Icon";
+import MDBadge from "../../components/MDBadge";
 
 export const dataTableModel = {
   columns: [
     {Header: "FULL NAME", accessor: "name"},
     {Header: "GROUP", accessor: "group"},
-    {Header: "ACCESS TYPE", accessor: "access_type"},
+    {Header: "ACCESS TYPE", accessor: "role"},
     {Header: "ACTION", accessor: "actions", disableOrdering: true}
   ],
   rows: [],
 };
 
-const hashBox = (text, to = false) => {
+const hashBox = (text) => {
   return (
     <MDBox
-      sx={{ display: 'block', wordWrap: 'break-word', width: to ? 120 : 100, color: '#3B88B6', position: 'relative', paddingLeft: to ? '20px': 0}}>
-      {to && <Icon sx={{ position: 'absolute', color: '#8D955D', transform: 'scale(1.3)', top: 15, left: -10}}>east</Icon>}
+      sx={{ display: 'block', wordWrap: 'break-word', width: 100, color: '#3B88B6', position: 'relative'}}>
       {truncate(text, 22)}
     </MDBox>
   )
 }
 
-const formatBalance = (text) => {
-  return (
-    <MDBox
-      sx={{ display: 'block', wordWrap: 'break-word', width: 100, color: '#8D955D', position: 'relative'}}>
-      {/*{truncate(money_fmt(text), 22)}*/}
-      $ {text}
-    </MDBox>
-  )
+const badgeBoxType = (item) => {
+  if (item.group !== 'BANK') {
+    return <MDBadge variant="contained" color="success" badgeContent={item.group} container />
+  } else {
+    return <MDBadge variant="contained" color="info" badgeContent={item.group}  container />
+  }
 }
 
-const dateBox = (date) => {
-  return (
-    <>
-      <MDBox sx={{color: '#000000', fontSize: 14, fontWeight: 500}}>
-        {moment(date).format('MMMM DD, YYYY')}
-      </MDBox>
-      <MDBox sx={{color: '#666666', fontSize: 12, fontWeight: 700}}>
-        {moment(date).format('H:mm a').toUpperCase()}
-      </MDBox>
-    </>
-  )
+const badgeBoxRole = (item) => {
+  if (item.role === 'EMPLOYEE' || item.role === 'SUPERVISOR') {
+    return <MDBadge variant="contained" color="success" badgeContent={item.role} container />
+  } else {
+    return <MDBadge variant="contained" color="info" badgeContent={item.role}  container />
+  }
 }
-
 
 export const renderTableRow = (item, onAction ) => {
-  item.dwolla_id = (hashBox(item.dwolla_id))
-  item.crypto_wallet_id = (hashBox(item.crypto_wallet_id))
-  item.last_login = (dateBox(item.last_login))
-  item.balance = (formatBalance(item.balance))
+  item.name = hashBox(item.name)
+  item.role = badgeBoxRole(item)
+  item.group = badgeBoxType(item)
   item.actions = (
     <MDButton color={"pink"} size={"small"} onClick={() => onAction(item)}>
       Delete
