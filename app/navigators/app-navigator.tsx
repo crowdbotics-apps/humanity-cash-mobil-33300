@@ -33,7 +33,8 @@ import {
   ContactScreen,
   ForgotPassScreen,
   SendPersonalScreen,
-  StaticQRScreen
+  StaticQRScreen,
+  MakeRetun
 } from "../screens";
 
 export type NavigatorParamList = {
@@ -65,6 +66,7 @@ export type NavigatorParamList = {
   forgotPass: any
   sendPersonal: any
   staticQR: any
+  makeReturn: any
 }
 
 const DrawerNav = createDrawerNavigator<NavigatorParamList>();
@@ -110,6 +112,7 @@ const AppStackDrawer: React.FC = () => {
       <DrawerNav.Screen name="forgotPass" component={ForgotPassScreen} />
       <DrawerNav.Screen name="sendPersonal" component={SendPersonalScreen} />
       <DrawerNav.Screen name="staticQR" component={StaticQRScreen} />
+      <DrawerNav.Screen name="makeReturn" component={MakeRetun} />
     </DrawerNav.Navigator>
   )
 }

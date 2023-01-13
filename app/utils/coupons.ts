@@ -6,7 +6,6 @@ const refreshCouponState = (loginStore) => loginStore.environment.api
     .getConsumerCoupons()
     .then((result: any) => {
         if (result.kind === "ok") {
-            //console.log('CONSUMER COUPONS =============>', result.data)
             runInAction(() => {
                 loginStore.setConsumerCoupons(result.data?.results)
             })

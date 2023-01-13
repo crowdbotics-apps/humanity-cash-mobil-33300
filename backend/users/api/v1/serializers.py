@@ -2,7 +2,7 @@ from rest_framework import serializers
 from allauth.utils import email_address_exists
 from allauth.account.adapter import get_adapter
 
-from home.helpers import setup_verification_code, send_verification_email
+from home.helpers import setup_verification_code, send_verification_email, send_reset_email
 from users.models import User
 
 
@@ -45,6 +45,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
             is_admin=True
         )
         user.save()
-        code = setup_verification_code(user)
-        send_verification_email(user, code)
+        request = self.context.get('request')
+        send_reset_email(user, request)
         return user

@@ -13,6 +13,7 @@ import { profileTypes } from '../drawer/drawer-screen'
 
 export const HomeScreen = observer(function HomeScreen() {
 	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
+	const [ShowMakeReturnModal, setShowMakeReturnModal] = useState(false);
 	const [couponsConfig, setCouponsConfig] = useState({
 		coupons: [],
 		couponSelected: {},
@@ -178,10 +179,33 @@ export const HomeScreen = observer(function HomeScreen() {
 						<TouchableOpacity
 							style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
 							onPress={() => [
+								setShowConfirmLogoutModal(false),
 								loginStore.setSelectedAccount('merchant'),
-								setShowConfirmLogoutModal(false)
+								loginStore.reset(),
+								 navigation.navigate("login")
 							]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</TouchableWithoutFeedback>
+		</Modal>
+	)
+
+	const makeReturnModal = () => (
+		<Modal visible={ShowMakeReturnModal} transparent>
+			<TouchableWithoutFeedback onPress={() => setShowMakeReturnModal(false)}>
+				<View style={styles.ROOT_MODAL}>
+					<View style={[styles.MODAL_RETURN_CONTENT, {backgroundColor: loginStore.getAccountColor}]}>
+						<Text style={[styles.STEP_TITLE_BLACK, {color: 'white'}]}>Scan the customer’s return receipt QR code.</Text>
+						<Text style={styles.STEP_SUB_TITLE_MODAL}>The customer needs to provide the transaction receipt, and select “Make a Return” in order to generate a QR Code. Scan this QR code in order to the refund BerkShares to the customer.</Text>
+						<TouchableOpacity
+							style={[styles.MODAL_BUTTON, { backgroundColor: 'white' }]}
+							onPress={() => [
+								navigation.navigate('makeReturn'),
+								setShowMakeReturnModal(false)
+							]}>
+							<Text style={[styles.SUBMIT_BUTTON_LABEL, {color: 'black'}]}>Scan</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -232,7 +256,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					</View>
 					<View style={styles.LINE} />
 
-					{!(!loginStore.getAllData.first_name && loginStore.getSelectedAccount === 'merchant') &&
+					{(!loginStore.getAllData.first_name && loginStore.getSelectedAccount === 'merchant') &&
 						<TouchableOpacity
 							style={[styles.WARNING_CONTAINER, {marginBottom: 10}]}
 							onPress={() => navigation.navigate('signupProfile', { profile_type: profileTypes[0] })}
@@ -338,7 +362,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					/>
 					<Text style={styles.CASHIER_BUTTON_LABEL}>Transactions</Text>
 				</TouchableOpacity>
-				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => navigation.navigate("qr")}>
+				<TouchableOpacity style={styles.CASHIER_BUTTON_SMALL} onPress={() => setShowMakeReturnModal(true)}>
 					<Image
 						resizeMode="contain"
 						source={IMAGES.return_cashier}
@@ -377,6 +401,7 @@ export const HomeScreen = observer(function HomeScreen() {
 				style={styles.ROOT}
 			>
 				{confirmLogoutModal()}
+				{makeReturnModal()}
 				{loginStore.getSelectedAccount === 'cashier'
 					? CashierView()
 					: [

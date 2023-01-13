@@ -47,7 +47,7 @@ class ResetPasswordConfirmSerializer(serializers.Serializer):
                 if self.token_generator.check_token(user, token):
                     self.request.session[INTERNAL_RESET_SESSION_TOKEN] = token
                     return
-        raise serializers.ValidationError("Password reset unsuccessful")
+        raise serializers.ValidationError("Invalid token")
 
     def validate_new_password2(self, password2):
         password1 = self.initial_data['new_password1']
