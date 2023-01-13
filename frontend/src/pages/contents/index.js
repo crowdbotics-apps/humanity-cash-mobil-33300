@@ -6,9 +6,8 @@ import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'
 import MDBox from "components/MDBox";
-
+import MDTypography from "components/MDTypography";
 import { CalendarIcon, StoriesIcon } from "../../assets/svg";
-import { event_list } from "./data";
 import { ContentEventCard, ContentEventDetail, getTitleFormat, HourLine } from "./components";
 import '../../assets/fakescroll/fakescroll.css'
 import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
@@ -16,6 +15,7 @@ import moment from 'moment'
 import MDButton from "components/MDButton";
 import ConfirmDialogInputModal from "components/ConfirmDialogInputModal";
 import {AddEventForm, AddStoryForm} from "./forms";
+import Checkbox from "@mui/material/Checkbox";
 
 // keep at the end
 import './Content.css';
@@ -63,11 +63,11 @@ const BlockchainTransactions = () => {
     let api = CalendarEl.current.getApi()
     setCalendarApi(api)
     setTitle(api.currentDataManager.data.viewTitle)
-    setRightEvents(event_list)
+    setRightEvents([])
   }
 
   const handleDateClick = (arg) => { // bind with an arrow function
-    setDetails(event_list[0].events)
+    setDetails([])
     let target = arg.el.closest(".fc-daygrid-day")
     let selectedDay = ''
     selectedDay = target.querySelector('.fc-daygrid-day-number').firstChild.textContent
@@ -359,7 +359,7 @@ const BlockchainTransactions = () => {
 
   const createModal = <ConfirmDialogInputModal
     title={'Create'}
-    description={'Lorem ipsum dolor sit amet '}
+    description={'Create a new content '}
     open={show}
     width={800}
     hideButtons
@@ -415,7 +415,7 @@ const BlockchainTransactions = () => {
 
   const eventModal = <ConfirmDialogInputModal
     title={CurrentEvent && CurrentEvent.id !== null ? 'Edit Event': 'Add New Event'}
-    description={'Lorem ipsum dolor sit amet'}
+    description={''}
     open={showEventModal}
     width={800}
     hideButtons
@@ -426,7 +426,7 @@ const BlockchainTransactions = () => {
 
   const storyModal = <ConfirmDialogInputModal
     title={CurrentEvent ? "Edit Story" : "Add New Story"}
-    description={'Lorem ipsum dolor sit amet'}
+    description={''}
     open={showStoryModal}
     width={800}
     hideButtons
@@ -438,12 +438,44 @@ const BlockchainTransactions = () => {
     <AddStoryForm event={CurrentEvent} save={(data) => saveStory(data)} />
   </ConfirmDialogInputModal>
 
+  // POPOVER 
+  const filterOptions = [
+    { label: 'Super Admin', accessor: 'super_admin' },
+    { label: 'Bank', accessor: 'bank' },
+    { label: 'App support', accessor: 'app_support' },
+  ]
+  const pageFilters = <MDBox>
+    <MDBox width={500} display={'flex'} alignItems={'center'}>
+      {filterOptions.map((f, i) =>
+        <MDBox key={`filter__${i}`} width={'33%'} style={{ justifyContent: 'center' }} display={'flex'} alignItems={'center'}>
+          <MDTypography variant="h6" fontWeight="medium">
+            {f.label}
+          </MDTypography>
+          <Checkbox style={{ marginLeft: 5 }} fontSize={'small'} />
+        </MDBox>
+      )}
+    </MDBox>
+    <div style={{ background: '#3B88B6', height: 1, marginTop: 20, width: '100%', margin: 'auto' }} />
+    <MDBox width={500} mt={1} display={'flex'} alignItems={'center'}>
+      <MDTypography width={'60%'} color={'pink'} variant="h6" fontWeight="regular">
+        Clear All Filters
+      </MDTypography>
+      <MDTypography width={'20%'} color={'gray'} variant="h6" fontWeight="regular">
+        Cancel
+      </MDTypography>
+      <MDTypography syle={{cursor: 'grab',}} width={'20%'} color={'primary'} variant="h6" fontWeight="regular">
+        Apply
+      </MDTypography>
+    </MDBox>
+  </MDBox>
+  //
 
   return (
     <DashboardLayout
       loginRequired
       loading={loading}
       searchFunc={getEventsRequest}
+      filterContent={pageFilters}
     >
       <MDBox display={'flex'} mt={5}>
         <div className={'calendar-left-column'}>
