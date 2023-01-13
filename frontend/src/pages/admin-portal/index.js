@@ -33,7 +33,7 @@ const rolesManager = [
 const AdminPortal = () => {
   const api = useApi()
   const navigate = useNavigate()
-  const formRef = useRef();
+  const formikRef = useRef();
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
@@ -48,6 +48,7 @@ const AdminPortal = () => {
   const getAdminUsers = (searchData, page = 1, ordering = "") => {
     setLoading(true)
     api.getAdminUsers(searchData, page, ordering, 8).then((result) => {
+      console.log('result ', result)
       if (result.kind === "ok") {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
@@ -60,6 +61,25 @@ const AdminPortal = () => {
       .catch(err => showMessage())
       .finally(() => setLoading(false))
   }
+
+  const createAdminUser = (data) => {
+    setLoading(true)
+    api.createAdminUser(data).then((result) => {
+      if (result.kind === 'ok') {
+        clearDetail()
+        getAdminUsers("")
+        showMessage('Admin user added successfully', 'success')
+      } else if (result.kind === 'bad-data') {
+        formikRef.current.setErrors(result.errors)
+        showMessage('Validation errors found')
+      } else {
+        showMessage()
+      }
+    })
+      .catch(err => showMessage())
+      .finally(() => setLoading(false))
+  }
+
   const onColumnOrdering = (ordering) => {
     const {column, order} = ordering
     if (column === '') {
@@ -77,13 +97,12 @@ const AdminPortal = () => {
 
   const clearDetail = () => {
     setShowUserFormModal(false)
-    // setSelectedItem(null)
-    // setUserPassword('')
+    setRoles([])
   }
 
   const confirmAction = () => {
-    if (formRef.current) {
-      formRef.current.handleSubmit()
+    if (formikRef.current) {
+      formikRef.current.handleSubmit()
     }
   }
 
@@ -147,14 +166,14 @@ const AdminPortal = () => {
         handleConfirm={() => confirmAction()}
       >
         <Formik
-          innerRef={formRef}
+          innerRef={formikRef}
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={values => {
-            console.log('values ', values)
+            createAdminUser(values)
           }}
         >
-          {({errors, touched, setFieldValue}) => (
+          {({errors, touched, setFieldValue, values}) => (
             <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
               <Field name="name">
                 {({field}) => {
@@ -202,7 +221,9 @@ const AdminPortal = () => {
                         options={groups}
                         labelFieldName={"title"}
                         field={field}
-                        setFieldValue={(field, value) => setFieldValue(field, value.id)}
+                        setFieldValue={(field, value) => {
+                          setFieldValue(field, value.id)
+                        }}
                         initialValue={initialValues.group}
                         touched={touched}
                         errors={errors}
@@ -219,6 +240,7 @@ const AdminPortal = () => {
                         options={roles}
                         labelFieldName={"title"}
                         field={field}
+                        disabled={values.group === ''}
                         setFieldValue={(field, value) => setFieldValue(field, value.id)}
                         initialValue={initialValues.role}
                         touched={touched}
