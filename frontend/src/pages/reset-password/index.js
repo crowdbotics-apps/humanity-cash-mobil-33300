@@ -42,7 +42,7 @@ function ResetPassword() {
     const form = {
       new_password1: data.password,
       new_password2: data.new_password2,
-      uid: getUrls[0],
+      uidb64: getUrls[0],
       token: getUrls[1]
     }
     setLoading(true)
@@ -51,8 +51,12 @@ function ResetPassword() {
         showMessage('Password reset successful', 'success')
         navigate(ROUTES.LOGIN)
       } else if(result.kind === "bad-data") {
-        showMessage('Validation errors found')
-        formikRef.current.setErrors(result.errors)
+        if (result.errors.token) {
+          showMessage(result.errors.token)
+        } else {
+          showMessage('Validation errors found')
+          formikRef.current.setErrors(result.errors)
+        }
       } else {
         showMessage()
       }
