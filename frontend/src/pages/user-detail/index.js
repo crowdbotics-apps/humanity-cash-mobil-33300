@@ -40,7 +40,6 @@ const UserDetail = () => {
   const getDwollaUser = (data) => {
     setLoading(true)
     api.getDwollaUser(data).then((result) => {
-      console.log('result ', result)
       if (result.kind === "ok") {
         clearDetail()
         const {ach_transactions, blockchain_transactions} = result.response
