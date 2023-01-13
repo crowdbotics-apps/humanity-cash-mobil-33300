@@ -13,6 +13,7 @@ import MDInput from "../../components/MDInput";
 import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
 import {AutocompleteFormik} from "../../components/AutocompleteFormik";
+import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 
 
 const groups = [
@@ -32,7 +33,6 @@ const rolesManager = [
 
 const AdminPortal = () => {
   const api = useApi()
-  const navigate = useNavigate()
   const formikRef = useRef();
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,8 +41,10 @@ const AdminPortal = () => {
   const [recordList, setRecordList] = useState({...dataTableModel})
   const searchQueryRef = useRef("");
   const [showUserFormModal, setShowUserFormModal] = useState(false)
+  const [showUserDeleteModal, setShowUserDeleteModal] = useState(false)
   const [roles, setRoles] = useState([])
   const [selectedGroup, setSelectedGroup] = useState(null)
+  const [selectedItem, setSelectedItem] = useState(null)
 
 
   const getAdminUsers = (searchData, page = 1, ordering = "") => {
@@ -80,6 +82,21 @@ const AdminPortal = () => {
       .finally(() => setLoading(false))
   }
 
+  const deleteAdminUser = () => {
+    setLoading(true)
+    api.deleteAdminUser(selectedItem.id).then((result) => {
+      if (result.kind === 'ok') {
+        clearDetail()
+        getAdminUsers("")
+        showMessage('Admin user deleted successfully', 'success')
+      } else {
+        showMessage()
+      }
+    })
+      .catch(err => showMessage())
+      .finally(() => setLoading(false))
+  }
+
   const onColumnOrdering = (ordering) => {
     const {column, order} = ordering
     if (column === '') {
@@ -92,11 +109,14 @@ const AdminPortal = () => {
   }
 
   const setDetailToShow = (item) => {
-    console.log('items')
+    setSelectedItem(item)
+    setShowUserDeleteModal(true)
   }
 
   const clearDetail = () => {
     setShowUserFormModal(false)
+    setShowUserDeleteModal(false)
+    setSelectedItem(null)
     setRoles([])
   }
 
@@ -158,6 +178,15 @@ const AdminPortal = () => {
           </MDButton>
         </MDBox>
       </MDBox>
+      <ConfirmDialogModal
+        title={'Delete user'}
+        description={`Do you want to delete this user?`}
+        open={showUserDeleteModal}
+        handleClose={() => clearDetail()}
+        handleConfirm={() => deleteAdminUser()}
+        cancelText={'Cancel'}
+        confirmText={'Delete'}
+      />
       <ConfirmDialogInputModal
         title={'Add user'}
         description={'Admin user create form'}
