@@ -38,6 +38,7 @@ import MDTypography from "../../../components/MDTypography";
 import {observer} from "mobx-react";
 import {CircularProgress, Grid, Input} from "@mui/material";
 import {ArrowBack, Search} from "@mui/icons-material";
+import MDButton from "../../MDButton";
 
 function DashboardNavbar({absolute, light, isMini, searchFunc, title, goBack, loading = false}) {
   const [controller, dispatch] = useMaterialUIController();
@@ -115,6 +116,9 @@ function DashboardNavbar({absolute, light, isMini, searchFunc, title, goBack, lo
                       onChange={(evt) => searchFunc(evt?.target?.value)}
                     />
                   </MDBox>
+                  <MDButton variant="standard" color="dark" iconOnly sx={{marginLeft: 2}}>
+                    <Icon sx={{ fontWeight: "bold" }}>tune</Icon>
+                  </MDButton>
                 </Grid>
                 }
             </MDBox>
