@@ -309,6 +309,10 @@ export class Api extends ApiBase {
     return this.simple_get(`${API_VERSION_PREFIX}/user-admin/${filters}`, extraData)
   }
 
+  async createAdminUser(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post( `${API_VERSION_PREFIX}/user-admin/`, data)
+  }
+
 
   async getDwollaUser(data: any): Promise<Types.SimplePostResult> {
     return this.simple_post( `${API_VERSION_PREFIX}/dwolla_user/${data.id}/details/`, data)
