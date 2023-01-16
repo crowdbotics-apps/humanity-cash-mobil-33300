@@ -1,6 +1,7 @@
 import {Instance, SnapshotOut, types} from "mobx-state-tree"
 import {withEnvironment} from "../extensions/with-environment";
 import {withRootStore} from "../extensions/with-root-store";
+import {UXModel} from "../UXModel";
 
 /**
  * Model description here for TypeScript hints.
@@ -21,6 +22,8 @@ export const LoginStoreModel = types
     refresh_token: types.maybeNull(types.string),
     verified_email: types.maybeNull(types.boolean),
     merchant_data: types.maybeNull(types.string),
+
+    ux: types.maybeNull(UXModel)
   })
   .views(self => ({
     get isLoggedIn() {
@@ -29,7 +32,9 @@ export const LoginStoreModel = types
     get fullName() {
       return self.first_name + ' ' + self.last_name
     },
-
+    get getUX() {
+      return {...self.ux} || {...UXModel}
+    }
   }))
   .actions(self => ({
     setApiToken(token: string | null) {
@@ -60,6 +65,11 @@ export const LoginStoreModel = types
       self.access_token = user.token.access
       self.refresh_token = user.token.refresh
       self.verified_email = user.verified_email
+    },
+    setPopoverOpen(open: boolean) {
+      let ux = { ...self.ux } || { popoverOpen: false }
+      ux.popoverOpen = open
+      self.ux = ux
     },
     reset() {
       const api = self.environment.api.apisauce

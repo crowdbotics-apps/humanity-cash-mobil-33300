@@ -3,18 +3,10 @@ import { useEffect, useRef, useState } from "react"
 import MDButton from "../../components/MDButton"
 import { showMessage, useApi } from "../../services/helpers"
 import MDBox from "../../components/MDBox";
-import { Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { CircularProgress, Grid, Input } from "@mui/material";
-import MDInput from "../../components/MDInput";
-import Pagination from "../../components/Pagination/Pagination";
-import ConfirmDialogModal from "../../components/ConfirmDialogModal";
-import ModalItem from "../../components/ModalItem";
-import { renderTableRow } from "./utils";
+import MDTypography from "components/MDTypography";
 import DataTableDropdown from "../../components/DataTableDropdown";
-import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../services/constants";
+import Checkbox from "@mui/material/Checkbox";
 import moment from "moment";
 
 const dataTableModel = {
@@ -132,11 +124,44 @@ const Dashboard = () => {
     getTransactions("")
   }, [])
 
+  // POPOVER 
+  const filterOptions = [
+    { label: 'Super Admin', accessor: 'super_admin' },
+    { label: 'Bank', accessor: 'bank' },
+    { label: 'App support', accessor: 'app_support' },
+  ]
+  const filterContent = <MDBox>
+    <MDBox width={500} display={'flex'} alignItems={'center'}>
+      {filterOptions.map((f, i) =>
+        <MDBox key={`filter__${i}`} width={'33%'} style={{ justifyContent: 'center' }} display={'flex'} alignItems={'center'}>
+          <MDTypography variant="h6" fontWeight="medium">
+            {f.label}
+          </MDTypography>
+          <Checkbox style={{ marginLeft: 5 }} fontSize={'small'} />
+        </MDBox>
+      )}
+    </MDBox>
+    <div style={{ background: '#3B88B6', height: 1, marginTop: 20, width: '100%', margin: 'auto' }} />
+    <MDBox width={500} mt={1} display={'flex'} alignItems={'center'}>
+      <MDTypography width={'60%'} color={'pink'} variant="h6" fontWeight="regular">
+        Clear All Filters
+      </MDTypography>
+      <MDTypography width={'20%'} color={'gray'} variant="h6" fontWeight="regular">
+        Cancel
+      </MDTypography>
+      <MDTypography syle={{cursor: 'grab',}} width={'20%'} color={'primary'} variant="h6" fontWeight="regular">
+        Apply
+      </MDTypography>
+    </MDBox>
+  </MDBox>
+  //
+
   return (
     <DashboardLayout
       loginRequired
       loading={loading}
       searchFunc={getTransactions}
+      filterContent={filterContent}
     >
       {recordList?.rows.length > 0
         ? (<DataTableDropdown

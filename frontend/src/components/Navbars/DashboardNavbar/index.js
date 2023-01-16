@@ -117,9 +117,9 @@ function DashboardNavbar({absolute, light, isMini, searchFunc, title, goBack, lo
                       onChange={(evt) => searchFunc(evt?.target?.value)}
                     />
                   </MDBox>
-                  <MDButtonPopover customPopoverContent={filterContent} variant="standard" color="dark" iconOnly sx={{marginLeft: 2}}>
+                  {filterContent || <MDButton variant="standard" color="dark" iconOnly sx={{marginLeft: 2}}>
                     <Icon sx={{ fontWeight: "bold" }}>tune</Icon>
-                  </MDButtonPopover>
+                  </MDButton>}
                 </Grid>
                 }
             </MDBox>
