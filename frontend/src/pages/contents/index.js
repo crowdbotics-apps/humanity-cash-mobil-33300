@@ -1,13 +1,13 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
-import { useEffect, useRef, useState } from "react"
-import { showMessage, useApi } from "../../services/helpers"
-import { useNavigate } from "react-router-dom";
+import {useEffect, useRef, useState} from "react"
+import {showMessage, useApi} from "../../services/helpers"
+import {useNavigate} from "react-router-dom";
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'
 import MDBox from "components/MDBox";
-import { CalendarIcon, StoriesIcon } from "../../assets/svg";
-import { ContentEventCard, ContentEventDetail, getTitleFormat, HourLine } from "./components";
+import {CalendarIcon, StoriesIcon} from "../../assets/svg";
+import {ContentEventCard, ContentEventDetail, getTitleFormat, HourLine} from "./components";
 import '../../assets/fakescroll/fakescroll.css'
 import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
 import moment from 'moment'
@@ -38,7 +38,7 @@ const BlockchainTransactions = () => {
   const CalendarEl = useRef(null);
   const [loading, setLoading] = useState(false)
 
-  const { innerWidth: width, innerHeight: height } = window;
+  const {innerWidth: width, innerHeight: height} = window;
   const [CalendarHeight, setCalendarHeight] = useState(height * 0.7)
   const [calendarApi, setCalendarApi] = useState(null)
   const [show, setShow] = useState(false);
@@ -57,7 +57,7 @@ const BlockchainTransactions = () => {
   const handleShow = () => setShow(true);
 
   const initCalendar = () => {
-    // @ts-ignore
+
     if (!CalendarEl?.current) return
     let api = CalendarEl.current.getApi()
     setCalendarApi(api)
@@ -70,7 +70,7 @@ const BlockchainTransactions = () => {
     let target = arg.el.closest(".fc-daygrid-day")
     let selectedDay = ''
     selectedDay = target.querySelector('.fc-daygrid-day-number').firstChild.textContent
-    setDetails(CalendarEvents.filter((value)=> moment(value.date).format('D') === selectedDay))
+    setDetails(CalendarEvents.filter((value) => moment(value.date).format('D') === selectedDay))
     setShowDetailModal(true)
   }
 
@@ -78,23 +78,23 @@ const BlockchainTransactions = () => {
     setCalendarEvents([])
     setRightEvents([])
     setAllEvents([])
-    // @ts-ignore
+
     calendarApi.next()
-    // @ts-ignore
+
     let current = calendarApi.currentDataManager.data.dateProfile.currentRange
     setDateRange(current)
-    // @ts-ignore
+
     setTitle(calendarApi.currentDataManager.data.viewTitle)
   }
 
   const previous = () => {
     setCalendarEvents([])
-    // @ts-ignore
+
     calendarApi.prev()
-    // @ts-ignore
+
     let current = calendarApi.currentDataManager.data.dateProfile.currentRange
     setDateRange(current)
-    // @ts-ignore
+
     setTitle(calendarApi.currentDataManager.data.viewTitle)
   }
 
@@ -120,30 +120,30 @@ const BlockchainTransactions = () => {
       allEvents.push(newEvent)
       let aux_date = moment(event.start_date).format('YYYY-MM-DD')
       if (Object.keys(data).indexOf(aux_date) === -1) {
-        // @ts-ignore
-        data[aux_date] = { title: event.start_date, events: [newEvent] }
+
+        data[aux_date] = {title: event.start_date, events: [newEvent]}
       } else {
-        // @ts-ignore
+
         data[aux_date].events.push(newEvent)
       }
     }
 
     let rightEvents = []
     for (let k of Object.keys(data)) {
-      // @ts-ignore
+
       if (data[k].events.length > 1) {
-        // @ts-ignore
+
         for (let event of data[k].events) {
           event.isOverlapping = true
           calendarEvents.push(event)
         }
       } else {
-        // @ts-ignore
+
         data[k].events[0].isOverlapping = false
-        // @ts-ignore
+
         calendarEvents.push(data[k].events[0])
       }
-      // @ts-ignore
+
       rightEvents.push(data[k])
 
     }
@@ -164,7 +164,7 @@ const BlockchainTransactions = () => {
       .finally(() => setLoading(false))
   }
 
-  const deleteEvent = (id)=>{
+  const deleteEvent = (id) => {
     setLoading(true)
     api.deleteEvent(id).then((response) => {
       if (response.kind === "not-found") {
@@ -172,95 +172,133 @@ const BlockchainTransactions = () => {
         showMessage("Object not found");
       } else {
         setLoading(false)
-        getEventsRequest()
-        showMessage('Deleted successfully','success');
+        showMessage('Deleted successfully', 'success');
         setDetails(Details.filter(value => value.id !== id))
         setShowStoryModal(false)
+        getEventsRequest()
       }
     }).catch(err => showMessage())
   }
 
-  const editEvent = (event)=>{
+  const editEvent = (event) => {
     console.log("edit event", event)
     setCurrentEvent(event)
     // setShowDetailModal(false)
-    if(event.eventType === 'story'){
+    if (event.eventType === 'story') {
       setShowStoryModal(true)
-    }else{
+    } else {
       setShowEventModal(true)
     }
   }
 
-  const patchEvent = (event:any)=>{
-    api.editEvent(event.id, event).then((result: any) => {
-      console.log(" api.editEvent", result)
+  const patchEvent = (event) => {
+    const image = event.image
+    let keys = []
+    let updatedData = event
+    delete updatedData['image']
+    if (image && typeof image !== 'string') {
+      updatedData = {...event, image}
+      keys = ['image']
+    }
+    setLoading(true)
+    api.editEvent(event.id, updatedData, keys).then((result) => {
       if (result.kind === "ok") {
-
-        showMessage("Created successfully.", 'success');
-        setDetails(Details.map(value => value.id === event.id?event:value))
-        getEventsRequest()
         setShowStoryModal(false)
+        setShowEventModal(false)
+        setShowDetailModal(false)
+        showMessage("Updated successfully.", 'success');
+        setDetails(Details.map(value => value.id === event.id ? event : value))
+        getEventsRequest()
       } else {
-        // showMessage(getErrorMessages(result.errors), {
-        //   position: toast.POSITION.TOP_CENTER
-        // });
+        showMessage()
       }
     }).catch(err => showMessage())
+      .finally(() => setLoading(false))
   }
 
-  const createEvent = (event:any)=>{
-    api.createEvent(event).then((result: any) => {
-      console.log(" api.createEvent", result)
+  const createEvent = (event) => {
+    const image = event.image
+    let keys = []
+    let updatedData = event
+    delete updatedData['image']
+    if (image && typeof image !== 'string') {
+      updatedData = {...event, image}
+      keys = ['image']
+    }
+    setLoading(true)
+    api.createEvent(updatedData, keys).then((result) => {
+      console.log('result ', result)
       if (result.kind === "ok") {
+        setShowStoryModal(false)
+        setShowEventModal(false)
+        setShowDetailModal(false)
         showMessage("Saved successfully.", 'success');
         getEventsRequest()
-        setShowStoryModal(false)
       } else {
-        // showMessage(getErrorMessages(result.errors), {
-        //   position: toast.POSITION.TOP_CENTER
-        // });
+        showMessage()
       }
-    }).catch(err => showMessage())
+    }).catch(err => {
+      console.log('err ', err)
+      showMessage()
+    }).finally(() => setLoading(false))
   }
 
-  const saveEvent = (data)=>{
-    console.log("saveEvent", data)
+  const saveEvent = (data) => {
+    let event = {}
     setCurrentEvent(null)
-    let event = {
-      id: data.id,
-      title: data.title,
-      description: data.description,
-      event_type: data.eventType,
-      start_date: data.startDate,
-      location: data.location,
-      end_date: data.endDate,
-      image: null,
-      link:data.link
-    }
-    console.log(data)
-    if(data.id){
+    if (data.id !== undefined) {
+      event = {
+        id: data.id,
+        title: data.title,
+        description: data.description,
+        event_type: data.eventType,
+        start_date: data.startDate,
+        location: data.location,
+        end_date: data.endDate,
+        image: data.img,
+        link: data.link
+      }
       patchEvent(event)
-    }else{
+    } else {
+      event = {
+        title: data.title,
+        description: data.description,
+        event_type: data.eventType,
+        start_date: data.startDate,
+        location: data.location,
+        end_date: data.endDate,
+        image: data.img,
+        link: data.link
+      }
       createEvent(event)
     }
     setShowEventModal(false)
   }
 
-  const saveStory = (data:any)=>{
+  const saveStory = (data) => {
+    console.log('event ', data)
+    let event = {}
     setCurrentEvent(null)
-    let event = {
-      id: data.id,
-      title: data.title,
-      link: data.link,
-      description: data.description,
-      event_type: data.eventType,
-      start_date: data.date,
-      image: null
-    }
-    console.log(data)
-    if(data.id){
+    if (data.id !== undefined) {
+      event = {
+        id: data.id,
+        title: data.title,
+        link: data.link,
+        description: data.description,
+        event_type: data.eventType,
+        start_date: data.date,
+        image: data.img,
+      }
       patchEvent(event)
-    }else{
+    } else {
+      event = {
+        title: data.title,
+        link: data.link,
+        description: data.description,
+        event_type: data.eventType,
+        start_date: data.date,
+        image: data.img,
+      }
       createEvent(event)
     }
   }
@@ -279,18 +317,18 @@ const BlockchainTransactions = () => {
   }
 
   const renderEventContent = (eventInfo) => {
-    const eventType =  eventInfo.event._def.extendedProps.eventType
-    const eventHour =  moment(eventInfo.event._def.extendedProps.startDate).format("hh:mm A")
+    const eventType = eventInfo.event._def.extendedProps.eventType
+    const eventHour = moment(eventInfo.event._def.extendedProps.startDate).format("hh:mm A")
 
-    const isOverlaping =  eventInfo.event._def.extendedProps.isOverlapping
+    const isOverlaping = eventInfo.event._def.extendedProps.isOverlapping
 
-    const Overlapping = (event)=> (<div className={'dot my-event-overlapped my-event-overlapped-'+eventType} />)
+    const Overlapping = (event) => (<div className={'dot my-event-overlapped my-event-overlapped-' + eventType}/>)
     return (
       <>
         {isOverlaping
-        ?<Overlapping event={eventInfo.event} />
-        : <div className={'my-event my-event-'+eventType} >
-            <h5 className={'my-event-title'}>{eventInfo.event.title.slice(0,12) }</h5>
+          ? <Overlapping event={eventInfo.event}/>
+          : <div className={'my-event my-event-' + eventType}>
+            <h5 className={'my-event-title'}>{eventInfo.event.title.slice(0, 12)}</h5>
             <h5 className={'my-event-subtitle'}>{eventHour}</h5>
           </div>
         }
@@ -308,14 +346,14 @@ const BlockchainTransactions = () => {
           setShowDetailModal(true)
           console.log(value)
         }}>
-        <div className={'text-gray'} style={{ fontSize: 12, marginLeft: 20 }}>{getTitleFormat(value.title)}</div>
-        <div style={{ marginBottom: 20 }}>
+        <div className={'text-gray'} style={{fontSize: 12, marginLeft: 20}}>{getTitleFormat(value.title)}</div>
+        <div style={{marginBottom: 20}}>
           {value.events.map((data, index) => {
             return (
               <div key={index}>
-                <HourLine hour={getHourFormatted(data.date)} />
-                <ContentEventCard event={data} />
-                <HourLine hour={getHourFormatted(data.date)} />
+                <HourLine hour={getHourFormatted(data.date)}/>
+                <ContentEventCard event={data}/>
+                <HourLine hour={getHourFormatted(data.date)}/>
               </div>)
           })}
         </div>
@@ -326,26 +364,26 @@ const BlockchainTransactions = () => {
   const CalendarHeader = () => {
     return (
       <div className={'calendar-header'}>
-        <MDBox style={{ width: 280, justifyContent: 'space-between', display: 'flex'}}>
+        <MDBox style={{width: 280, justifyContent: 'space-between', display: 'flex'}}>
           <button type="button"
-            title="Previous month"
-            aria-pressed="true"
-            onClick={previous}
-            className="fc-button">
-            <span className="fc-icon fc-icon-chevron-left" /></button>
-          <span className="fc-toolbar-title" >{Title}</span>
+                  title="Previous month"
+                  aria-pressed="true"
+                  onClick={previous}
+                  className="fc-button">
+            <span className="fc-icon fc-icon-chevron-left"/></button>
+          <span className="fc-toolbar-title">{Title}</span>
           <button type="button"
-            title="Next month"
-            aria-pressed="true"
-            onClick={next}
-            className="fc-button">
-            <span className="fc-icon fc-icon-chevron-right" /></button>
+                  title="Next month"
+                  aria-pressed="true"
+                  onClick={next}
+                  className="fc-button">
+            <span className="fc-icon fc-icon-chevron-right"/></button>
         </MDBox>
         <MDBox className={'col-4 calendar-header'}>
-          <div className={'dot my-event-overlapped-story'} />
-          <div style={{ marginLeft: 15, fontSize: 15 }} className={'text-gray'}>EVENTS</div>
-          <div style={{ marginLeft: 35 }} className={'dot my-event-overlapped-event'} />
-          <div style={{ marginLeft: 15, fontSize: 15 }} className={'text-gray'}>STORIES </div>
+          <div className={'dot my-event-overlapped-story'}/>
+          <div style={{marginLeft: 15, fontSize: 15}} className={'text-gray'}>EVENTS</div>
+          <div style={{marginLeft: 35}} className={'dot my-event-overlapped-event'}/>
+          <div style={{marginLeft: 15, fontSize: 15}} className={'text-gray'}>STORIES</div>
         </MDBox>
         <MDBox className={'col-4'}>
           <MDButton className={'create-btn'} onClick={handleShow}>
@@ -365,31 +403,31 @@ const BlockchainTransactions = () => {
     handleClose={() => setShow(false)}
   >
     <MDBox display={'flex'}>
-      <MDBox style={{ width: '50%', marginRight: '10px' }}>
+      <MDBox style={{width: '50%', marginRight: '10px'}}>
         <div className={'col-modal-create col-modal-left'}
-          onClick={event => {
-            setShow(false)
-            setShowStoryModal(true)
-          }}>
+             onClick={event => {
+               setShow(false)
+               setShowStoryModal(true)
+             }}>
           <div>
-            <StoriesIcon />
+            <StoriesIcon/>
           </div>
-          <div className={'text-blue'} style={{ fontSize: 34, marginLeft: 10, fontWeight: 500 }}>
+          <div className={'text-blue'} style={{fontSize: 34, marginLeft: 10, fontWeight: 500}}>
             Story
           </div>
         </div>
       </MDBox>
-      <MDBox style={{ width: '50%', marginLeft: '10px' }}>
+      <MDBox style={{width: '50%', marginLeft: '10px'}}>
         <div className={'col-modal-create col-modal-right'}
-          onClick={event => {
-            setShow(false)
-            setShowEventModal(true)
-          }}
+             onClick={event => {
+               setShow(false)
+               setShowEventModal(true)
+             }}
         >
           <div>
-            <CalendarIcon />
+            <CalendarIcon/>
           </div>
-          <div className={'text-blue'} style={{ fontSize: 34, marginLeft: 10, fontWeight: 500 }}>
+          <div className={'text-blue'} style={{fontSize: 34, marginLeft: 10, fontWeight: 500}}>
             Event
           </div>
         </div>
@@ -405,22 +443,23 @@ const BlockchainTransactions = () => {
     hideButtons
     handleClose={() => setShowDetailModal(false)}
   >
-    <div>
+    <MDBox sx={{overflowY: 'scroll', height: 600}}>
       {Details.map((value, index) => {
-        return <ContentEventDetail delete={deleteEvent} key={"detail-" + index} edit={editEvent} event={value} />
+        return <ContentEventDetail delete={deleteEvent} key={"detail-" + index} edit={editEvent} event={value}/>
       })}
-    </div>
+    </MDBox>
   </ConfirmDialogInputModal>
 
   const eventModal = <ConfirmDialogInputModal
-    title={CurrentEvent && CurrentEvent.id !== null ? 'Edit Event': 'Add New Event'}
+    title={CurrentEvent && CurrentEvent.id !== null ? 'Edit Event' : 'Add New Event'}
     description={''}
     open={showEventModal}
     width={800}
     hideButtons
+    disabledConfirm={loading}
     handleClose={() => setShowEventModal(false)}
   >
-    <AddEventForm event={CurrentEvent} save={(data) => saveEvent(data)} />
+    <AddEventForm event={CurrentEvent} save={(data) => saveEvent(data)} loading={loading}/>
   </ConfirmDialogInputModal>
 
   const storyModal = <ConfirmDialogInputModal
@@ -429,12 +468,13 @@ const BlockchainTransactions = () => {
     open={showStoryModal}
     width={800}
     hideButtons
+    disabledConfirm={loading}
     handleClose={() => {
       setCurrentEvent(null)
       setShowStoryModal(false)
     }}
   >
-    <AddStoryForm event={CurrentEvent} save={(data) => saveStory(data)} />
+    <AddStoryForm event={CurrentEvent} save={(data) => saveStory(data)} loading={loading}/>
   </ConfirmDialogInputModal>
 
   return (
@@ -444,7 +484,7 @@ const BlockchainTransactions = () => {
     >
       <MDBox display={'flex'} mt={5}>
         <div className={'calendar-left-column'}>
-          <CalendarHeader />
+          <CalendarHeader/>
           <FullCalendar
             ref={CalendarEl}
 
@@ -468,14 +508,14 @@ const BlockchainTransactions = () => {
             }}
             //@ts-ignore
             plugins={[dayGridPlugin, interactionPlugin]}
-            eventClick={(arg)=>{
+            eventClick={(arg) => {
               handleDateClick(arg)
             }}
             events={CalendarEvents}
             initialView="dayGridMonth"
           />
         </div>
-        <div className={'calendar-right-column'} >
+        <div className={'calendar-right-column'}>
           <p className={'text-blue all-in-month-title'}>All in {Title}</p>
           <FakeScroll className="scroll-container" track={false} onChange={onFakeScrollChange}>
             {RightEvents.map((value, index) => {
