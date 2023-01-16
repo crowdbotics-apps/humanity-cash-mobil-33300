@@ -8,7 +8,6 @@ import interactionPlugin from '@fullcalendar/interaction'
 import MDBox from "components/MDBox";
 
 import { CalendarIcon, StoriesIcon } from "../../assets/svg";
-import { event_list } from "./data";
 import { ContentEventCard, ContentEventDetail, getTitleFormat, HourLine } from "./components";
 import '../../assets/fakescroll/fakescroll.css'
 import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
@@ -36,6 +35,7 @@ const getDateRange = (dateRange) => {
 const BlockchainTransactions = () => {
   const api = useApi()
   const navigate = useNavigate()
+  const event_list = []
   const CalendarEl = useRef(null);
   const [loading, setLoading] = useState(false)
 
@@ -288,7 +288,7 @@ const BlockchainTransactions = () => {
     const Overlapping = (event)=> (<div className={'dot my-event-overlapped my-event-overlapped-'+eventType} />)
     return (
       <>
-        {isOverlaping 
+        {isOverlaping
         ?<Overlapping event={eventInfo.event} />
         : <div className={'my-event my-event-'+eventType} >
             <h5 className={'my-event-title'}>{eventInfo.event.title.slice(0,12) }</h5>
