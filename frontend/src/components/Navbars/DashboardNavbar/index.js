@@ -39,8 +39,9 @@ import {observer} from "mobx-react";
 import {CircularProgress, Grid, Input} from "@mui/material";
 import {ArrowBack, Search} from "@mui/icons-material";
 import MDButton from "../../MDButton";
+import MDButtonPopover from "components/MDButtonPopover";
 
-function DashboardNavbar({absolute, light, isMini, searchFunc, title, goBack, loading = false}) {
+function DashboardNavbar({absolute, light, isMini, searchFunc, title, goBack, loading = false, filterContent}) {
   const [controller, dispatch] = useMaterialUIController();
   const {miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode, isDrawed} = controller;
   const route = useLocation().pathname.split("/").slice(1);
@@ -116,9 +117,9 @@ function DashboardNavbar({absolute, light, isMini, searchFunc, title, goBack, lo
                       onChange={(evt) => searchFunc(evt?.target?.value)}
                     />
                   </MDBox>
-                  <MDButton variant="standard" color="dark" iconOnly sx={{marginLeft: 2}}>
+                  {filterContent && <MDButton variant="standard" color="dark" iconOnly sx={{marginLeft: 2}}>
                     <Icon sx={{ fontWeight: "bold" }}>tune</Icon>
-                  </MDButton>
+                  </MDButton>}
                 </Grid>
                 }
             </MDBox>

@@ -6,7 +6,6 @@ import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'
 import MDBox from "components/MDBox";
-
 import { CalendarIcon, StoriesIcon } from "../../assets/svg";
 import { ContentEventCard, ContentEventDetail, getTitleFormat, HourLine } from "./components";
 import '../../assets/fakescroll/fakescroll.css'
@@ -63,11 +62,11 @@ const BlockchainTransactions = () => {
     let api = CalendarEl.current.getApi()
     setCalendarApi(api)
     setTitle(api.currentDataManager.data.viewTitle)
-    setRightEvents(event_list)
+    setRightEvents([])
   }
 
   const handleDateClick = (arg) => { // bind with an arrow function
-    setDetails(event_list[0].events)
+    setDetails([])
     let target = arg.el.closest(".fc-daygrid-day")
     let selectedDay = ''
     selectedDay = target.querySelector('.fc-daygrid-day-number').firstChild.textContent
@@ -359,7 +358,7 @@ const BlockchainTransactions = () => {
 
   const createModal = <ConfirmDialogInputModal
     title={'Create'}
-    description={'Lorem ipsum dolor sit amet '}
+    description={'Create a new content '}
     open={show}
     width={800}
     hideButtons
@@ -415,7 +414,7 @@ const BlockchainTransactions = () => {
 
   const eventModal = <ConfirmDialogInputModal
     title={CurrentEvent && CurrentEvent.id !== null ? 'Edit Event': 'Add New Event'}
-    description={'Lorem ipsum dolor sit amet'}
+    description={''}
     open={showEventModal}
     width={800}
     hideButtons
@@ -426,7 +425,7 @@ const BlockchainTransactions = () => {
 
   const storyModal = <ConfirmDialogInputModal
     title={CurrentEvent ? "Edit Story" : "Add New Story"}
-    description={'Lorem ipsum dolor sit amet'}
+    description={''}
     open={showStoryModal}
     width={800}
     hideButtons
@@ -438,12 +437,10 @@ const BlockchainTransactions = () => {
     <AddStoryForm event={CurrentEvent} save={(data) => saveStory(data)} />
   </ConfirmDialogInputModal>
 
-
   return (
     <DashboardLayout
       loginRequired
       loading={loading}
-      searchFunc={getEventsRequest}
     >
       <MDBox display={'flex'} mt={5}>
         <div className={'calendar-left-column'}>
@@ -484,7 +481,7 @@ const BlockchainTransactions = () => {
             {RightEvents.map((value, index) => {
               return renderDayContent(value, index)
             })}
-          </FakeScroll>``
+          </FakeScroll>
         </div>
       </MDBox>
       {createModal}

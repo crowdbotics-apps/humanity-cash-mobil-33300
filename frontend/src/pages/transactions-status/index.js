@@ -8,7 +8,6 @@ import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
 import MDBox from "../../components/MDBox";
 
-
 const TransactionStatus = () => {
   const api = useApi()
   const [loading, setLoading] = useState(false)
@@ -122,6 +121,7 @@ const TransactionStatus = () => {
     return amount + action.subTitle
   }
 
+
   useEffect(() => {
     getTransactions("")
   }, [transactionStatus])
@@ -136,7 +136,7 @@ const TransactionStatus = () => {
         color={transactionStatus === "Pending" ? "primary" : "gray"}
         variant={"text"}
         onClick={() => setTransactionStatus('Pending')}
-        sx={{borderBottom: transactionStatus === "Pending" ? '2px solid #3B88B6' : '2px solid #ffffff', borderRadius: 0, minWidth: 300, fontWeight: 600, marginTop: 3}}
+        sx={{ borderBottom: transactionStatus === "Pending" ? '2px solid #3B88B6' : '2px solid #ffffff', borderRadius: 0, minWidth: 300, fontWeight: 600, marginTop: 3 }}
       >
         PENDING
       </MDButton>
