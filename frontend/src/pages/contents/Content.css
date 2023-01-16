@@ -238,7 +238,7 @@ td[role=presentation], th[role=presentation],  th[role=columnheader]{
 .scroll-container {
     position: relative;
     margin-right: 2em;
-    height: 64vh;
+    height: 74vh;
     box-sizing: border-box;
 }
 

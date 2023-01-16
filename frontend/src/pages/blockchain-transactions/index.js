@@ -5,7 +5,7 @@ import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
-
+import MDBox from "components/MDBox";
 
 const BlockchainTransactions = () => {
   const api = useApi()

@@ -1,10 +1,10 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
-import { useEffect, useRef, useState } from "react"
+import {useEffect, useRef, useState} from "react"
 import {money_fmt, showMessage, useApi} from "../../services/helpers"
-import { renderTableRow } from "./utils";
+import {renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../services/constants";
+import {useNavigate} from "react-router-dom";
+import {ROUTES} from "../../services/constants";
 import MDButtonPopover from "../../components/MDButtonPopover";
 import ConfirmDialogInputModal from "../../components/ConfirmDialogInputModal";
 import MDInput from "../../components/MDInput";
@@ -20,14 +20,14 @@ const ReconciliationActions = {
 
 const initialData = {
   columns: [
-    { Header: "", accessor: "title", disableOrdering: true },
-    { Header: `RESERVE WALLET`, accessor: "reserve", disableOrdering: true },
+    {Header: "", accessor: "title", disableOrdering: true},
+    {Header: `RESERVE WALLET`, accessor: "reserve", disableOrdering: true},
     {
       Header: "NEGATIVE ADJUSTMENT ACCOUNT", accessor: "negative", disableOrdering: true,
       component: <MDButtonPopover
         color="primary"
         size={'small'}
-        style={{ minWidth: 0 }}
+        style={{minWidth: 0}}
         actionList={[]}
       >+</MDButtonPopover>
     },
@@ -36,13 +36,19 @@ const initialData = {
       component: <MDButtonPopover
         color="primary"
         size={'small'}
-        style={{ minWidth: 0 }}
+        style={{minWidth: 0}}
         actionList={[]}
       >+</MDButtonPopover>
     },
   ],
   rows: [{
-    title: <div style={{ color: "var(--green-dark)", fontWeight: "bold",  height: 50, alignItems: 'center', display: 'flex'}}>Today's Date</div>
+    title: <div style={{
+      color: "var(--green-dark)",
+      fontWeight: "bold",
+      height: 50,
+      alignItems: 'center',
+      display: 'flex'
+    }}>Today's Date</div>
   }],
 };
 
@@ -81,15 +87,21 @@ const ReconciliationActionsPage = () => {
     setLoading(true)
     api.getWalletBalances().then((result) => {
       if (result.kind === "ok") {
-        let { count, results, humanity, reserve, positive, negative } = result.data
-        const tmp = { ...dataTableModel }
+        let {count, results, humanity, reserve, positive, negative} = result.data
+        const tmp = {...dataTableModel}
 
         results = [{
-          title: <div style={{ color: "var(--green-dark)", fontWeight: "bold",  height: 50, alignItems: 'center', display: 'flex'}}>Today's Date</div>,
+          title: <div style={{
+            color: "var(--green-dark)",
+            fontWeight: "bold",
+            height: 50,
+            alignItems: 'center',
+            display: 'flex'
+          }}>Today's Date</div>,
           // humanity: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(humanity)}</div>,
-          reserve: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(reserve)}</div>,
-          negative: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(negative)}</div>,
-          positive: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(positive)}</div>,
+          reserve: <div style={{fontWeight: 500, fontSize: "14px"}}>{money_fmt(reserve)}</div>,
+          negative: <div style={{fontWeight: 500, fontSize: "14px"}}>{money_fmt(negative)}</div>,
+          positive: <div style={{fontWeight: 500, fontSize: "14px"}}>{money_fmt(positive)}</div>,
         }]
 
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
@@ -104,15 +116,15 @@ const ReconciliationActionsPage = () => {
 
   const apiCall = (data) => {
     api.addAdjustment(data)
-    .then((result) => {
-      if (result.kind === "ok") {
-        showMessage('Action executed successfully', 'success')
-      } else if (result.kind === "bad-data") {
-        const key = Object.keys(result?.errors)[0]
-        const msg = `${key}: ${result?.errors?.[key][0]}`
-        showMessage(msg)
-      }
-    })
+      .then((result) => {
+        if (result.kind === "ok") {
+          showMessage('Action executed successfully', 'success')
+        } else if (result.kind === "bad-data") {
+          const key = Object.keys(result?.errors)[0]
+          const msg = `${key}: ${result?.errors?.[key][0]}`
+          showMessage(msg)
+        }
+      })
       .catch(err => showMessage(err))
       .finally(resetData)
   }
@@ -256,14 +268,14 @@ const ReconciliationActionsPage = () => {
 
   const dataTableModel = {
     columns: [
-      { Header: "", accessor: "title", disableOrdering: true },
-      { Header: `RESERVE WALLET`, accessor: "reserve", disableOrdering: true },
+      {Header: "", accessor: "title", disableOrdering: true},
+      {Header: `RESERVE WALLET`, accessor: "reserve", disableOrdering: true},
       {
         Header: "NEGATIVE ADJUSTMENT ACCOUNT", accessor: "negative", disableOrdering: true,
         component: <MDButtonPopover
           color="primary"
           size={'small'}
-          style={{ minWidth: 0 }}
+          style={{minWidth: 0}}
           actionList={negativeActionList}
         >+</MDButtonPopover>
       },
@@ -272,7 +284,7 @@ const ReconciliationActionsPage = () => {
         component: <MDButtonPopover
           color="primary"
           size={'small'}
-          style={{ minWidth: 0 }}
+          style={{minWidth: 0}}
           actionList={positiveActionList}
         >+</MDButtonPopover>
       },
@@ -303,10 +315,10 @@ const ReconciliationActionsPage = () => {
     <DashboardLayout
       loginRequired
     >
-<DataTable
-          table={recordList}
-          showTotalEntries={false}
-        />
+      <DataTable
+        table={recordList}
+        showTotalEntries={false}
+      />
       {/* PASS MODAL */}
       <ConfirmDialogInputModal
         title={'Supervisor Credentials'}

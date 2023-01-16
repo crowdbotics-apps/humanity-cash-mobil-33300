@@ -39,7 +39,8 @@ function DashboardLayout({
                            searchFunc = null,
                            loading,
                            title = null,
-                           goBack = null
+                           goBack = null,
+                           filterContent = null
                          }) {
 
   const [controller, dispatch] = useMaterialUIController();
@@ -69,11 +70,18 @@ function DashboardLayout({
           },
         })}
       >
-        {showNavbar && (<DashboardNavbar searchFunc={searchFunc} title={title} goBack={goBack} loading={loading}/>)}
-        {fullSize && (
-          children
-        ) || (
-          <div style={{
+        {showNavbar &&
+          <DashboardNavbar
+            searchFunc={searchFunc}
+            title={title}
+            goBack={goBack}
+            loading={loading}
+            filterContent={filterContent}
+          />
+        }
+        {fullSize
+          ? children
+          : <div style={{
             width: '100%',
             overflowY: 'scroll',
             marginTop: 70,
@@ -85,10 +93,10 @@ function DashboardLayout({
               height: 2,
               backgroundColor: '#3B88B6',
               marginTop: 5
-            }}/>
+            }} />
             {children}
           </div>
-        )}
+        }
       </MDBox>
     )
   }

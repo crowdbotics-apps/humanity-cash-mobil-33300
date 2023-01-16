@@ -22,7 +22,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def validate_email(self, email):
         email = get_adapter().clean_email(email)
-        if email and email_address_exists(email):
+        user = User.objects.filter(username=email).exists()
+        if email and (email_address_exists(email) or user):
             raise serializers.ValidationError("A user is already registered with this e-mail address.")
         return email
 
