@@ -14,7 +14,9 @@ import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
 import {AutocompleteFormik} from "../../components/AutocompleteFormik";
 import ConfirmDialogModal from "../../components/ConfirmDialogModal";
-
+import MDFilterButtonPopover from './filter'
+import Checkbox from "@mui/material/Checkbox";
+import Icon from "@mui/material/Icon";
 
 const groups = [
   {id: 'BANK', title: 'Bank'},
@@ -45,7 +47,8 @@ const AdminPortal = () => {
   const [roles, setRoles] = useState([])
   const [selectedGroup, setSelectedGroup] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null)
-
+  //
+  const [Checked, setChecked] = useState('')
 
   const getAdminUsers = (searchData, page = 1, ordering = "") => {
     setLoading(true)
@@ -64,7 +67,7 @@ const AdminPortal = () => {
       .finally(() => setLoading(false))
   }
 
-  const createAdminUser = (data) => {
+  const createAdminUserReq = (data) => {
     setLoading(true)
     api.createAdminUser(data).then((result) => {
       if (result.kind === 'ok') {
@@ -141,9 +144,45 @@ const AdminPortal = () => {
     group: "",
   };
 
+  const filterOptions = [
+    {
+      label: 'Manager',
+      accessor: 'manager',
+      value: Checked === 'manager',
+      action: () => setChecked('manager')      
+    },
+    {
+      label: 'Bank',
+      accessor: 'bank',
+      value: Checked === 'bank',
+      action: () => setChecked('bank') 
+    },
+    {
+      label: 'Employee',
+      accessor: 'employee',
+      value: Checked === 'employee',
+      action: () => setChecked('employee') 
+    },
+    {
+      label: 'Supervisor',
+      accessor: 'supervisor',
+      value: Checked === 'supervisor',
+      action: () => setChecked('supervisor') 
+    },
+  ]
+
+  const buttonActions = {
+    clear: () => {
+      setChecked(false)
+      getAdminUsers("")
+    },
+    cancel: () => {},
+    apply: () => getAdminUsers(Checked),
+  }
+
   useEffect(() => {
     if (selectedGroup) {
-      if(selectedGroup.id === 'BANK') {
+      if (selectedGroup.id === 'BANK') {
         setRoles(rolesBank)
       } else {
         setRoles(rolesManager)
@@ -162,6 +201,11 @@ const AdminPortal = () => {
       title={'Admin Employees / Sub - Admins'}
       loading={loading}
       searchFunc={getAdminUsers}
+      filterContent={
+        <MDFilterButtonPopover filterOptions={filterOptions} buttonActions={buttonActions} variant="standard" color="dark" iconOnly sx={{ marginLeft: 2 }}>
+          <Icon sx={{ fontWeight: "bold" }}>tune</Icon>
+        </MDFilterButtonPopover>
+      }
     >
       <MDBox display={'flex'} flex={1} alignItems={'center'} mt={5}>
         <MDTypography  color={'primary'} sx={{fontWeight: 400}} fontSize={24} >
@@ -199,7 +243,7 @@ const AdminPortal = () => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={values => {
-            createAdminUser(values)
+            createAdminUserReq(values)
           }}
         >
           {({errors, touched, setFieldValue, values}) => (

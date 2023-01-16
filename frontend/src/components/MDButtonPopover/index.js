@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import {forwardRef, useState} from "react";
+import { forwardRef, useState } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -25,15 +25,15 @@ import Typography from '@mui/material/Typography';
 import MDButton from "components/MDButton";
 
 // Material Dashboard 2 PRO React contexts
-import {useMaterialUIController} from "context";
-import {CircularProgress} from "@mui/material";
+import { useMaterialUIController } from "context";
+import { CircularProgress } from "@mui/material";
 
 const MDButtonPopover = forwardRef(
-  ({ loading, color, variant, size, circular, iconOnly, children, actionList, ...rest }, ref) => {
+  ({ loading, color, variant, size, circular, iconOnly, children, actionList, customPopoverContent, ...rest }, ref) => {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
     const popoverStyle = { border: "1px solid #3B88B6", borderRadius: "14px", maxWidth: "90vw" }
-    const buttonContainerStyle = {display: "flex", flexDirection: "column", padding: "1rem", gap: "1rem"}
+    const buttonContainerStyle = { display: "flex", flexDirection: "column", padding: "1rem", gap: "1rem" }
     const popoverButtonStyle = {
       margin: 'auto !important',
       minWidth: '200px',
@@ -88,12 +88,14 @@ const MDButtonPopover = forwardRef(
           }}
         >
           <div style={buttonContainerStyle}>
-            {Array.isArray(actionList) && actionList.map((action, idx) =>
-              <MDButton key={`key_btn_${idx}`} style={popoverButtonStyle} color="primary" onClick={action.action} disabled={action.disabled}>
-                {action.label}
-              </MDButton>
-            )}
-
+            {customPopoverContent
+              ? customPopoverContent
+              : Array.isArray(actionList) && actionList.map((action, idx) =>
+                <MDButton key={`key_btn_${idx}`} style={popoverButtonStyle} color="primary" onClick={action.action} disabled={action.disabled}>
+                  {action.label}
+                </MDButton>
+              )
+            }
           </div>
         </Popover>
       </div>

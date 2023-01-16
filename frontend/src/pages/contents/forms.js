@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Grid } from '@mui/material';
 import MDTypography from "components/MDTypography";
-import MDInput from "components/MDInput";
+import MDInput from "../../components/MDInput";
 import * as _ from 'lodash'
 import { AttachmentIcon } from "../../assets/svg";
 import MDBox from "../../components/MDBox";
@@ -168,14 +168,12 @@ export const AddEventForm = (props) => {
           </Grid>
 
           <Grid item xs={12} md={12} sm={12}>
-            <MDTypography variant="h6" fontWeight="bold">
-              LOCATION (OPTIONAL)
-            </MDTypography>
             <Field name="location">
               {({ field }) =>
                 <MDInput
                   type="text"
                   variant="outlined"
+                  label="LOCATION (OPTIONAL)"
                   fullWidth
                   error={errors.location !== undefined}
                   helperText={errors.location && errors.location}
@@ -185,12 +183,11 @@ export const AddEventForm = (props) => {
           </Grid>
 
           <Grid item xs={12} md={12} sm={12}>
-            <MDTypography variant="h6" fontWeight="bold">
-              EVENT NAME
-            </MDTypography>
+
             <Field name="title">
               {({ field }) =>
                 <MDInput
+                  label={'EVENT NAME'}
                   type="text"
                   variant="outlined"
                   fullWidth
@@ -202,12 +199,11 @@ export const AddEventForm = (props) => {
           </Grid>
 
           <Grid item xs={12} md={12} sm={12}>
-            <MDTypography variant="h6" fontWeight="bold">
-              DESCRIPTION
-            </MDTypography>
+
             <Field name="description">
               {({ field }) =>
                 <MDInput
+                  label={'DESCRIPTION'}
                   type="text"
                   variant="outlined"
                   fullWidth
@@ -259,9 +255,9 @@ export const AddStoryForm = (props) => {
 
 
   const initialValues = {
-    title: event?event.title:"",
-    link: event?event.link:"",
-    description: event?event.description:""
+    title: event ? event.title : "",
+    link: event ? event.link : "",
+    description: event ? event.description : ""
   }
 
   const validationSchema = Yup.object({
@@ -272,12 +268,12 @@ export const AddStoryForm = (props) => {
   })
 
   const onSubmit = values => {
-    let data = {...values, ...{img:dataUri}}
-    if(!event){
+    let data = { ...values, ...{ img: dataUri } }
+    if (!event) {
       data['eventType'] = 'story'
       data['date'] = moment().format();
     }
-    data = {...event, ...data}
+    data = { ...event, ...data }
     props.save(data)
   }
 
@@ -313,14 +309,13 @@ export const AddStoryForm = (props) => {
     {({ errors, touched, setFieldValue }) => (
       <Form style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
         <Grid container spacing={2}>
-        
+
           <Grid item xs={12} md={12} sm={12}>
-            <MDTypography variant="h6" fontWeight="bold">
-              TITLE
-            </MDTypography>
+
             <Field name="title">
               {({ field }) =>
                 <MDInput
+                  label={'TITLE'}
                   type="text"
                   variant="outlined"
                   fullWidth
@@ -332,12 +327,11 @@ export const AddStoryForm = (props) => {
           </Grid>
 
           <Grid item xs={12} md={12} sm={12}>
-            <MDTypography variant="h6" fontWeight="bold">
-              LINK (OPTIONAL)
-            </MDTypography>
+
             <Field name="link">
               {({ field }) =>
                 <MDInput
+                  label={'LINK (OPTIONAL)'}
                   type="text"
                   variant="outlined"
                   fullWidth
@@ -349,12 +343,11 @@ export const AddStoryForm = (props) => {
           </Grid>
 
           <Grid item xs={12} md={12} sm={12}>
-            <MDTypography variant="h6" fontWeight="bold">
-              DESCRIPTION
-            </MDTypography>
+
             <Field name="description">
               {({ field }) =>
                 <MDInput
+                  label={'DESCRIPTION'}
                   type="text"
                   variant="outlined"
                   fullWidth

@@ -5,7 +5,7 @@ import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
-
+import MDBox from "../../components/MDBox";
 
 const Users = () => {
   const api = useApi()
@@ -58,6 +58,7 @@ const Users = () => {
       loginRequired
       loading={loading}
       searchFunc={getDwollaUsers}
+      filterContent={<MDBox />}
     >
       {recordList?.rows.length > 0
         ? (<DataTable
