@@ -56,7 +56,6 @@ const SmartContracts = () => {
       loginRequired
       loading={loading}
       searchFunc={getContracts}
-      filterContent={<MDBox />}
     >
       {recordList?.rows.length > 0
         ? (<DataTable

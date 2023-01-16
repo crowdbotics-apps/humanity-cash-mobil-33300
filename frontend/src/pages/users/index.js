@@ -58,7 +58,6 @@ const Users = () => {
       loginRequired
       loading={loading}
       searchFunc={getDwollaUsers}
-      filterContent={<MDBox />}
     >
       {recordList?.rows.length > 0
         ? (<DataTable
