@@ -78,7 +78,6 @@ const ACHTransactions = () => {
       loading={loading}
       searchFunc={getACHTransactions}
       title={'ACH Transactions'}
-      filterContent={<MDBox />}
     >
       {recordList?.rows.length > 0
         ? (<DataTable

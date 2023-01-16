@@ -56,7 +56,6 @@ const BlockchainTransactions = () => {
       loginRequired
       loading={loading}
       searchFunc={getBlockchainTransactions}
-      filterContent={<MDBox />}
     >
       {recordList?.rows.length > 0
         ? (<DataTable

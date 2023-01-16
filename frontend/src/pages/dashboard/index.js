@@ -129,7 +129,6 @@ const Dashboard = () => {
       loginRequired
       loading={loading}
       searchFunc={getTransactions}
-      filterContent={<MDBox />} 
     >
       {recordList?.rows.length > 0
         ? (<DataTableDropdown
