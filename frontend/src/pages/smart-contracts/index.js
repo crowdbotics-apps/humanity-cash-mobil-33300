@@ -5,7 +5,7 @@ import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
-
+import MDBox from "../../components/MDBox";
 
 const SmartContracts = () => {
   const api = useApi()
@@ -56,6 +56,7 @@ const SmartContracts = () => {
       loginRequired
       loading={loading}
       searchFunc={getContracts}
+      filterContent={<MDBox />}
     >
       {recordList?.rows.length > 0
         ? (<DataTable

@@ -131,6 +131,7 @@ const TransactionStatus = () => {
       loginRequired
       loading={loading}
       searchFunc={getTransactions}
+      filterContent={<MDBox />}
     >
       <MDButton
         color={transactionStatus === "Pending" ? "primary" : "gray"}

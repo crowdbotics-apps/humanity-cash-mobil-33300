@@ -74,13 +74,13 @@ const MDFilterButtonPopover = forwardRef(
             </MDBox>
             <div style={{ background: '#3B88B6', height: 1, marginTop: 20, width: '100%', margin: 'auto' }} />
             <MDBox width={500} mt={1} display={'flex'} alignItems={'center'}>
-                <MDTypography width={'60%'} color={'pink'} variant="h6" fontWeight="regular" onClick={() => action(buttonActions.clear)}>
+                <MDTypography style={{ cursor: 'pointer' }} width={'60%'} color={'pink'} variant="h6" fontWeight="regular" onClick={() => action(buttonActions.clear)}>
                     Clear All Filters
                 </MDTypography>
-                <MDTypography width={'20%'} color={'gray'} variant="h6" fontWeight="regular"  onClick={() => action(buttonActions.cancel)}>
+                <MDTypography style={{ cursor: 'pointer' }} width={'20%'} color={'gray'} variant="h6" fontWeight="regular"  onClick={() => action(buttonActions.cancel)}>
                     Cancel
                 </MDTypography>
-                <MDTypography syle={{ cursor: 'grab', }} width={'20%'} color={'primary'} variant="h6" fontWeight="regular"  onClick={() => action(buttonActions.apply)}>
+                <MDTypography style={{ cursor: 'pointer' }} width={'20%'} color={'primary'} variant="h6" fontWeight="regular"  onClick={() => action(buttonActions.apply)}>
                     Apply
                 </MDTypography>
             </MDBox>

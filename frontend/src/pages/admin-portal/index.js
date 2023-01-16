@@ -48,9 +48,7 @@ const AdminPortal = () => {
   const [selectedGroup, setSelectedGroup] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null)
   //
-  const [CheckedAmount, setCheckedAmount] = useState(false)
-  const [CheckedRequest, setCheckedRequest] = useState(false)
-  const [CheckedSignedoff, setCheckedSignedoff] = useState(false)
+  const [Checked, setChecked] = useState('')
 
   const getAdminUsers = (searchData, page = 1, ordering = "") => {
     setLoading(true)
@@ -69,7 +67,7 @@ const AdminPortal = () => {
       .finally(() => setLoading(false))
   }
 
-  const createAdminUser = (data) => {
+  const createAdminUserReq = (data) => {
     setLoading(true)
     api.createAdminUser(data).then((result) => {
       if (result.kind === 'ok') {
@@ -148,43 +146,38 @@ const AdminPortal = () => {
 
   const filterOptions = [
     {
-      label: 'Super Admin',
-      accessor: 'super_admin',
-      value: CheckedAmount,
-      action: () => [
-        setCheckedAmount(!CheckedAmount),
-        console.log('asd')
-      ]
+      label: 'Manager',
+      accessor: 'manager',
+      value: Checked === 'manager',
+      action: () => setChecked('manager')      
     },
     {
       label: 'Bank',
       accessor: 'bank',
-      value: CheckedRequest,
-      action: () => [
-        setCheckedRequest(!CheckedRequest),
-        console.log('asd')
-      ]
+      value: Checked === 'bank',
+      action: () => setChecked('bank') 
     },
     {
-      label: 'App support',
-      accessor: 'app_support',
-      value: CheckedSignedoff,
-      action: () => [
-        setCheckedSignedoff(!CheckedSignedoff),
-        console.log('asd')
-      ]
+      label: 'Employee',
+      accessor: 'employee',
+      value: Checked === 'employee',
+      action: () => setChecked('employee') 
+    },
+    {
+      label: 'Supervisor',
+      accessor: 'supervisor',
+      value: Checked === 'supervisor',
+      action: () => setChecked('supervisor') 
     },
   ]
 
   const buttonActions = {
     clear: () => {
-      setCheckedAmount(false)
-      setCheckedRequest(false)
-      setCheckedSignedoff(false)
+      setChecked(false)
       getAdminUsers("")
     },
     cancel: () => {},
-    apply: () => console.log('apply'),
+    apply: () => getAdminUsers(Checked),
   }
 
   useEffect(() => {
@@ -250,7 +243,7 @@ const AdminPortal = () => {
           initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={values => {
-            createAdminUser(values)
+            createAdminUserReq(values)
           }}
         >
           {({errors, touched, setFieldValue, values}) => (

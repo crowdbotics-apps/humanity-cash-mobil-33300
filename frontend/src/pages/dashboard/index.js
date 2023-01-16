@@ -124,44 +124,12 @@ const Dashboard = () => {
     getTransactions("")
   }, [])
 
-  // POPOVER 
-  const filterOptions = [
-    { label: 'Super Admin', accessor: 'super_admin' },
-    { label: 'Bank', accessor: 'bank' },
-    { label: 'App support', accessor: 'app_support' },
-  ]
-  const filterContent = <MDBox>
-    <MDBox width={500} display={'flex'} alignItems={'center'}>
-      {filterOptions.map((f, i) =>
-        <MDBox key={`filter__${i}`} width={'33%'} style={{ justifyContent: 'center' }} display={'flex'} alignItems={'center'}>
-          <MDTypography variant="h6" fontWeight="medium">
-            {f.label}
-          </MDTypography>
-          <Checkbox style={{ marginLeft: 5 }} fontSize={'small'} />
-        </MDBox>
-      )}
-    </MDBox>
-    <div style={{ background: '#3B88B6', height: 1, marginTop: 20, width: '100%', margin: 'auto' }} />
-    <MDBox width={500} mt={1} display={'flex'} alignItems={'center'}>
-      <MDTypography width={'60%'} color={'pink'} variant="h6" fontWeight="regular">
-        Clear All Filters
-      </MDTypography>
-      <MDTypography width={'20%'} color={'gray'} variant="h6" fontWeight="regular">
-        Cancel
-      </MDTypography>
-      <MDTypography syle={{cursor: 'grab',}} width={'20%'} color={'primary'} variant="h6" fontWeight="regular">
-        Apply
-      </MDTypography>
-    </MDBox>
-  </MDBox>
-  //
-
   return (
     <DashboardLayout
       loginRequired
       loading={loading}
       searchFunc={getTransactions}
-      filterContent={filterContent}
+      filterContent={<MDBox />} 
     >
       {recordList?.rows.length > 0
         ? (<DataTableDropdown
