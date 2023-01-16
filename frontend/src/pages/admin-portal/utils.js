@@ -30,10 +30,17 @@ const badgeBoxType = (item) => {
   }
 }
 
+const badgeBoxRole = (item) => {
+  if (item.role === 'EMPLOYEE' || item.role === 'SUPERVISOR') {
+    return <MDBadge variant="contained" color="success" badgeContent={item.role} container />
+  } else {
+    return <MDBadge variant="contained" color="info" badgeContent={item.role}  container />
+  }
+}
 
 export const renderTableRow = (item, onAction ) => {
   item.name = hashBox(item.name)
-  item.role = hashBox(item.role)
+  item.role = badgeBoxRole(item)
   item.group = badgeBoxType(item)
   item.actions = (
     <MDButton color={"pink"} size={"small"} onClick={() => onAction(item)}>
