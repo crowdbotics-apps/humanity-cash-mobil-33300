@@ -32,9 +32,6 @@ export const LoginStoreModel = types
     get fullName() {
       return self.first_name + ' ' + self.last_name
     },
-    get getUX() {
-      return {...self.ux} || {...UXModel}
-    }
   }))
   .actions(self => ({
     setApiToken(token: string | null) {
@@ -46,10 +43,10 @@ export const LoginStoreModel = types
         api?.deleteHeader('Authorization')
       }
     },
-    setUp(){
-      if(self.access_token){
+    setUp() {
+      if (self.access_token) {
         self.environment.api.apisauce?.setHeader("Authorization", 'Bearer ' + self.access_token)
-      }else{
+      } else {
         self.environment.api.apisauce?.deleteHeader("Authorization")
       }
 
@@ -65,11 +62,6 @@ export const LoginStoreModel = types
       self.access_token = user.token.access
       self.refresh_token = user.token.refresh
       self.verified_email = user.verified_email
-    },
-    setPopoverOpen(open: boolean) {
-      let ux = { ...self.ux } || { popoverOpen: false }
-      ux.popoverOpen = open
-      self.ux = ux
     },
     reset() {
       const api = self.environment.api.apisauce

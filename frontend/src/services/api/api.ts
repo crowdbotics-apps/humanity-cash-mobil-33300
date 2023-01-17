@@ -87,8 +87,16 @@ export class Api extends ApiBase {
     return this.simple_post( `${API_VERSION_PREFIX}/user-admin/`, data)
   }
 
+  async editadminUser(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_patch( `${API_VERSION_PREFIX}/user-admin/${data.id}/`, data)
+  }
+
   async deleteAdminUser(id: number): Promise<Types.GenericResponse> {
     return this.simple_delete( `${API_VERSION_PREFIX}/user-admin/${id}/`)
+  }
+
+  async reSendAdminUserEmail(id: number): Promise<Types.GenericResponse> {
+    return this.simple_post( `${API_VERSION_PREFIX}/user-admin/${id}/email/`)
   }
 
   async getDwollaUser(data: any): Promise<Types.SimplePostResult> {
