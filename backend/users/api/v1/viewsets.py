@@ -1,5 +1,7 @@
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework import mixins, viewsets, permissions, filters, status
+from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -14,6 +16,7 @@ from users.models import User
 
 class UserAdminView(
     mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet
@@ -26,7 +29,7 @@ class UserAdminView(
     search_fields = ['name', 'first_name', 'last_name', 'role', 'group']
 
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.action == 'create' or self.action == 'partial_update':
             return UserCreateSerializer
         return UserDetailSerializer
 
@@ -34,6 +37,11 @@ class UserAdminView(
         instance.is_active = False
         instance.save()
 
+    @action(detail=True, methods=['post'])
+    def email(self, request, *args, **kwargs):
+        user = self.get_object()
+        send_reset_email(user, request)
+        return Response(status=status.HTTP_200_OK)
 
 
 class ResetPasswordFormCustom(APIView):
