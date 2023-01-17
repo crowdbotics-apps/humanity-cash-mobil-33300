@@ -1,5 +1,5 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
-import {useEffect, useRef, useState} from "react"
+import React, {useEffect, useRef, useState} from "react"
 import {money_fmt, showMessage, useApi} from "../../services/helpers"
 import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
@@ -11,12 +11,13 @@ import Icon from "@mui/material/Icon";
 import MDButton from "../../components/MDButton";
 import ConfirmDialogInputModal from "../../components/ConfirmDialogInputModal";
 import {Search} from "@mui/icons-material";
-import {CircularProgress, Input} from "@mui/material";
+import {CircularProgress, Grid, Input} from "@mui/material";
 import MDAvatar from "../../components/MDAvatar";
 import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
 import MDInput from "../../components/MDInput";
 import {AutocompleteFormik} from "../../components/AutocompleteFormik";
+import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 
 
 const AdminWalletControl = () => {
@@ -25,14 +26,21 @@ const AdminWalletControl = () => {
   const [loading, setLoading] = useState(false)
   const [showRecipientModal, setShowRecipientModal] = useState(false)
   const [showLinkBankModal, setShowLinkBankModal] = useState(false)
+  const [showChangeRecipientModal, setShowChangeRecipientModal] = useState(false)
+  const [showChangeBankAccountModal, setShowChangeBankAccountModal] = useState(false)
+  const [showAmountModal, setShowAmountModal] = useState(false)
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false)
   const [communityAmount, setCommunityAmount] = useState(0)
   const [humanityAmount, setHumanityAmount] = useState(0)
   const [recipientSection, setRecipientSection] = useState('people')
+  const [actionListModal, setActionListModal] = useState('recipient')
   const [usersPeople, setUsersPeople] = useState([])
   const [usersBusiness, setUsersBusiness] = useState([])
   const [searchedUsers, setSearchedUsers] = useState([])
   const [searchBarText, setSearchBarText] = useState('')
   const [selectedUser, setSelectedUser] = useState(null)
+  const [selectedFormData, setSelectedFormData] = useState(null)
+  const [amount, setAmount] = useState('')
 
   const getWalletBalances = () => {
     setLoading(true)
@@ -62,10 +70,43 @@ const AdminWalletControl = () => {
       .finally(() => setLoading(false))
   }
 
-  const confirmSelectedRecipient = () => {
+  const clearModalsAction = () => {
     setShowRecipientModal(false)
     setSelectedUser(null)
+    setSelectedFormData(null)
+    setShowChangeRecipientModal(false)
+    setShowChangeBankAccountModal(false)
+    setShowLinkBankModal(false)
+    setShowAmountModal(false)
+    setShowConfirmationModal(false)
+    setAmount('')
   }
+
+  const confirmSelectedRecipient = () => {
+    setShowChangeBankAccountModal(true)
+  }
+
+  const confirmActionSelectRecipient = () => {
+    const data = {...selectedUser}
+    showMessage('Recipient updated successfully', 'success')
+    console.log('data ', data)
+    clearModalsAction()
+  }
+
+  const confirmActionLinkBankAccount = () => {
+    const data = {...selectedFormData}
+    showMessage('Bank account updated successfully', 'success')
+    console.log('data ', data)
+    clearModalsAction()
+  }
+
+  const confirmAmountAction = () => {
+    const data = {...selectedUser, amount}
+    showMessage('Money transferred successfully', 'success')
+    console.log('data ', data)
+    clearModalsAction()
+  }
+
 
   const searchFriendInContacts = () => {
     let usersFilter
@@ -143,8 +184,61 @@ const AdminWalletControl = () => {
       title={'Admin Wallet Control'}
     >
       <MDBox mt={3}>
+        <ConfirmDialogModal
+          title={'Change Recipient'}
+          description={`Do you want to change the current recipient?`}
+          open={showChangeRecipientModal}
+          handleClose={() => setShowChangeRecipientModal(false)}
+          handleConfirm={() => confirmActionSelectRecipient()}
+          cancelText={'Cancel'}
+          confirmText={'Confirm'}
+        />
+        <ConfirmDialogModal
+          title={'Change Bank Account'}
+          description={`Do you want to change the linked bank account?`}
+          open={showChangeBankAccountModal}
+          handleClose={() => setShowChangeBankAccountModal(false)}
+          handleConfirm={() => confirmActionLinkBankAccount()}
+          cancelText={'Cancel'}
+          confirmText={'Confirm'}
+        />
         <ConfirmDialogInputModal
-          title={'Select Recipient'}
+          title={'Select amount'}
+          description={'Amount to transfer'}
+          open={showAmountModal}
+          disabledConfirm={!amount || amount === ''}
+          handleClose={() => setShowAmountModal(false)}
+          handleConfirm={() => {
+            setShowAmountModal(false)
+            setShowConfirmationModal(true)
+          }}
+        >
+          <MDInput
+            type="number"
+            label="ENTER AMOUNT"
+            variant="outlined"
+            fullWidth
+            placeholder="input the amount"
+            value={amount}
+            onChange={(evt) => setAmount(evt.target.value)}
+          />
+        </ConfirmDialogInputModal>
+
+        <ConfirmDialogInputModal
+          title={'Confirm Amount'}
+          description={`Do you want to transfer $${amount} to ${selectedUser?.username}`}
+          open={showConfirmationModal}
+          handleClose={() => {
+            setShowConfirmationModal(false)
+            setShowAmountModal(true)
+          }}
+          handleConfirm={confirmAmountAction}
+        >
+
+        </ConfirmDialogInputModal>
+
+        <ConfirmDialogInputModal
+          title={actionListModal === 'recipient' ? 'Select Recipient' : 'Send / Transfer'}
           description={''}
           open={showRecipientModal}
           disabledConfirm={selectedUser === null}
@@ -152,7 +246,14 @@ const AdminWalletControl = () => {
             setShowRecipientModal(false)
             setSelectedUser(null)
           }}
-          handleConfirm={() => confirmSelectedRecipient()}
+          handleConfirm={() => {
+            if (actionListModal === 'recipient' ) {
+              setShowChangeRecipientModal(true)
+            } else {
+              setShowAmountModal(true)
+            }
+
+          }}
         >
           <MDBox sx={{backgroundColor: '#EBEBEB', position: 'relative'}} px={5}>
             {loading === false ? <Search style={{position: 'absolute', bottom: 8, left: 10}}/> :
@@ -205,21 +306,19 @@ const AdminWalletControl = () => {
         <ConfirmDialogInputModal
           title={'Link Bank account'}
           description={''}
+          hideButtons
           open={showLinkBankModal}
-          handleClose={() => {
-            setShowLinkBankModal(false)
-          }}
-          handleConfirm={() => confirmSelectedRecipient()}
         >
           <Formik
             innerRef={formikRef}
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={values => {
-              // createAdminUser(values)
+              setSelectedFormData(values)
+              setShowChangeBankAccountModal(true)
             }}
           >
-            {({errors, touched, setFieldValue, values}) => (
+            {({errors, isValid}) => (
               <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
                 <Field name="name">
                   {({field}) => {
@@ -278,6 +377,18 @@ const AdminWalletControl = () => {
                   }
                   }
                 </Field>
+                <Grid container display={'flex'} justifyContent={'center'} mt={2}>
+                  <Grid item xs={5}>
+                    <MDButton color="primary" variant={'outlined'} fullWidth onClick={() => setShowLinkBankModal(false)}>
+                      Cancel
+                    </MDButton>
+                  </Grid>
+                  <Grid item xs={5} ml={2}>
+                    <MDButton color="primary" fullWidth type={'submit'} disabled={!isValid}>
+                      Confirm
+                    </MDButton>
+                  </Grid>
+                </Grid>
               </Form>
             )}
           </Formik>
@@ -327,7 +438,10 @@ const AdminWalletControl = () => {
             </MDBox>
           </MDBox>
           <MDBox display={'flex'} flex={1} p={5} alignItems={'center'}>
-            <MDButton color={"primary"} variant={"outlined"} fullWidth onClick={() => setShowRecipientModal(true)}>
+            <MDButton color={"primary"} variant={"outlined"} fullWidth onClick={() => {
+              setActionListModal('recipient')
+              setShowRecipientModal(true)
+            }}>
               <Icon fontSize="medium" sx={{marginRight: 2, transform: 'scale(1.2)'}}>
                 list-all
               </Icon>
@@ -389,10 +503,13 @@ const AdminWalletControl = () => {
               </Icon>
               Link Bank Account
             </MDButton>
-            <MDButton color={"primary"} variant={"contained"} fullWidth onClick={() => setShowRecipientModal(true)}>
+            <MDButton color={"primary"} variant={"contained"} fullWidth onClick={() => {
+              setActionListModal('transfer')
+              setShowRecipientModal(true)
+            }}>
               Send / Transfer
             </MDButton>
-            <MDButton color={"primary"} variant={"outlined"} fullWidth>
+            <MDButton color={"primary"} variant={"outlined"} fullWidth disabled>
               Reedem to Cash
             </MDButton>
           </MDBox>
