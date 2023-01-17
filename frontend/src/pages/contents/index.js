@@ -183,7 +183,6 @@ const BlockchainTransactions = () => {
   const editEvent = (event) => {
     console.log("edit event", event)
     setCurrentEvent(event)
-    // setShowDetailModal(false)
     if (event.eventType === 'story') {
       setShowStoryModal(true)
     } else {
@@ -203,10 +202,11 @@ const BlockchainTransactions = () => {
     setLoading(true)
     api.editEvent(event.id, updatedData, keys).then((result) => {
       if (result.kind === "ok") {
+        showMessage("Updated successfully.", 'success');
         setShowStoryModal(false)
         setShowEventModal(false)
         setShowDetailModal(false)
-        showMessage("Updated successfully.", 'success');
+        setCurrentEvent(null)
         setDetails(Details.map(value => value.id === event.id ? event : value))
         getEventsRequest()
       } else {
@@ -232,6 +232,7 @@ const BlockchainTransactions = () => {
         setShowStoryModal(false)
         setShowEventModal(false)
         setShowDetailModal(false)
+        setCurrentEvent(null)
         showMessage("Saved successfully.", 'success');
         getEventsRequest()
       } else {
@@ -245,7 +246,6 @@ const BlockchainTransactions = () => {
 
   const saveEvent = (data) => {
     let event = {}
-    setCurrentEvent(null)
     if (data.id !== undefined) {
       event = {
         id: data.id,
@@ -278,7 +278,6 @@ const BlockchainTransactions = () => {
   const saveStory = (data) => {
     console.log('event ', data)
     let event = {}
-    setCurrentEvent(null)
     if (data.id !== undefined) {
       event = {
         id: data.id,
@@ -319,7 +318,6 @@ const BlockchainTransactions = () => {
   const renderEventContent = (eventInfo) => {
     const eventType = eventInfo.event._def.extendedProps.eventType
     const eventHour = moment(eventInfo.event._def.extendedProps.startDate).format("hh:mm A")
-
     const isOverlaping = eventInfo.event._def.extendedProps.isOverlapping
 
     const Overlapping = (event) => (<div className={'dot my-event-overlapped my-event-overlapped-' + eventType}/>)
@@ -489,11 +487,9 @@ const BlockchainTransactions = () => {
             ref={CalendarEl}
 
             headerToolbar={{
-              // start: 'title', // will normally be on the left. if RTL, will be on the right
               end: '',
               start: '',
               center: '',
-              // start: 'prev, title,next' // will normally be on the right. if RTL, will be on the left
             }}
             eventColor={"transparent"}
             eventContent={renderEventContent}

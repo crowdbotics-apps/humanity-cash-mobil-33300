@@ -78,7 +78,6 @@ export const ContentEventCard = observer((props) => {
 export const ContentEventDetail = observer((props) => {
   const {event} = props
   const color = (event.eventType === 'story'?'green':'blue')
-  const extraClass = 'text-'+color
 
   return (
     <div className={' border-orange detail-event-card '}  >
@@ -100,20 +99,20 @@ export const ContentEventDetail = observer((props) => {
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
             <p className={'event-card-title '}>{event.title}</p>
             <div className={'action-buttons'}>
-              <div className={'action-icon-container action-icon-container-pink'} onClick={() => {
+              <div className={'action-icon-container action-icon-container-pink'} style={{cursor: 'pointer'}} onClick={() => {
                 props.delete(event.id)
               }}>
                 <CloseActionIcon />
                 <div className={'action-icon-container-child text-pink'}>Delete</div>
               </div>
               {event.eventType === 'event' && (
-                <div className={'action-icon-container action-icon-container-green'}>
+                <div className={'action-icon-container action-icon-container-green'}  style={{cursor: 'pointer'}} >
                   <DoneActionIcon />
                   <div className={'action-icon-container-child text-green'}>Done</div>
                 </div>
               )}
 
-              <div className={'action-icon-container  action-icon-container-blue '} onClick={() => {
+              <div className={'action-icon-container  action-icon-container-blue '} style={{cursor: 'pointer'}} onClick={() => {
                 props.edit(event)
               }}>
                 <EditActionIcon />
