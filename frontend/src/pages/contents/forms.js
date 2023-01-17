@@ -24,7 +24,6 @@ export const AddEventForm = (props) => {
   const {event} = props
   const fileInputRef = useRef(null)
   const [file, setFile] = useState(null)
-  const [dataUri, setDataUri] = useState(event ? event.url : "")
   const formikRef = useRef();
 
 
@@ -74,7 +73,6 @@ export const AddEventForm = (props) => {
 
       let file = e.target.files[0] || null
       if (!file) {
-        setDataUri('');
         return;
       }
       setFile(file)
@@ -242,7 +240,6 @@ export const AddStoryForm = (props) => {
   const {event} = props
   const fileInputRef = useRef(null)
   const [file, setFile] = useState(null)
-  const [dataUri, setDataUri] = useState(event ? event.url : "")
   const formikRef = useRef();
 
 
@@ -277,7 +274,6 @@ export const AddStoryForm = (props) => {
 
       let file = e.target.files[0] || null
       if (!file) {
-        setDataUri('');
         return;
       }
 
