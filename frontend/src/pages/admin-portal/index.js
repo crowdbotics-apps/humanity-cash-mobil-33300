@@ -33,6 +33,9 @@ const rolesManager = [
   {id: 'SUPERADMIN', title: 'Super admin'},
 ]
 
+const allRoles = rolesBank.concat(rolesManager)
+
+
 const AdminPortal = () => {
   const api = useApi()
   const formikRef = useRef();
@@ -44,10 +47,10 @@ const AdminPortal = () => {
   const searchQueryRef = useRef("");
   const [showUserFormModal, setShowUserFormModal] = useState(false)
   const [showUserDeleteModal, setShowUserDeleteModal] = useState(false)
+  const [showUserSendEmailModal, setShowSendEmailModal] = useState(false)
   const [roles, setRoles] = useState([])
   const [selectedGroup, setSelectedGroup] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null)
-  //
   const [Checked, setChecked] = useState('')
 
   const getAdminUsers = (searchData, page = 1, ordering = "") => {
@@ -57,7 +60,7 @@ const AdminPortal = () => {
       if (result.kind === "ok") {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
-        tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
+        tmp.rows = results.map(e => renderTableRow(e, setDetailToShow, setEmailData, setEditShow))
         setRecordList(tmp)
         setNumberOfItems(count)
         setNumberOfItemsPage(results.length)
@@ -85,6 +88,24 @@ const AdminPortal = () => {
       .finally(() => setLoading(false))
   }
 
+  const editAdminUser = (data) => {
+    setLoading(true)
+    api.editadminUser(data).then((result) => {
+      if (result.kind === 'ok') {
+        clearDetail()
+        getAdminUsers("")
+        showMessage('Admin user updated successfully', 'success')
+      } else if (result.kind === 'bad-data') {
+        formikRef.current.setErrors(result.errors)
+        showMessage('Validation errors found')
+      } else {
+        showMessage()
+      }
+    })
+      .catch(err => showMessage())
+      .finally(() => setLoading(false))
+  }
+
   const deleteAdminUser = () => {
     setLoading(true)
     api.deleteAdminUser(selectedItem.id).then((result) => {
@@ -92,6 +113,20 @@ const AdminPortal = () => {
         clearDetail()
         getAdminUsers("")
         showMessage('Admin user deleted successfully', 'success')
+      } else {
+        showMessage()
+      }
+    })
+      .catch(err => showMessage())
+      .finally(() => setLoading(false))
+  }
+
+  const reSendAdminUserEmail = () => {
+    setLoading(true)
+    api.reSendAdminUserEmail(selectedItem.id).then((result) => {
+      if (result.kind === 'ok') {
+        clearDetail()
+        showMessage('Admin user password email sent successfully', 'success')
       } else {
         showMessage()
       }
@@ -111,13 +146,27 @@ const AdminPortal = () => {
     }
   }
 
+  const setEditShow = (item) => {
+    const group = groups.find(it => it.id === item.group_raw)
+    const role = allRoles.find(it => it.id === item.role_raw)
+    const user = {...item, group, role}
+    setSelectedItem(user)
+    setShowUserFormModal(true)
+  }
+
   const setDetailToShow = (item) => {
     setSelectedItem(item)
     setShowUserDeleteModal(true)
   }
 
+  const setEmailData = (item) => {
+    setSelectedItem(item)
+    setShowSendEmailModal(true)
+  }
+
   const clearDetail = () => {
     setShowUserFormModal(false)
+    setShowSendEmailModal(false)
     setShowUserDeleteModal(false)
     setSelectedItem(null)
     setRoles([])
@@ -138,10 +187,10 @@ const AdminPortal = () => {
     })
 
   const initialValues = {
-    name: "",
-    email: "",
-    role: "",
-    group: "",
+    name: selectedItem ? selectedItem.name_raw : "",
+    email: selectedItem ? selectedItem.email : "",
+    role: selectedItem ? selectedItem.role : "",
+    group: selectedItem ? selectedItem.group : "",
   };
 
   const filterOptions = [
@@ -149,25 +198,25 @@ const AdminPortal = () => {
       label: 'Manager',
       accessor: 'manager',
       value: Checked === 'manager',
-      action: () => setChecked('manager')      
+      action: () => setChecked('manager')
     },
     {
       label: 'Bank',
       accessor: 'bank',
       value: Checked === 'bank',
-      action: () => setChecked('bank') 
+      action: () => setChecked('bank')
     },
     {
       label: 'Employee',
       accessor: 'employee',
       value: Checked === 'employee',
-      action: () => setChecked('employee') 
+      action: () => setChecked('employee')
     },
     {
       label: 'Supervisor',
       accessor: 'supervisor',
       value: Checked === 'supervisor',
-      action: () => setChecked('supervisor') 
+      action: () => setChecked('supervisor')
     },
   ]
 
@@ -202,7 +251,7 @@ const AdminPortal = () => {
       loading={loading}
       searchFunc={getAdminUsers}
       filterContent={
-        <MDFilterButtonPopover filterOptions={filterOptions} buttonActions={buttonActions} variant="standard" color="dark" iconOnly sx={{ marginLeft: 2 }}>
+        <MDFilterButtonPopover filterOptions={filterOptions} buttonActions={buttonActions} variant="standard" color="dark" iconOnly sx={{ marginLeft: 2, backgroundColor: '#EBEBEB' }}>
           <Icon sx={{ fontWeight: "bold" }}>tune</Icon>
         </MDFilterButtonPopover>
       }
@@ -231,9 +280,18 @@ const AdminPortal = () => {
         cancelText={'Cancel'}
         confirmText={'Delete'}
       />
+      <ConfirmDialogModal
+        title={'Send password set email'}
+        description={`Do you want to resend the email to set user password?`}
+        open={showUserSendEmailModal}
+        handleClose={() => clearDetail()}
+        handleConfirm={() => reSendAdminUserEmail()}
+        cancelText={'Cancel'}
+        confirmText={'Confirm'}
+      />
       <ConfirmDialogInputModal
-        title={'Add user'}
-        description={'Admin user create form'}
+        title={selectedItem ? 'Edit user' : 'Add user'}
+        description={selectedItem ? 'Admin user edit form' :'Admin user create form'}
         open={showUserFormModal}
         handleClose={() => clearDetail()}
         handleConfirm={() => confirmAction()}
@@ -241,9 +299,16 @@ const AdminPortal = () => {
         <Formik
           innerRef={formikRef}
           initialValues={initialValues}
+          enableReinitialize
           validationSchema={validationSchema}
           onSubmit={values => {
-            createAdminUserReq(values)
+            if (selectedItem) {
+              const data = {...values, id: selectedItem.id}
+              editAdminUser(data)
+            } else {
+              createAdminUserReq(values)
+            }
+
           }}
         >
           {({errors, touched, setFieldValue, values}) => (
