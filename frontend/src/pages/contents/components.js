@@ -148,9 +148,12 @@ export const ContentEventDetail = observer((props) => {
           )}
 
           {event.link && (
-            <div style={{display:'flex', flexDirection:'row', alignItems:"center"}} className={'event-card-footer'}>
+            <div
+              style={{ display: 'flex', flexDirection: 'row', alignItems: "center", textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: 200 }}
+              className={'event-card-footer'}
+            >
               <AttachmentIcon />
-              <a target={"_blank"} href={event.link} style={{fontSize:14, marginLeft:10}}>{event.link}</a>
+              <a target={"_blank"} href={event.link} style={{ fontSize: 14, marginLeft: 10 }}>Link</a>
             </div>
           )}
         </div>
