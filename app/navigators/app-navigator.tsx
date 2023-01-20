@@ -3,7 +3,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme, useNavigationContainerRef
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { COLOR, METRICS } from "../theme"
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   SplashScreen,
@@ -119,6 +119,7 @@ const AppStackDrawer: React.FC = () => {
 
 export const AppNavigator = () => {
   const ref = React.useRef<any>();
+
   return (
     <NavigationContainer
       ref={ref}

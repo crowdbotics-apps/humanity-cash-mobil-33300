@@ -64,7 +64,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
 
   const RenderBanks = () => (
     <View style={styles.CONTAINER}>
-      <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("settings")}>
+      <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate("Home")}>
         <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
         <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
       </TouchableOpacity>
