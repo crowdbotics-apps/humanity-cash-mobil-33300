@@ -170,9 +170,9 @@ const ReconciliationActionsPage = () => {
       confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
-    [ReconciliationActions.AddAdjustmentAndMint]: {
-      title: "Add Adjustment",
-      subTitle: "Enter an amount to be minted to the Positive Mint Adjustment Account Wallet.",
+    [ReconciliationActions.ReconcileAndBurn]: {
+      title: "Reconcile & Burn Tokens",
+      subTitle: "Enter an amount to be burned from the Negative Adjustment Account Wallet.",
       next: onAddAdjustmentAndMint,
       type: 'burn_from_negative',
       confirmTitle: "Confirm Amount",
@@ -180,22 +180,22 @@ const ReconciliationActionsPage = () => {
     },
     [ReconciliationActions.RevertAdjustment]: {
       title: "Revert Adjustment",
-      subTitle: "Enter an amount to revert a previous action",
+      subTitle: "Enter an amount to revert a previous action (Transfer to reserve wallet).",
       next: onRevertAdjustment,
       type: 'revert_fund_negative',
       confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
-    [ReconciliationActions.ReconcileAndBurn]: {
-      title: "Reconcile and burn Tokens",
-      subTitle: "Enter an amount to be burned from the Negative Adjustment Account Wallet.",
+    [ReconciliationActions.AddAdjustmentAndMint]: {
+      title: "Add Adjustment & Mint Tokens",
+      subTitle: "Enter an amount to be minted to the Positive Mint Adjustment Account Wallet.",
       next: onReconcileAndBurn,
       type: 'mint_to_positive',
       confirmTitle: "Confirm Burn",
       selectRecipient: false
     },
     [ReconciliationActions.ReconcileAndTransfer]: {
-      title: "Transfer funds",
+      title: "Reconcile & Transfer Tokens",
       subTitle: "Enter an amount to be transferred from the Positive Mint Adjustment Account Wallet to the " +
         "Recipient wallet.",
       next: onReconcileAndTransfer,
@@ -204,18 +204,18 @@ const ReconciliationActionsPage = () => {
       selectRecipient: true
     },
     [ReconciliationActions.RevertMint]: {
-      title: "Revert Mint",
-      subTitle: "Burn tokens to revert previous action",
+      title: "Revert Adjustment & Burn Tokens",
+      subTitle: "Burn tokens from positive wallet to revert previous action.",
       next: onRevertMint,
       type: 'revert_mint_to_positive',
-      confirmTitle: "Confirm Recipient",
+      confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
   }
 
   const negativeActionList = [
     {
-      label: "Add Adjustment",
+      label: actions[ReconciliationActions.AddAdjustment].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.AddAdjustment])
         setShowPasswordModal(true)
@@ -223,7 +223,7 @@ const ReconciliationActionsPage = () => {
       disabled: false
     },
     {
-      label: "Reconcile & Burn Tokens",
+      label: actions[ReconciliationActions.ReconcileAndBurn].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.ReconcileAndBurn])
         setShowPasswordModal(true)
@@ -231,7 +231,7 @@ const ReconciliationActionsPage = () => {
       disabled: false
     },
     {
-      label: "Revert Adjustment",
+      label: actions[ReconciliationActions.RevertAdjustment].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.RevertAdjustment])
         setShowPasswordModal(true)
@@ -241,7 +241,7 @@ const ReconciliationActionsPage = () => {
   ]
   const positiveActionList = [
     {
-      label: "Add Adjustment & Mint Tokens",
+      label: actions[ReconciliationActions.AddAdjustmentAndMint].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.AddAdjustmentAndMint])
         setShowPasswordModal(true)
@@ -249,7 +249,7 @@ const ReconciliationActionsPage = () => {
       disabled: false
     },
     {
-      label: "Reconcile & Transfer Tokens",
+      label: actions[ReconciliationActions.ReconcileAndTransfer].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.ReconcileAndTransfer])
         setShowPasswordModal(true)
@@ -257,7 +257,7 @@ const ReconciliationActionsPage = () => {
       disabled: false
     },
     {
-      label: "Revert Adjustment & Burn Tokens",
+      label: actions[ReconciliationActions.RevertMint].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.RevertMint])
         setShowPasswordModal(true)
