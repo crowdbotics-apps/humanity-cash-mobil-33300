@@ -131,8 +131,8 @@ const ReconciliationPage: React.FC = observer(() => {
       selectRecipient: false
     },
     [ReconciliationActions.AddAdjustmentAndMint]: {
-      title: "Add Adjustment",
-      subTitle: "Enter an amount to be minted to the Positive Mint Adjustment Account Wallet.",
+      title: "Reconcile & Burn Tokens",
+      subTitle: "Enter an amount to be burned from the Negative Adjustment Account Wallet.",
       next: onAddAdjustmentAndMint,
       type: 'burn_from_negative',
       confirmTitle: "Confirm Amount",
@@ -140,22 +140,22 @@ const ReconciliationPage: React.FC = observer(() => {
     },
     [ReconciliationActions.RevertAdjustment]: {
       title: "Revert Adjustment",
-      subTitle: "Enter an amount to revert a previous action",
+      subTitle: "Enter an amount to revert a previous action (Transfer to reserve wallet).",
       next: onRevertAdjustment,
       type: 'revert_fund_negative',
       confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
     [ReconciliationActions.ReconcileAndBurn]: {
-      title: "Reconcile and burn Tokens",
-      subTitle: "Enter an amount to be burned from the Negative Adjustment Account Wallet.",
+      title: "Add Adjustment & Mint Tokens",
+      subTitle: "Enter an amount to be minted to the Positive Mint Adjustment Account Wallet.",
       next: onReconcileAndBurn,
       type: 'mint_to_positive',
       confirmTitle: "Confirm Burn",
       selectRecipient: false
     },
     [ReconciliationActions.ReconcileAndTransfer]: {
-      title: "Transfer funds",
+      title: "Reconcile & Transfer Tokens",
       subTitle: "Enter an amount to be transferred from the Positive Mint Adjustment Account Wallet to the " +
         "Recipient wallet.",
       next: onReconcileAndTransfer,
@@ -164,11 +164,11 @@ const ReconciliationPage: React.FC = observer(() => {
       selectRecipient: true
     },
     [ReconciliationActions.RevertMint]: {
-      title: "Revert Mint",
-      subTitle: "Burn tokens to revert previous action",
+      title: "Revert Mint (Burn).",
+      subTitle: "Burn tokens from positive wallet to revert previous action.",
       next: onRevertMint,
       type: 'revert_mint_to_positive',
-      confirmTitle: "Confirm Recipient",
+      confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
   }
@@ -264,14 +264,30 @@ const ReconciliationPage: React.FC = observer(() => {
     CurrentAction.next(data)
   }
 
+  const getBalance = () => {
+    userStore.environment.api.getBalances().then((res:any) => {
+      if (res.kind === 'ok') {
+        setItems([{
+          title: <div style={{color: "var(--green-dark)", fontWeight: "bold"}}>Today's Date</div>,
+          reserve: <div style={{fontWeight: 500, fontSize: "14px"}}>
+            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(res.data.reserve)}
+          </div>,
+          negative: <div style={{fontWeight: 500, fontSize: "14px"}}>
+            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(res.data.negative)}
+          </div>,
+          positive: <div style={{fontWeight: 500, fontSize: "14px"}}>
+            {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(res.data.positive)}
+          </div>,
+        }])
+      } else {
+        console.log("Something wrong happened")
+      }
+    })
+  }
+
   useEffect(() => {
     userStore.setUp()
-    setItems([{
-      title: <div style={{color: "var(--green-dark)", fontWeight: "bold"}}>Today's Date</div>,
-      reserve: <div style={{fontWeight: 500, fontSize: "14px"}}>$ 100,000.00</div>,
-      negative: <div style={{fontWeight: 500, fontSize: "14px"}}>$ 0.00</div>,
-      positive: <div style={{fontWeight: 500, fontSize: "14px"}}>$ 0.00</div>,
-    }])
+    getBalance()
   }, [])
 
   return (
