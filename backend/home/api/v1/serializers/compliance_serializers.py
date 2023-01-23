@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError
 from base import configs
 from celo_humanity.models import ComplianceAction
 from home.models import DatedSystemBalance, BankAccount, DatedSystemBalanceBankBalances
-from users.models import Merchant, Consumer, BaseProfileModel
+from users.models import Merchant, Consumer
 
 
 class ComplianceActionReadSerializer(serializers.ModelSerializer):
@@ -50,24 +50,36 @@ class ComplianceActionReadSerializer(serializers.ModelSerializer):
         if instance.type == ComplianceAction.Type.fund_negative_wallet:
             return f'Reserve wallet ({configs.RESERVE_WALLET_UID})'
 
-        elif instance.type == ComplianceAction.Type.burn_from_negative_wallet:
+        elif instance.type in [
+            ComplianceAction.Type.burn_from_negative_wallet,
+            ComplianceAction.Type.revert_fund_negative_wallet
+        ]:
             return f'Negative Adjustment Wallet ({configs.NEGATIVE_ADJUSTMENT_WALLET_UID})'
 
         elif instance.type == ComplianceAction.Type.mint_to_positive_wallet:
             return '---'
 
-        elif instance.type == ComplianceAction.Type.transfer_adjustment_to_user:
+        elif instance.type in [
+            ComplianceAction.Type.transfer_adjustment_to_user,
+            ComplianceAction.Type.revert_mint_to_positive_wallet
+        ]:
             return f'Positive Adjustment Wallet ({configs.POSITIVE_ADJUSTMENT_WALLET_UID})'
 
     def get_action_to(self, instance):
         if instance.type == ComplianceAction.Type.fund_negative_wallet:
             return f'Negative Adjustment Wallet ({configs.NEGATIVE_ADJUSTMENT_WALLET_UID})'
 
-        elif instance.type == ComplianceAction.Type.burn_from_negative_wallet:
+        elif instance.type in [
+            ComplianceAction.Type.burn_from_negative_wallet,
+            ComplianceAction.Type.revert_mint_to_positive_wallet
+        ]:
             return '---'
 
         elif instance.type == ComplianceAction.Type.mint_to_positive_wallet:
             return f'Positive Adjustment Wallet ({configs.POSITIVE_ADJUSTMENT_WALLET_UID})'
+
+        if instance.type == ComplianceAction.Type.revert_fund_negative_wallet:
+            return f'Reserve wallet ({configs.RESERVE_WALLET_UID})'
 
         elif instance.type == ComplianceAction.Type.transfer_adjustment_to_user:
             if instance.consumer:
