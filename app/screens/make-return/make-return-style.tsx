@@ -60,7 +60,6 @@ export default StyleSheet.create({
     paddingHorizontal: '10%'
   },
   CONTAINER: {
-    backgroundColor: 'red'
   },
   FORGOT_PASSWORD_CONTAINER: {
     alignItems: 'center',

@@ -70,9 +70,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
 
   useEffect(() => {
     if (isFocused) {
-
       getBusiness()
-
       Geolocation.getCurrentPosition(
         ({ coords: { latitude, longitude } }) => {
           const location = {
@@ -88,9 +86,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
         console.warn,
         { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
       )
-
     } else {
-
       setShowDetail(false)
     }
   }, [isFocused, ShowConfirmCoupon])
@@ -138,31 +134,43 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
           notifyMessage(null)
         }
       })
-
   }
 
   const RenderCategories = () => {
     if (!loginStore?.getBusiness?.[0]) return
     return (
       loginStore?.getBusiness?.map(category => (
-        Object.keys(category).map((i, key) => (
-          <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
-            <Text style={styles.INDUSTRY_TITLE}>{i}</Text>
-            <View style={styles.LINE} />
-            <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
-              {category[i].map((b, key2) => (
-                <TouchableOpacity onPress={() => [getBusinessDetail(b.id)]} style={styles.BUSINESS} key={key + '' + key2}>
-                  <Image
-                    source={{ uri: b.background_picture }}
-                    resizeMode='cover'
-                    style={styles.BUSINESS_IMAGE}
-                  />
-                  <Text style={styles.BUSINESS_NAME}>{b.business_name}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        ))
+        Object.keys(category).map((i, key) => {
+          let hasOcurrecy = true
+          console.log(' category -> ', category)
+          category[i].map(c => {
+            console.log(' category -> ', c.business_name.toLocaleLowerCase(), ' -> ', Search.toLocaleLowerCase())
+            if (c.business_name.toLocaleLowerCase().includes(Search.toLocaleLowerCase()) && (Search !== '')) {
+              console.log(' entre ')
+              hasOcurrecy = false
+            } 
+          })
+          console.log(' hasOcurrecy -> ', hasOcurrecy)
+          if (!hasOcurrecy) return null
+          return (
+            <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
+              <Text style={styles.INDUSTRY_TITLE}>{i}</Text>
+              <View style={styles.LINE} />
+              <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
+                {category[i].map((b, key2) => (
+                  <TouchableOpacity onPress={() => [getBusinessDetail(b.id)]} style={styles.BUSINESS} key={key + '' + key2}>
+                    <Image
+                      source={{ uri: b.background_picture }}
+                      resizeMode='cover'
+                      style={styles.BUSINESS_IMAGE}
+                    />
+                    <Text style={styles.BUSINESS_NAME}>{b.business_name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          )
+        })
       ))
     )
   }
@@ -171,7 +179,8 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
     <Text style={styles.DISTANCE_FILTER_LABEL}>Distance</Text>
     <View style={styles.DISTANCES_CONTAINER}>
       <CheckBox
-        checked={DistanceFilter === 1}
+        checked={DistanceFilter === 1
+}
         onPress={() => setDistanceFilter(1)}
         checkedColor={loginStore.getAccountColor}
       />

@@ -94,19 +94,19 @@ class SendMoneyView(AuthenticatedAPIView):
             from_password = body['password']
             amount = float(body.get('amount', 0))
             roundup = float(body.get('roundup', 0))
-            if from_.user.check_password(from_password) or from_password is None:
-                total = amount + roundup
-                if amount <= 0 or roundup < 0 or total < 0.01:
-                    return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
+            # if from_.user.check_password(from_password) or from_password is None:
+            total = amount + roundup
+            if amount <= 0 or roundup < 0 or total < 0.01:
+                return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
 
-                if total > from_.balance:
-                    return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
+            if total > from_.balance:
+                return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
 
-                from_.transfer(to_, amount, roundup)
+            from_.transfer(to_, amount, roundup)
 
-                return Response(status=status.HTTP_200_OK)
-            else:
-                return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_200_OK)
+            # else:
+            #    return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
 
         except (AttributeError, KeyError, ValueError):
             return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)

@@ -559,7 +559,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					placeholder={'Facebook Link'}
 				/>
 			</View>
-			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+			{/* <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>TWITTER LINK</Text>
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
@@ -570,7 +570,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					value={TwitterLink}
 					placeholder={'Twitter Link'}
 				/>
-			</View>
+			</View> */}
 
 		</View>
 	)

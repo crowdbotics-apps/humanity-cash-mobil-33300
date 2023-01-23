@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Button, Screen, Text, ConfirmCouponModal } from "../../components";
-import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback,  BackHandler } from "react-native";
+import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback, BackHandler, FlatList, RefreshControl } from "react-native";
 import { COLOR, IMAGES } from "../../theme";
 import styles from "./home-style";
 import { useStores } from "../../models";
@@ -14,12 +14,14 @@ import { profileTypes } from '../drawer/drawer-screen'
 export const HomeScreen = observer(function HomeScreen() {
 	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
 	const [ShowMakeReturnModal, setShowMakeReturnModal] = useState(false);
+	const [refreshing, setRefreshing] = React.useState(false);
+	const [enablePTR, setEnablePTR] = React.useState(false);
 	const [couponsConfig, setCouponsConfig] = useState({
 		coupons: [],
 		couponSelected: {},
 		ShowConfirmCoupon: false
 	});
-	const {coupons, couponSelected, ShowConfirmCoupon} = couponsConfig;
+	const { coupons, couponSelected, ShowConfirmCoupon } = couponsConfig;
 
 	const rootStore = useStores();
 	const { loginStore } = rootStore;
@@ -91,6 +93,7 @@ export const HomeScreen = observer(function HomeScreen() {
 		loginStore.environment.api
 			.getEvents()
 			.then((result: any) => {
+				setRefreshing(false)
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setEvents(result.data?.results)
@@ -147,6 +150,11 @@ export const HomeScreen = observer(function HomeScreen() {
 		couponSelected: c
 	});
 
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		getEvents()
+	}, []);
+
 	useEffect(() => {
 		if (isFocused) {
 			getEvents()
@@ -182,7 +190,7 @@ export const HomeScreen = observer(function HomeScreen() {
 								setShowConfirmLogoutModal(false),
 								loginStore.setSelectedAccount('merchant'),
 								loginStore.reset(),
-								 navigation.navigate("login")
+								navigation.navigate("login")
 							]}>
 							<Text style={styles.SUBMIT_BUTTON_LABEL}>Log out</Text>
 						</TouchableOpacity>
@@ -196,8 +204,8 @@ export const HomeScreen = observer(function HomeScreen() {
 		<Modal visible={ShowMakeReturnModal} transparent>
 			<TouchableWithoutFeedback onPress={() => setShowMakeReturnModal(false)}>
 				<View style={styles.ROOT_MODAL}>
-					<View style={[styles.MODAL_RETURN_CONTENT, {backgroundColor: loginStore.getAccountColor}]}>
-						<Text style={[styles.STEP_TITLE_BLACK, {color: 'white'}]}>Scan the customer’s return receipt QR code.</Text>
+					<View style={[styles.MODAL_RETURN_CONTENT, { backgroundColor: loginStore.getAccountColor }]}>
+						<Text style={[styles.STEP_TITLE_BLACK, { color: 'white' }]}>Scan the customer’s return receipt QR code.</Text>
 						<Text style={styles.STEP_SUB_TITLE_MODAL}>The customer needs to provide the transaction receipt, and select “Make a Return” in order to generate a QR Code. Scan this QR code in order to the refund BerkShares to the customer.</Text>
 						<TouchableOpacity
 							style={[styles.MODAL_BUTTON, { backgroundColor: 'white' }]}
@@ -205,7 +213,7 @@ export const HomeScreen = observer(function HomeScreen() {
 								navigation.navigate('makeReturn'),
 								setShowMakeReturnModal(false)
 							]}>
-							<Text style={[styles.SUBMIT_BUTTON_LABEL, {color: 'black'}]}>Scan</Text>
+							<Text style={[styles.SUBMIT_BUTTON_LABEL, { color: 'black' }]}>Scan</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
@@ -213,22 +221,23 @@ export const HomeScreen = observer(function HomeScreen() {
 		</Modal>
 	)
 
-	const renderNews = () => (
-		loginStore.getEvents.map((n, key) => <View key={key + '_new'} style={styles.NEWS_CONTAINER}>
-			<View style={styles.NEWS_HEADER_CONTAINER}>
-				<Text style={styles.NEWS_TAG}>{n.tag}</Text>
-				<Text style={styles.NEWS_TAG}>{DateFormat(n.start_date)}</Text>
+	const renderNews = () =>
+		loginStore.getEvents.map((n, key) =>
+			<View key={key + '_new'} style={styles.NEWS_CONTAINER}>
+				<View style={styles.NEWS_HEADER_CONTAINER}>
+					<Text style={styles.NEWS_TAG}>{n.tag}</Text>
+					<Text style={styles.NEWS_TAG}>{DateFormat(n.start_date)}</Text>
+				</View>
+				<Text style={styles.NEWS_TITLE}>{n.title}</Text>
+				<Text style={styles.NEWS_BODY}>{n.description}</Text>
+				<Image
+					source={{ uri: n.image }}
+					resizeMode="contain"
+					style={styles.NEWS_IMAGE}
+				/>
 			</View>
-			<Text style={styles.NEWS_TITLE}>{n.title}</Text>
-			<Text style={styles.NEWS_BODY}>{n.description}</Text>
-			<Image
-				source={{ uri: n.image }}
-				resizeMode="contain"
-				style={styles.NEWS_IMAGE}
-			/>
-		</View>
 		)
-	)
+
 
 	const ConsumerView = () => (
 		<View style={styles.ROOT_CONTAINER}>
@@ -237,7 +246,19 @@ export const HomeScreen = observer(function HomeScreen() {
 				<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Menu`}</Text>
 			</TouchableOpacity>
 
-			<ScrollView key="consumer_view" showsVerticalScrollIndicator={false} bounces={false}>
+			<ScrollView
+				key="consumer_view"
+				showsVerticalScrollIndicator={false}
+				// bounces={false}
+				refreshControl={
+					<RefreshControl
+						refreshing={refreshing}
+						onRefresh={onRefresh}
+						enabled={enablePTR}
+					/>
+				}
+
+			>
 				<View style={styles.STEP_CONTAINER}>
 					<Image
 						resizeMode="contain"
@@ -258,7 +279,7 @@ export const HomeScreen = observer(function HomeScreen() {
 
 					{(!loginStore.getAllData.first_name && loginStore.getSelectedAccount === 'merchant') &&
 						<TouchableOpacity
-							style={[styles.WARNING_CONTAINER, {marginBottom: 10}]}
+							style={[styles.WARNING_CONTAINER, { marginBottom: 10 }]}
 							onPress={() => navigation.navigate('signupProfile', { profile_type: profileTypes[0] })}
 						>
 							<View style={styles.ICON_WARNING_CONTAINER}>
@@ -312,14 +333,14 @@ export const HomeScreen = observer(function HomeScreen() {
 
 					{renderNews()}
 
-					{ ShowConfirmCoupon &&
+					{ShowConfirmCoupon &&
 
 						<ConfirmCouponModal
 							mustDoAction={true}
 							couponsConfig={couponsConfig}
 							setCouponsConfig={setCouponsConfig}
 							visible={ShowConfirmCoupon}
-							buttonAction={() => setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})}
+							buttonAction={() => setCouponsConfig({ ...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon })}
 							couponSelected={couponSelected}
 							// @ts-ignore
 							mode={!loginStore.getConsumerCoupons.some(c => c.id_cupon === couponSelected.id) ? 'ADD' : 'DELETE'}
@@ -327,7 +348,7 @@ export const HomeScreen = observer(function HomeScreen() {
 								await getAllCoupons()
 								// @ts-ignore
 								navigation.navigate('home')
-								setCouponsConfig({...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon})
+								setCouponsConfig({ ...couponsConfig, ShowConfirmCoupon: !ShowConfirmCoupon })
 							}}
 						/>
 					}

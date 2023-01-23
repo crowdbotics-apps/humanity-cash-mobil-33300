@@ -150,6 +150,7 @@ const AdminPortal = () => {
     const group = groups.find(it => it.id === item.group_raw)
     const role = allRoles.find(it => it.id === item.role_raw)
     const user = {...item, group, role}
+    // setSelectedGroup(group)
     setSelectedItem(user)
     setShowUserFormModal(true)
   }
@@ -182,8 +183,8 @@ const AdminPortal = () => {
     Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string().email().required(),
-      group: Yup.string().required(),
-      role: Yup.string().required(),
+      group: Yup.object().required(),
+      role: Yup.object().required(),
     })
 
   const initialValues = {
@@ -302,11 +303,14 @@ const AdminPortal = () => {
           enableReinitialize
           validationSchema={validationSchema}
           onSubmit={values => {
+            let valuesFormated = {...values}
+            if (valuesFormated?.group?.id) valuesFormated.group = valuesFormated.group.id
+            if (valuesFormated?.role?.id) valuesFormated.role = valuesFormated.role.id
             if (selectedItem) {
-              const data = {...values, id: selectedItem.id}
+              const data = {...valuesFormated, id: selectedItem.id}
               editAdminUser(data)
             } else {
-              createAdminUserReq(values)
+              createAdminUserReq(valuesFormated)
             }
 
           }}
@@ -360,7 +364,7 @@ const AdminPortal = () => {
                         labelFieldName={"title"}
                         field={field}
                         setFieldValue={(field, value) => {
-                          setFieldValue(field, value.id)
+                          setFieldValue(field, value)
                         }}
                         initialValue={initialValues.group}
                         touched={touched}
@@ -379,7 +383,7 @@ const AdminPortal = () => {
                         labelFieldName={"title"}
                         field={field}
                         disabled={values.group === ''}
-                        setFieldValue={(field, value) => setFieldValue(field, value.id)}
+                        setFieldValue={(field, value) => setFieldValue(field, value)}
                         initialValue={initialValues.role}
                         touched={touched}
                         errors={errors}
