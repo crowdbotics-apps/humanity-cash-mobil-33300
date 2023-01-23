@@ -367,7 +367,7 @@ const ReconciliationActionsPage = () => {
       {/* CONFIRMATION MODAL */}
       <ConfirmDialogInputModal
         title={CurrentAction.confirmTitle}
-        description={CurrentAction.selectRecipient ? "John Doe Wallet address 0xasdf234asdf0234" : `${Amount}`}
+        description={CurrentAction.selectRecipient ? "John Doe Wallet address 0xasdf234asdf0234" : `${money_fmt(Amount)}`}
         open={ShowConfirmationModal}
         handleClose={() => setShowConfirmationModal(false)}
         handleConfirm={onReconciliationConfirm}
