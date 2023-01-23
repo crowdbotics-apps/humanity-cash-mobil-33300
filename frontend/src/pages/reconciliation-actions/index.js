@@ -8,6 +8,8 @@ import {ROUTES} from "../../services/constants";
 import MDButtonPopover from "../../components/MDButtonPopover";
 import ConfirmDialogInputModal from "../../components/ConfirmDialogInputModal";
 import MDInput from "../../components/MDInput";
+import {Autocomplete, CircularProgress, TextField} from "@mui/material";
+import {Search} from "@mui/icons-material";
 
 const ReconciliationActions = {
   AddAdjustment: 'AddAdjustment',
@@ -74,6 +76,11 @@ const ReconciliationActionsPage = () => {
 
   const [Password, setPassword] = useState("")
   const [Amount, setAmount] = useState("")
+
+  const selectRecipientRef = useRef(null)
+  const [loadingRecipient, setLoadingRecipient] = useState(false);
+  const [RecipientList, setRecipientList] = useState([]);
+  const [openRecipientList, setOpenRecipientList] = useState(false);
 
 
   const resetData = () => {
@@ -307,7 +314,30 @@ const ReconciliationActionsPage = () => {
     setShowConfirmationModal(true)
   }
 
+  const getRecipientList = () => {
+    if (loadingRecipient) {
+      return
+    }
+    setLoadingRecipient(true)
+    let data = {}
+    if (selectRecipientRef.current.value !== "") {
+      data.search = selectRecipientRef.current.value
+    }
+    api.getComplianceRecipient(data).then(res => {
+      if (res.kind === 'ok') {
+        setRecipientList(res.data.results)
+      } else {
+        console.log("Error, please put the corresponding alert message")
+      }
+    }).finally(() => setLoadingRecipient(false))
+  }
+
+  useEffect(()=> {
+    console.log("Recipient", CurrentRecipient)
+  }, [CurrentRecipient])
+
   useEffect(() => {
+    setLoadingRecipient(false)
     getWalletBalances()
   }, [])
 
@@ -353,6 +383,79 @@ const ReconciliationActionsPage = () => {
         handleClose={() => setShowAmountModal(false)}
         handleConfirm={() => onConfirmAmountModal(Amount)}
       >
+        {CurrentAction.selectRecipient &&
+          <Autocomplete
+            open={openRecipientList}
+            onOpen={() => {
+              getRecipientList()
+              setOpenRecipientList(true);
+            }}
+            onClose={() => {
+              setOpenRecipientList(false);
+            }}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            getOptionLabel={(option) => option.label}
+            options={RecipientList}
+            loading={loading}
+            onChange={(event, value) => {
+              setCurrentRecipient(value)
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                inputRef={selectRecipientRef}
+                label="SELECT RECIPIENT"
+                sx={{
+                  marginBottom: '24px',
+                  backgroundColor: 'transparent',
+                  pointerEvents: "auto",
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: '#D59B76',
+                    borderWidth: 2
+                  },
+                  "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                    borderColor: '#D59B76',
+                    borderWidth: 2
+                  },
+                  "&:hover .MuiOutlinedInput-input": {
+                    borderColor: '#D59B76',
+                    borderWidth: 2,
+                  },
+                  "& .MuiOutlinedInput-input": {
+                    height: '12px'
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#D59B76",
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "#666666",
+                    fontSize: 16,
+                    fontWeight: 700,
+                  },
+                  ".MuiAutocomplete-endAdornment": {
+                    display: 'none',
+                  },
+                  ".MuiInputBase-root": {
+                    paddingRight: '12px!important',
+                  },
+                }
+                }
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loadingRecipient ?
+                        <CircularProgress size={20} color="primary"/> :
+                        <Search fontSize={"medium"}/>
+                      }
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
+            )}
+          />
+        }
         <MDInput
           type="number"
           label="ENTER AMOUNT"
@@ -367,7 +470,7 @@ const ReconciliationActionsPage = () => {
       {/* CONFIRMATION MODAL */}
       <ConfirmDialogInputModal
         title={CurrentAction.confirmTitle}
-        description={CurrentAction.selectRecipient ? "John Doe Wallet address 0xasdf234asdf0234" : `${money_fmt(Amount)}`}
+        description={CurrentAction.selectRecipient ? CurrentRecipient?.label : `${money_fmt(Amount)}`}
         open={ShowConfirmationModal}
         handleClose={() => setShowConfirmationModal(false)}
         handleConfirm={onReconciliationConfirm}
