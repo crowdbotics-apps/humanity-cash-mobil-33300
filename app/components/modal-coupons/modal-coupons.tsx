@@ -105,10 +105,10 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
                         <Text style={MarginTextStyle}>Business Name: {couponSelected?.merchant?.business_name}</Text>
                         <Text style={MarginTextStyle}>Promo Type: {couponSelected?.type_of_promo}</Text>
                         <Text style={MarginTextStyle}>
-                            Promo Discount:
-                            {` ${couponSelected?.discount_input}`}
-                            {couponSelected?.type_of_promo === 'Discount percentage' && '%'}
+                            {`Promo Discount: `}
                             {couponSelected?.type_of_promo === 'Discount dollar amount' && '$'}
+                            {couponSelected?.discount_input}
+                            {couponSelected?.type_of_promo === 'Discount percentage' && '%'}
                         </Text>
                         <Text style={MarginTextStyle}>
                             Description:

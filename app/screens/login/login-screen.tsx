@@ -49,16 +49,22 @@ export const LoginScreen = observer(function LoginScreen() {
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
-            setUsername('')
-            setPass('')
+            // setUsername('')
+            // setPass('')
+
+            console.log(' result ===>>> ', JSON.stringify(result, null, 2))
+
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount(result?.response?.user?.consumer_data ? 'consumer' : 'merchant')
             loginStore.setMerchantUser(result?.response?.user?.merchant_data)
             loginStore.setConsumerUser(result?.response?.user)
+
             if ((result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) &&
               (result?.response?.user?.merchant_data?.business_name === '' || result?.response?.user?.merchant_data?.business_name === null)) navigation.navigate("setupProfile")
-            else navigation.navigate("home")
+
+            // else navigation.navigate("home")
+
           })
         } else if (result.kind === "bad-data") {
           const errors = result.errors
