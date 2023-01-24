@@ -20,7 +20,7 @@ import TouchID from 'react-native-touch-id'
 export const LoginScreen = observer(function LoginScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
-	const isFocused = useIsFocused()
+  const isFocused = useIsFocused()
 
   const { loginStore } = rootStore
 
@@ -35,11 +35,11 @@ export const LoginScreen = observer(function LoginScreen() {
   const [PassErrorMessage, setPassErrorMessage] = useState("")
 
   useEffect(() => {
-		if (!isFocused) {
-			setUsername('')
-            setPass('')
-		}
-	}, [isFocused])
+    if (!isFocused) {
+      setUsername('')
+      setPass('')
+    }
+  }, [isFocused])
 
   const login = () => {
     setLoading(true)
@@ -49,21 +49,19 @@ export const LoginScreen = observer(function LoginScreen() {
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
-            // setUsername('')
-            // setPass('')
-
-            console.log(' result ===>>> ', JSON.stringify(result, null, 2))
+            setUsername('')
+            setPass('')
 
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
-            loginStore.setSelectedAccount(result?.response?.user?.consumer_data ? 'consumer' : 'merchant')
+            loginStore.setSelectedAccount((result?.response?.user?.first_name !== '' && result?.response?.user?.first_name) ? 'consumer' : 'merchant')
             loginStore.setMerchantUser(result?.response?.user?.merchant_data)
             loginStore.setConsumerUser(result?.response?.user)
 
             if ((result?.response?.user?.first_name === '' || result?.response?.user?.first_name === null) &&
               (result?.response?.user?.merchant_data?.business_name === '' || result?.response?.user?.merchant_data?.business_name === null)) navigation.navigate("setupProfile")
 
-            // else navigation.navigate("home")
+            else navigation.navigate("home")
 
           })
         } else if (result.kind === "bad-data") {
