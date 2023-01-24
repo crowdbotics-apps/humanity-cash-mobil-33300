@@ -162,22 +162,19 @@ const TransactionStatus = () => {
         height: 2,
         backgroundColor: '#3B88B6',
       }}/>
-      {recordList?.rows.length > 0
-        ? (<DataTable
+      <DataTable
+          loading={loading}
+          emptyLabelText={'No reconciliation transactions found'}
           table={recordList}
           onColumnOrdering={onColumnOrdering}
           currentPage={currentPage}
           numberOfItems={numberOfItems}
           numberOfItemsPage={numberOfItemsPage}
-          pageSize={8}
           onPageChange={page => {
             getTransactions('', page)
             setCurrentPage(page)
           }}
-        />)
-        : <p style={{display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20}}>No
-          transactions found</p>
-      }
+        />
       <ConfirmDialogInputModal
         title={'Supervisor Credentials'}
         description={'Please enter your password to confirm'}

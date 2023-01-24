@@ -14,7 +14,6 @@ export const dataTableModel = {
     {Header: "BANK", accessor: "bank"},
     {Header: "CONFIRMED AT", accessor: "confirmed_at"},
     {Header: "STATUS", accessor: "status"},
-    // {Header: "ACTION", accessor: "actions", disableOrdering: true}
   ],
   rows: [],
 };
@@ -66,7 +65,7 @@ const badgeBoxStatus = (item) => {
   }
 }
 
-export const renderTableRow = (item, onAction) => {
+export const renderTableRow = (item) => {
   item.transaction_id = (hashBox(item.transaction_id))
   item.amount = money_fmt(item.amount)
   item.action_from = (hashBox(item.action_from))
@@ -76,10 +75,5 @@ export const renderTableRow = (item, onAction) => {
   item.status = badgeBoxStatus(item)
   item.created_at = (dateBox(item.created_at))
   item.confirmed_at = (dateBox(item.confirmed_at))
-  item.actions = (
-    <MDButton color={"primary"} size={"small"} onClick={() => onAction(item)}>
-      Detail
-    </MDButton>
-  )
   return item
 }

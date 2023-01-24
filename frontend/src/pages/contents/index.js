@@ -380,7 +380,7 @@ const BlockchainTransactions = () => {
           <div style={{ marginLeft: 15, fontSize: 15 }} className={'text-gray'}>STORIES</div>
         </MDBox>
         <MDBox className={'col-4'}>
-          <MDButton className={'create-btn'} onClick={handleShow}>
+          <MDButton variant={'contained'} color={'primary'} onClick={handleShow}>
             Create
           </MDButton>
         </MDBox>

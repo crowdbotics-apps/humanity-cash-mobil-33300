@@ -1,9 +1,18 @@
 import {Box, CircularProgress} from "@mui/material";
+import Lottie from "react-lottie";
+import animationLoader from "../../assets/svg/loader.json";
 
-export const ProgressLoading = ({hide}) => {
-  return hide ? null : <Box
+export const ProgressLoading = ({show}) => {
+
+  const loaderAnimationOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationLoader,
+  };
+
+  return show ? <Box
     style={{
-      backgroundColor: "rgba(0,0,0,0.3)",
+      backgroundColor: "rgba(255, 255, 255, 0.7)",
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
@@ -17,6 +26,11 @@ export const ProgressLoading = ({hide}) => {
       overflow: "auto"
     }}
   >
-    <CircularProgress/>
-  </Box>
+    {/*<CircularProgress size={50} style={{color: 'white'}}/>*/}
+    <Lottie
+      options={loaderAnimationOptions}
+      height={100}
+      width={100}
+    />
+  </Box> : null
 }

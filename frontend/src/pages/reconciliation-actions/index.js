@@ -88,6 +88,7 @@ const ReconciliationActionsPage = () => {
     setCurrentAmount(0)
     setCurrentRecipient(null)
     setSupervisorCredential("")
+    setLoading(true)
   }
 
   const getWalletBalances = () => {
@@ -122,6 +123,7 @@ const ReconciliationActionsPage = () => {
   }
 
   const apiCall = (data) => {
+    setLoading(true)
     api.addAdjustment(data)
       .then((result) => {
         if (result.kind === "ok") {
@@ -344,6 +346,7 @@ const ReconciliationActionsPage = () => {
   return (
     <DashboardLayout
       loginRequired
+      loading={loading}
     >
       <DataTable
         table={recordList}
