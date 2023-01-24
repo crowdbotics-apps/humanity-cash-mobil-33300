@@ -150,6 +150,7 @@ class ComplianceRecipientSerializer(serializers.ModelSerializer):
             'id',
             'is_consumer',
             'label',
+            'crypto_wallet_id',
         ]
 
     def get_label(self, instance):
