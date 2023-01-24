@@ -1,11 +1,10 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
-import {useEffect, useRef, useState} from "react"
+import {useEffect, useState} from "react"
 import {showMessage, useApi} from "../../services/helpers"
 import {
-  dataTableModel,
   dataTableModelACH,
   dataTableModelBlockChain,
-  renderTableRow, renderTableRowACH,
+  renderTableRowACH,
   renderTableRowBlockchain
 } from "./utils";
 import DataTable from "../../components/DataTable";
@@ -31,8 +30,6 @@ const UserDetail = () => {
   const [selectedItem, setSelectedItem] = useState(null)
   const [userPassword, setUserPassword] = useState('')
   const [userDetailSection, setUserDetailSection] = useState('detail')
-  const [numberOfItems, setNumberOfItems] = useState(0);
-  const [numberOfItemsPage, setNumberOfItemsPage] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordListBlockchain, setRecordListBlockchain] = useState({...dataTableModelBlockChain})
   const [recordListACH, setRecordListACH] = useState({...dataTableModelACH})
@@ -84,7 +81,7 @@ const UserDetail = () => {
       goBack={() => navigate(ROUTES.USERS)}
     >
       <MDTypography mt={5} color={'primary'} sx={{fontWeight: 400}} fontSize={24}>
-        {userDetailSection === "detail" && 'User details'}
+        {userDetailSection === "detail" && (selectedItem?.full_name ? selectedItem.full_name : 'User details')}
         {userDetailSection === "ach" && 'ACH Transactions'}
         {userDetailSection === "blockchain" && 'Blockchain transactions'}
       </MDTypography>
@@ -156,7 +153,7 @@ const UserDetail = () => {
           table={userDetailSection === "ach" ? recordListACH : recordListBlockchain}
           currentPage={currentPage}
           numberOfItems={userDetailSection === "ach" ? recordListACH.rows.length : recordListBlockchain.rows.length}
-          numberOfItemsPage={numberOfItemsPage}
+          numberOfItemsPage={0}
           pageSize={8}
           onPageChange={page => {
             setCurrentPage(page)

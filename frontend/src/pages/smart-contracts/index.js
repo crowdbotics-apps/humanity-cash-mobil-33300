@@ -3,13 +3,9 @@ import {useEffect, useRef, useState} from "react"
 import {showMessage, useApi} from "../../services/helpers"
 import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
-import {useNavigate} from "react-router-dom";
-import {ROUTES} from "../../services/constants";
-import MDBox from "../../components/MDBox";
 
 const SmartContracts = () => {
   const api = useApi()
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
@@ -57,22 +53,19 @@ const SmartContracts = () => {
       loading={loading}
       searchFunc={getContracts}
     >
-      {recordList?.rows.length > 0
-        ? (<DataTable
-          table={recordList}
-          onColumnOrdering={onColumnOrdering}
-          currentPage={currentPage}
-          numberOfItems={numberOfItems}
-          numberOfItemsPage={numberOfItemsPage}
-          pageSize={8}
-          onPageChange={page => {
-            getContracts('', page)
-            setCurrentPage(page)
-          }}
-        />)
-        : <p style={{display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20}}>No
-          smart contracts found</p>
-      }
+      <DataTable
+        table={recordList}
+        loading={loading}
+        emptyLabelText={'No smart contracts found'}
+        onColumnOrdering={onColumnOrdering}
+        currentPage={currentPage}
+        numberOfItems={numberOfItems}
+        numberOfItemsPage={numberOfItemsPage}
+        onPageChange={page => {
+          getContracts('', page)
+          setCurrentPage(page)
+        }}
+      />
     </DashboardLayout>
   )
 }

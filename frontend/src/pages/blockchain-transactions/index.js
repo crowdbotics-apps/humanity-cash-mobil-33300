@@ -5,7 +5,6 @@ import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
-import MDBox from "components/MDBox";
 
 const BlockchainTransactions = () => {
   const api = useApi()
@@ -57,22 +56,19 @@ const BlockchainTransactions = () => {
       loading={loading}
       searchFunc={getBlockchainTransactions}
     >
-      {recordList?.rows.length > 0
-        ? (<DataTable
-          table={recordList}
-          onColumnOrdering={onColumnOrdering}
-          currentPage={currentPage}
-          numberOfItems={numberOfItems}
-          numberOfItemsPage={numberOfItemsPage}
-          pageSize={8}
-          onPageChange={page => {
-            getBlockchainTransactions('', page)
-            setCurrentPage(page)
-          }}
-        />)
-        : <p style={{display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20}}>No
-          blockchain transactions found</p>
-      }
+      <DataTable
+        table={recordList}
+        loading={loading}
+        emptyLabelText={'No blockchain transactions found'}
+        onColumnOrdering={onColumnOrdering}
+        currentPage={currentPage}
+        numberOfItems={numberOfItems}
+        numberOfItemsPage={numberOfItemsPage}
+        onPageChange={page => {
+          getBlockchainTransactions('', page)
+          setCurrentPage(page)
+        }}
+      />
     </DashboardLayout>
   )
 }

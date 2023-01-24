@@ -182,6 +182,7 @@ const AdminWalletControl = () => {
     <DashboardLayout
       loginRequired
       title={'Admin Wallet Control'}
+      loading={loading}
     >
       <MDBox mt={3}>
         <ConfirmDialogModal

@@ -127,11 +127,12 @@ class DwollaUserDetailSerializer(serializers.ModelSerializer):
     balance = serializers.SerializerMethodField()
     blockchain_transactions = serializers.SerializerMethodField()
     ach_transactions = serializers.SerializerMethodField()
+    full_name = serializers.SerializerMethodField()
 
     class Meta:
         model = DwollaUser
         fields = ['id', 'balance', 'name', 'address', 'email', 'dwolla_id', 'blockchain_transactions','ach_transactions',
-                  'crypto_wallet_id', 'last_login', 'date_joined', 'account_type']
+                  'crypto_wallet_id', 'last_login', 'date_joined', 'account_type', 'full_name']
 
     def get_balance(self, obj):
         try:
@@ -161,3 +162,7 @@ class DwollaUserDetailSerializer(serializers.ModelSerializer):
         if hasattr(user, 'consumer'):
             transactions = user.consumer.ach_transactions.all()
         return ACHTransactionSerializer(instance=transactions, many=True, context={'request': self.context['request']}).data
+
+    def get_full_name(self, obj):
+        user = User.objects.get(pk=obj.pk)
+        return user.get_full_name()

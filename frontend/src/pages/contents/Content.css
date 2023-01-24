@@ -100,7 +100,7 @@
 
 .my-event{
     /*margin-left: 10px;*/
-    height: 30px;
+    height: 25px;
     padding-left: 10px;
 }
 .dot{
@@ -146,18 +146,18 @@ div.fc-daygrid-day-events > div.fc-daygrid-event-harness > a:after{
 .my-event-title{
     color: var(--dark);
     font-weight: 700;
-    font-size: 12px;
+    font-size: 11px;
     text-transform: capitalize;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     overflow: hidden;
 }
 
 .my-event-subtitle{
     color: var(--gray);
     font-weight: 700;
-    font-size: 10px;
+    font-size: 9px;
     text-transform: uppercase;
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 .fc-day{

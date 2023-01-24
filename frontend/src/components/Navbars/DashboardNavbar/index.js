@@ -91,7 +91,7 @@ function DashboardNavbar({absolute, light, isMini, searchFunc, title, goBack, lo
         <MDBox
           color="inherit"
           mb={{xs: 1, md: 0}}
-          sx={[(theme) => navbarRow(theme, {isMini}), {marginLeft: isDrawed ? '18%' : '7%', transition: '0.3s'}]}>
+          sx={[(theme) => navbarRow(theme, {isMini}), {marginLeft: isDrawed ? '20%' : '9%', transition: '0.3s'}]}>
           {goBack && <ArrowBack color={'primary'} sx={{transform: 'scale(1.5)', marginRight: 3, cursor: 'pointer'}} onClick={() => goBack()}/>}
           <MDTypography sx={{
             fontSize: goBack ? 25 : 32,

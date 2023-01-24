@@ -3,8 +3,6 @@ import {useEffect, useRef, useState} from "react"
 import {showMessage, useApi} from "../../services/helpers"
 import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
-import {Link, useNavigate} from "react-router-dom";
-import {ROUTES} from "../../services/constants";
 import MDTypography from "../../components/MDTypography";
 import MDButton from "../../components/MDButton";
 import MDBox from "../../components/MDBox";
@@ -15,7 +13,6 @@ import {Field, Form, Formik} from "formik";
 import {AutocompleteFormik} from "../../components/AutocompleteFormik";
 import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 import MDFilterButtonPopover from './filter'
-import Checkbox from "@mui/material/Checkbox";
 import Icon from "@mui/material/Icon";
 
 const groups = [
@@ -226,7 +223,8 @@ const AdminPortal = () => {
       setChecked(false)
       getAdminUsers("")
     },
-    cancel: () => {},
+    cancel: () => {
+    },
     apply: () => getAdminUsers(Checked),
   }
 
@@ -252,13 +250,14 @@ const AdminPortal = () => {
       loading={loading}
       searchFunc={getAdminUsers}
       filterContent={
-        <MDFilterButtonPopover filterOptions={filterOptions} buttonActions={buttonActions} variant="standard" color="dark" iconOnly sx={{ marginLeft: 2, backgroundColor: '#EBEBEB' }}>
-          <Icon sx={{ fontWeight: "bold" }}>tune</Icon>
+        <MDFilterButtonPopover filterOptions={filterOptions} buttonActions={buttonActions} variant="standard"
+                               color="dark" iconOnly sx={{marginLeft: 2, backgroundColor: '#EBEBEB'}}>
+          <Icon sx={{fontWeight: "bold"}}>tune</Icon>
         </MDFilterButtonPopover>
       }
     >
       <MDBox display={'flex'} flex={1} alignItems={'center'} mt={5}>
-        <MDTypography  color={'primary'} sx={{fontWeight: 400}} fontSize={24} >
+        <MDTypography color={'primary'} sx={{fontWeight: 400}} fontSize={24}>
           Admin Portal Access Management
         </MDTypography>
         <MDBox ml={'auto'}>
@@ -292,7 +291,7 @@ const AdminPortal = () => {
       />
       <ConfirmDialogInputModal
         title={selectedItem ? 'Edit user' : 'Add user'}
-        description={selectedItem ? 'Admin user edit form' :'Admin user create form'}
+        description={selectedItem ? 'Admin user edit form' : 'Admin user create form'}
         open={showUserFormModal}
         handleClose={() => clearDetail()}
         handleConfirm={() => confirmAction()}
@@ -397,22 +396,19 @@ const AdminPortal = () => {
           )}
         </Formik>
       </ConfirmDialogInputModal>
-      {recordList?.rows.length > 0
-        ? (<DataTable
-          table={recordList}
-          onColumnOrdering={onColumnOrdering}
-          currentPage={currentPage}
-          numberOfItems={numberOfItems}
-          numberOfItemsPage={numberOfItemsPage}
-          pageSize={8}
-          onPageChange={page => {
-            getAdminUsers('', page)
-            setCurrentPage(page)
-          }}
-        />)
-        : <p style={{display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20}}>No
-          users found</p>
-      }
+      <DataTable
+        table={recordList}
+        emptyLabelText={'No users found'}
+        loading={loading}
+        onColumnOrdering={onColumnOrdering}
+        currentPage={currentPage}
+        numberOfItems={numberOfItems}
+        numberOfItemsPage={numberOfItemsPage}
+        onPageChange={page => {
+          getAdminUsers('', page)
+          setCurrentPage(page)
+        }}
+      />
     </DashboardLayout>
   )
 }
