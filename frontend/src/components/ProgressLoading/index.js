@@ -1,4 +1,4 @@
-import {Box, CircularProgress} from "@mui/material";
+import {Box} from "@mui/material";
 import Lottie from "react-lottie";
 import animationLoader from "../../assets/svg/loader.json";
 
@@ -26,7 +26,6 @@ export const ProgressLoading = ({show}) => {
       overflow: "auto"
     }}
   >
-    {/*<CircularProgress size={50} style={{color: 'white'}}/>*/}
     <Lottie
       options={loaderAnimationOptions}
       height={100}

@@ -33,8 +33,6 @@ const getDateRange = (dateRange) => {
 
 const BlockchainTransactions = () => {
   const api = useApi()
-  const navigate = useNavigate()
-  const event_list = []
   const CalendarEl = useRef(null);
   const [loading, setLoading] = useState(false)
 
@@ -48,7 +46,6 @@ const BlockchainTransactions = () => {
   const [DetailsTitle, setDetailsTitle] = useState("")
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [DateRange, setDateRange] = useState(getDateRange())
-  const [AllEvents, setAllEvents] = useState([])
   const [CalendarEvents, setCalendarEvents] = useState([])
   const [showStoryModal, setShowStoryModal] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
@@ -77,7 +74,6 @@ const BlockchainTransactions = () => {
   const next = () => {
     setCalendarEvents([])
     setRightEvents([])
-    setAllEvents([])
 
     calendarApi.next()
 
@@ -147,7 +143,6 @@ const BlockchainTransactions = () => {
       rightEvents.push(data[k])
 
     }
-    setAllEvents(allEvents)
     setRightEvents(rightEvents)
     setCalendarEvents(calendarEvents)
     setLoading(false)
@@ -239,7 +234,6 @@ const BlockchainTransactions = () => {
         showMessage()
       }
     }).catch(err => {
-      console.log('err ', err)
       showMessage()
     }).finally(() => setLoading(false))
   }
@@ -304,6 +298,8 @@ const BlockchainTransactions = () => {
     getEventsRequest()
     initCalendar()
   }, [])
+
+  useEffect(() =>  getEventsRequest(), [DateRange])
 
   const onFakeScrollChange = (scrollRatio) => {
     // console.log("scroll ratio", scrollRatio)
@@ -456,7 +452,12 @@ const BlockchainTransactions = () => {
       setShowEventModal(false)
     }}
   >
-    <AddEventForm event={CurrentEvent} save={(data) => saveEvent(data)} loading={loading} />
+    <AddEventForm
+      event={CurrentEvent}
+      save={(data) => saveEvent(data)}
+      loading={loading}
+      onCancel={() => setShowEventModal(false)}
+    />
   </ConfirmDialogInputModal>
 
   const storyModal = () => <ConfirmDialogInputModal
@@ -471,7 +472,12 @@ const BlockchainTransactions = () => {
       setShowStoryModal(false)
     }}
   >
-    <AddStoryForm event={CurrentEvent} save={(data) => saveStory(data)} loading={loading} />
+    <AddStoryForm
+      event={CurrentEvent}
+      save={(data) => saveStory(data)}
+      loading={loading}
+      onCancel={() => setShowStoryModal(false)}
+    />
   </ConfirmDialogInputModal>
 
   return (

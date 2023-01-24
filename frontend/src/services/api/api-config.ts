@@ -22,6 +22,6 @@ export interface ApiConfig {
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
     url: process.env.REACT_APP_API_BASE_URL,
-    timeout: 15000,
+    timeout: 60000,
     isDebug: false,
 }
