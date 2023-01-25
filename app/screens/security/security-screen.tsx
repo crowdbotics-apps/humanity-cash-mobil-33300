@@ -43,7 +43,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
         old_password: Pass,
         new_password: NewPass,
         new_password_confirm: NewPassConfirmation,
-        allow_touch_id: allowTouchId
+        // allow_touch_id: allowTouchId
       })
       .then((result: any) => {
         setLoading(false);
@@ -51,6 +51,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
           setPass('');
           setNewPass('');
           setNewPassConfirmation('');  
+          notifyMessage('Password has been updated');
           runInAction(() => {
             loginStore.setAllowTouchId(result.response)
             navigation.navigate("settings")

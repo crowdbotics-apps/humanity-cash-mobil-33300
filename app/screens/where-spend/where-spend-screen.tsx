@@ -43,6 +43,20 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
   });
   const { couponSelected, ShowConfirmCoupon } = couponConfig;
 
+  const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
+		if (initialData === [] || !initialData) return []
+		if (keys === [] || !keys) return initialData
+		if (filter === '' || !filter) return initialData
+		let data = []
+		initialData.map(d => {
+		  keys.map(k => {
+			try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
+			catch { }
+		  })
+		})
+		return data
+	  }
+
   const getBusiness = () => {
     loginStore.environment.api
       .getBusiness()
@@ -93,6 +107,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
 
   const RenderTopMonth = () => {
     const merchantOfTheMonth = loginStore.getMerchantOfMonth
+    if (!merchantOfTheMonth?.business_name?.toLocaleLowerCase().includes(Search.toLocaleLowerCase())) return
     return (
       <View style={styles.INDUSTRY_CONTAINER}>
         <Text style={styles.INDUSTRY_TITLE}>MERCHANT OF THE MONTH</Text>
@@ -141,23 +156,12 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
     return (
       loginStore?.getBusiness?.map(category => (
         Object.keys(category).map((i, key) => {
-          let hasOcurrecy = true
-          console.log(' category -> ', category)
-          category[i].map(c => {
-            console.log(' category -> ', c.business_name.toLocaleLowerCase(), ' -> ', Search.toLocaleLowerCase())
-            if (c.business_name.toLocaleLowerCase().includes(Search.toLocaleLowerCase()) && (Search !== '')) {
-              console.log(' entre ')
-              hasOcurrecy = false
-            } 
-          })
-          console.log(' hasOcurrecy -> ', hasOcurrecy)
-          if (!hasOcurrecy) return null
           return (
             <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
               <Text style={styles.INDUSTRY_TITLE}>{i}</Text>
               <View style={styles.LINE} />
               <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
-                {category[i].map((b, key2) => (
+                {getDataFiltered(category[i], ['business_name'], Search).map((b, key2) => (
                   <TouchableOpacity onPress={() => [getBusinessDetail(b.id)]} style={styles.BUSINESS} key={key + '' + key2}>
                     <Image
                       source={{ uri: b.background_picture }}

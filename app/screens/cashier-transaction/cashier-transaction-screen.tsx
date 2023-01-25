@@ -50,6 +50,20 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
+	const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
+		if (initialData === [] || !initialData) return []
+		if (keys === [] || !keys) return initialData
+		if (filter === '' || !filter) return initialData
+		let data = []
+		initialData.map(d => {
+		  keys.map(k => {
+			try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
+			catch { }
+		  })
+		})
+		return data
+	  }
+
 	useEffect(() => {
 		if (isFocused) {
 			// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
@@ -132,8 +146,8 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 			</View>
 			{ShowFilter && Filters()}
 			{Object.keys(returns).map((r, key) => ([
-				<Text key={key + '_label'} style={styles.RETURNS_LABEL}>TODAY</Text>,
-				returns[r].map((i, key2) => (
+				<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r}</Text>,
+				getDataFiltered(returns[r], ['item'], Search).map((i, key2) => (
 					<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
 						<View style={{ marginLeft: 15 }}>
 							<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
@@ -178,19 +192,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 			</KeyboardAvoidingView>
 			{bankModal()}
 			{ReturnDetailModal()}
-			{ShowIndex &&
-				<Button
-					buttonStyle={{
-						backgroundColor: loginStore.getAccountColor,
-					}}
-					buttonLabelPre={<Icon key={'button_adornment'} name={"qr-code-2"} size={30} color={'white'} style={{ marginRight: 30 }} />}
-					onPress={() => setShowIndex(false)}
-					buttonLabel={'Receive or Scan to pay'}
-					showBottonMenu
-					hideButton
-					accountType={loginStore.getSelectedAccount}
-				/>
-			}
+			
 		</Screen>
 	)
 })
