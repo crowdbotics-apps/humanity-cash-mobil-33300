@@ -62,3 +62,12 @@ class UserActivityListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserActivity
         fields = ['id', 'login', 'session_key']
+
+
+class UserActivityAdminListSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')
+    email = serializers.CharField(source='user.email')
+
+    class Meta:
+        model = UserActivity
+        fields = ['id', 'login', 'session_key', 'username', 'email']

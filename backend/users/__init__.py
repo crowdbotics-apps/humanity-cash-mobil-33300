@@ -23,7 +23,7 @@ class IsProgramManagerSuperAdmin(BasePermission):
         return check_humanity_permissions(request.user, UserRole.SUPER_ADMIN.value)
 
 
-class IsProgramManagerAdmin(IsProgramManagerSuperAdmin):
+class IsProgramManagerAdmin(BasePermission):
 
     def has_permission(self, request, view):
         return check_humanity_permissions(request.user, UserRole.ADMIN.value)

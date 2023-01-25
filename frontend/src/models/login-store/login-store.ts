@@ -2,6 +2,7 @@ import {Instance, SnapshotOut, types} from "mobx-state-tree"
 import {withEnvironment} from "../extensions/with-environment";
 import {withRootStore} from "../extensions/with-root-store";
 import {UXModel} from "../UXModel";
+import {PERMISSIONS} from "../../services/constants";
 
 /**
  * Model description here for TypeScript hints.
@@ -78,6 +79,24 @@ export const LoginStoreModel = types
       self.verified_email = null
       self.is_superuser = null
     },
+    getPermission (permissionRequired: string) {
+      if (self.is_superuser) {
+        return true
+      }
+      if (self.role === PERMISSIONS.SUPER_ADMIN) {
+        return true
+      }
+      if (permissionRequired === PERMISSIONS.ADMIN && self.role === permissionRequired) {
+        return true
+      }
+      if (permissionRequired === PERMISSIONS.SUPERVISOR && (self.role === permissionRequired || self.role === PERMISSIONS.ADMIN)) {
+        return true
+      }
+      if (permissionRequired === PERMISSIONS.EMPLOYEE && (self.role === permissionRequired || self.role === PERMISSIONS.ADMIN || self.role === PERMISSIONS.SUPERVISOR)) {
+        return true
+      }
+      return false
+    }
   }))
 
 /**

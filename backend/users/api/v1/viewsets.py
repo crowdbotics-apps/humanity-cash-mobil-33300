@@ -10,8 +10,10 @@ from django.utils.http import urlsafe_base64_encode
 from allauth.account.adapter import get_adapter
 
 from home.helpers import send_reset_email
-from users import IsProgramManagerSuperAdmin, IsProgramManagerAdmin, IsBankSupervisor, IsBankEmployee
-from users.api.v1.serializers import UserDetailSerializer, UserCreateSerializer, UserActivityListSerializer
+from users import IsProgramManagerSuperAdmin, IsProgramManagerAdmin, IsBankSupervisor, IsBankEmployee, \
+    check_humanity_permissions, UserRole
+from users.api.v1.serializers import UserDetailSerializer, UserCreateSerializer, UserActivityListSerializer, \
+    UserActivityAdminListSerializer
 from users.models import User, UserActivity
 
 
@@ -67,3 +69,9 @@ class UserLoginDataView(
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['id']
     # search_fields = ['id', 'user__first_name', 'user__last_name', 'user__email', 'user__username']
+
+    def get_serializer_class(self):
+        user = self.request.user
+        if check_humanity_permissions(user, UserRole.SUPERVISOR.value):
+            return UserActivityAdminListSerializer
+        return UserActivityListSerializer
