@@ -423,15 +423,12 @@ export class ApiBase {
     };
     try {
       response = await this.apisauce.axiosInstance.patch(path, fdata, {headers});
-      console.log('response ==> ', response)
     } catch (e: any) {
-      console.log('e ==> ', e)
       if (e.message.indexOf("status code 400") !== -1) {
         return {kind: "bad-data", errors: e.response.data};
       }
       response = {status: 500, errors: 'SERVER_ERROR', problem: 'SERVER_ERROR'}
     }
-    console.log('response ==> ', response)
     if (response.status === 400) {
       // @ts-ignore
       return {kind: "bad-data", errors: response.data};

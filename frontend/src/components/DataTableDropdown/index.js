@@ -13,26 +13,24 @@
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import {useEffect, useMemo, useState} from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
 
 // react-table components
-import { useAsyncDebounce, useGlobalFilter, usePagination, useSortBy, useTable } from "react-table";
+import {useGlobalFilter, usePagination, useSortBy, useTable} from "react-table";
 
 // @mui material components
-import { Grid, Table, TableBody, TableContainer, TablePagination, TableRow, TableCell } from "@mui/material";
+import {Grid, Table, TableBody, TableContainer, TableRow} from "@mui/material";
 
 // Material Dashboard 2 PRO React components
 import MDBox from "components/MDBox";
-import MDInput from "components/MDInput";
 
 // Material Dashboard 2 PRO React examples
 import DataTableHeadCell from "./DataTableHeadCell";
 import DataTableBodyCell from "./DataTableBodyCell";
 import Pagination from "../Pagination/Pagination";
-import { display } from "@mui/system";
 
 const DataTableDropdown = ({
   entriesPerPage,
@@ -157,7 +155,7 @@ const DataTableDropdown = ({
                         )}
                       </TableRow>
                     )
-                  
+
                 ]
               );
             })}

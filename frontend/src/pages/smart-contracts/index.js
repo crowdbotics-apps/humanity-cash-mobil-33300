@@ -40,7 +40,7 @@ const SmartContracts = () => {
   }
 
   const setDetailToShow = (item) => {
-    console.log('items')
+
   }
 
   useEffect(() => {

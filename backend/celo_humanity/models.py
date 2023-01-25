@@ -17,6 +17,9 @@ class Account(models.Model):
     bank_name = models.CharField(max_length=70, unique=True)
     created = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return self.name
 
@@ -30,6 +33,9 @@ class Contract(models.Model):
     active = models.BooleanField(default=False, null=False)
 
     proxy_holder = None
+
+    class Meta:
+        ordering = ['-id']
 
     def __init__(self, *args, **kwargs):
         super(Contract, self).__init__(*args, **kwargs)
@@ -75,6 +81,8 @@ class Transaction(models.Model):
                                              related_name='counterpart_transactions')
     counterpart_merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL,
                                              related_name='counterpart_transactions')
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return f'txn[ {self.transaction_id} ] ({self.method_or_memo})'
@@ -142,6 +150,9 @@ class ACHTransaction(models.Model):
     bank_account = models.ForeignKey('home.BankAccount', null=True, on_delete=models.SET_NULL,
                                      related_name='ach_transactions', blank=True)
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return self.ach_id
 
@@ -203,6 +214,9 @@ class ComplianceAction(models.Model):
                                  related_name='compliance_actions')
 
     amount = models.DecimalField(null=True, decimal_places=2, max_digits=14)
+
+    class Meta:
+        ordering = ['-id']
 
     @property
     def get_consumer_data(self):
@@ -309,7 +323,9 @@ class ComplianceActionSignoff(models.Model):
     signoff_time = models.DateTimeField(auto_now=True)
     user = models.ForeignKey('users.User', on_delete=models.PROTECT, related_name='signoffs')
 
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['action_id', 'user_id'], name='one signoff per user')
         ]
+        ordering = ['-id']

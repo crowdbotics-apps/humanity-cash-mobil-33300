@@ -1,19 +1,18 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
-import { useEffect, useRef, useState } from "react"
-import { showMessage, useApi } from "../../services/helpers"
-import { useNavigate } from "react-router-dom";
+import {useEffect, useRef, useState} from "react"
+import {showMessage, useApi} from "../../services/helpers"
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'
 import MDBox from "components/MDBox";
-import { CalendarIcon, StoriesIcon } from "../../assets/svg";
-import { ContentEventCard, ContentEventDetail, getTitleFormat, HourLine } from "./components";
+import {CalendarIcon, StoriesIcon} from "../../assets/svg";
+import {ContentEventCard, ContentEventDetail, getTitleFormat, HourLine} from "./components";
 import '../../assets/fakescroll/fakescroll.css'
 import FakeScroll from '../../assets/fakescroll/react.fakescroll.js'
 import moment from 'moment'
 import MDButton from "components/MDButton";
 import ConfirmDialogInputModal from "components/ConfirmDialogInputModal";
-import { AddEventForm, AddStoryForm } from "./forms";
+import {AddEventForm, AddStoryForm} from "./forms";
 
 // keep at the end
 import './Content.css';
@@ -163,7 +162,6 @@ const BlockchainTransactions = () => {
     setLoading(true)
     api.deleteEvent(id).then((response) => {
       if (response.kind === "not-found") {
-        console.log("error deleting event", response)
         showMessage("Object not found");
       } else {
         setLoading(false)

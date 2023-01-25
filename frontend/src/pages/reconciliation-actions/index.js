@@ -334,10 +334,6 @@ const ReconciliationActionsPage = () => {
     }).finally(() => setLoadingRecipient(false))
   }
 
-  useEffect(()=> {
-    console.log("Recipient", CurrentRecipient)
-  }, [CurrentRecipient])
-
   useEffect(() => {
     setLoadingRecipient(false)
     getWalletBalances()

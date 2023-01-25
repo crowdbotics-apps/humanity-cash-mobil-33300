@@ -5,8 +5,6 @@ import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
-import MDBox from "../../components/MDBox";
-import {EmptyResponseDatatable} from "../../components/EmptyResponseDatatable";
 
 const Users = () => {
   const api = useApi()
@@ -23,7 +21,6 @@ const Users = () => {
     api.getDwollaUsers(searchData, page, ordering, 8).then((result) => {
       if (result.kind === "ok") {
         const {count, results} = result.data
-        console.log('results ', results)
         const tmp = {...dataTableModel}
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
         setRecordList(tmp)

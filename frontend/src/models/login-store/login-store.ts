@@ -16,6 +16,7 @@ export const LoginStoreModel = types
     first_name: types.maybeNull(types.string),
     last_name: types.maybeNull(types.string),
     group: types.maybeNull(types.string),
+    is_superuser: types.maybeNull(types.boolean),
     role: types.maybeNull(types.string),
     email: types.maybeNull(types.string),
     access_token: types.maybeNull(types.string),
@@ -62,6 +63,7 @@ export const LoginStoreModel = types
       self.access_token = user.token.access
       self.refresh_token = user.token.refresh
       self.verified_email = user.verified_email
+      self.is_superuser = user.is_superuser
     },
     reset() {
       const api = self.environment.api.apisauce
@@ -74,6 +76,7 @@ export const LoginStoreModel = types
       self.access_token = null
       self.refresh_token = null
       self.verified_email = null
+      self.is_superuser = null
     },
   }))
 

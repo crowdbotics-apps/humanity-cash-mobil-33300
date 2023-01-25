@@ -53,7 +53,6 @@ const AdminPortal = () => {
   const getAdminUsers = (searchData, page = 1, ordering = "") => {
     setLoading(true)
     api.getAdminUsers(searchData, page, ordering, 8).then((result) => {
-      console.log('result ', result)
       if (result.kind === "ok") {
         const {count, results} = result.data
         const tmp = {...dataTableModel}

@@ -1,4 +1,4 @@
-import {money_fmt, truncate} from "../../services/helpers";
+import {truncate} from "../../services/helpers";
 import MDBox from "../../components/MDBox";
 import moment from "moment";
 import MDButton from "../../components/MDButton";

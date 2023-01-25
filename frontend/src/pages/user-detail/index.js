@@ -1,12 +1,7 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
 import {useEffect, useState} from "react"
 import {showMessage, useApi} from "../../services/helpers"
-import {
-  dataTableModelACH,
-  dataTableModelBlockChain,
-  renderTableRowACH,
-  renderTableRowBlockchain
-} from "./utils";
+import {dataTableModelACH, dataTableModelBlockChain, renderTableRowACH, renderTableRowBlockchain} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {ROUTES} from "../../services/constants";

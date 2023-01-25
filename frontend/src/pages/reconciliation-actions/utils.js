@@ -1,6 +1,4 @@
-import {money_fmt, truncate} from "../../services/helpers";
-import pencilIcon from "../../assets/icons/pencil_btn.png";
-import trashIcon from "../../assets/icons/delete_btn.png";
+import {truncate} from "../../services/helpers";
 import MDBox from "../../components/MDBox";
 import moment from "moment";
 import MDButton from "../../components/MDButton";
