@@ -60,6 +60,7 @@ import AdminPortal from "./pages/admin-portal";
 import TransactionStatus from "./pages/transactions-status";
 import ACHTransactions from "./pages/ach-transactions";
 import AdminWalletControl from "./pages/admin-wallet";
+import UserActivities from "./pages/user-activity";
 
 
 const routes = [
@@ -151,6 +152,15 @@ const routes = [
     route: "/admin-wallet/",
     component: <AdminWalletControl/>,
     icon: <WalletIcon/>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Sign-in logs",
+    key: "user-activity",
+    route: "/user-activity/",
+    component: <UserActivities/>,
+    icon: <UsersIcons/>,
     noCollapse: true,
   },
   {
