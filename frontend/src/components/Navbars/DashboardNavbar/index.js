@@ -38,8 +38,6 @@ import MDTypography from "../../../components/MDTypography";
 import {observer} from "mobx-react";
 import {CircularProgress, Grid, Input} from "@mui/material";
 import {ArrowBack, Search} from "@mui/icons-material";
-import MDButton from "../../MDButton";
-import MDButtonPopover from "components/MDButtonPopover";
 
 function DashboardNavbar({absolute, light, isMini, searchFunc, title, goBack, loading = false, filterContent}) {
   const [controller, dispatch] = useMaterialUIController();

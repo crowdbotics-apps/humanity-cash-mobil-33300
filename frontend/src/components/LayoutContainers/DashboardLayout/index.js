@@ -27,7 +27,6 @@ import MDBox from "components/MDBox";
 // Material Dashboard 2 PRO React context
 import {setLayout, useMaterialUIController} from "context";
 import DashboardNavbar from "../../Navbars/DashboardNavbar";
-import Card from "@mui/material/Card";
 import {useStores} from "../../../models";
 import {observer} from "mobx-react";
 import {ProgressLoading} from "../../ProgressLoading";

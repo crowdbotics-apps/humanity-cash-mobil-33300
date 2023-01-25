@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import * as Yup from "yup";
 import {Grid} from '@mui/material';
 import MDTypography from "components/MDTypography";
@@ -55,8 +55,6 @@ export const AddEventForm = (props) => {
 
   const onFilechange = (e) => {
     /*Selected files data can be collected here.*/
-    console.log(e.target.files);
-
     if (e.target.files.length > 0) {
 
       let file = e.target.files[0] || null
@@ -261,7 +259,6 @@ export const AddStoryForm = (props) => {
 
   const onFilechange = (e) => {
     /*Selected files data can be collected here.*/
-    console.log(e.target.files);
 
     if (e.target.files.length > 0) {
 

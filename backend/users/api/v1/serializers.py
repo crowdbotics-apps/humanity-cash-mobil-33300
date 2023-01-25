@@ -3,7 +3,7 @@ from allauth.utils import email_address_exists
 from allauth.account.adapter import get_adapter
 
 from home.helpers import setup_verification_code, send_verification_email, send_reset_email
-from users.models import User
+from users.models import User, UserActivity
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -55,3 +55,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         send_reset_email(user, request)
         return user
+
+
+class UserActivityListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserActivity
+        fields = ['id', 'login', 'session_key']

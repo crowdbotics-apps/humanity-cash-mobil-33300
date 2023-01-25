@@ -16,13 +16,10 @@
 import {forwardRef, useState} from "react";
 
 // prop-types is a library for typechecking of props
-import PropTypes from "prop-types";
 
 // Custom styles for MDButton
 import MDButtonRoot from "components/MDButton/MDButtonRoot";
 import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
-import MDButton from "components/MDButton";
 import MDTypography from "components/MDTypography";
 import Checkbox from "@mui/material/Checkbox";
 import MDBox from "components/MDBox";

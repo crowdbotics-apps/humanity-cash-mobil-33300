@@ -199,7 +199,6 @@ export const validateEmail = (email) => {
 export const truncate = (input, size) => input && input.length > size ? `${input.substring(0, size)}...` : input;
 
 export const getErrorMessages = (err)=>{
-  console.log("error", err)
   let message = ""
   for (let k of Object.keys(err)){
     message +=  err[k].join(". ")

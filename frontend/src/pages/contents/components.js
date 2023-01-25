@@ -7,7 +7,6 @@ import {
   CalendarIconBlue,
   ClockIcon,
   CloseActionIcon,
-  DoneActionIcon,
   EditActionIcon,
   LocationIcon,
   StoryIconGreen

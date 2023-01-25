@@ -246,6 +246,7 @@ class DwollaUser(models.Model):
     class Meta:
         db_table = "dwolla_user"
         managed = False
+        ordering = ['-id']
 
 
 class Coupon(models.Model):
@@ -262,6 +263,8 @@ class Coupon(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
+    class Meta:
+        ordering = ['-id']
 
 class ConsumerCoupon(models.Model):
     consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE, related_name='consumer_coupons')
@@ -376,3 +379,10 @@ class Notification(models.Model):
         verbose_name = 'Notification'
         verbose_name_plural = 'Notifications'
         ordering = ['-timestamp']
+
+
+class UserActivity(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    session_key = models.CharField(max_length=40, db_index=True)
+    login = models.DateTimeField(auto_now_add=True)
+    logout = models.DateTimeField(null=True, default=None)

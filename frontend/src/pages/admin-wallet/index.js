@@ -1,10 +1,6 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
 import React, {useEffect, useRef, useState} from "react"
 import {money_fmt, showMessage, useApi} from "../../services/helpers"
-import {dataTableModel, renderTableRow} from "./utils";
-import DataTable from "../../components/DataTable";
-import {useNavigate} from "react-router-dom";
-import {ROUTES} from "../../services/constants";
 import MDBox from "../../components/MDBox";
 import MDTypography from "../../components/MDTypography";
 import Icon from "@mui/material/Icon";
@@ -16,7 +12,6 @@ import MDAvatar from "../../components/MDAvatar";
 import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
 import MDInput from "../../components/MDInput";
-import {AutocompleteFormik} from "../../components/AutocompleteFormik";
 import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 
 
@@ -89,21 +84,18 @@ const AdminWalletControl = () => {
   const confirmActionSelectRecipient = () => {
     const data = {...selectedUser}
     showMessage('Recipient updated successfully', 'success')
-    console.log('data ', data)
     clearModalsAction()
   }
 
   const confirmActionLinkBankAccount = () => {
     const data = {...selectedFormData}
     showMessage('Bank account updated successfully', 'success')
-    console.log('data ', data)
     clearModalsAction()
   }
 
   const confirmAmountAction = () => {
     const data = {...selectedUser, amount}
     showMessage('Money transferred successfully', 'success')
-    console.log('data ', data)
     clearModalsAction()
   }
 
