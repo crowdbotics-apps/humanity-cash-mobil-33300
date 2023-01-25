@@ -59,9 +59,7 @@ import {debounce, Grid, Modal} from "@mui/material";
 
 import MDBox from "../MDBox";
 import Autocomplete from "@mui/material/Autocomplete";
-import MDInput from "../MDInput";
 import React from "react";
-import TextField from "@mui/material/TextField";
 import MDInputAutocomplete from "../MDInputAutocomplete";
 
 export const AutocompleteFormik = (opts) => {

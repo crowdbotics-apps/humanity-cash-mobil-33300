@@ -312,7 +312,7 @@ export class ApiBase {
     }
     let fdata = new FormData()
     for (const key in data) {
-      // if you pass an undefined value it will crash
+      if (data[key] === null || data[key] === undefined) continue
       const name = data[key]['name']
       if (keys.includes(key) && (typeof data[key] === "number" || typeof data[key] === "boolean"
         || Object.prototype.toString.call(data[key]) === '[object Date]')) {
@@ -347,7 +347,6 @@ export class ApiBase {
     }
     try {
       response = await this.apisauce.axiosInstance.post(path, fdata, {headers})
-
     } catch (e: any) {
       if (e.message.indexOf("status code 400") !== -1) {
         return {kind: "bad-data", errors: e.response.data}
@@ -355,7 +354,7 @@ export class ApiBase {
       if (e.message.indexOf("status code 403") !== -1) {
         return {kind: "bad-data", errors: e.response.data}
       }
-      response = {status: 500}
+      response = {status: 500, errors: 'SERVER_ERROR', problem: 'SERVER_ERROR'}
     }
     if (response.status === 400 || response.status === 403) {
       // @ts-ignore
@@ -389,7 +388,7 @@ export class ApiBase {
 
     let fdata = new FormData();
     for (const key in data) {
-      // if you pass an undefined value it will crash
+      if (data[key] === null || data[key] === undefined) continue
       const name = data[key]['name']
       if (keys.includes(key) && (typeof data[key] === "number" || typeof data[key] === "boolean"
         || Object.prototype.toString.call(data[key]) === '[object Date]')) {
@@ -428,9 +427,8 @@ export class ApiBase {
       if (e.message.indexOf("status code 400") !== -1) {
         return {kind: "bad-data", errors: e.response.data};
       }
-      response = {status: 500};
+      response = {status: 500, errors: 'SERVER_ERROR', problem: 'SERVER_ERROR'}
     }
-
     if (response.status === 400) {
       // @ts-ignore
       return {kind: "bad-data", errors: response.data};

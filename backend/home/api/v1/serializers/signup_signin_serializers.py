@@ -117,7 +117,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'verified_email', 'first_name', 'last_name', 'name', 'role_name',
             'email', 'username', 'password_set', 'group', 'role', 'group_name',
-            'consumer_data', 'merchant_data', 'allow_touch_id', 'token','is_admin'
+            'consumer_data', 'merchant_data', 'allow_touch_id', 'token','is_admin', 'is_superuser'
             ]
 
     def get_group_name(self, obj):

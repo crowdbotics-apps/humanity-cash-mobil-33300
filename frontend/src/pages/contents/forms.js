@@ -1,24 +1,13 @@
-import React, {useEffect, useRef, useState} from "react";
-import {useFormik} from "formik";
+import React, {useRef, useState} from "react";
 import * as Yup from "yup";
 import {Grid} from '@mui/material';
 import MDTypography from "components/MDTypography";
 import MDInput from "../../components/MDInput";
-import * as _ from 'lodash'
 import {AttachmentIcon} from "../../assets/svg";
-import MDBox from "../../components/MDBox";
 import moment from 'moment'
 import {Field, Form, Formik} from "formik";
-import {AutocompleteFormik} from "components/AutocompleteFormik";
 import MDButton from "components/MDButton";
-
-const fileToDataUri = (file) => new Promise((resolve, reject) => {
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    resolve(event.target.result)
-  };
-  reader.readAsDataURL(file);
-})
+import MDInputAutocomplete from "../../components/MDInputAutocomplete";
 
 export const AddEventForm = (props) => {
   const {event} = props
@@ -53,7 +42,6 @@ export const AddEventForm = (props) => {
   })
 
   const onSubmit = values => {
-    console.log('file ', file)
     let data = {...values, ...{img: file}}
 
     data['eventType'] = 'event'
@@ -67,8 +55,6 @@ export const AddEventForm = (props) => {
 
   const onFilechange = (e) => {
     /*Selected files data can be collected here.*/
-    console.log(e.target.files);
-
     if (e.target.files.length > 0) {
 
       let file = e.target.files[0] || null
@@ -94,7 +80,7 @@ export const AddEventForm = (props) => {
             </MDTypography>
             <Field name="startDate">
               {({field}) =>
-                <MDInput
+                <MDInputAutocomplete
                   type="date"
                   lang={"us-US"}
                   variant="outlined"
@@ -111,7 +97,7 @@ export const AddEventForm = (props) => {
             </MDTypography>
             <Field name="endDate">
               {({field}) =>
-                <MDInput
+                <MDInputAutocomplete
                   type="date"
                   lang={"us-US"}
                   variant="outlined"
@@ -129,7 +115,7 @@ export const AddEventForm = (props) => {
             </MDTypography>
             <Field name="startTime">
               {({field}) =>
-                <MDInput
+                <MDInputAutocomplete
                   type="time"
                   lang={"us-US"}
                   variant="outlined"
@@ -146,7 +132,7 @@ export const AddEventForm = (props) => {
             </MDTypography>
             <Field name="endTime">
               {({field}) =>
-                <MDInput
+                <MDInputAutocomplete
                   type="time"
                   lang={"us-US"}
                   variant="outlined"
@@ -210,11 +196,11 @@ export const AddEventForm = (props) => {
         <Grid container display={'flex'} justifyContent={'space-evenly'} mt={2}>
 
           <Grid item xs={4}>
-            <input accept="image/png, image/jpeg" type="file" id="upload"
+            <input disabled={props.loading} accept="image/png, image/jpeg" type="file" id="upload"
                    onChange={onFilechange}
                    hidden ref={fileInputRef}/>
             <div>
-              <MDButton color="primary" variant={'outlined'} fullWidth
+              <MDButton disabled={props.loading} color="primary" variant={'outlined'} fullWidth
                         onClick={() => {
                           fileInputRef.current.click()
                         }}
@@ -222,9 +208,14 @@ export const AddEventForm = (props) => {
             </div>
           </Grid>
 
-          <Grid item xs={4}>
-            <MDButton color="primary" fullWidth type="submit">
+          <Grid item xs={3}>
+            <MDButton disabled={props.loading} loading={props.loading} color="primary" fullWidth type="submit">
               Save
+            </MDButton>
+          </Grid>
+          <Grid item xs={3}>
+            <MDButton disabled={props.loading} color="primary" variant={"outlined"} fullWidth onClick={() => props.onCancel()}>
+              Cancel
             </MDButton>
           </Grid>
 
@@ -268,7 +259,6 @@ export const AddStoryForm = (props) => {
 
   const onFilechange = (e) => {
     /*Selected files data can be collected here.*/
-    console.log(e.target.files);
 
     if (e.target.files.length > 0) {
 
@@ -356,13 +346,18 @@ export const AddStoryForm = (props) => {
               > <AttachmentIcon/> Add Attachment</MDButton>
             </div>
           </Grid>
-
-          <Grid item xs={4}>
-            <MDButton color="primary" fullWidth type="submit" disabled={props.loading ? props.loading : false} loading={props.loading ? props.loading : false}>
+          <Grid item xs={3}>
+            <MDButton color="primary" fullWidth type="submit" disabled={props.loading ? props.loading : false}
+                      loading={props.loading ? props.loading : false}>
               Save
             </MDButton>
           </Grid>
 
+          <Grid item xs={3}>
+            <MDButton color="primary" variant={"outlined"} fullWidth onClick={() => props.onCancel()}>
+              Cancel
+            </MDButton>
+          </Grid>
         </Grid>
 
       </Form>

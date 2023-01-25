@@ -102,6 +102,10 @@ export class Api extends ApiBase {
         return this.simple_get(API_VERSION_PREFIX+"/compliance/dashboard/")
     }
 
+    async getBalances(): Promise<Types.SimpleGetResult> {
+        return this.simple_get(API_VERSION_PREFIX+"/compliance_action/balances/")
+    }
+
     async getACHTransactions(data: any): Promise<Types.SimpleGetResult> {
         return this.simple_get(API_VERSION_PREFIX+"/ach_transaction/", data)
     }

@@ -1,7 +1,6 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
 import {useEffect, useRef, useState} from "react"
 import {showMessage, useApi} from "../../services/helpers"
-import {useNavigate} from "react-router-dom";
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
 import interactionPlugin from '@fullcalendar/interaction'
@@ -33,12 +32,10 @@ const getDateRange = (dateRange) => {
 
 const BlockchainTransactions = () => {
   const api = useApi()
-  const navigate = useNavigate()
-  const event_list = []
   const CalendarEl = useRef(null);
   const [loading, setLoading] = useState(false)
 
-  const {innerWidth: width, innerHeight: height} = window;
+  const { innerWidth: width, innerHeight: height } = window;
   const [CalendarHeight, setCalendarHeight] = useState(height * 0.7)
   const [calendarApi, setCalendarApi] = useState(null)
   const [show, setShow] = useState(false);
@@ -48,7 +45,6 @@ const BlockchainTransactions = () => {
   const [DetailsTitle, setDetailsTitle] = useState("")
   const [showDetailModal, setShowDetailModal] = useState(false)
   const [DateRange, setDateRange] = useState(getDateRange())
-  const [AllEvents, setAllEvents] = useState([])
   const [CalendarEvents, setCalendarEvents] = useState([])
   const [showStoryModal, setShowStoryModal] = useState(false);
   const [showEventModal, setShowEventModal] = useState(false);
@@ -77,7 +73,6 @@ const BlockchainTransactions = () => {
   const next = () => {
     setCalendarEvents([])
     setRightEvents([])
-    setAllEvents([])
 
     calendarApi.next()
 
@@ -121,7 +116,7 @@ const BlockchainTransactions = () => {
       let aux_date = moment(event.start_date).format('YYYY-MM-DD')
       if (Object.keys(data).indexOf(aux_date) === -1) {
 
-        data[aux_date] = {title: event.start_date, events: [newEvent]}
+        data[aux_date] = { title: event.start_date, events: [newEvent] }
       } else {
 
         data[aux_date].events.push(newEvent)
@@ -147,7 +142,6 @@ const BlockchainTransactions = () => {
       rightEvents.push(data[k])
 
     }
-    setAllEvents(allEvents)
     setRightEvents(rightEvents)
     setCalendarEvents(calendarEvents)
     setLoading(false)
@@ -168,7 +162,6 @@ const BlockchainTransactions = () => {
     setLoading(true)
     api.deleteEvent(id).then((response) => {
       if (response.kind === "not-found") {
-        console.log("error deleting event", response)
         showMessage("Object not found");
       } else {
         setLoading(false)
@@ -181,7 +174,6 @@ const BlockchainTransactions = () => {
   }
 
   const editEvent = (event) => {
-    console.log("edit event", event)
     setCurrentEvent(event)
     if (event.eventType === 'story') {
       setShowStoryModal(true)
@@ -190,19 +182,20 @@ const BlockchainTransactions = () => {
     }
   }
 
-  const patchEvent = (event) => {
+  const patchEventReq = (event) => {
     const image = event.image
     let keys = []
     let updatedData = event
     delete updatedData['image']
     if (image && typeof image !== 'string') {
-      updatedData = {...event, image}
+      updatedData = { ...event, image }
       keys = ['image']
     }
     setLoading(true)
     api.editEvent(event.id, updatedData, keys).then((result) => {
       if (result.kind === "ok") {
         showMessage("Updated successfully.", 'success');
+        setShow(false)
         setShowStoryModal(false)
         setShowEventModal(false)
         setShowDetailModal(false)
@@ -222,13 +215,13 @@ const BlockchainTransactions = () => {
     let updatedData = event
     delete updatedData['image']
     if (image && typeof image !== 'string') {
-      updatedData = {...event, image}
+      updatedData = { ...event, image }
       keys = ['image']
     }
     setLoading(true)
     api.createEvent(updatedData, keys).then((result) => {
-      console.log('result ', result)
       if (result.kind === "ok") {
+        setShow(false)
         setShowStoryModal(false)
         setShowEventModal(false)
         setShowDetailModal(false)
@@ -239,7 +232,6 @@ const BlockchainTransactions = () => {
         showMessage()
       }
     }).catch(err => {
-      console.log('err ', err)
       showMessage()
     }).finally(() => setLoading(false))
   }
@@ -258,7 +250,7 @@ const BlockchainTransactions = () => {
         image: data.img,
         link: data.link
       }
-      patchEvent(event)
+      patchEventReq(event)
     } else {
       event = {
         title: data.title,
@@ -272,11 +264,9 @@ const BlockchainTransactions = () => {
       }
       createEvent(event)
     }
-    setShowEventModal(false)
   }
 
   const saveStory = (data) => {
-    console.log('event ', data)
     let event = {}
     if (data.id !== undefined) {
       event = {
@@ -288,7 +278,7 @@ const BlockchainTransactions = () => {
         start_date: data.date,
         image: data.img,
       }
-      patchEvent(event)
+      patchEventReq(event)
     } else {
       event = {
         title: data.title,
@@ -307,6 +297,8 @@ const BlockchainTransactions = () => {
     initCalendar()
   }, [])
 
+  useEffect(() =>  getEventsRequest(), [DateRange])
+
   const onFakeScrollChange = (scrollRatio) => {
     // console.log("scroll ratio", scrollRatio)
   }
@@ -319,12 +311,11 @@ const BlockchainTransactions = () => {
     const eventType = eventInfo.event._def.extendedProps.eventType
     const eventHour = moment(eventInfo.event._def.extendedProps.startDate).format("hh:mm A")
     const isOverlaping = eventInfo.event._def.extendedProps.isOverlapping
-
-    const Overlapping = (event) => (<div className={'dot my-event-overlapped my-event-overlapped-' + eventType}/>)
+    const Overlapping = (event) => (<div className={'dot my-event-overlapped my-event-overlapped-' + eventType} />)
     return (
       <>
         {isOverlaping
-          ? <Overlapping event={eventInfo.event}/>
+          ? <Overlapping event={eventInfo.event} />
           : <div className={'my-event my-event-' + eventType}>
             <h5 className={'my-event-title'}>{eventInfo.event.title.slice(0, 12)}</h5>
             <h5 className={'my-event-subtitle'}>{eventHour}</h5>
@@ -342,16 +333,15 @@ const BlockchainTransactions = () => {
           setDetails(value.events)
           setDetailsTitle(getTitleFormat(value.title))
           setShowDetailModal(true)
-          console.log(value)
         }}>
-        <div className={'text-gray'} style={{fontSize: 12, marginLeft: 20}}>{getTitleFormat(value.title)}</div>
-        <div style={{marginBottom: 20}}>
+        <div className={'text-gray'} style={{ fontSize: 12, marginLeft: 20 }}>{getTitleFormat(value.title)}</div>
+        <div style={{ marginBottom: 20 }}>
           {value.events.map((data, index) => {
             return (
               <div key={index}>
-                <HourLine hour={getHourFormatted(data.date)}/>
-                <ContentEventCard event={data}/>
-                <HourLine hour={getHourFormatted(data.date)}/>
+                <HourLine hour={getHourFormatted(data.date)} />
+                <ContentEventCard event={data} />
+                <HourLine hour={getHourFormatted(data.date)} />
               </div>)
           })}
         </div>
@@ -362,29 +352,29 @@ const BlockchainTransactions = () => {
   const CalendarHeader = () => {
     return (
       <div className={'calendar-header'}>
-        <MDBox style={{width: 280, justifyContent: 'space-between', display: 'flex'}}>
+        <MDBox style={{ width: 280, justifyContent: 'space-between', display: 'flex' }}>
           <button type="button"
-                  title="Previous month"
-                  aria-pressed="true"
-                  onClick={previous}
-                  className="fc-button">
-            <span className="fc-icon fc-icon-chevron-left"/></button>
+            title="Previous month"
+            aria-pressed="true"
+            onClick={previous}
+            className="fc-button">
+            <span className="fc-icon fc-icon-chevron-left" /></button>
           <span className="fc-toolbar-title">{Title}</span>
           <button type="button"
-                  title="Next month"
-                  aria-pressed="true"
-                  onClick={next}
-                  className="fc-button">
-            <span className="fc-icon fc-icon-chevron-right"/></button>
+            title="Next month"
+            aria-pressed="true"
+            onClick={next}
+            className="fc-button">
+            <span className="fc-icon fc-icon-chevron-right" /></button>
         </MDBox>
         <MDBox className={'col-4 calendar-header'}>
-          <div className={'dot my-event-overlapped-story'}/>
-          <div style={{marginLeft: 15, fontSize: 15}} className={'text-gray'}>EVENTS</div>
-          <div style={{marginLeft: 35}} className={'dot my-event-overlapped-event'}/>
-          <div style={{marginLeft: 15, fontSize: 15}} className={'text-gray'}>STORIES</div>
+          <div className={'dot my-event-overlapped-story'} />
+          <div style={{ marginLeft: 15, fontSize: 15 }} className={'text-gray'}>EVENTS</div>
+          <div style={{ marginLeft: 35 }} className={'dot my-event-overlapped-event'} />
+          <div style={{ marginLeft: 15, fontSize: 15 }} className={'text-gray'}>STORIES</div>
         </MDBox>
         <MDBox className={'col-4'}>
-          <MDButton className={'create-btn'} onClick={handleShow}>
+          <MDButton variant={'contained'} color={'primary'} onClick={handleShow}>
             Create
           </MDButton>
         </MDBox>
@@ -392,7 +382,7 @@ const BlockchainTransactions = () => {
     )
   }
 
-  const createModal = <ConfirmDialogInputModal
+  const createModal = () => <ConfirmDialogInputModal
     title={'Create'}
     description={'Create a new content '}
     open={show}
@@ -401,31 +391,31 @@ const BlockchainTransactions = () => {
     handleClose={() => setShow(false)}
   >
     <MDBox display={'flex'}>
-      <MDBox style={{width: '50%', marginRight: '10px'}}>
+      <MDBox style={{ width: '50%', marginRight: '10px' }}>
         <div className={'col-modal-create col-modal-left'}
-             onClick={event => {
-               setShow(false)
-               setShowStoryModal(true)
-             }}>
+          onClick={event => {
+            setShow(false)
+            setShowStoryModal(true)
+          }}>
           <div>
-            <StoriesIcon/>
+            <StoriesIcon />
           </div>
-          <div className={'text-blue'} style={{fontSize: 34, marginLeft: 10, fontWeight: 500}}>
+          <div className={'text-blue'} style={{ fontSize: 34, marginLeft: 10, fontWeight: 500 }}>
             Story
           </div>
         </div>
       </MDBox>
-      <MDBox style={{width: '50%', marginLeft: '10px'}}>
+      <MDBox style={{ width: '50%', marginLeft: '10px' }}>
         <div className={'col-modal-create col-modal-right'}
-             onClick={event => {
-               setShow(false)
-               setShowEventModal(true)
-             }}
+          onClick={event => {
+            setShow(false)
+            setShowEventModal(true)
+          }}
         >
           <div>
-            <CalendarIcon/>
+            <CalendarIcon />
           </div>
-          <div className={'text-blue'} style={{fontSize: 34, marginLeft: 10, fontWeight: 500}}>
+          <div className={'text-blue'} style={{ fontSize: 34, marginLeft: 10, fontWeight: 500 }}>
             Event
           </div>
         </div>
@@ -433,7 +423,7 @@ const BlockchainTransactions = () => {
     </MDBox>
   </ConfirmDialogInputModal>
 
-  const eventDetailModal = <ConfirmDialogInputModal
+  const eventDetailModal = () =>  <ConfirmDialogInputModal
     title={'Details'}
     description={DetailsTitle}
     open={showDetailModal}
@@ -441,26 +431,34 @@ const BlockchainTransactions = () => {
     hideButtons
     handleClose={() => setShowDetailModal(false)}
   >
-    <MDBox sx={{overflowY: 'scroll', height: 600}}>
+    <MDBox sx={{ overflowY: 'scroll', height: 600 }}>
       {Details.map((value, index) => {
-        return <ContentEventDetail delete={deleteEvent} key={"detail-" + index} edit={editEvent} event={value}/>
+        return <ContentEventDetail delete={deleteEvent} key={"detail-" + index} edit={editEvent} event={value} />
       })}
     </MDBox>
   </ConfirmDialogInputModal>
 
-  const eventModal = <ConfirmDialogInputModal
+  const eventModal = () => <ConfirmDialogInputModal
     title={CurrentEvent && CurrentEvent.id !== null ? 'Edit Event' : 'Add New Event'}
     description={''}
     open={showEventModal}
     width={800}
     hideButtons
     disabledConfirm={loading}
-    handleClose={() => setShowEventModal(false)}
+    handleClose={() => {
+      setCurrentEvent(null)
+      setShowEventModal(false)
+    }}
   >
-    <AddEventForm event={CurrentEvent} save={(data) => saveEvent(data)} loading={loading}/>
+    <AddEventForm
+      event={CurrentEvent}
+      save={(data) => saveEvent(data)}
+      loading={loading}
+      onCancel={() => setShowEventModal(false)}
+    />
   </ConfirmDialogInputModal>
 
-  const storyModal = <ConfirmDialogInputModal
+  const storyModal = () => <ConfirmDialogInputModal
     title={CurrentEvent ? "Edit Story" : "Add New Story"}
     description={''}
     open={showStoryModal}
@@ -472,7 +470,12 @@ const BlockchainTransactions = () => {
       setShowStoryModal(false)
     }}
   >
-    <AddStoryForm event={CurrentEvent} save={(data) => saveStory(data)} loading={loading}/>
+    <AddStoryForm
+      event={CurrentEvent}
+      save={(data) => saveStory(data)}
+      loading={loading}
+      onCancel={() => setShowStoryModal(false)}
+    />
   </ConfirmDialogInputModal>
 
   return (
@@ -482,7 +485,7 @@ const BlockchainTransactions = () => {
     >
       <MDBox display={'flex'} mt={5}>
         <div className={'calendar-left-column'}>
-          <CalendarHeader/>
+          <CalendarHeader />
           <FullCalendar
             ref={CalendarEl}
 
@@ -498,7 +501,6 @@ const BlockchainTransactions = () => {
               weekday: 'long'
             }}
             selectable={false}
-
             dateClick={(arg) => {
               console.log("select", arg)
             }}
@@ -520,10 +522,10 @@ const BlockchainTransactions = () => {
           </FakeScroll>
         </div>
       </MDBox>
-      {createModal}
-      {eventDetailModal}
-      {eventModal}
-      {storyModal}
+      {createModal()}
+      {eventDetailModal()}
+      {eventModal()}
+      {storyModal()}
     </DashboardLayout>
   )
 }

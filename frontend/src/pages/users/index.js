@@ -5,7 +5,6 @@ import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
-import MDBox from "../../components/MDBox";
 
 const Users = () => {
   const api = useApi()
@@ -22,7 +21,6 @@ const Users = () => {
     api.getDwollaUsers(searchData, page, ordering, 8).then((result) => {
       if (result.kind === "ok") {
         const {count, results} = result.data
-        console.log('results ', results)
         const tmp = {...dataTableModel}
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
         setRecordList(tmp)
@@ -59,22 +57,19 @@ const Users = () => {
       loading={loading}
       searchFunc={getDwollaUsers}
     >
-      {recordList?.rows.length > 0
-        ? (<DataTable
-          table={recordList}
-          onColumnOrdering={onColumnOrdering}
-          currentPage={currentPage}
-          numberOfItems={numberOfItems}
-          numberOfItemsPage={numberOfItemsPage}
-          pageSize={8}
-          onPageChange={page => {
-            getDwollaUsers('', page)
-            setCurrentPage(page)
-          }}
-        />)
-        : <p style={{display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20}}>No
-          users found</p>
-      }
+      <DataTable
+        table={recordList}
+        loading={loading}
+        emptyLabelText={'No users found'}
+        onColumnOrdering={onColumnOrdering}
+        currentPage={currentPage}
+        numberOfItems={numberOfItems}
+        numberOfItemsPage={numberOfItemsPage}
+        onPageChange={page => {
+          getDwollaUsers('', page)
+          setCurrentPage(page)
+        }}
+      />
     </DashboardLayout>
   )
 }

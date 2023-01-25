@@ -567,7 +567,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					placeholder={'Facebook Link'}
 				/>
 			</View>
-			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+			{/* <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>TWITTER LINK</Text>
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
@@ -578,7 +578,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 					value={TwitterLink}
 					placeholder={'Twitter Link'}
 				/>
-			</View>
+			</View> */}
 		</View>
 	)
 	const renderbusinessExec = () => (

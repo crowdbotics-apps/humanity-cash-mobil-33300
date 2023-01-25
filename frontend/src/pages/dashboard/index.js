@@ -1,12 +1,8 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
-import { useEffect, useRef, useState } from "react"
-import MDButton from "../../components/MDButton"
-import { showMessage, useApi } from "../../services/helpers"
+import {useEffect, useState} from "react"
+import {showMessage, useApi} from "../../services/helpers"
 import MDBox from "../../components/MDBox";
-import MDTypography from "components/MDTypography";
 import DataTableDropdown from "../../components/DataTableDropdown";
-import { useNavigate } from "react-router-dom";
-import Checkbox from "@mui/material/Checkbox";
 import moment from "moment";
 
 const dataTableModel = {
@@ -25,11 +21,9 @@ const dataTableModel = {
 
 const Dashboard = () => {
   const api = useApi()
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [recordList, setRecordList] = useState({ ...dataTableModel })
-  const searchQueryRef = useRef("");
 
 
   const getFormatedData = (initialData) => {
@@ -95,10 +89,10 @@ const Dashboard = () => {
     })
 
     // finish columns
-    columns.push({Header: "TOTAL", accessor: "total", disableOrdering: true},
-      {Header: "B$ Outstanding", accessor: "outstanding", disableOrdering: true},
+    columns.push({Header: "CASH RESERVE", accessor: "total", disableOrdering: true},
+      {Header: "TOKENS ISSUED", accessor: "outstanding", disableOrdering: true},
       {Header: "RESERVE >= TOKENS?", accessor: "positive_result", disableOrdering: true},
-      {Header: "DIFERENCE", accessor: "diference", disableOrdering: true},
+      {Header: "DIFFERENCE", accessor: "diference", disableOrdering: true},
       {Header: "COMMENTS", accessor: "comments", disableOrdering: true},
     )
 
@@ -141,7 +135,7 @@ const Dashboard = () => {
             setCurrentPage(page)
           }}
         />)
-        : <p style={{ display: 'flex', height: '55vh', justifyContent: 'center', alignItems: 'center', fontSize: 20 }}>No transactions found</p>
+        : <p></p>
       }
     </DashboardLayout>
   )

@@ -8,6 +8,8 @@ import {ROUTES} from "../../services/constants";
 import MDButtonPopover from "../../components/MDButtonPopover";
 import ConfirmDialogInputModal from "../../components/ConfirmDialogInputModal";
 import MDInput from "../../components/MDInput";
+import {Autocomplete, CircularProgress, TextField} from "@mui/material";
+import {Search} from "@mui/icons-material";
 
 const ReconciliationActions = {
   AddAdjustment: 'AddAdjustment',
@@ -75,12 +77,18 @@ const ReconciliationActionsPage = () => {
   const [Password, setPassword] = useState("")
   const [Amount, setAmount] = useState("")
 
+  const selectRecipientRef = useRef(null)
+  const [loadingRecipient, setLoadingRecipient] = useState(false);
+  const [RecipientList, setRecipientList] = useState([]);
+  const [openRecipientList, setOpenRecipientList] = useState(false);
+
 
   const resetData = () => {
     setCurrentDocumentation("Placeholder")
     setCurrentAmount(0)
     setCurrentRecipient(null)
     setSupervisorCredential("")
+    setLoading(true)
   }
 
   const getWalletBalances = () => {
@@ -115,6 +123,7 @@ const ReconciliationActionsPage = () => {
   }
 
   const apiCall = (data) => {
+    setLoading(true)
     api.addAdjustment(data)
       .then((result) => {
         if (result.kind === "ok") {
@@ -170,9 +179,9 @@ const ReconciliationActionsPage = () => {
       confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
-    [ReconciliationActions.AddAdjustmentAndMint]: {
-      title: "Add Adjustment",
-      subTitle: "Enter an amount to be minted to the Positive Mint Adjustment Account Wallet.",
+    [ReconciliationActions.ReconcileAndBurn]: {
+      title: "Reconcile & Burn Tokens",
+      subTitle: "Enter an amount to be burned from the Negative Adjustment Account Wallet.",
       next: onAddAdjustmentAndMint,
       type: 'burn_from_negative',
       confirmTitle: "Confirm Amount",
@@ -180,22 +189,22 @@ const ReconciliationActionsPage = () => {
     },
     [ReconciliationActions.RevertAdjustment]: {
       title: "Revert Adjustment",
-      subTitle: "Enter an amount to revert a previous action",
+      subTitle: "Enter an amount to revert a previous action (Transfer to reserve wallet).",
       next: onRevertAdjustment,
       type: 'revert_fund_negative',
       confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
-    [ReconciliationActions.ReconcileAndBurn]: {
-      title: "Reconcile and burn Tokens",
-      subTitle: "Enter an amount to be burned from the Negative Adjustment Account Wallet.",
+    [ReconciliationActions.AddAdjustmentAndMint]: {
+      title: "Add Adjustment & Mint Tokens",
+      subTitle: "Enter an amount to be minted to the Positive Mint Adjustment Account Wallet.",
       next: onReconcileAndBurn,
       type: 'mint_to_positive',
       confirmTitle: "Confirm Burn",
       selectRecipient: false
     },
     [ReconciliationActions.ReconcileAndTransfer]: {
-      title: "Transfer funds",
+      title: "Reconcile & Transfer Tokens",
       subTitle: "Enter an amount to be transferred from the Positive Mint Adjustment Account Wallet to the " +
         "Recipient wallet.",
       next: onReconcileAndTransfer,
@@ -204,18 +213,18 @@ const ReconciliationActionsPage = () => {
       selectRecipient: true
     },
     [ReconciliationActions.RevertMint]: {
-      title: "Revert Mint",
-      subTitle: "Burn tokens to revert previous action",
+      title: "Revert Adjustment & Burn Tokens",
+      subTitle: "Burn tokens from positive wallet to revert previous action.",
       next: onRevertMint,
       type: 'revert_mint_to_positive',
-      confirmTitle: "Confirm Recipient",
+      confirmTitle: "Confirm Amount",
       selectRecipient: false
     },
   }
 
   const negativeActionList = [
     {
-      label: "Add Adjustment",
+      label: actions[ReconciliationActions.AddAdjustment].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.AddAdjustment])
         setShowPasswordModal(true)
@@ -223,7 +232,7 @@ const ReconciliationActionsPage = () => {
       disabled: false
     },
     {
-      label: "Reconcile & Burn Tokens",
+      label: actions[ReconciliationActions.ReconcileAndBurn].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.ReconcileAndBurn])
         setShowPasswordModal(true)
@@ -231,7 +240,7 @@ const ReconciliationActionsPage = () => {
       disabled: false
     },
     {
-      label: "Revert Adjustment",
+      label: actions[ReconciliationActions.RevertAdjustment].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.RevertAdjustment])
         setShowPasswordModal(true)
@@ -241,7 +250,7 @@ const ReconciliationActionsPage = () => {
   ]
   const positiveActionList = [
     {
-      label: "Add Adjustment & Mint Tokens",
+      label: actions[ReconciliationActions.AddAdjustmentAndMint].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.AddAdjustmentAndMint])
         setShowPasswordModal(true)
@@ -249,7 +258,7 @@ const ReconciliationActionsPage = () => {
       disabled: false
     },
     {
-      label: "Reconcile & Transfer Tokens",
+      label: actions[ReconciliationActions.ReconcileAndTransfer].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.ReconcileAndTransfer])
         setShowPasswordModal(true)
@@ -257,7 +266,7 @@ const ReconciliationActionsPage = () => {
       disabled: false
     },
     {
-      label: "Revert Adjustment & Burn Tokens",
+      label: actions[ReconciliationActions.RevertMint].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.RevertMint])
         setShowPasswordModal(true)
@@ -307,13 +316,33 @@ const ReconciliationActionsPage = () => {
     setShowConfirmationModal(true)
   }
 
+  const getRecipientList = () => {
+    if (loadingRecipient) {
+      return
+    }
+    setLoadingRecipient(true)
+    let data = {}
+    if (selectRecipientRef.current.value !== "") {
+      data.search = selectRecipientRef.current.value
+    }
+    api.getComplianceRecipient(data).then(res => {
+      if (res.kind === 'ok') {
+        setRecipientList(res.data.results)
+      } else {
+        console.log("Error, please put the corresponding alert message")
+      }
+    }).finally(() => setLoadingRecipient(false))
+  }
+
   useEffect(() => {
+    setLoadingRecipient(false)
     getWalletBalances()
   }, [])
 
   return (
     <DashboardLayout
       loginRequired
+      loading={loading}
     >
       <DataTable
         table={recordList}
@@ -353,6 +382,79 @@ const ReconciliationActionsPage = () => {
         handleClose={() => setShowAmountModal(false)}
         handleConfirm={() => onConfirmAmountModal(Amount)}
       >
+        {CurrentAction.selectRecipient &&
+          <Autocomplete
+            open={openRecipientList}
+            onOpen={() => {
+              getRecipientList()
+              setOpenRecipientList(true);
+            }}
+            onClose={() => {
+              setOpenRecipientList(false);
+            }}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            getOptionLabel={(option) => option.label}
+            options={RecipientList}
+            loading={loading}
+            onChange={(event, value) => {
+              setCurrentRecipient(value)
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                inputRef={selectRecipientRef}
+                label="SELECT RECIPIENT"
+                sx={{
+                  marginBottom: '24px',
+                  backgroundColor: 'transparent',
+                  pointerEvents: "auto",
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: '#D59B76',
+                    borderWidth: 2
+                  },
+                  "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+                    borderColor: '#D59B76',
+                    borderWidth: 2
+                  },
+                  "&:hover .MuiOutlinedInput-input": {
+                    borderColor: '#D59B76',
+                    borderWidth: 2,
+                  },
+                  "& .MuiOutlinedInput-input": {
+                    height: '12px'
+                  },
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#D59B76",
+                  },
+                  "& .MuiInputLabel-root": {
+                    color: "#666666",
+                    fontSize: 16,
+                    fontWeight: 700,
+                  },
+                  ".MuiAutocomplete-endAdornment": {
+                    display: 'none',
+                  },
+                  ".MuiInputBase-root": {
+                    paddingRight: '12px!important',
+                  },
+                }
+                }
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <>
+                      {loadingRecipient ?
+                        <CircularProgress size={20} color="primary"/> :
+                        <Search fontSize={"medium"}/>
+                      }
+                      {params.InputProps.endAdornment}
+                    </>
+                  ),
+                }}
+              />
+            )}
+          />
+        }
         <MDInput
           type="number"
           label="ENTER AMOUNT"
@@ -367,7 +469,7 @@ const ReconciliationActionsPage = () => {
       {/* CONFIRMATION MODAL */}
       <ConfirmDialogInputModal
         title={CurrentAction.confirmTitle}
-        description={CurrentAction.selectRecipient ? "John Doe Wallet address 0xasdf234asdf0234" : `${Amount}`}
+        description={CurrentAction.selectRecipient ? `${money_fmt(Amount)} to ${CurrentRecipient?.label} wallet address ${CurrentRecipient?.crypto_wallet_id}` : `${money_fmt(Amount)}`}
         open={ShowConfirmationModal}
         handleClose={() => setShowConfirmationModal(false)}
         handleConfirm={onReconciliationConfirm}

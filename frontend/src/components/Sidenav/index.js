@@ -40,10 +40,7 @@ import SidenavItem from "./SidenavItem";
 import SidenavCollapse from "./SidenavCollapse";
 import SidenavList from "./SidenavList";
 import IconButton from "@mui/material/IconButton";
-import {collapseText} from "./styles/sidenavCollapse";
 import {useStores} from "../../models";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import {ROUTES} from "../../services/constants";
 import {observer} from "mobx-react";
 
 

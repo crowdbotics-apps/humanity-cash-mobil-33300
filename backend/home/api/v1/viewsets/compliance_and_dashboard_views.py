@@ -12,6 +12,7 @@ from rest_framework import status, mixins, viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -99,6 +100,7 @@ class ComplianceActionViewset(
     queryset = ComplianceAction.objects.all()
     permission_classes = [IsAuthenticated] # TODO is admin permission
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    pagination_class = PageNumberPagination
     search_fields = ['status', 'created_by__username', 'created_by__email', 'documentation']
 
     def get_queryset(self):
