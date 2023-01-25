@@ -286,7 +286,7 @@ export const HomeScreen = observer(function HomeScreen() {
 								<Text style={styles.ICON_WARNING}>!</Text>
 							</View>
 							<Text style={styles.TEXT_WARNING}>
-								Create a personal profile so you can easily switch accounts.{' '}
+							You do not have a personal account linked. Create one now and link your personal bank account!{' '}
 								<Text style={styles.TEXT_WARNING_LINK}>
 									Go to set up
 								</Text>

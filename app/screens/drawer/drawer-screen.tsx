@@ -119,7 +119,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         <Text style={styles.MENU_ITEM_LABEL}>Receive payment / Scan to pay</Text>
       </TouchableOpacity>,
 
-      <TouchableOpacity key={'merchant_transactions'} onPress={() => props.navigation.navigate("makeReturnn")} style={styles.MENU_ITEM_CONTAINER}>
+      <TouchableOpacity key={'merchant_transactions'} onPress={() => props.navigation.navigate("makeReturn")} style={styles.MENU_ITEM_CONTAINER}>
         <Image
           resizeMode="contain"
           source={IMAGES.make_a_return}
@@ -127,7 +127,14 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         />
         <Text style={styles.MENU_ITEM_LABEL}>Make a return</Text>
       </TouchableOpacity>,
-
+ <TouchableOpacity key={'marchant_transactions'} onPress={() => props.navigation.navigate("myTransactions")} style={styles.MENU_ITEM_CONTAINER}>
+ <Image
+   resizeMode="contain"
+   source={IMAGES.receive_payment}
+   style={styles.MENU_ITEM_ICON}
+ />
+ <Text style={styles.MENU_ITEM_LABEL}>My Transactions</Text>
+</TouchableOpacity>,
       <TouchableOpacity key={'merchant_wallet'} onPress={() => props.navigation.navigate("loadWallet")} style={styles.MENU_ITEM_CONTAINER}>
         <Image
           resizeMode="contain"

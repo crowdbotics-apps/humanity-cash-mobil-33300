@@ -69,6 +69,10 @@ export default StyleSheet.create({
   FULL_WIDTH: {
     width: '100%'
   },
+  INPUT_LABEL_ERROR: {
+    color: COLOR.PALETTE.pink,
+    fontSize: 10,
+  },
   INPUT_LABEL_STYLE: {
     color: COLOR.PALETTE.black,
     fontSize: 10,
@@ -115,7 +119,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.purple,
     height: 1,
-    marginBottom: 40,
+    marginBottom: 10,
     marginTop: 10,
     width: METRICS.screenWidth * 0.95
   },
@@ -197,15 +201,70 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.strongGreen,
     fontSize: 10,
   },
+  STEP_SUB_TITLE_ERROR: {
+    bottom: 20,
+    color: COLOR.PALETTE.black,
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
+  PENDING_TITLE: {
+    color: COLOR.PALETTE.orange,
+    fontSize: 32,
+    marginLeft: 10,
+    marginTop: 40,
+    width: METRICS.screenWidth * 0.8
+  },
+  RETURN_AMOUNT: {
+    color: COLOR.PALETTE.activeBlue,
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    marginTop: 10,
+    textAlign: 'center'
+  },
+  RETURN_CONTAINER_MODAL: {
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.whiteTextInput,
+    height: 140,
+    marginVertical: 10,
+    width: METRICS.screenWidth * 0.95,
+  },
+  RETURN_DETAIL_CONTAINER: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: METRICS.screenWidth * 0.85,
+  },
+  RETURN_DETAIL_LABEL: { 
+    color: COLOR.PALETTE.black,
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  RETURN_ITEM_MODAL: {
+    // bottom: 30,
+    color: COLOR.PALETTE.activeBlue,
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
   ROOT: {
     flex: 1,
+  },
+  ACTIVITY: {
+    marginBottom: 55
   },
   ROOT_MODAL: {
     alignItems: 'center',
     backgroundColor: COLOR.PALETTE.modalBackgroundColor,
     flex: 1,
     justifyContent: 'space-around',
-
+  },
+  SUB_TITLE: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16,
+    marginLeft: 10,
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.90,
   },
   ROOT_MODAL_PASS: {
     backgroundColor: COLOR.PALETTE.white,
@@ -221,12 +280,10 @@ export default StyleSheet.create({
   },
   STEP_CONTAINER: {
   },
-
   STEP_SUB_TITLE: {
-    bottom: 20,
     color: COLOR.PALETTE.black,
-    fontSize: 18,
-    fontWeight: 'bold'
+    fontSize: 10,
+    marginLeft: 10
   },
   STEP_SUB_TITLE_AMOUNT: {
     color: COLOR.PALETTE.black,
@@ -249,7 +306,7 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.orange,
     fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 20
+    marginLeft: 10
   },
   STEP_TITLE_AMOUNT: {
     color: COLOR.PALETTE.green,

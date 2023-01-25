@@ -45,10 +45,10 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		loginStore.environment.api
 			.getCoupons({merchant_id: loginStore.merchant_id})
 			.then((result: any) => {
+				console.log(' result ====>>> ', loginStore.merchant_id, JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
-						const filteredCouponsByLoguedMerchant = result?.data?.results.filter(c => c.merchant === loginStore.merchant_id)
-						loginStore.setMerchantCoupons(filteredCouponsByLoguedMerchant);
+						loginStore.setMerchantCoupons(result?.data?.results);
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
