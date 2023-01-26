@@ -132,8 +132,8 @@ class ComplianceActionViewset(
                 documentation=vdata['documentation'],
                 created_by=user,
                 amount=vdata['amount'],
-                consumer=consumer,
-                merchant=merchant,
+                consumer_id=consumer,
+                merchant_id=merchant,
             )
             # ca.signoffs.create(user=user)
 
