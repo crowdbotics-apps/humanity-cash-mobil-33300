@@ -20,3 +20,10 @@ export const ROUTES = {
   USERS: "/users",
   USER: (id) =>  `/users/${id}`,
 }
+
+export const PERMISSIONS = {
+  SUPER_ADMIN: 'SUPERADMIN',
+  ADMIN: 'ADMIN',
+  SUPERVISOR: 'SUPERVISOR',
+  EMPLOYEE: 'EMPLOYEE',
+}

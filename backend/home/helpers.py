@@ -219,14 +219,18 @@ def send_email_with_template_attach_element(subject, email, context, template_to
 
     return mail.send()
 
-def send_reset_email(user, request):
+def generate_reset_url(user, request):
     temp_key = default_token_generator.make_token(user)
-    current_site = f"{request.scheme}://{request.get_host()}"
     url = f"{request.scheme}://{request.get_host()}/set-new-password/{urlsafe_base64_encode(force_bytes(user.pk))}/{temp_key}"
+    return url
+
+
+def send_reset_email(user, request):
+    current_site = f"{request.scheme}://{request.get_host()}"
     context = {
         "current_site": current_site,
         "user": user,
-        "password_reset_url": url,
+        "password_reset_url": generate_reset_url(user,request),
         "request": request,
     }
     get_adapter(request).send_mail(

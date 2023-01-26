@@ -38,7 +38,8 @@ function DataTable(
     onPageChange,
     showTotalEntries = true,
     loading = false,
-    emptyLabelText = 'No items found'
+    emptyLabelText = 'No items found',
+    loadingText = ''
   }
 ) {
   const columns = useMemo(() => table.columns, [table]);
@@ -78,7 +79,7 @@ function DataTable(
   }, [sortedByColumn])
   return (
     <>
-      {rows?.length === 0 && <EmptyResponseDatatable loading={loading} text={emptyLabelText}/> }
+      {rows?.length === 0 && <EmptyResponseDatatable loadingText={loadingText} loading={loading} text={emptyLabelText}/> }
       {!loading && rows?.length > 0 && <>
         <TableContainer sx={{boxShadow: "none", background: "transparent"}}>
           <Table {...getTableProps()}>
