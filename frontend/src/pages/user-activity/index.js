@@ -1,14 +1,17 @@
 import DashboardLayout from "../../components/LayoutContainers/DashboardLayout"
 import {useEffect, useRef, useState} from "react"
 import {showMessage, useApi} from "../../services/helpers"
-import {dataTableModel, renderTableRow} from "./utils";
+import {dataTableModel, dataTableModelEmployee, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
-import {ROUTES} from "../../services/constants";
+import {PERMISSIONS, ROUTES} from "../../services/constants";
+import {useStores} from "../../models";
 
 const UserActivities = () => {
   const api = useApi()
   const navigate = useNavigate()
+  const rootStore = useStores()
+  const {loginStore} = rootStore
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
@@ -21,8 +24,8 @@ const UserActivities = () => {
     api.getUserActivity(searchData, page, ordering, 8).then((result) => {
       if (result.kind === "ok") {
         const {count, results} = result.data
-        const tmp = {...dataTableModel}
-        tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
+        const tmp = loginStore.getPermission(PERMISSIONS.SUPERVISOR) ? {...dataTableModelEmployee} : {...dataTableModel}
+        tmp.rows = results.map(e => renderTableRow(e, setDetailToShow, loginStore.role))
         setRecordList(tmp)
         setNumberOfItems(count)
         setNumberOfItemsPage(results.length)

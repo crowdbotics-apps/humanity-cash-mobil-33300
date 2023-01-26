@@ -1,12 +1,22 @@
 import {truncate} from "../../services/helpers";
 import MDBox from "../../components/MDBox";
 import moment from "moment";
-import MDButton from "../../components/MDButton";
 import Icon from "@mui/material/Icon";
 
 export const dataTableModel = {
   columns: [
     {Header: "ID", accessor: "id"},
+    {Header: "SESSION", accessor: "session_key"},
+    {Header: "DATE", accessor: "login"},
+  ],
+  rows: [],
+};
+
+export const dataTableModelEmployee = {
+  columns: [
+    {Header: "ID", accessor: "id"},
+    {Header: "USERNAME", accessor: "username"},
+    {Header: "EMAIL", accessor: "email"},
     {Header: "SESSION", accessor: "session_key"},
     {Header: "DATE", accessor: "login"},
   ],
@@ -37,13 +47,8 @@ const dateBox = (date) => {
 }
 
 
-export const renderTableRow = (item, onAction ) => {
+export const renderTableRow = (item, onAction) => {
   item.session_key = (hashBox(item.session_key))
   item.login = (dateBox(item.login))
-  item.actions = (
-    <MDButton color={"primary"} size={"small"} onClick={() => onAction(item)}>
-      Detail
-    </MDButton>
-  )
   return item
 }
