@@ -2,7 +2,8 @@ from rest_framework import serializers
 from allauth.utils import email_address_exists
 from allauth.account.adapter import get_adapter
 
-from home.helpers import setup_verification_code, send_verification_email, send_reset_email
+from home.helpers import setup_verification_code, send_verification_email, send_reset_email, generate_reset_url, \
+    send_email_with_template
 from users.models import User, UserActivity
 
 
@@ -53,7 +54,15 @@ class UserCreateSerializer(serializers.ModelSerializer):
         )
         user.save()
         request = self.context.get('request')
-        send_reset_email(user, request)
+        send_email_with_template(
+            subject='Activate your Humanity Cash Admin account',
+            email=user.email,
+            template_to_load='emails/admin_user_email.html',
+            context={
+                "username": user.username,
+                "set_password_link": generate_reset_url(user, request),
+            }
+        )
         return user
 
 
@@ -62,3 +71,12 @@ class UserActivityListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserActivity
         fields = ['id', 'login', 'session_key']
+
+
+class UserActivityAdminListSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')
+    email = serializers.CharField(source='user.email')
+
+    class Meta:
+        model = UserActivity
+        fields = ['id', 'login', 'session_key', 'username', 'email']
