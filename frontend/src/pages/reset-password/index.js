@@ -54,7 +54,7 @@ function ResetPassword() {
         if (result.errors.token) {
           showMessage(result.errors.token)
         } else {
-          showMessage('Validation errors found')
+          showMessage(result.errors?.errors)
           formikRef.current.setErrors(result.errors)
         }
       } else {
