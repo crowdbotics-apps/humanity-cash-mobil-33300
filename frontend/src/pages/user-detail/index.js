@@ -134,13 +134,30 @@ const UserDetail = () => {
             <MDTypography color={'success'} sx={{fontWeight: 500}} fontSize={14}>{selectedItem?.balance}</MDTypography>
           </Grid>
           <Grid item xs={6} md={2}>
-            <MDTypography color={'gray'} sx={{fontWeight: 500}} fontSize={14}>ADDRESS</MDTypography>
-            <MDTypography color={'dark'} sx={{fontWeight: 500}} fontSize={14}>{selectedItem?.address}</MDTypography>
-          </Grid>
-          <Grid item xs={6} md={2}>
             <MDTypography color={'gray'} sx={{fontWeight: 500}} fontSize={14}>EMAIL</MDTypography>
             <MDTypography color={'dark'} sx={{fontWeight: 500}} fontSize={14}>{selectedItem?.email}</MDTypography>
           </Grid>
+          {selectedItem?.profile?.city && <Grid item xs={6} md={2}>
+            <MDTypography color={'gray'} sx={{fontWeight: 500}} fontSize={14}>CITY</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 500}} fontSize={14}>{selectedItem?.profile?.city}</MDTypography>
+          </Grid>}
+          {selectedItem?.profile?.state && <Grid item xs={6} md={2}>
+            <MDTypography color={'gray'} sx={{fontWeight: 500}} fontSize={14}>STATE</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 500}} fontSize={14}>{selectedItem?.profile?.state}</MDTypography>
+          </Grid>}
+          {selectedItem?.profile?.address_1 && <Grid item xs={6} md={2}>
+            <MDTypography color={'gray'} sx={{fontWeight: 500}} fontSize={14}>ADDRESS LINE 1</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 500}} fontSize={14}>{selectedItem?.profile?.address_1}</MDTypography>
+          </Grid>}
+          {selectedItem?.profile?.address_2 && <Grid item xs={6} md={2}>
+            <MDTypography color={'gray'} sx={{fontWeight: 500}} fontSize={14}>ADDRESS LINE 2</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 500}} fontSize={14}>{selectedItem?.profile?.address_2}</MDTypography>
+          </Grid>}
+          {selectedItem?.profile?.zip_code && <Grid item xs={6} md={2}>
+            <MDTypography color={'gray'} sx={{fontWeight: 500}} fontSize={14}>ZIP CODE</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 500}} fontSize={14}>{selectedItem?.profile?.zip_code}</MDTypography>
+          </Grid>}
+
         </Grid>
       </MDBox> }
       {selectedItem && (userDetailSection === "ach" || userDetailSection === "blockchain") && <>

@@ -42,6 +42,7 @@ import SidenavList from "./SidenavList";
 import IconButton from "@mui/material/IconButton";
 import {useStores} from "../../models";
 import {observer} from "mobx-react";
+import {PERMISSIONS} from "../../services/constants";
 
 
 const logoMini = require("../../assets/images/logo-mini.png")
@@ -172,8 +173,12 @@ function Sidenav({color, brand, brandName, routes, ...rest}) {
 
   // Render all the routes from the routes.js (All the visible items on the Sidenav)
   const renderRoutes = routes.map(
-    ({type, name, icon, title, collapse, noCollapse, key, href, route}) => {
+    ({type, name, icon, title, collapse, noCollapse, key, href, route, programManager}) => {
       let returnValue;
+
+      if (!loginStore.getPermission(PERMISSIONS.SUPERVISOR) && programManager) {
+        return null
+      }
 
       if (type === "collapse") {
         if (href) {

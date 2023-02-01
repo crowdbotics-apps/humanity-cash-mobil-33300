@@ -72,6 +72,7 @@ const routes = [
     component: <Services/>,
     icon: <DashboardIcon />,
     noCollapse: true,
+    programManager: false,
   },
   {
     type: "collapse",
@@ -81,6 +82,7 @@ const routes = [
     component: <ReconciliationActionsPage/>,
     icon: <ReconciliationIcon/>,
     noCollapse: true,
+    programManager: false,
   },
   {
     type: "collapse",
@@ -90,6 +92,7 @@ const routes = [
     component: <TransactionStatus/>,
     icon: <CashoutIcon/>,
     noCollapse: true,
+    programManager: false,
   },
   {
     type: "collapse",
@@ -99,6 +102,7 @@ const routes = [
     component: <ACHTransactions/>,
     icon: <CarsRemoveIcon/>,
     noCollapse: true,
+    programManager: false,
   },
   {
     type: "collapse",
@@ -108,6 +112,7 @@ const routes = [
     component: <BlockchainTransactions/>,
     icon: <BlockChainIcon/>,
     noCollapse: true,
+    programManager: false,
   },
   {
     type: "collapse",
@@ -117,6 +122,7 @@ const routes = [
     component: <Users/>,
     icon: <UsersIcons />,
     noCollapse: true,
+    programManager: false,
   },
   {
     type: "collapse",
@@ -126,6 +132,7 @@ const routes = [
     component: <SmartContracts/>,
     icon: <NoteIcon/>,
     noCollapse: true,
+    programManager: true,
   },
   {
     type: "collapse",
@@ -135,6 +142,7 @@ const routes = [
     component: <ContentsPage/>,
     icon: <DocumentIcon/>,
     noCollapse: true,
+    programManager: false,
   },
   {
     type: "collapse",
@@ -144,6 +152,7 @@ const routes = [
     component: <AdminPortal/>,
     icon: <SubtAdminIcon/>,
     noCollapse: true,
+    programManager: true,
   },
   {
     type: "collapse",
@@ -153,6 +162,7 @@ const routes = [
     component: <AdminWalletControl/>,
     icon: <WalletIcon/>,
     noCollapse: true,
+    programManager: false,
   },
   {
     type: "collapse",
@@ -162,6 +172,7 @@ const routes = [
     component: <UserActivities/>,
     icon: <UsersIcons/>,
     noCollapse: true,
+    programManager: false,
   },
   {
     type: "collapse",
@@ -171,6 +182,7 @@ const routes = [
     component: <Logout/>,
     icon: <LogoutIcon/>,
     noCollapse: true,
+    programManager: false,
   },
 ];
 

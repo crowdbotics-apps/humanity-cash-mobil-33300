@@ -146,9 +146,13 @@ const AdminPortal = () => {
     const group = groups.find(it => it.id === item.group_raw)
     const role = allRoles.find(it => it.id === item.role_raw)
     const user = {...item, group, role}
-    // setSelectedGroup(group)
     setSelectedItem(user)
     setShowUserFormModal(true)
+    if (item.group_raw === 'BANK') {
+      setRoles(rolesBank)
+    } else {
+      setRoles(rolesManager)
+    }
   }
 
   const setDetailToShow = (item) => {
