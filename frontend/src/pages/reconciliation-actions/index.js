@@ -69,7 +69,7 @@ const ReconciliationActionsPage = () => {
   const [ShowAmountModal, setShowAmountModal] = useState(false)
   const [ShowConfirmationModal, setShowConfirmationModal] = useState(false)
 
-  const [CurrentDocumentation, setCurrentDocumentation] = useState("Placeholder")
+  const [CurrentDocumentation, setCurrentDocumentation] = useState("")
   const [CurrentAmount, setCurrentAmount] = useState(0)
   const [CurrentRecipient, setCurrentRecipient] = useState(null)
   const [supervisorCredential, setSupervisorCredential] = useState(null)
@@ -84,11 +84,11 @@ const ReconciliationActionsPage = () => {
 
 
   const resetData = () => {
-    setCurrentDocumentation("Placeholder")
+    setCurrentDocumentation("")
     setCurrentAmount(0)
     setCurrentRecipient(null)
     setSupervisorCredential("")
-    setLoading(true)
+    setLoading(false)
   }
 
   const getWalletBalances = () => {
@@ -200,7 +200,7 @@ const ReconciliationActionsPage = () => {
       subTitle: "Enter an amount to be minted to the Positive Mint Adjustment Account Wallet.",
       next: onReconcileAndBurn,
       type: 'mint_to_positive',
-      confirmTitle: "Confirm Burn",
+      confirmTitle: "Confirm Mint",
       selectRecipient: false
     },
     [ReconciliationActions.ReconcileAndTransfer]: {
@@ -227,6 +227,7 @@ const ReconciliationActionsPage = () => {
       label: actions[ReconciliationActions.AddAdjustment].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.AddAdjustment])
+        setCurrentDocumentation(actions[ReconciliationActions.AddAdjustment].title)
         setShowPasswordModal(true)
       },
       disabled: false
@@ -235,6 +236,7 @@ const ReconciliationActionsPage = () => {
       label: actions[ReconciliationActions.ReconcileAndBurn].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.ReconcileAndBurn])
+        setCurrentDocumentation(actions[ReconciliationActions.ReconcileAndBurn].title)
         setShowPasswordModal(true)
       },
       disabled: false
@@ -243,6 +245,7 @@ const ReconciliationActionsPage = () => {
       label: actions[ReconciliationActions.RevertAdjustment].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.RevertAdjustment])
+        setCurrentDocumentation(actions[ReconciliationActions.RevertAdjustment].title)
         setShowPasswordModal(true)
       },
       disabled: false
@@ -253,6 +256,7 @@ const ReconciliationActionsPage = () => {
       label: actions[ReconciliationActions.AddAdjustmentAndMint].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.AddAdjustmentAndMint])
+        setCurrentDocumentation(actions[ReconciliationActions.AddAdjustmentAndMint].title)
         setShowPasswordModal(true)
       },
       disabled: false
@@ -261,6 +265,7 @@ const ReconciliationActionsPage = () => {
       label: actions[ReconciliationActions.ReconcileAndTransfer].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.ReconcileAndTransfer])
+        setCurrentDocumentation(actions[ReconciliationActions.ReconcileAndTransfer].title)
         setShowPasswordModal(true)
       },
       disabled: false
@@ -269,6 +274,7 @@ const ReconciliationActionsPage = () => {
       label: actions[ReconciliationActions.RevertMint].title,
       action: () => {
         setCurrentAction(actions[ReconciliationActions.RevertMint])
+        setCurrentDocumentation(actions[ReconciliationActions.RevertMint].title)
         setShowPasswordModal(true)
       },
       disabled: false

@@ -96,6 +96,24 @@ export const LoginStoreModel = types
         return true
       }
       return false
+    },
+    getPermissionInit(permissionRequired: string, user: any) {
+      if (user.is_superuser) {
+        return true
+      }
+      if (self.role === PERMISSIONS.SUPER_ADMIN) {
+        return true
+      }
+      if (permissionRequired === PERMISSIONS.ADMIN && user.role === permissionRequired) {
+        return true
+      }
+      if (permissionRequired === PERMISSIONS.SUPERVISOR && (user.role === permissionRequired || user.role === PERMISSIONS.ADMIN)) {
+        return true
+      }
+      if (permissionRequired === PERMISSIONS.EMPLOYEE && (user.role === permissionRequired || user.role === PERMISSIONS.ADMIN || user.role === PERMISSIONS.SUPERVISOR)) {
+        return true
+      }
+      return false
     }
   }))
 
