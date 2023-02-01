@@ -46,6 +46,17 @@ class TransactionSerializer(serializers.ModelSerializer):
             address = obj.counterpart_merchant.crypto_wallet_id
         return address
 
+    def validate_params(self, data):
+        show_username = False
+        password_is_valid = False
+        if 'show_username' in data.keys():
+            show_username = data['show_username']
+        if 'password' in data.keys():
+            password_is_valid = self.context['request'].user.check_password(data['password'])
+            if show_username and not password_is_valid:
+                raise ValidationError("You are not allowed to see usernames", code=status.HTTP_401_UNAUTHORIZED)
+        return show_username, password_is_valid
+
     def get_from_username(self, obj):
         data = self.context['request'].data
         username = '-'
@@ -60,18 +71,6 @@ class TransactionSerializer(serializers.ModelSerializer):
             if obj.merchant_id:
                 username = obj.merchant.user.username
         return username
-
-    def validate_params(self, data):
-        show_username = False
-        password_is_valid = False
-        if 'show_username' in data.keys():
-            show_username = data['show_username']
-        if 'password' in data.keys():
-            password_is_valid = self.context['request'].user.check_password(data['password'])
-            if show_username and not password_is_valid:
-                raise ValidationError("You are not allowed to see usernames", code=status.HTTP_401_UNAUTHORIZED)
-        return show_username, password_is_valid
-
 
     def get_to_username(self, obj):
         data = self.context['request'].data

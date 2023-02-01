@@ -30,6 +30,8 @@ import DashboardNavbar from "../../Navbars/DashboardNavbar";
 import {useStores} from "../../../models";
 import {observer} from "mobx-react";
 import {ProgressLoading} from "../../ProgressLoading";
+import {PERMISSIONS, ROUTES} from "../../../services/constants";
+import routes from "routes";
 
 function DashboardLayout({
                            children,
@@ -53,6 +55,15 @@ function DashboardLayout({
   useEffect(() => {
     setLayout(dispatch, "dashboard");
   }, [pathname]);
+
+  // useEffect(() => {
+  //   const route = routes.find(route => route.route === pathname)
+  //   console.log('route')
+  //   if (!loginStore.getPermission(PERMISSIONS.SUPERVISOR) && route?.programManager) {
+  //     loginStore.reset()
+  //   }
+  //
+  // }, [])
 
   const renderMainContent = (children) => {
     return (

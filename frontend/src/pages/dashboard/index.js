@@ -47,11 +47,11 @@ const Dashboard = () => {
 
       let col_children = [
         { date_title: <MDBox style={{ color: "var(--green)", marginLeft: 20, height: 40, alignItems: 'center', display: 'flex' }}>
-          Total Deposits settled to date</MDBox> },
+          Total Mints settled to date</MDBox> },
         { date_title: <MDBox style={{ color: "var(--blue)", marginLeft: 20, height: 40, alignItems: 'center', display: 'flex' }}>
-          Total Withdrawals settled to date</MDBox> },
+          Total Burns settled to date</MDBox> },
         { date_title: <MDBox style={{ color: "var(--mustard)", marginLeft: 20, height: 40, alignItems: 'center', display: 'flex' }}>
-          Net Deposits settled</MDBox> }
+          Net Mints settled</MDBox> }
       ]
       let totalBanksCredit = 0
       let totalBanksDebit = 0

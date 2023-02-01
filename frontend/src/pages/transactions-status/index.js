@@ -146,7 +146,7 @@ const TransactionStatus = () => {
         onClick={() => setTransactionStatus('Approved')}
         sx={{borderBottom: transactionStatus === "Approved" ? '2px solid #3B88B6' : '2px solid #ffffff', borderRadius: 0, minWidth: 300, fontWeight: 600, marginTop: 3}}
       >
-        APPROVED
+        FAILED
       </MDButton>
       <MDButton
         color={transactionStatus === "Executed" ? "primary" : "gray"}
