@@ -284,9 +284,13 @@ class SendQRView(AuthenticatedAPIView):
             imgObj = stream.read()
             banner_image = MIMEImage(imgObj)
             banner_image.add_header('Content-ID', '<qr_code.png>')
+            if data['qr_data']['to_is_consumer']:
+                username = Consumer.objects.get(id=data['qr_data']['to']).user.username
+            else:
+                username = Merchant.objects.get(id=data['qr_data']['to']).business_name
             send_email_with_template_attach_element(
                 context={
-                    "username": "Username",
+                    "username": username,
                     "detail": "Detail text",
                     "qr_image": banner_image
                 },

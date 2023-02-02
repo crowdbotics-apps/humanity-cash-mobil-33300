@@ -39,7 +39,7 @@ class BusinessDetailsSerializer(serializers.ModelSerializer):
         model = Merchant
         fields = ['id', 'business_name', 'business_story', 'background_picture',
                   'address_1', 'address_2', 'zip_code', 'city', 'state', 'website',
-                  'instagram', 'facebook', 'twitter', 'coupons']
+                  'instagram', 'facebook', 'twitter', 'coupons', 'phone_number']
 
 
 class SendQrCodeSerializer(serializers.Serializer):

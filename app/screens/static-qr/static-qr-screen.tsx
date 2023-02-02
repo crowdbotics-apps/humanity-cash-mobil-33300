@@ -63,13 +63,13 @@ export const StaticQRScreen = observer(function StaticQRScreen() {
             <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Static QR</Text>
             <View style={styles.LINE} />
             <Text style={styles.STEP_SUB_TITLE}>{`
-You can accept BerkShares without using the app at your cash register by displaying your QR code at the cash register. This QR code contains only your BerkShares wallet address and not transaction specific data. 
+You can accept Currency without using the app at your cash register by displaying your QR code at the cash register. This QR code contains only your Currency wallet address and not transaction specific data. 
 
 When you use the static QR code to receive payments, your customer must enter the correct amount. Be sure to check that the customer has entered the correct amount and that the transaction was successful. Your customer should have a transaction receipt once completed. 
 
-You can have customers scan your static QR code as a backup in case your BerkShares app or device is not working. 
+You can have customers scan your static QR code as a backup in case your Currency app or device is not working. 
 
-If you encounter any issue, don’t hesitate to contact us via info@berkshares.org. 
+If you encounter any issue, don’t hesitate to contact us via info@humanitycash.org. 
 `}</Text>
 
 
