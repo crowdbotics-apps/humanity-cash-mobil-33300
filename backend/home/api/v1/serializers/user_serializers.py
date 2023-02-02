@@ -17,7 +17,7 @@ from websockets.exceptions import ConnectionClosedOK
 from celo_humanity.humanity_contract_helpers import NoWalletException
 from home.api.v1.serializers.ach_transaction_serializers import ACHTransactionSerializer
 from home.api.v1.serializers.transaction_serializers import TransactionSerializer
-from users.models import Consumer, DwollaUser
+from users.models import Consumer, DwollaUser, Merchant
 
 User = get_user_model()
 logger = logging.getLogger('django')
@@ -122,47 +122,74 @@ class DwollaUserDetailVerifySerializer(serializers.Serializer):
         return value
 
 
+class ConsumerDetailUserSerializer(serializers.ModelSerializer):
+    state = serializers.CharField(source='state.name_ascii')
+
+    class Meta:
+        model = Consumer
+        fields = ['id', 'address_1', 'address_2', 'city', 'state', 'zip_code']
+
+
+class MerchantDetailUserSerializer(serializers.ModelSerializer):
+    state = serializers.CharField(source='state.name_ascii')
+
+    class Meta:
+        model = Merchant
+        fields = ['id', 'address_1', 'address_2', 'city', 'state', 'zip_code']
 
 class DwollaUserDetailSerializer(serializers.ModelSerializer):
     balance = serializers.SerializerMethodField()
     blockchain_transactions = serializers.SerializerMethodField()
     ach_transactions = serializers.SerializerMethodField()
     full_name = serializers.SerializerMethodField()
+    profile = serializers.SerializerMethodField()
 
     class Meta:
         model = DwollaUser
         fields = ['id', 'balance', 'name', 'address', 'email', 'dwolla_id', 'blockchain_transactions','ach_transactions',
-                  'crypto_wallet_id', 'last_login', 'date_joined', 'account_type', 'full_name']
+                  'crypto_wallet_id', 'last_login', 'date_joined', 'account_type', 'profile', 'full_name']
 
     def get_balance(self, obj):
         try:
+            user_type = self.context.get('request').data['type']
             user = User.objects.get(pk=obj.pk)
-            if hasattr(user, 'merchant'):
+            if hasattr(user, 'merchant') and user_type == 'BUSSINES':
                 return user.merchant.balance
-
-            if hasattr(user, 'consumer'):
+            if hasattr(user, 'consumer') and user_type == 'PERSONAL':
                 return user.consumer.balance
         except (TimeoutError, NoWalletException) as error:
             return '-'
 
     def get_blockchain_transactions(self, obj):
+        user_type = self.context.get('request').data['type']
         user = User.objects.get(pk=obj.pk)
         transactions = []
-        if hasattr(user, 'merchant'):
+        if hasattr(user, 'merchant') and user_type == 'BUSSINES':
             transactions = user.merchant.transactions.all()
-        if hasattr(user, 'consumer'):
+        if hasattr(user, 'consumer') and user_type == 'PERSONAL':
             transactions = user.consumer.transactions.all()
         return TransactionSerializer(instance=transactions, many=True, context={'request': self.context['request']}).data
 
     def get_ach_transactions(self, obj):
+        user_type = self.context.get('request').data['type']
         user = User.objects.get(pk=obj.pk)
         transactions = []
-        if hasattr(user, 'merchant'):
+        if hasattr(user, 'merchant') and user_type == 'BUSSINES':
             transactions = user.merchant.ach_transactions.all()
-        if hasattr(user, 'consumer'):
+        if hasattr(user, 'consumer') and user_type == 'PERSONAL':
             transactions = user.consumer.ach_transactions.all()
         return ACHTransactionSerializer(instance=transactions, many=True, context={'request': self.context['request']}).data
 
     def get_full_name(self, obj):
         user = User.objects.get(pk=obj.pk)
         return user.get_full_name()
+
+    def get_profile(self, obj):
+        user_type = self.context.get('request').data['type']
+        user = User.objects.get(pk=obj.pk)
+        if hasattr(user, 'merchant') and user_type == 'BUSSINES':
+            return MerchantDetailUserSerializer(user.merchant).data
+
+        if hasattr(user, 'consumer') and user_type == 'PERSONAL':
+            return ConsumerDetailUserSerializer(user.consumer).data
+        return None

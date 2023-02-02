@@ -47,7 +47,7 @@ const dateBox = (date) => {
 export const renderTableRow = (item, onAction ) => {
   item.transaction_id = (hashBox(item.transaction_id))
   item.from_username = (hashBox(item.from_username))
-  item.to_username = (hashBox(item.to_username, true))
+  item.to_username = (hashBox(item.to_username, item.to_username !== '-'))
   item.from_address = (hashBox(item.from_address))
   item.to_address = (hashBox(item.to_address))
   item.created = (dateBox(item.created))
