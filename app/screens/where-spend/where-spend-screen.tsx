@@ -156,12 +156,14 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
     return (
       loginStore?.getBusiness?.map(category => (
         Object.keys(category).map((i, key) => {
+            const dataFiltered = getDataFiltered(category[i], ['business_name'], Search) || []
+            if (dataFiltered.length > 0) {
           return (
             <View style={styles.INDUSTRY_CONTAINER} key={key + '_industry'}>
               <Text style={styles.INDUSTRY_TITLE}>{i}</Text>
               <View style={styles.LINE} />
               <ScrollView horizontal style={styles.BUSINESS_CONTAINER}>
-                {getDataFiltered(category[i], ['business_name'], Search).map((b, key2) => (
+                {dataFiltered.map((b, key2) => (
                   <TouchableOpacity onPress={() => [getBusinessDetail(b.id)]} style={styles.BUSINESS} key={key + '' + key2}>
                     <Image
                       source={{ uri: b.background_picture }}
@@ -174,6 +176,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
               </ScrollView>
             </View>
           )
+        }
         })
       ))
     )
@@ -348,10 +351,11 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                       /> : null
                     }
                     <View style={styles.SEE_ON_MAP_LABEL}>
-
+                        {console.log(' ====>>>>>> ', JSON.stringify(SelectedDetail, null ,2))}
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>
-                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.zip_code}</Text>
+                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.city + ' ' + SelectedDetail?.zip_code}</Text>
+                        <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.phone_number}</Text>
                     </View>
                   </View>
                 </View>

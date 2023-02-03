@@ -206,7 +206,7 @@ export const HomeScreen = observer(function HomeScreen() {
 				<View style={styles.ROOT_MODAL}>
 					<View style={[styles.MODAL_RETURN_CONTENT, { backgroundColor: loginStore.getAccountColor }]}>
 						<Text style={[styles.STEP_TITLE_BLACK, { color: 'white' }]}>Scan the customer’s return receipt QR code.</Text>
-						<Text style={styles.STEP_SUB_TITLE_MODAL}>The customer needs to provide the transaction receipt, and select “Make a Return” in order to generate a QR Code. Scan this QR code in order to the refund BerkShares to the customer.</Text>
+						<Text style={styles.STEP_SUB_TITLE_MODAL}>The customer needs to provide the transaction receipt, and select “Make a Return” in order to generate a QR Code. Scan this QR code in order to make a refund to the customer.</Text>
 						<TouchableOpacity
 							style={[styles.MODAL_BUTTON, { backgroundColor: 'white' }]}
 							onPress={() => [
@@ -221,12 +221,26 @@ export const HomeScreen = observer(function HomeScreen() {
 		</Modal>
 	)
 
+	const dateFormat = (date) => {
+		let dateFormated = ''
+		if (date && date.split('-') && date.split('T')) {
+			const d = date.split('T')
+			const t = d[0].split('-')
+			dateFormated = `${t[2]}/${t[1]}/${t[0]}`
+		}
+		return dateFormated
+	}
+
 	const renderNews = () =>
 		loginStore.getEvents.map((n, key) =>
 			<View key={key + '_new'} style={styles.NEWS_CONTAINER}>
 				<View style={styles.NEWS_HEADER_CONTAINER}>
 					<Text style={styles.NEWS_TAG}>{n.tag}</Text>
 					<Text style={styles.NEWS_TAG}>{DateFormat(n.start_date)}</Text>
+				</View>
+				<View style={styles.DateStyle}>
+					<Text style={styles.MarginTextStyle}>from: {dateFormat(n.start_date)}</Text>
+					<Text style={styles.MarginTextStyle}>To: {dateFormat(n.end_date)}</Text>
 				</View>
 				<Text style={styles.NEWS_TITLE}>{n.title}</Text>
 				<Text style={styles.NEWS_BODY}>{n.description}</Text>
@@ -280,7 +294,9 @@ export const HomeScreen = observer(function HomeScreen() {
 					{(!loginStore.getAllData.first_name && loginStore.getSelectedAccount === 'merchant') &&
 						<TouchableOpacity
 							style={[styles.WARNING_CONTAINER, { marginBottom: 10 }]}
-							onPress={() => navigation.navigate('signupProfile', { profile_type: profileTypes[0] })}
+							onPress={() => [
+								navigation.navigate('signupProfile', { profile_type: profileTypes[0] }),
+							]}
 						>
 							<View style={styles.ICON_WARNING_CONTAINER}>
 								<Text style={styles.ICON_WARNING}>!</Text>
@@ -316,6 +332,9 @@ export const HomeScreen = observer(function HomeScreen() {
 								style={styles.COUPON_CONTAINER}
 								onPress={() => openModal(c)}
 							>
+								<Text style={styles.COUPON_MERCHANT}>
+									{c?.merchant?.business_name}
+								</Text>
 								<Image
 									source={{ uri: c.promo_image }}
 									resizeMode='cover'

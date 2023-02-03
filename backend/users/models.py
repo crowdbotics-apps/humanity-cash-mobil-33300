@@ -266,6 +266,7 @@ class Coupon(models.Model):
     class Meta:
         ordering = ['-id']
 
+
 class ConsumerCoupon(models.Model):
     consumer = models.ForeignKey(Consumer, on_delete=models.CASCADE, related_name='consumer_coupons')
     coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, related_name='consumer_coupons')
