@@ -2,7 +2,16 @@ import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, ConnectBankModal } from "../../components";
-import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView } from "react-native";
+import {
+	ActivityIndicator,
+	TextInput,
+	TouchableOpacity,
+	View,
+	Modal,
+	Platform,
+	KeyboardAvoidingView,
+	Alert
+} from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import { ButtonIcon } from "../../components/button-icon/button-icon";
 import styles from './load-wallet-style';
@@ -12,6 +21,19 @@ import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import Ionicons from "react-native-vector-icons/Ionicons"
 
+import TouchID from 'react-native-touch-id'
+
+const optionalConfigObject = {
+	title: 'Authentication Required', // Android
+	imageColor: '#e00606', // Android
+	imageErrorColor: '#ff0000', // Android
+	sensorDescription: 'Touch sensor', // Android
+	sensorErrorDescription: 'Failed', // Android
+	cancelText: 'Cancel', // Android
+	fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+	unifiedErrors: false, // use unified error messages (default false)
+	passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
+};
 const maxAmount = 2000
 
 export const LoadWalletScreen = observer(function LoadWalletScreen() {
@@ -41,6 +63,22 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 			else setShowBankModal(false)
 		}
 	}, [isFocused])
+
+	const pressHandler = () => {
+		if (loginStore.ProfileData.allow_touch_id) {
+			TouchID.authenticate('to check the user', optionalConfigObject)
+				.then(success => {
+					postDeposit()
+					setShowPassModal(false)
+				})
+				.catch(error => {
+					Alert.alert('Authentication Failed');
+				});
+		} else {
+			postDeposit()
+			setShowPassModal(false)
+		}
+	}
 
 	const postDeposit = () => {
 		setTransactionConfirm(true)
@@ -201,7 +239,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 							<Text style={styles.STEP_SUB_TITLE_MODAL}>{`You will load up C$ ${Amount} to your wallet.`}</Text>
 							<TouchableOpacity
 								style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
-								onPress={() => [postDeposit(), setShowPassModal(false)]}
+								onPress={() => pressHandler()}
 							>
 								<Text style={styles.SUBMIT_BUTTON_LABEL}>Confirm</Text>
 							</TouchableOpacity>

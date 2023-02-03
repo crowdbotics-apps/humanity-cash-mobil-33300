@@ -234,7 +234,6 @@ export const HomeScreen = observer(function HomeScreen() {
 	const renderNews = () =>
 		loginStore.getEvents.map((n, key) =>
 			<View key={key + '_new'} style={styles.NEWS_CONTAINER}>
-				{console.log(' ===>>> ', JSON.stringify(n, null, 2))}
 				<View style={styles.NEWS_HEADER_CONTAINER}>
 					<Text style={styles.NEWS_TAG}>{n.tag}</Text>
 					<Text style={styles.NEWS_TAG}>{DateFormat(n.start_date)}</Text>

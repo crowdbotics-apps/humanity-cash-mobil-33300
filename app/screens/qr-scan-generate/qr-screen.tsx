@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
-import { View, TouchableOpacity, Modal, TextInput, Image, Keyboard } from 'react-native';
+import {View, TouchableOpacity, Modal, TextInput, Image, Keyboard, Alert} from 'react-native';
 import {
   Text,
   Button,
@@ -18,6 +18,20 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import QRCode from 'react-native-qrcode-svg'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { BaseConfirmModal as UserModal } from '../../layouts'
+
+import TouchID from 'react-native-touch-id'
+
+const optionalConfigObject = {
+  title: 'Authentication Required', // Android
+  imageColor: '#e00606', // Android
+  imageErrorColor: '#ff0000', // Android
+  sensorDescription: 'Touch sensor', // Android
+  sensorErrorDescription: 'Failed', // Android
+  cancelText: 'Cancel', // Android
+  fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+  unifiedErrors: false, // use unified error messages (default false)
+  passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
+};
 
 // steps = ['tabs', 'amount', 'pass', 'finish']
 const maxAmount = 2000
@@ -49,6 +63,34 @@ export const QRScreen = observer(function QRScreen(props: any) {
   const [ShowConfirmationModal, setShowConfirmationModal] = useState(false)
 
   const [AmountError, setAmountError] = useState(false)
+
+  const pressHandler = (round) => {
+    if (loginStore.ProfileData.allow_touch_id) {
+      TouchID.authenticate('tto check the user', optionalConfigObject)
+          .then(success => {
+            if (round) {
+              setShowConfirmationModal(false)
+              setAmount(RoundedAmount.toString())
+              SkipPass ? transferCurrency() : setStep('pass')
+            } else {
+              setShowConfirmationModal(false)
+              SkipPass ? transferCurrency() : setStep('pass')
+            }
+          })
+          .catch(error => {
+            Alert.alert('Authentication Failed');
+          });
+    } else {
+      if (round) {
+        setShowConfirmationModal(false)
+        setAmount(RoundedAmount.toString())
+        SkipPass ? transferCurrency() : setStep('pass')
+      } else {
+        setShowConfirmationModal(false)
+        SkipPass ? transferCurrency() : setStep('pass')
+      }
+    }
+  }
 
   const transferCurrency = () => {
     if (!QR) return
@@ -124,19 +166,12 @@ export const QRScreen = observer(function QRScreen(props: any) {
           buttonStyle={[styles.CONFIRM_MODAL_PAY_BUTTON, { borderColor: loginStore.getAccountColor }]}
           buttonLabel={`Pay C$ ${Amount} `}
           buttonLabelStyle={styles.COLOR_BLACK}
-          onPress={() => [
-            setShowConfirmationModal(false),
-            SkipPass ? transferCurrency() : setStep('pass')
-          ]}
+          onPress={() => pressHandler(false)}
         />
         <Button
           buttonStyle={[{ backgroundColor: loginStore.getAccountColor }, styles.CONFIRM_MODAL_PAY_BUTTON_ROUND]}
           buttonLabel={`Round up to C$ ${RoundedAmount}`}
-          onPress={() => {
-            setShowConfirmationModal(false)
-            setAmount(RoundedAmount.toString())
-            SkipPass ? transferCurrency() : setStep('pass')
-          }}
+          onPress={() => pressHandler(true)}
         />
       </View>
       <Text style={styles.CONFIRM_MODAL_SECONDARY_TEXT}>THE ROUND UP IS A NON REFUNDABLE DONATION</Text>
