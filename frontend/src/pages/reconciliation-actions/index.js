@@ -10,6 +10,7 @@ import ConfirmDialogInputModal from "../../components/ConfirmDialogInputModal";
 import MDInput from "../../components/MDInput";
 import {Autocomplete, CircularProgress, TextField} from "@mui/material";
 import {Search} from "@mui/icons-material";
+import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 
 const ReconciliationActions = {
   AddAdjustment: 'AddAdjustment',
@@ -91,11 +92,32 @@ const ReconciliationActionsPage = () => {
     setLoading(false)
   }
 
+  const link_or_number = (amount, url) => {
+    if (url){
+      return (
+          <div style={{fontWeight: 500, fontSize: "14px"}}>
+            <a href={url} target={'blank'}>{money_fmt(amount)}</a>
+          </div>
+      )
+    } else {
+      return (
+          <div style={{fontWeight: 500, fontSize: "14px"}}>
+            {money_fmt(amount)}
+          </div>
+      )
+    }
+  }
+
   const getWalletBalances = () => {
     setLoading(true)
     api.getWalletBalances().then((result) => {
       if (result.kind === "ok") {
-        let {count, results, humanity, reserve, positive, negative} = result.data
+        let {
+          count, results, humanity,
+          reserve, positive, negative,
+          reserve_link, positive_link, negative_link
+        } = result.data
+
         const tmp = {...dataTableModel}
 
         results = [{
@@ -107,9 +129,9 @@ const ReconciliationActionsPage = () => {
             display: 'flex'
           }}>Today's Date</div>,
           // humanity: <div style={{ fontWeight: 500, fontSize: "14px" }}>{money_fmt(humanity)}</div>,
-          reserve: <div style={{fontWeight: 500, fontSize: "14px"}}>{money_fmt(reserve)}</div>,
-          negative: <div style={{fontWeight: 500, fontSize: "14px"}}>{money_fmt(negative)}</div>,
-          positive: <div style={{fontWeight: 500, fontSize: "14px"}}>{money_fmt(positive)}</div>,
+          reserve: link_or_number(reserve, reserve_link),
+          negative: link_or_number(negative, negative_link),
+          positive: link_or_number(positive, positive_link),
         }]
 
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
@@ -127,10 +149,16 @@ const ReconciliationActionsPage = () => {
     api.addAdjustment(data)
       .then((result) => {
         if (result.kind === "ok") {
-          showMessage('Action executed successfully', 'success')
+          showMessage('Action created successfully, check transaction tab for signoff and status', 'success')
+
         } else if (result.kind === "bad-data") {
-          const key = Object.keys(result?.errors)[0]
-          const msg = `${key}: ${result?.errors?.[key][0]}`
+          let msg = ''
+          if (!Array.isArray(result?.errors)) {
+            const key = Object.keys(result?.errors)[0]
+            msg = `${key}: ${result?.errors?.[key][0]}`
+          }else{
+            msg = result?.errors[0] || result
+          }
           showMessage(msg)
         }
       })
@@ -332,10 +360,11 @@ const ReconciliationActionsPage = () => {
       data.search = selectRecipientRef.current.value
     }
     api.getComplianceRecipient(data).then(res => {
+      console.log(res)
       if (res.kind === 'ok') {
-        setRecipientList(res.data.results)
+        setRecipientList(res.data)
       } else {
-        console.log("Error, please put the corresponding alert message")
+        showMessage('Error getting recipients', 'error')
       }
     }).finally(() => setLoadingRecipient(false))
   }
@@ -398,7 +427,7 @@ const ReconciliationActionsPage = () => {
             onClose={() => {
               setOpenRecipientList(false);
             }}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
+            isOptionEqualToValue={(option, value) => (option.id === value.id && option.is_consumer === value.is_consumer)}
             getOptionLabel={(option) => option.label}
             options={RecipientList}
             loading={loading}
@@ -473,15 +502,17 @@ const ReconciliationActionsPage = () => {
       </ConfirmDialogInputModal>
       {/*  */}
       {/* CONFIRMATION MODAL */}
-      <ConfirmDialogInputModal
+      <ConfirmDialogModal
         title={CurrentAction.confirmTitle}
         description={CurrentAction.selectRecipient ? `${money_fmt(Amount)} to ${CurrentRecipient?.label} wallet address ${CurrentRecipient?.crypto_wallet_id}` : `${money_fmt(Amount)}`}
         open={ShowConfirmationModal}
+        confirmText={'Confirm'}
+        cancelText={'Cancel'}
         handleClose={() => setShowConfirmationModal(false)}
         handleConfirm={onReconciliationConfirm}
       >
 
-      </ConfirmDialogInputModal>
+      </ConfirmDialogModal>
       {/*  */}
     </DashboardLayout>
   )
