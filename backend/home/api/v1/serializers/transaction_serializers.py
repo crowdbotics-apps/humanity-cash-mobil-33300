@@ -1,8 +1,11 @@
+from json import JSONDecodeError
+
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 # from rest_auth.serializers import PasswordResetSerializer
 from rest_framework.exceptions import ValidationError
 
+from celo_humanity.humanity_contract_helpers import uid_to_wallet
 from celo_humanity.models import Transaction
 import json
 from rest_framework import status
@@ -31,20 +34,18 @@ class TransactionSerializer(serializers.ModelSerializer):
         ]
 
     def get_from_address(self, obj):
-        address = '-'
         if obj.consumer_id:
-            address = obj.consumer.crypto_wallet_id
+            return uid_to_wallet(obj.consumer.crypto_wallet_id)
         if obj.merchant_id:
-            address = obj.merchant.crypto_wallet_id
-        return address
+            return uid_to_wallet(obj.merchant.crypto_wallet_id)
+        return '-'
 
     def get_to_address(self, obj):
-        address = '-'
         if obj.counterpart_consumer_id:
-            address = obj.counterpart_consumer.crypto_wallet_id
+            return uid_to_wallet(obj.counterpart_consumer.crypto_wallet_id)
         if obj.counterpart_merchant_id:
-            address = obj.counterpart_merchant.crypto_wallet_id
-        return address
+            return uid_to_wallet(obj.counterpart_merchant.crypto_wallet_id)
+        return '-'
 
     def validate_params(self, data):
         show_username = False
@@ -62,9 +63,12 @@ class TransactionSerializer(serializers.ModelSerializer):
         username = '-'
         show_username, password_is_valid = self.validate_params(data)
         if not show_username:
-            data = json.loads(obj.receipt)
-            if 'from' in data.keys():
-                username = data['from']
+            try:
+                data = json.loads(obj.receipt)
+                if 'from' in data.keys():
+                    username = data['from']
+            except JSONDecodeError:
+                username = 'unknown'
         elif show_username and password_is_valid:
             if obj.consumer_id:
                 username = obj.consumer.user.username
@@ -78,9 +82,12 @@ class TransactionSerializer(serializers.ModelSerializer):
         show_username, password_is_valid = self.validate_params(data)
 
         if not show_username:
-            receipt = json.loads(obj.receipt)
-            if 'to' in receipt.keys():
-                username = receipt['to']
+            try:
+                receipt = json.loads(obj.receipt)
+                if 'to' in receipt.keys():
+                    username = receipt['to']
+            except JSONDecodeError:
+                username = 'unknown'
         elif show_username and password_is_valid:
             if obj.counterpart_consumer_id:
                 username = obj.counterpart_consumer.user.username
