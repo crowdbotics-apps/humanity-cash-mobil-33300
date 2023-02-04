@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.conf import settings
 from django.db import models
+from rest_framework.exceptions import ValidationError
 
 from base import configs
 from celo_humanity.web3helpers import get_contract, ContractProxy
@@ -215,6 +216,8 @@ class ComplianceAction(models.Model):
 
     amount = models.DecimalField(null=True, decimal_places=2, max_digits=14)
 
+    latest_error = models.TextField(null=True)
+
     class Meta:
         ordering = ['-id']
 
@@ -248,6 +251,33 @@ class ComplianceAction(models.Model):
         self.status = ComplianceAction.Status.approved
         self.approved_time = datetime.now()
         self.save()
+
+    def pre_check_action(self):
+        from celo_humanity.humanity_contract_helpers import get_wallet_balance
+
+        if self.type == ComplianceAction.Type.fund_negative_wallet:
+            if self.amount > get_wallet_balance(configs.RESERVE_WALLET_UID):
+                raise ValidationError('Insufficient Reserve Wallet Balance')
+
+        elif self.type == ComplianceAction.Type.revert_fund_negative_wallet:
+            if self.amount > get_wallet_balance(configs.NEGATIVE_ADJUSTMENT_WALLET_UID):
+                raise ValidationError('Insufficient Negative Adjustment Wallet Balance')
+
+        elif self.type == ComplianceAction.Type.burn_from_negative_wallet:
+            if self.amount > get_wallet_balance(configs.NEGATIVE_ADJUSTMENT_WALLET_UID):
+                raise ValidationError('Insufficient Negative Adjustment Wallet Balance')
+
+        elif self.type == ComplianceAction.Type.mint_to_positive_wallet:
+            pass
+
+        elif self.type == ComplianceAction.Type.revert_mint_to_positive_wallet:
+            if self.amount > get_wallet_balance(configs.POSITIVE_ADJUSTMENT_WALLET_UID):
+                raise ValidationError('Insufficient Positive Adjustment Wallet Balance')
+
+        elif self.type == ComplianceAction.Type.transfer_adjustment_to_user:
+            if self.amount > get_wallet_balance(configs.POSITIVE_ADJUSTMENT_WALLET_UID):
+                raise ValidationError('Insufficient Positive Adjustment Wallet Balance')
+
 
     def execute(self):
         if self.status != ComplianceAction.Status.approved:
@@ -311,11 +341,14 @@ class ComplianceAction(models.Model):
             self.status = ComplianceAction.Status.executed
             self.executed_time = datetime.now()
             self.save()
-        except Exception:
+            return True
+        except Exception as exc:
             # TODO narrow exception
-            # TODO log error and retry on cron
+            self.latest_error = f'{type(exc).__name__}: {exc}'
+            self.executed_time = datetime.now()
+            self.save()
             logger.exception("Error executing compliance action")
-            pass
+        return False
 
 
 class ComplianceActionSignoff(models.Model):
