@@ -1,9 +1,11 @@
+import functools
 from decimal import Decimal
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from base import configs
+from celo_humanity.humanity_contract_helpers import uid_to_wallet
 from celo_humanity.models import ComplianceAction
 from home.models import DatedSystemBalance, BankAccount, DatedSystemBalanceBankBalances
 from users.models import Merchant, Consumer
@@ -32,6 +34,7 @@ class ComplianceActionReadSerializer(serializers.ModelSerializer):
             'created_time',
             'created_by',
             'signable',
+            'latest_error',
         ]
 
     def get_signable(self, instance):
@@ -48,51 +51,51 @@ class ComplianceActionReadSerializer(serializers.ModelSerializer):
 
     def get_action_from(self, instance):
         if instance.type == ComplianceAction.Type.fund_negative_wallet:
-            return f'Reserve wallet ({configs.RESERVE_WALLET_UID})'
+            return f'Reserve wallet ({uid_to_wallet(configs.RESERVE_WALLET_UID)})'
 
         elif instance.type in [
             ComplianceAction.Type.burn_from_negative_wallet,
             ComplianceAction.Type.revert_fund_negative_wallet
         ]:
-            return f'Negative Adjustment Wallet ({configs.NEGATIVE_ADJUSTMENT_WALLET_UID})'
+            return f'Negative Adjustment Wallet ({uid_to_wallet(configs.NEGATIVE_ADJUSTMENT_WALLET_UID)})'
 
         elif instance.type == ComplianceAction.Type.mint_to_positive_wallet:
-            return '---'
+            return '0x0000000000000000000000000000000000000000'
 
         elif instance.type in [
             ComplianceAction.Type.transfer_adjustment_to_user,
             ComplianceAction.Type.revert_mint_to_positive_wallet
         ]:
-            return f'Positive Adjustment Wallet ({configs.POSITIVE_ADJUSTMENT_WALLET_UID})'
+            return f'Positive Adjustment Wallet ({uid_to_wallet(configs.POSITIVE_ADJUSTMENT_WALLET_UID)})'
 
     def get_action_to(self, instance):
         if instance.type == ComplianceAction.Type.fund_negative_wallet:
-            return f'Negative Adjustment Wallet ({configs.NEGATIVE_ADJUSTMENT_WALLET_UID})'
+            return f'Negative Adjustment Wallet ({uid_to_wallet(configs.NEGATIVE_ADJUSTMENT_WALLET_UID)})'
 
         elif instance.type in [
             ComplianceAction.Type.burn_from_negative_wallet,
             ComplianceAction.Type.revert_mint_to_positive_wallet
         ]:
-            return '---'
+            return '0x0000000000000000000000000000000000000000'
 
         elif instance.type == ComplianceAction.Type.mint_to_positive_wallet:
-            return f'Positive Adjustment Wallet ({configs.POSITIVE_ADJUSTMENT_WALLET_UID})'
+            return f'Positive Adjustment Wallet ({uid_to_wallet(configs.POSITIVE_ADJUSTMENT_WALLET_UID)})'
 
         if instance.type == ComplianceAction.Type.revert_fund_negative_wallet:
-            return f'Reserve wallet ({configs.RESERVE_WALLET_UID})'
+            return f'Reserve wallet ({uid_to_wallet(configs.RESERVE_WALLET_UID)})'
 
         elif instance.type == ComplianceAction.Type.transfer_adjustment_to_user:
             if instance.consumer:
-                return f'Consumer account ({instance.consumer.crypto_wallet_id})'
+                return f'Consumer account ({uid_to_wallet(instance.consumer.crypto_wallet_id)})'
             elif instance.merchant:
-                return f'Merchant account ({instance.merchant.crypto_wallet_id})'
+                return f'Merchant account ({uid_to_wallet(instance.merchant.crypto_wallet_id)})'
             else:
                 return 'invalid action destination'
 
 
 class ComplianceActionCreateSerializer(serializers.Serializer):
     documentation = serializers.CharField(min_length=10)
-    password = serializers.CharField(min_length=8)
+    password = serializers.CharField(min_length=4)
     amount = serializers.DecimalField(6, 2)
     profile_is_consumer = serializers.BooleanField()
     profile_id = serializers.IntegerField(min_value=1, allow_null=True)
@@ -141,11 +144,13 @@ class ComplianceActionSignoffSerializer(serializers.Serializer):
         return value
 
 
-class ComplianceRecipientSerializer(serializers.ModelSerializer):
+class ComplianceRecipientSerializer(serializers.Serializer):
     label = serializers.SerializerMethodField()
+    id = serializers.IntegerField()
+    is_consumer = serializers.BooleanField()
+    crypto_wallet_id = serializers.SerializerMethodField()
 
     class Meta:
-        model = Consumer
         fields = [
             'id',
             'is_consumer',
@@ -156,7 +161,10 @@ class ComplianceRecipientSerializer(serializers.ModelSerializer):
     def get_label(self, instance):
         if instance.is_consumer:
             return f'Cons. {instance.user.name} ({instance.user.email})'
-        return f'Merch. {instance.user.name} ({instance.user.email})'
+        return f'Merch. {instance.business_name} ({instance.user.email})'
+
+    def get_crypto_wallet_id(self, instance):
+        return uid_to_wallet(instance.crypto_wallet_id) if instance.crypto_wallet_id else '-'
 
 
 class BankAccountSerializer(serializers.ModelSerializer):

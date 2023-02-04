@@ -56,10 +56,6 @@ class TransactionViewSet(
                            Q(counterpart_merchant__user_id=user_id))
         return qs
 
-    def get_serializer_class(self):
-        res = super(TransactionViewSet, self).get_serializer_class()
-        return res
-
     @action(detail=True, methods=['post'])
     def show_detail_data(self, request, *args, **kwargs):
         try:
