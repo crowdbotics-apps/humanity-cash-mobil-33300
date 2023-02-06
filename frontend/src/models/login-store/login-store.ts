@@ -34,6 +34,14 @@ export const LoginStoreModel = types
     get fullName() {
       return self.first_name + ' ' + self.last_name
     },
+    get isProgramManagerSuperAdmin() {
+      if (['ADMIN', 'SUPERADMIN'].includes(self.role)) return true
+      return false
+    },
+    get canSeePersonalData() {
+      if (['ADMIN', 'SUPERVISOR', 'SUPERADMIN'].includes(self.role)) return true
+      return false
+    }
   }))
   .actions(self => ({
     setApiToken(token: string | null) {
