@@ -593,7 +593,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 		<View style={styles.STEP_CONTAINER}>
 			<Text style={styles.STEP_TITLE}>Business owner details</Text>
 			<View style={styles.LINE} />
-			<Text style={styles.STEP_SUB_TITLE}>We use your personal details to set up your BerkShares wallet. Don’t worry, this information is not shared publicy!</Text>
+			<Text style={styles.STEP_SUB_TITLE}>We use your personal details to set up your wallet. Don’t worry, this information is not shared publicy!</Text>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>FIRST NAME OF THE BUSINESS OWNER OR EXECUTIVE</Text>
 			</View>
@@ -829,7 +829,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		<Modal visible={ShowThankyouModal} transparent>
 			<View style={styles.THANK_MODAL}>
 
-				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Thank you! Welcome to the Currents App. Now it is time to add some Currents to your wallet!</Text>
+				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Welcome! Now it is time to load your wallet.</Text>
 				<View style={styles.CONTAINER}>
 					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
 					<Button

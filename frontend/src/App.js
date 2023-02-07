@@ -33,7 +33,7 @@ import 'chart.js/auto';
 import SignIn from "./pages/sign-in";
 import Logout from "./pages/logout";
 import Sidenav from "./components/Sidenav";
-import {ROUTES} from "./services/constants";
+import {PERMISSIONS, ROUTES} from "./services/constants";
 import ForgotPassword from "./pages/forgot-password";
 import ResetPassword from "./pages/reset-password";
 import NotFound from "./pages/not-found";
