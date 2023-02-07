@@ -37,8 +37,6 @@ const LinkBankAccountModal: React.FC<SuccessModalProps>  =({ show, onHide }: Suc
     onSubmit: values => {
       // alert(JSON.stringify(values, null, 2));
       let data = {name:values.name, email:values.routing, password:values.account}
-      console.log("data", data)
-
     }
   });
   const handleSubmitFormik = (event:any)=>{

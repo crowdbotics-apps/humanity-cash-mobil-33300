@@ -63,13 +63,15 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 				if (result.kind === "ok") {
 					runInAction(() => {
 						let temp = loginStore.getTransactions
-						result?.data?.results.map((r: any) => {
-							if (!temp.includes(r)) {
-								r.ach = true
-								temp.push(r)
-							}
-						})
-						loginStore.setTransactions(temp)
+						if (Array.isArray(result?.data?.results)) {
+							result?.data?.results.map((r: any) => {
+								if (!temp.includes(r)) {
+									r.ach = true
+									temp.push(r)
+								}
+							})
+							loginStore.setTransactions(temp)
+						}
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
@@ -88,13 +90,15 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 				if (result.kind === "ok") {
 					runInAction(() => {
 						let temp = loginStore.getTransactions
-						result?.data?.results.map((r: any) => {
-							if (!temp.includes(r)) {
-								r.ach = false
-								temp.push(r)
-							}
-						})
-						loginStore.setTransactions(temp)
+						if (Array.isArray(result?.data?.results)) {
+							result?.data?.results.map((r: any) => {
+								if (!temp.includes(r)) {
+									r.ach = false
+									temp.push(r)
+								}
+							})
+							loginStore.setTransactions(temp)
+						}
 					})
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]

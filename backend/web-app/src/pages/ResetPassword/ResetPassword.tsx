@@ -54,7 +54,6 @@ export const ResetPasswordPage: React.FC = observer((props) => {
       api.resetPassword(data).then((result: any) => {
         setLoading(false)
         if (result.kind === "ok") {
-          console.log(result.response.detail)
           toast.success(result.response.detail, {
             position: toast.POSITION.TOP_CENTER
           });

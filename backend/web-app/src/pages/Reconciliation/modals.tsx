@@ -37,7 +37,6 @@ export const CredentialsModal = observer((props: any) => {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      {console.log(' aca estoy')}
       <Modal.Header closeButton>
         <Modal.Title className='title-modal m-2'>Supervisor Credentials</Modal.Title>
       </Modal.Header>
@@ -147,13 +146,11 @@ export const AmountModal = observer((props: any) => {
         }
       } else {
         setShowRecipientsList(false)
-        console.log("There were problems")
       }
     }).catch((reason: any) => console.log(reason))
   }
 
   useEffect(() => {
-    console.log("Recipient", Recipient)
   }, [Recipient])
 
   return (

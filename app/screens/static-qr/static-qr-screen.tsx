@@ -63,16 +63,10 @@ export const StaticQRScreen = observer(function StaticQRScreen() {
             <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>Static QR</Text>
             <View style={styles.LINE} />
             <Text style={styles.STEP_SUB_TITLE}>{`
-You can accept Currency without using the app at your cash register by displaying your QR code at the cash register. This QR code contains only your Currency wallet address and not transaction specific data. 
+Your QR code allows you to accept money from others. Ask them to scan your QR code using their app, then they'll be prompted to enter the amount they want to send you. Be sure they check that the amount entered is correct before hitting send. When sent, you and the other party will both receive transaction receipts. 
 
-When you use the static QR code to receive payments, your customer must enter the correct amount. Be sure to check that the customer has entered the correct amount and that the transaction was successful. Your customer should have a transaction receipt once completed. 
-
-You can have customers scan your static QR code as a backup in case your Currency app or device is not working. 
-
-If you encounter any issue, don’t hesitate to contact us via info@humanitycash.org. 
+You can print out a copy of your QR code to make it easy for others to scan to pay you, especially if you're a small business. A printed QR code is a great backup in case your app or device isn't working. We're happy to email you a copy of your QR code that you can print out! 
 `}</Text>
-
-
           </View>
           {/* </View> */}
         </ScrollView>

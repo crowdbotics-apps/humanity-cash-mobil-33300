@@ -456,7 +456,6 @@ export class ApiBase {
         }
         try {
             response = await this.apisauce.axiosInstance.patch(path, fdata, {headers})
-            console.log('response ', response)
         } catch (e) {
             console.log('error ', JSON.parse(JSON.stringify(e)))
             if (e.message.indexOf("status code 400") !== -1) {

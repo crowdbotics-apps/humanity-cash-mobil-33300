@@ -283,15 +283,15 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			</View>
 			<View style={styles.SELECTS_CONTAINER}>
 				<View style={styles.CONTAINER}>
-					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
+					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.45 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
 					<View
-						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65, backgroundColor: `${loginStore.getAccountColor}25` }]}
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.45, backgroundColor: `${loginStore.getAccountColor}25` }]}
 					>
 						<TextInput
 							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.60 }]}
+							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.40 }]}
 							onChangeText={t => setCity(t)}
 							value={City}
 							placeholder={'City'}
@@ -310,11 +310,11 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 					</View>
 				</View>
 				<View style={styles.CONTAINER}>
-					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
+					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.4 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>STATE</Text>
 					</View>
 					<TouchableOpacity
-						style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.25, backgroundColor: `${loginStore.getAccountColor}25` }]}
+						style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.45, backgroundColor: `${loginStore.getAccountColor}25` }]}
 						onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
 					>
 						<ModalSelector

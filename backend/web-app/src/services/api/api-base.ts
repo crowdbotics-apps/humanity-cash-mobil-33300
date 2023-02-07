@@ -202,7 +202,6 @@ export class ApiBase {
                 // @ts-ignore
                 return {kind: "bad-data", errors: e.response.data}
             }
-            console.log(e)
             response = {status: 500}
         }
 

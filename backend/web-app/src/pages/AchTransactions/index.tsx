@@ -87,7 +87,6 @@ const AchTransactions: React.FC = observer(() => {
     const getACHTransactions = ()=> {
         const status = CurrentTab === Keys.PENDING?"pending":"processed"
         api.getACHTransactions({status:status}).then((response: any) => {
-            console.log(response.data)
             if (response.kind === "ok") {
                 setPrevious(response.data.previous)
                 setNext(response.data.next)
@@ -112,18 +111,15 @@ const AchTransactions: React.FC = observer(() => {
 
             }
         }).catch((error: any) => {
-            console.log(error)
             genericApiError()
         })
     }
 
     const onClickPage = (page:number)=>{
-        console.log("onclick page", page)
         setCurrentPage(page)
     }
 
     const onPreviousPage = ()=>{
-        console.log("onPreviousPage page", Previous)
         if(Previous){
             setCurrentPage(prevState => prevState-1)
         }
@@ -133,7 +129,6 @@ const AchTransactions: React.FC = observer(() => {
 
 
     const onNextPage = ()=>{
-        console.log("onNextPage page", Next)
         if(Next){
             setCurrentPage(prevState => prevState+1)
         }

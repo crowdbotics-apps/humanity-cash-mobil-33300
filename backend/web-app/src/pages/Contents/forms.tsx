@@ -66,7 +66,7 @@ export const AddEventForm = (props:AddEventFormProps)=> {
 
   const onFilechange = ( e:any ) => {
     /*Selected files data can be collected here.*/
-    console.log( e.target.files );
+    
 
     if(e.target.files.length > 0){
 
@@ -89,7 +89,7 @@ export const AddEventForm = (props:AddEventFormProps)=> {
 
   const handleSubmitFormik = (event:any)=>{
     formik.handleSubmit(event)
-    console.log(formik.errors)
+    
 
   }
 
@@ -244,7 +244,7 @@ export const AddStoryForm = (props:AddStoryFormProps)=> {
 
   const onFilechange = ( e:any ) => {
     /*Selected files data can be collected here.*/
-    console.log( e.target.files );
+    
 
     if(e.target.files.length > 0){
       let file = e.target.files[0] || null

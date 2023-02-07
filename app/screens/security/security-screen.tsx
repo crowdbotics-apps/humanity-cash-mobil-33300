@@ -57,7 +57,6 @@ export const SecurityScreen = observer(function SecurityScreen() {
 
   useEffect(() => {
     if (isFocused) {
-      console.log(' loginStore.ProfileData.allow_touch_id => ', loginStore.ProfileData.allow_touch_id)
       setAllowTouchId(loginStore.ProfileData.allow_touch_id || false)
     }
   }, [isFocused])

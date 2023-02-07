@@ -174,7 +174,7 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.blue,
     flex: 1,
     fontSize: 16,
-    height: '80%',
+    // height: '80%',
     justifyContent: 'space-evenly',
     textAlign: 'right',
   },

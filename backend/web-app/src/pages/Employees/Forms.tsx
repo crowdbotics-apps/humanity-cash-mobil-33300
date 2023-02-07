@@ -43,9 +43,9 @@ export const AddUserForm = (props:UserFormProps)=> {
   },[])
 
   const handleSubmitFormik = (user:any)=>{
-    console.log("user", user)
+    
     formik.handleSubmit(user)
-    console.log("errors",formik.errors)
+    
     // setValidated(_.isEmpty(formik.errors));
   }
 

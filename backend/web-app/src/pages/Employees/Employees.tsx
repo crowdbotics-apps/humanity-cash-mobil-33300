@@ -82,7 +82,7 @@ const EmployeesPage: React.FC = observer(() => {
 
   const createUser = (event:any)=>{
     api.createUser(event).then((result: any) => {
-      console.log(" api.createEvent", result)
+      
       if (result.kind === "ok") {
         openSuccesModal()
         // toast.success("Saved successfully.", {
@@ -119,13 +119,13 @@ const EmployeesPage: React.FC = observer(() => {
       page:CurrentPage
     }).then((response: any) => {
       if (response.kind === "ok") {
-        console.log(response.data)
+        
         setPrevious(response.data.previous)
         setNext(response.data.next)
         setTotalItems(response.data.count)
         const tableRows = []
         for(let data of response.data.results){
-          console.log(UserGroup.BANK.code, data.group)
+          
           const className = data.group === UserGroup.BANK.code? styles.bankBadge: styles.managerBadge
           let row:any = {
             id: data.id,
@@ -141,7 +141,7 @@ const EmployeesPage: React.FC = observer(() => {
         setEmployees(tableRows)
       }
     }).catch((error: any) => {
-      console.log(error)
+      
       genericApiError()
     })
   }
@@ -163,7 +163,7 @@ const EmployeesPage: React.FC = observer(() => {
   }
 
   const applyFilter = (data:any)=>{
-    console.log(data)
+    
     setBankFilter(data.bank)
     setSupportFilter(data.support)
     setSuperAdminFilter(data.superAdmin)
@@ -189,12 +189,12 @@ const EmployeesPage: React.FC = observer(() => {
   }
 
   const onClickPage = (page:number)=>{
-    console.log("onclick page", page)
+    
     setCurrentPage(page)
   }
 
   const onPreviousPage = ()=>{
-    console.log("onPreviousPage page", Previous)
+    
     if(Previous){
       setCurrentPage(prevState => prevState-1)
     }
@@ -202,7 +202,7 @@ const EmployeesPage: React.FC = observer(() => {
 
 
   const onNextPage = ()=>{
-    console.log("onNextPage page", Next)
+    
     if(Next){
       setCurrentPage(prevState => prevState+1)
     }
