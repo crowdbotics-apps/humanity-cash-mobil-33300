@@ -571,7 +571,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 					style={styles.INPUT_STYLE}
 					onChangeText={t => setBusinessWebsite(t)}
 					value={BusinessWebsite}
-					placeholder={'website (optional)'}
+					placeholder={'Website (optional)'}
 				/>
 			</View>
 			{/* <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>

@@ -43,6 +43,23 @@ class SetupConsumerProfileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"username": "User already has a Personal profile"})
         return super().validate(attrs)
 
+    def create(self, validated_data):
+        context = self.context
+        request = context.get('request')
+        user = request.user
+        profile_picture = None
+        if validated_data.get('consumer_profile'):
+            profile_picture = validated_data.pop('consumer_profile')
+
+        consumer, created = Consumer.objects.get_or_create(user=user)
+        consumer.profile_picture = profile_picture
+        user.username = validated_data['username']
+        if created:
+            consumer.new_wallet()
+        consumer.save()
+        user.save()
+        return user
+
     def get_has_consumer_profile(self, obj):
         return hasattr(obj, 'consumer')
 
