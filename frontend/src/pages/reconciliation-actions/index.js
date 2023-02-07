@@ -11,6 +11,7 @@ import MDInput from "../../components/MDInput";
 import {Autocomplete, CircularProgress, TextField} from "@mui/material";
 import {Search} from "@mui/icons-material";
 import ConfirmDialogModal from "../../components/ConfirmDialogModal";
+import {useStores} from "../../models";
 
 const ReconciliationActions = {
   AddAdjustment: 'AddAdjustment',
@@ -27,21 +28,25 @@ const initialData = {
     {Header: `RESERVE WALLET`, accessor: "reserve", disableOrdering: true},
     {
       Header: "NEGATIVE ADJUSTMENT ACCOUNT", accessor: "negative", disableOrdering: true,
-      component: <MDButtonPopover
+      component: false
+          ? <MDButtonPopover
         color="primary"
         size={'small'}
         style={{minWidth: 0}}
         actionList={[]}
       >+</MDButtonPopover>
+          : null
     },
     {
       Header: "POSITIVE ADJUSTMENT", accessor: "positive", disableOrdering: true,
-      component: <MDButtonPopover
+      component: false
+          ? <MDButtonPopover
         color="primary"
         size={'small'}
         style={{minWidth: 0}}
         actionList={[]}
       >+</MDButtonPopover>
+          : null
     },
   ],
   rows: [{
@@ -58,6 +63,9 @@ const initialData = {
 const ReconciliationActionsPage = () => {
   const api = useApi()
   const navigate = useNavigate()
+  const rootStore = useStores()
+  const {loginStore} = rootStore
+
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
@@ -315,21 +323,25 @@ const ReconciliationActionsPage = () => {
       {Header: `RESERVE WALLET`, accessor: "reserve", disableOrdering: true},
       {
         Header: "NEGATIVE ADJUSTMENT ACCOUNT", accessor: "negative", disableOrdering: true,
-        component: <MDButtonPopover
+        component: loginStore.isProgramManagerSuperAdmin
+            ? <MDButtonPopover
           color="primary"
           size={'small'}
           style={{minWidth: 0}}
           actionList={negativeActionList}
         >+</MDButtonPopover>
+            : null
       },
       {
         Header: "POSITIVE ADJUSTMENT", accessor: "positive", disableOrdering: true,
-        component: <MDButtonPopover
+        component: loginStore.isProgramManagerSuperAdmin
+            ? <MDButtonPopover
           color="primary"
           size={'small'}
           style={{minWidth: 0}}
           actionList={positiveActionList}
         >+</MDButtonPopover>
+            : null
       },
     ],
     rows: [],

@@ -16,6 +16,7 @@ import {AddEventForm, AddStoryForm} from "./forms";
 
 // keep at the end
 import './Content.css';
+import {useStores} from "../../models";
 
 const getDateRange = (dateRange) => {
   if (dateRange === null || dateRange === undefined) {
@@ -32,6 +33,9 @@ const getDateRange = (dateRange) => {
 
 const BlockchainTransactions = () => {
   const api = useApi()
+  const rootStore = useStores()
+  const {loginStore} = rootStore
+
   const CalendarEl = useRef(null);
   const [loading, setLoading] = useState(false)
 
@@ -374,9 +378,11 @@ const BlockchainTransactions = () => {
           <div style={{ marginLeft: 15, fontSize: 15 }} className={'text-gray'}>STORIES</div>
         </MDBox>
         <MDBox className={'col-4'}>
-          <MDButton variant={'contained'} color={'primary'} onClick={handleShow}>
-            Create
-          </MDButton>
+          {loginStore.isProgramManagerSuperAdmin &&
+              <MDButton variant={'contained'} color={'primary'} onClick={handleShow}>
+                Create
+              </MDButton>
+          }
         </MDBox>
       </div>
     )
@@ -433,7 +439,12 @@ const BlockchainTransactions = () => {
   >
     <MDBox sx={{ overflowY: 'scroll', height: 600 }}>
       {Details.map((value, index) => {
-        return <ContentEventDetail delete={deleteEvent} key={"detail-" + index} edit={editEvent} event={value} />
+        return <ContentEventDetail
+                  delete={loginStore.isProgramManagerSuperAdmin ? deleteEvent: null}
+                  key={"detail-" + index}
+                  edit={loginStore.isProgramManagerSuperAdmin ? editEvent: null}
+                  event={value}
+              />
       })}
     </MDBox>
   </ConfirmDialogInputModal>

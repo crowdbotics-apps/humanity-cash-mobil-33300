@@ -59,9 +59,8 @@ def get_wallet(uid, create=True, profile=None):
                 **fromandto_to_kwargs(profile)
             )
         else:
-            raise NoWalletException()
-    # TODO wrap exceptions
-
+            # raise NoWalletException()
+            return None
     return get_humanity_contract().proxy.getWalletAddress(uid)
 
 

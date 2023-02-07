@@ -5,10 +5,14 @@ import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
+import {useStores} from "../../models";
 
 const BlockchainTransactions = () => {
   const api = useApi()
   const navigate = useNavigate()
+  const rootStore = useStores()
+  const {loginStore} = rootStore
+
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
@@ -23,6 +27,7 @@ const BlockchainTransactions = () => {
         const {count, results} = result.data
         const tmp = {...dataTableModel}
         tmp.rows = results.map(e => renderTableRow(e, setDetailToShow))
+        if (!loginStore.canSeePersonalData) tmp.rows.map(r => delete r.actions)
         setRecordList(tmp)
         setNumberOfItems(count)
         setNumberOfItemsPage(results.length)

@@ -13,10 +13,14 @@ import * as Yup from "yup";
 import {Field, Form, Formik} from "formik";
 import MDInput from "../../components/MDInput";
 import ConfirmDialogModal from "../../components/ConfirmDialogModal";
+import {useStores} from "../../models";
 
 
 const AdminWalletControl = () => {
   const api = useApi()
+  const rootStore = useStores()
+  const {loginStore} = rootStore
+
   const formikRef = useRef();
   const [loading, setLoading] = useState(false)
   const [showRecipientModal, setShowRecipientModal] = useState(false)
@@ -430,17 +434,19 @@ const AdminWalletControl = () => {
               </MDBox>
             </MDBox>
           </MDBox>
+          {loginStore.isProgramManagerSuperAdmin &&
           <MDBox display={'flex'} flex={1} p={5} alignItems={'center'}>
-            <MDButton color={"primary"} variant={"outlined"} fullWidth onClick={() => {
-              setActionListModal('recipient')
-              setShowRecipientModal(true)
-            }}>
-              <Icon fontSize="medium" sx={{marginRight: 2, transform: 'scale(1.2)'}}>
-                list-all
-              </Icon>
-              Select Recipient
-            </MDButton>
+                <MDButton color={"primary"} variant={"outlined"} fullWidth onClick={() => {
+                  setActionListModal('recipient')
+                  setShowRecipientModal(true)
+                }}>
+                  <Icon fontSize="medium" sx={{marginRight: 2, transform: 'scale(1.2)'}}>
+                    list-all
+                  </Icon>
+                  Select Recipient
+                </MDButton>
           </MDBox>
+          }
         </MDBox>
       </MDBox>
       <MDBox mt={3}>
@@ -488,24 +494,27 @@ const AdminWalletControl = () => {
               </MDBox>
             </MDBox>
           </MDBox>
+          {loginStore.isProgramManagerSuperAdmin &&
           <MDBox display={'flex'} flexDirection={'column'} flex={1} p={5} alignItems={'center'}
                  justifyContent={'space-between'}>
+
             <MDButton color={"success"} variant={"text"} fullWidth onClick={() => setShowLinkBankModal(true)}>
               <Icon fontSize="medium" sx={{marginRight: 2, transform: 'scale(1.5)'}}>
                 attachment
               </Icon>
               Link Bank Account
             </MDButton>
-            <MDButton color={"primary"} variant={"contained"} fullWidth onClick={() => {
-              setActionListModal('transfer')
-              setShowRecipientModal(true)
-            }}>
-              Send / Transfer
-            </MDButton>
-            <MDButton color={"primary"} variant={"outlined"} fullWidth disabled>
-              Reedem to Cash
-            </MDButton>
+                <MDButton color={"primary"} variant={"contained"} fullWidth onClick={() => {
+                  setActionListModal('transfer')
+                  setShowRecipientModal(true)
+                }}>
+                  Send / Transfer
+                </MDButton>
+                <MDButton color={"primary"} variant={"outlined"} fullWidth disabled>
+                  Reedem to Cash
+                </MDButton>
           </MDBox>
+            }
         </MDBox>
       </MDBox>
     </DashboardLayout>
