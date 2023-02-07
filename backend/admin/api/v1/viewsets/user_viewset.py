@@ -35,10 +35,10 @@ def password_reset(request):
 
 @api_view(['POST'])
 def password_reset_mobile(request):
-    serializer = ResetPasswordSerializer(data=request.data)
     user = User.objects.get(email=request.data.get('email'), is_active=True)
-    code = setup_verification_code(user)
-    send_verification_email(user, code)
+    if user:
+        code = setup_verification_code(user)
+        send_verification_email(user, code)
     return Response(
         {'detail': 'Password reset e-mail has been sent.'},
         status=status.HTTP_200_OK
