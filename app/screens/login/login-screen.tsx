@@ -54,7 +54,12 @@ export const LoginScreen = observer(function LoginScreen() {
 
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
-            loginStore.setSelectedAccount((result?.response?.user?.first_name !== '' && result?.response?.user?.first_name) ? 'consumer' : 'merchant')
+            loginStore.setSelectedAccount((
+              result?.response?.user?.first_name !== '' 
+              && result?.response?.user?.first_name 
+              && result?.response?.user?.consumer_data
+              ) ? 'consumer' : 'merchant'
+            )
             loginStore.setMerchantUser(result?.response?.user?.merchant_data)
             loginStore.setConsumerUser(result?.response?.user)
 
@@ -93,7 +98,6 @@ export const LoginScreen = observer(function LoginScreen() {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn();
       const user = await GoogleSignin.getCurrentUser();
-      console.log('user ', user)
       loginStore.environment.api.loginGoogle(user.user, user.idToken).then((result) => {
 
         setLoading(false)

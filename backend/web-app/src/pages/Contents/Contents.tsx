@@ -157,7 +157,7 @@ const ContentsPage: React.FC = observer(() => {
     setLoading(true)
     api.deleteEvent(id).then((response: any) => {
       if (response.kind === "not-found") {
-        console.log("error deleting event", response)
+        
         toast.error("Object not found", {
           position: toast.POSITION.TOP_CENTER
         });
@@ -199,12 +199,12 @@ const ContentsPage: React.FC = observer(() => {
     )
   }
   const onFakeScrollChange = (scrollRatio:any)=>{
-    // console.log("scroll ratio", scrollRatio)
+    
   }
 
   const patchEvent = (event:any)=>{
     api.editEvent(event.id, event).then((result: any) => {
-      console.log(" api.editEvent", result)
+      
       if (result.kind === "ok") {
 
         toast.success("Created successfully.", {
@@ -225,7 +225,7 @@ const ContentsPage: React.FC = observer(() => {
 
   const createEvent = (event:any)=>{
     api.createEvent(event).then((result: any) => {
-      console.log(" api.createEvent", result)
+      
       if (result.kind === "ok") {
         toast.success("Saved successfully.", {
           position: toast.POSITION.TOP_CENTER
@@ -253,7 +253,7 @@ const ContentsPage: React.FC = observer(() => {
       start_date: data.date,
       image: null
     }
-    console.log(data)
+    
     if(data.id){
       patchEvent(event)
     }else{
@@ -262,7 +262,7 @@ const ContentsPage: React.FC = observer(() => {
   }
 
   const saveEvent = (data:any)=>{
-    console.log("saveEvent", data)
+    
     setCurrentEvent(null)
     let event = {
       id: data.id,
@@ -275,7 +275,7 @@ const ContentsPage: React.FC = observer(() => {
       image: null,
       link:data.link
     }
-    console.log(data)
+    
     if(data.id){
       patchEvent(event)
     }else{
@@ -286,7 +286,7 @@ const ContentsPage: React.FC = observer(() => {
 
 
   const editEvent = (event:any)=>{
-    console.log("edit event", event)
+    
     setCurrentEvent(event)
     // setShowDetailModal(false)
     if(event.eventType === EVENT_TYPE.Story){
@@ -375,7 +375,7 @@ const ContentsPage: React.FC = observer(() => {
           setDetails(value.events)
           setDetailsTitle(getTitleFormat(value.title))
           setShowDetailModal(true)
-          console.log(value)
+          
         }}>
         <div className={'text-gray'} style={{fontSize:12, marginLeft:20}}>{getTitleFormat(value.title)}</div>
         <div style={{marginBottom:20}}>
@@ -420,7 +420,7 @@ const ContentsPage: React.FC = observer(() => {
 
 
               dateClick={(arg:any)=>{
-                console.log("select", arg)
+                
               }}
               //@ts-ignore
               plugins={[  dayGridPlugin, interactionPlugin ]}

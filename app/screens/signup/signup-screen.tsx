@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import Entypo from "react-native-vector-icons/Entypo"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from "./signup-style"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
@@ -29,6 +29,7 @@ export const SignupScreen = observer(function SignupScreen() {
   const rootStore = useStores()
   const navigation = useNavigation()
   const { loginStore } = rootStore
+  const isFocused = useIsFocused();
 
   const [Loading, setLoading] = useState(false)
 
@@ -541,6 +542,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     if (data?.Code5) setCode5(data.Code5)
     if (data?.Code6) setCode6(data.Code6)
   }, [])
+
+  useEffect(() => {
+		if (isFocused) resetData()
+	}, [isFocused])
 
   return (
     <Screen showHeader={true} preset="fixed" statusBar={"dark-content"} unsafe={true}>

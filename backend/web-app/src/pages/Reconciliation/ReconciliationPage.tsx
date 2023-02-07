@@ -34,7 +34,7 @@ const ReconciliationPage: React.FC = observer(() => {
   const showMessage = (res: any) => {
     if (res.kind === 'ok') {
       alert("Success")
-      console.log("res", res)
+      
     } else {
       alert("Some error occurred")
     }
@@ -45,17 +45,17 @@ const ReconciliationPage: React.FC = observer(() => {
   const onClickFilter = () => {
   }
   const onClickPage = (page: number) => {
-    console.log("onclick page", page)
+    
     setCurrentPage(page)
   }
   const onPreviousPage = () => {
-    console.log("onPreviousPage page", Previous)
+    
     if (Previous) {
       setCurrentPage(prevState => prevState - 1)
     }
   }
   const onNextPage = () => {
-    console.log("onNextPage page", Next)
+    
     if (Next) {
       setCurrentPage(prevState => prevState + 1)
     }
@@ -73,10 +73,10 @@ const ReconciliationPage: React.FC = observer(() => {
       </InputGroup>)
   }
   const onSubmit = () => {
-    console.log("onsubmit")
+    
   }
   const handleClose = () => {
-    console.log("handle close")
+    
     setShowPasswordModal(false)
   }
   const [Items, setItems] = useState<any>([])
@@ -280,7 +280,7 @@ const ReconciliationPage: React.FC = observer(() => {
           </div>,
         }])
       } else {
-        console.log("Something wrong happened")
+        
       }
     })
   }

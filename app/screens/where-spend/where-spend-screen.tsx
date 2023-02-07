@@ -14,7 +14,7 @@ import { CheckBox } from 'react-native-elements'
 import MapView, { Marker, Circle } from 'react-native-maps'
 import Geolocation from '@react-native-community/geolocation';
 import { runInAction } from "mobx"
-import { notifyMessage } from "../../utils/helpers"
+import { notifyMessage, formatPhoneNumber } from "../../utils/helpers"
 
 export const WhereSpendScreen = observer(function WhereSpendScreen() {
   const rootStore = useStores()
@@ -62,6 +62,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
       .getBusiness()
       .then((result: any) => {
         if (result.kind === "ok") {
+          
           runInAction(() => {
             loginStore.setBusiness(result.data?.merchants)
             loginStore.setMerchantMonth(result.data?.merchant_month)
@@ -112,7 +113,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
       <View style={styles.INDUSTRY_CONTAINER}>
         <Text style={styles.INDUSTRY_TITLE}>MERCHANT OF THE MONTH</Text>
         <View style={styles.LINE} />
-        <TouchableOpacity onPress={() => [setShowDetail(true), setSelectedDetail(merchantOfTheMonth)]} style={styles.BUSINESS_CONTAINER}>
+        <TouchableOpacity onPress={() => [getBusinessDetail(merchantOfTheMonth.id), setShowDetail(true), setSelectedDetail(merchantOfTheMonth)]} style={styles.BUSINESS_CONTAINER}>
           <View style={styles.TOP_MONTH}>
             <Text style={styles.MONTH_BUSINESS_NAME}>{merchantOfTheMonth.business_name}</Text>
             <Text style={styles.MONTH_BUSINESS_ABOUT}>{merchantOfTheMonth.business_story}</Text>
@@ -351,11 +352,10 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                       /> : null
                     }
                     <View style={styles.SEE_ON_MAP_LABEL}>
-                        {console.log(' ====>>>>>> ', JSON.stringify(SelectedDetail, null ,2))}
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>
-                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.city + ' ' + SelectedDetail?.zip_code}</Text>
-                        <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.phone_number}</Text>
+                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.city + ', ' + SelectedDetail?.zip_code}</Text>
+                      <Text style={styles.SEE_ON_MAP_LABEL}>{formatPhoneNumber(SelectedDetail?.phone_number)}</Text>
                     </View>
                   </View>
                 </View>

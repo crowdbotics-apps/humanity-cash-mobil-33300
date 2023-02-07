@@ -5,6 +5,17 @@ import { Platform, ToastAndroid, Alert } from "react-native"
 import { checkMultiple, requestMultiple, PERMISSIONS } from "react-native-permissions"
 import numeral from "numeral";
 
+export const formatPhoneNumber = phoneNumberString => {
+  const cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+  const match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/);
+  if (match) {
+    // const intlCode = (match[1] ? '+1 ' : '');
+    const intlCode = ''
+    return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
+  }
+  return null;
+}
+
 export const notifyMessage = (msg: any, type = "error") => {
   if (msg === null) {
     msg = "An error occurred while communicating with the server, please try again in a few moments"

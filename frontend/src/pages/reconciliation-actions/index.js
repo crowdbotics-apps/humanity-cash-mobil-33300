@@ -372,7 +372,6 @@ const ReconciliationActionsPage = () => {
       data.search = selectRecipientRef.current.value
     }
     api.getComplianceRecipient(data).then(res => {
-      console.log(res)
       if (res.kind === 'ok') {
         setRecipientList(res.data)
       } else {

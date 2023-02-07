@@ -47,7 +47,7 @@ export const LoginPage: React.FC = () => {
       api.apisauce.deleteHeader(AUTHORIZATION)
 
       api.login(data).then((result: any) => {
-        console.log(result)
+        
         if (result.kind === "ok") {
           userStore.setUser(result.response.user)
           userStore.setApiToken(result.response.access_token, result.response.refresh_token)
@@ -139,7 +139,6 @@ export const LoginPage: React.FC = () => {
                 <div className="forgot-password">
                   <div
                     onClick={() => {
-                      console.log("onclick ", ROUTES.FORGOT_PASSWORD)
                       navigate(ROUTES.FORGOT_PASSWORD, {replace: false})
                     }}
                     className='link-primary'>Forgot password?

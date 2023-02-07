@@ -18,6 +18,7 @@ import { useStores } from "../../models"
 import { notifyMessage } from "../../utils/helpers"
 import MapView, { Marker } from 'react-native-maps'
 import Geolocation from '@react-native-community/geolocation';
+import { Masks } from "react-native-mask-input";
 
 const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
 const profileTypes = [
@@ -238,7 +239,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		}
 		const keys = BusinessImageSource === null ? [] : ["profile_picture"]
 		if (BackBusinessImageSource !== null) keys.push("background_picture")
-		const data ={
+		const data = {
 			business_name: BusinessName,
 			profile_picture: BusinessImageSource?.uri ? profPic : null,
 			background_picture: BackBusinessImageSource?.uri ? backPic : null,
@@ -406,8 +407,8 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={[
 				UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER,
-				{backgroundColor: `${ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}25`}
-				]}>
+				{ backgroundColor: `${ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}25` }
+			]}>
 				<TextInput
 					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
@@ -428,8 +429,8 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={[
 				styles.INPUT_STYLE_CONTAINER,
-				{backgroundColor: `${ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}25`}
-				]}>
+				{ backgroundColor: `${ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}25` }
+			]}>
 				<TextInput
 					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
@@ -443,7 +444,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			</View>
 			<View style={[
 				styles.INPUT_STYLE_CONTAINER,
-				{backgroundColor: `${ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}25`}
+				{ backgroundColor: `${ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}25` }
 			]}>
 				<TextInput
 					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
@@ -729,15 +730,15 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			</TouchableOpacity>
 			<View style={styles.SELECTS_CONTAINER}>
 				<View style={styles.CONTAINER}>
-					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
+					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.45 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
 					<View
-						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.45 }]}
 					>
-							<TextInput
+						<TextInput
 							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.60 }]}
+							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.40 }]}
 							onChangeText={t => setCity(t)}
 							value={City}
 							placeholder={'City'}
@@ -756,15 +757,15 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					</View>
 				</View>
 				<View style={styles.CONTAINER}>
-					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
+					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.4 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>STATE</Text>
 					</View>
 					<View style={[
 						styles.SELECT_INPUT_STYLE_CONTAINER,
-						{ width: METRICS.screenWidth * 0.25 }
+						{ width: METRICS.screenWidth * 0.45 }
 					]}>
 						<TouchableOpacity
-							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2, justifyContent: 'flex-end' }]}
+							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.4, justifyContent: 'flex-end' }]}
 							onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
 						>
 							<ModalSelector
@@ -798,12 +799,14 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setPhoneNumber(t)}
+				<MaskInput
 					value={PhoneNumber}
-					placeholder={'Phone number'}
+					mask={Masks.USA_PHONE}
+					name="ssn"
+					placeholder="(XXX)-XXX-XXXX"
+					keyboardType="number-pad"
+					onChange={(masked, unmasked) => setPhoneNumber(unmasked)}
+					style={styles.INPUT_STYLE_CONTAINER}
 				/>
 			</View>
 		</View>
@@ -883,13 +886,15 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			<View style={styles.THANK_MODAL}>
 				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Welcome! Now it is time to load your wallet.</Text>
 				<View style={styles.CONTAINER}>
-					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
+					<Text onPress={() => [setLoading(true), setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100, height: 50 }]}>Skip for now</Text>
 					<Button
-						onPress={() => navigation.navigate('linkBank')}
+						onPress={() => [navigation.navigate('linkBank'), setLoading(true)]}
 						buttonLabel={`Link my ${ProfileType?.value === 'personal' ? 'personal' : 'business'} bank account`}
+						loading={Loading}
+						disabled={Loading}
 						buttonStyle={[
 							styles.SUBMIT_BUTTON,
-							{backgroundColor: ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}
+							{ backgroundColor: ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green }
 						]}
 					/>
 				</View>
@@ -1001,8 +1006,12 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 			// fetchCity()
 			fetchState()
+		} else if (!isFocused) {
+			setLoading(false)
+			loginStore.setSetupData({});
 		}
 	}, [isFocused])
+
 
 	return (
 		<Screen
@@ -1033,7 +1042,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			{mapInputModal()}
 			{confirmLogoutModal()}
 			{thankyouModal()}
-			{console.log(' ==>>> ', ProfileType)}
 			<Button
 				disabled={ButtonDisabled || Loading}
 				onPress={() => nextButtonHandler()}
@@ -1046,7 +1054,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				}
 				buttonStyle={[
 					(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON,
-					{backgroundColor: ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}
+					{ backgroundColor: ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green }
 				]}
 			/>
 		</Screen>

@@ -40,7 +40,7 @@ const UserDetailPage: React.FC = observer(() => {
 
   const params = useParams();
   const {id} = params
-  console.log("USE LOCATION",params, id)
+  
 
 
   const [LeftOpen, setLeftOpen] = useState<any>(true);
@@ -129,7 +129,7 @@ const UserDetailPage: React.FC = observer(() => {
 
   const getUserData = ()=>{
     api.getDwollaUser(id).then((response: any) => {
-      console.log("cosumers", response.data)
+      
       if (response.kind === "ok") {
 
         const data = response.data
@@ -148,14 +148,14 @@ const UserDetailPage: React.FC = observer(() => {
         })
       }
     }).catch((error: any) => {
-      console.log(error)
+      
       genericApiError()
     })
   }
 
   const getACHTransactions = ()=>{
     api.getACHTransactions({user:User.id}).then((response:any)=>{
-      console.log(response.data)
+      
       if (response.kind === "ok") {
         setPrevious(response.data.previous)
         setNext(response.data.next)
@@ -180,7 +180,7 @@ const UserDetailPage: React.FC = observer(() => {
 
       }
     }).catch((error: any) => {
-      console.log(error)
+      
       genericApiError()
     })
   }
@@ -213,7 +213,7 @@ const UserDetailPage: React.FC = observer(() => {
         setItems(tableRows)
       }
     }).catch((error: any) => {
-      console.log(error)
+      
       genericApiError()
     })
   }
@@ -227,7 +227,7 @@ const UserDetailPage: React.FC = observer(() => {
   }
 
   const applyFilter = (data:any)=>{
-    console.log(data)
+    
 
 
   }
@@ -239,12 +239,12 @@ const UserDetailPage: React.FC = observer(() => {
   }
 
   const onClickPage = (page:number)=>{
-    console.log("onclick page", page)
+    
     setCurrentPage(page)
   }
 
   const onPreviousPage = ()=>{
-    console.log("onPreviousPage page", Previous)
+    
     if(Previous){
       setCurrentPage(prevState => prevState-1)
     }
@@ -254,7 +254,7 @@ const UserDetailPage: React.FC = observer(() => {
 
 
   const onNextPage = ()=>{
-    console.log("onNextPage page", Next)
+    
     if(Next){
       setCurrentPage(prevState => prevState+1)
     }
@@ -274,11 +274,11 @@ const UserDetailPage: React.FC = observer(() => {
   }
 
   const onSubmit = ()=>{
-    console.log("onsubmit")
+    
   }
 
   const handleClose = ()=>{
-    console.log("handle close")
+    
   }
 
   return (
