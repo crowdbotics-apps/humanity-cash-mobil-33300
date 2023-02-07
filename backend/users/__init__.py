@@ -4,6 +4,8 @@ from users.constants import UserRole, UserGroup
 
 
 def check_humanity_permissions(user, role_permission):
+    if user.is_anonymous:
+        return False
     if user.is_superuser:
         return True
     if user.role == UserRole.SUPER_ADMIN.value:
