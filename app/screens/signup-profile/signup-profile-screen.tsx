@@ -18,6 +18,7 @@ import { useStores } from "../../models"
 import { notifyMessage } from "../../utils/helpers"
 import MapView, { Marker } from 'react-native-maps'
 import Geolocation from '@react-native-community/geolocation';
+import { Masks } from "react-native-mask-input";
 
 const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
 const profileTypes = [
@@ -798,12 +799,14 @@ IDENTIFICATION NUMBER (ENTER ONE)
 				<Text style={styles.INPUT_LABEL_STYLE}>PHONE NUMBER</Text>
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
-				<TextInput
-					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-					style={styles.INPUT_STYLE}
-					onChangeText={t => setPhoneNumber(t)}
+				<MaskInput
 					value={PhoneNumber}
-					placeholder={'Phone number'}
+					mask={Masks.USA_PHONE}
+					name="ssn"
+					placeholder="(XXX)-XXX-XXXX"
+					keyboardType="number-pad"
+					onChange={(masked, unmasked) => setPhoneNumber(unmasked)}
+					style={styles.INPUT_STYLE_CONTAINER}
 				/>
 			</View>
 		</View>
