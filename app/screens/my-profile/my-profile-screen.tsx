@@ -254,7 +254,7 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 						setBusinessWebsite(t)
 					}}
 					value={BusinessWebsite}
-					placeholder={'website (optional)'}
+					placeholder={'Website (optional)'}
 				/>
 			</View>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
