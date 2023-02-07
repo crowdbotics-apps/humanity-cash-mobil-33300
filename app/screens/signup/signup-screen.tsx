@@ -97,7 +97,7 @@ export const SignupScreen = observer(function SignupScreen() {
   };
 
   const pressHandler = () => {
-    TouchID.authenticate('to demo this react-native component', optionalConfigObject)
+    TouchID.authenticate('to check the user', optionalConfigObject)
       .then(success => {
         Alert.alert('Authenticated Successfully');
       })

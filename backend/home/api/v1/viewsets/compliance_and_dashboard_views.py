@@ -4,6 +4,7 @@ import logging
 import traceback
 from decimal import Decimal
 
+from django.conf import settings
 from django.db import IntegrityError, transaction
 from django.db.models import Sum
 from django.db.models.functions import Coalesce
@@ -20,20 +21,20 @@ from websockets.exceptions import ConnectionClosedOK
 
 from base import configs
 from celo_humanity.humanity_contract_helpers import get_wallet_balance, get_community_balance, get_humanity_balance, \
-    NoWalletException
+    NoWalletException, get_wallet
 from celo_humanity.models import Transaction, ACHTransaction, ComplianceActionSignoff, ComplianceAction
 from home.api.v1.serializers.compliance_serializers import ComplianceActionReadSerializer, \
     ComplianceActionCreateSerializer, ComplianceActionSignoffSerializer, ComplianceRecipientSerializer, \
     DatedBalanceSerializer
 from home.helpers import AuthenticatedAPIView
 from home.models import DatedSystemBalance, get_current_system_balance
+from users import IsProgramManagerSuperAdmin
 from users.models import Merchant, Consumer
 
 logger = logging.getLogger('compliance')
 
 class ComplianceDashboardView(APIView):
-    # TODO if admin (permission)
-    # permission_classes = [IsAuthenticated & IsNotCashier]
+    permission_classes = [IsProgramManagerSuperAdmin]
 
     def get(self, request, *args, **kwargs):
         today = get_current_system_balance()
@@ -42,9 +43,8 @@ class ComplianceDashboardView(APIView):
         return Response(serializer.data)
 
 
-class DashboardDataView(APIView): #AuthenticatedAPIView):
-    # TODO if admin (permission)
-    # permission_classes = [IsAuthenticated & IsNotCashier]
+class DashboardDataView(APIView):
+    permission_classes = [IsProgramManagerSuperAdmin]
 
     def get(self, request, *args, **kwargs):
         try:
@@ -98,7 +98,7 @@ class ComplianceActionViewset(
                     mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
     queryset = ComplianceAction.objects.all()
-    permission_classes = [IsAuthenticated] # TODO is admin permission
+    permission_classes = [IsProgramManagerSuperAdmin]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     pagination_class = PageNumberPagination
     search_fields = ['status', 'created_by__username', 'created_by__email', 'documentation']
@@ -132,18 +132,20 @@ class ComplianceActionViewset(
                 documentation=vdata['documentation'],
                 created_by=user,
                 amount=vdata['amount'],
-                consumer=consumer,
-                merchant=merchant,
+                consumer_id=consumer,
+                merchant_id=merchant,
             )
+            ca.pre_check_action()
             # ca.signoffs.create(user=user)
 
-        if ca.signoffs.count() >= configs.NECCESARY_COMPLIANCE_SIGNOFFS:  # in case of 1 signoff required
-            ca.approve()
+        result = 'created'
+        # if ca.signoffs.count() >= configs.NECCESARY_COMPLIANCE_SIGNOFFS:  # in case of 1 signoff required
+        #     ca.approve()
+        #
+        #     # TODO for now, execute on approval
+        #     result = 'executed' if ca.execute() else 'failed'
 
-            # TODO for now, execute on approval
-            ca.execute()
-
-        return Response(status=status.HTTP_200_OK)
+        return Response(result, status=status.HTTP_200_OK)
 
     @action(detail=True, methods=['post'])
     def signoff(self, request, *args, **kwargs):
@@ -161,13 +163,14 @@ class ComplianceActionViewset(
 
             action.signoffs.create(user=user)  # may fail due to duplicated signoff
 
+            result = 'signed'
             if action.signoffs.count() >= configs.NECCESARY_COMPLIANCE_SIGNOFFS:
                 action.approve()
 
                 # TODO for now, execute on approval
-                action.execute()
+                result = 'executed' if action.execute() else 'failed'
 
-            return Response(status=status.HTTP_200_OK)
+            return Response(result, status=status.HTTP_200_OK)
 
         except (AttributeError, KeyError, ValueError):
             raise ValidationError('Invalid request')
@@ -186,6 +189,16 @@ class ComplianceActionViewset(
                 negative=get_wallet_balance(configs.NEGATIVE_ADJUSTMENT_WALLET_UID),
                 community=get_community_balance(),
                 humanity=get_humanity_balance(),
+
+                reserve_link=settings.BLOCKCHAIN_EXPLORER_LINK_TEMPLATE.format(
+                    address=get_wallet(configs.RESERVE_WALLET_UID)
+                ),
+                positive_link=settings.BLOCKCHAIN_EXPLORER_LINK_TEMPLATE.format(
+                    address=get_wallet(configs.POSITIVE_ADJUSTMENT_WALLET_UID)
+                ),
+                negative_link=settings.BLOCKCHAIN_EXPLORER_LINK_TEMPLATE.format(
+                    address=get_wallet(configs.NEGATIVE_ADJUSTMENT_WALLET_UID)
+                ),
             ), status=status.HTTP_200_OK)
         except (TimeoutError, NoWalletException, RuntimeError, ConnectionClosedOK) as error:
             logger.exception('Contract Error: {}'.format(error))
@@ -198,27 +211,19 @@ class ComplianceActionViewset(
             ), status=status.HTTP_200_OK)
 
 
-# class MultiQueryWrapper:
-#
-#     def __init__(self):
-#         self.a = Consumer.objects.all()
-#         self.b = Merchant.objects.all()
-#
-#     def filter(self, *args, **kwargs):
-#         self.a = self.a.filter(*args, **kwargs)
-#         self.b = self.b.filter(*args, **kwargs)
-#         return self
-#
-#     def distinct(self, *args, **kwargs):
-#         self.a = self.a.filter(*args, **kwargs)
-#         self.b = self.b.filter(*args, **kwargs)
-
-class ComplianceRecipientSearchViewset(mixins.ListModelMixin,
-                    mixins.RetrieveModelMixin,
-                    mixins.CreateModelMixin,
-                    viewsets.GenericViewSet):
+class ComplianceRecipientSearchViewset(viewsets.GenericViewSet):
     serializer_class = ComplianceRecipientSerializer
-    queryset = Consumer.objects.all()  # TODO both user and merchants
-    #permission_classes = [IsAuthenticated] # TODO is admin permission
+    permission_classes = [IsProgramManagerSuperAdmin]
     filter_backends = [SearchFilter]
-    search_fields = ['user__username', 'user__name', 'user__email', 'crypto_wallet_id']
+    search_fields_consumer = ['user__username', 'user__name', 'user__email', 'crypto_wallet_id']
+    search_fields_merchant = ['user__username', 'user__name', 'user__email', 'crypto_wallet_id', 'business_name']
+    search_fields = []
+
+    def list(self, request, *args, **kwargs):
+        self.search_fields = self.search_fields_consumer
+        list_consumer = self.filter_queryset(Consumer.objects.all())
+        self.search_fields = self.search_fields_consumer
+        list_merchant = self.filter_queryset(Merchant.objects.all())
+
+        serializer = self.get_serializer(list(list_consumer[:15]) + list(list_merchant[:15]), many=True)
+        return Response(serializer.data)

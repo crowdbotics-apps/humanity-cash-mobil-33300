@@ -5,10 +5,14 @@ import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "../../services/constants";
+import {useStores} from "../../models";
 
 const Users = () => {
   const api = useApi()
   const navigate = useNavigate()
+  const rootStore = useStores()
+  const {loginStore} = rootStore
+
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
   const [numberOfItems, setNumberOfItems] = useState(0);
@@ -17,6 +21,7 @@ const Users = () => {
   const searchQueryRef = useRef("");
 
   const getDwollaUsers = (searchData, page = 1, ordering = "") => {
+    if (!loginStore.canSeePersonalData) return
     setLoading(true)
     api.getDwollaUsers(searchData, page, ordering, 8).then((result) => {
       if (result.kind === "ok") {

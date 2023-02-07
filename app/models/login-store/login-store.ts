@@ -254,6 +254,8 @@ export const LoginStoreModel = types
       self.password_set = user.password_set
       self.verified_email = user.verified_email
       self.allow_touch_id = user.allow_touch_id
+      self.group = user.group
+      self.group_name = user.group_name
     },
     setRandomProfilePictureIndex(index) {
       self.random_profile_picture_index = index

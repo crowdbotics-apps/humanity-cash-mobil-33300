@@ -20,6 +20,7 @@ const UserActivities = () => {
   const searchQueryRef = useRef("");
 
   const getUserActivity = (searchData, page = 1, ordering = "") => {
+    if (!loginStore.canSeePersonalData) return
     setLoading(true)
     api.getUserActivity(searchData, page, ordering, 8).then((result) => {
       if (result.kind === "ok") {

@@ -1,5 +1,6 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import { COLOR, METRICS } from '../../theme';
+import styles from "../../components/connect-bank-modal/styles";
 
 export default StyleSheet.create({
   AGREE_CONTAINER: {
@@ -92,17 +93,29 @@ export default StyleSheet.create({
     marginRight: 10,
     width: 100
   },
+  COUPON_MERCHANT: {
+    color: COLOR.PALETTE.pureblack,
+    fontWeight: 'bold',
+    fontSize: 12,
+    marginVertical: 3,
+  },
   COUPON_TITLE: {
     color: COLOR.PALETTE.pureblack,
     fontSize: 12,
     marginVertical: 3,
-    textAlign: 'center',
   },
+  DateStyle :{
+  display: 'flex',
+   width: METRICS.screenWidth * 0.80,
+   marginTop: 10,
+  flexDirection: 'row',
+  justifyContent: 'space-between'
+},
   FAVORITE_ICON: {
 
-    bottom: 35, 
+    bottom: 35,
     height: 25,
-    left: 3, 
+    left: 3,
     position: 'absolute',
   },
   HEADER: {
@@ -115,17 +128,17 @@ export default StyleSheet.create({
   },
   ICON_WARNING: {
     color: '#D2A824',
-    fontSize: 10, 
-    fontWeight: 'bold', 
-    textAlign: 'center', 
-  }, 
+    fontSize: 10,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
   ICON_WARNING_CONTAINER: {
     borderColor: '#D2A824',
-    borderRadius: 2000, 
-    borderWidth: 1, 
-    height: 16, 
-    width: 16, 
-  }, 
+    borderRadius: 2000,
+    borderWidth: 1,
+    height: 16,
+    width: 16,
+  },
   INDUSTRY_TITLE: {
     color: COLOR.PALETTE.orange,
     fontSize: 12,
@@ -190,6 +203,9 @@ export default StyleSheet.create({
     padding: 10,
     width: METRICS.screenWidth * 0.80
   },
+  MarginTextStyle: {
+  color: 'black'
+},
   NEED_HELP_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
@@ -228,11 +244,12 @@ export default StyleSheet.create({
     height: null,
     width: METRICS.screenWidth * 0.80,
   },
-  NEWS_TAG: {
+ NEWS_TAG: {
     color: COLOR.PALETTE.gray,
     fontSize: 10
   },
-  NEWS_TITLE: {
+
+NEWS_TITLE: {
     color: COLOR.PALETTE.black,
     fontSize: 18,
     fontWeight: 'bold',

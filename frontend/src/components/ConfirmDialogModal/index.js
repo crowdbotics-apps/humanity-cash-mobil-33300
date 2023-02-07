@@ -13,7 +13,6 @@ const ConfirmDialogModal = ({
                               open,
                               handleClose,
                               handleConfirm,
-                              children=null
                             }) => {
   return (
     <Modal
@@ -42,16 +41,20 @@ const ConfirmDialogModal = ({
           {description}
         </Typography>
         <Grid container display={'flex'} justifyContent={'center'} mt={2}>
-          <Grid item xs={5}>
-            <MDButton variant="outlined" color="primary" fullWidth onClick={handleClose}>
-              {cancelText}
-            </MDButton>
-          </Grid>
-          <Grid item xs={5} ml={2}>
-            <MDButton variant="contained" color="primary" fullWidth onClick={handleConfirm}>
-              {confirmText}
-            </MDButton>
-          </Grid>
+            {cancelText &&
+              <Grid item xs={5}>
+                <MDButton variant="outlined" color="primary" fullWidth onClick={handleClose}>
+                  {cancelText}
+                </MDButton>
+              </Grid>
+            }
+            {confirmText &&
+                <Grid item xs={5} ml={2}>
+                    <MDButton variant="contained" color="primary" fullWidth onClick={handleConfirm}>
+                        {confirmText}
+                    </MDButton>
+                </Grid>
+            }
         </Grid>
       </Box>
     </Modal>

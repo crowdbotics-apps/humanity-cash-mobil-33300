@@ -57,6 +57,12 @@ const renderAction = (item, onAction) => {
         Sign Off
       </MDButton>
     )
+  } else if (item.status === 'Approved') {
+      return (
+          <MDButton color={"primary"} size={"small"} onClick={() => onAction(item)}>
+              Show error
+          </MDButton>
+    )
   } else {
     return '---'
   }

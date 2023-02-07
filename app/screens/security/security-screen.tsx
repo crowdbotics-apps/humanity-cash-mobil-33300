@@ -1,23 +1,46 @@
 import React, { useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, TouchableOpacity, KeyboardAvoidingView, ScrollView, Platform, TextInput, Switch } from "react-native"
+import {
+  View,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  TextInput,
+  Switch,
+  Alert
+} from "react-native"
 import { Text, Button, Screen } from "../../components"
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from "./security-style"
 import { COLOR, METRICS } from "../../theme"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { useStores } from "../../models"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { runInAction } from "mobx";
 import { notifyMessage } from "../../utils/helpers";
 
+import TouchID from 'react-native-touch-id'
+
+const optionalConfigObject = {
+  title: 'Authentication Required', // Android
+  imageColor: '#e00606', // Android
+  imageErrorColor: '#ff0000', // Android
+  sensorDescription: 'Touch sensor', // Android
+  sensorErrorDescription: 'Failed', // Android
+  cancelText: 'Cancel', // Android
+  fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+  unifiedErrors: false, // use unified error messages (default false)
+  passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
+};
 
 export const SecurityScreen = observer(function SecurityScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
+  const isFocused = useIsFocused();
+
   const { loginStore } = rootStore
   const [Loading, setLoading] = useState(false)
-
 
   const [Pass, setPass] = useState("")
   const [HidePass, setHidePass] = useState(true)
@@ -33,8 +56,21 @@ export const SecurityScreen = observer(function SecurityScreen() {
   const toggleSwitchCashier = () => setenableCashierView(previousState => !previousState)
 
   useEffect(() => {
-    setAllowTouchId(loginStore.ProfileData.allow_touch_id)
-  }, [])
+    if (isFocused) {
+      console.log(' loginStore.ProfileData.allow_touch_id => ', loginStore.ProfileData.allow_touch_id)
+      setAllowTouchId(loginStore.ProfileData.allow_touch_id || false)
+    }
+  }, [isFocused])
+
+  const pressHandler = () => {
+    if (loginStore.ProfileData.allow_touch_id) {
+      TouchID.authenticate('to check the user', optionalConfigObject)
+          .then(success => updateSecurity())
+          .catch(error => {
+            Alert.alert('Authentication Failed');
+          });
+    } else updateSecurity()
+  }
 
   const updateSecurity = () => {
     setLoading(true)
@@ -43,7 +79,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
         old_password: Pass,
         new_password: NewPass,
         new_password_confirm: NewPassConfirmation,
-        // allow_touch_id: allowTouchId
+        allow_touch_id: allowTouchId || false
       })
       .then((result: any) => {
         setLoading(false);
@@ -51,7 +87,7 @@ export const SecurityScreen = observer(function SecurityScreen() {
           setPass('');
           setNewPass('');
           setNewPassConfirmation('');  
-          notifyMessage('Password has been updated');
+          notifyMessage('The information has been updated');
           runInAction(() => {
             loginStore.setAllowTouchId(result.response)
             navigation.navigate("settings")
@@ -67,10 +103,6 @@ export const SecurityScreen = observer(function SecurityScreen() {
           notifyMessage(msg);
         }
       })
-  }
-
-  const passwordsValidations = () => {
-    if (NewPass !== NewPassConfirmation) return notifyMessage('Passwords does not match')
   }
 
   return (
@@ -164,7 +196,8 @@ export const SecurityScreen = observer(function SecurityScreen() {
         buttonStyle={{
           backgroundColor: loginStore.getAccountColor,
         }}
-        onPress={() => updateSecurity()}
+        // onPress={() => updateSecurity()}
+        onPress={() => pressHandler()}
         buttonLabel={'Save changes'}
       />
     </Screen>

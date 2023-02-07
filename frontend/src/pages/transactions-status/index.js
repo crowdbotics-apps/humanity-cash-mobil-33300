@@ -7,17 +7,20 @@ import ConfirmDialogInputModal from "../../components/ConfirmDialogInputModal";
 import MDInput from "../../components/MDInput";
 import MDButton from "../../components/MDButton";
 import MDBox from "../../components/MDBox";
+import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 
 const TransactionStatus = () => {
   const api = useApi()
   const [loading, setLoading] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentOrdering, setCurrentOrdering] = useState('');
   const [numberOfItems, setNumberOfItems] = useState(0);
   const [numberOfItemsPage, setNumberOfItemsPage] = useState(0);
   const [recordList, setRecordList] = useState({...dataTableModel})
   const [showPrivacyModal, setShowPrivacyModal] = useState(false)
   const [selectedItem, setSelectedItem] = useState(null)
   const [ShowConfirmationModal, setShowConfirmationModal] = useState(false)
+  const [ShowErrorModal, setShowErrorModal] = useState(false)
   const [userPassword, setUserPassword] = useState('')
   const [transactionStatus, setTransactionStatus] = useState('Pending')
   const searchQueryRef = useRef("");
@@ -42,10 +45,19 @@ const TransactionStatus = () => {
     setLoading(true)
     api.signoffTransaction(data).then((result) => {
       if (result.kind === "ok") {
+
         showMessage('Action executed successfully', 'success')
         clearDetail()
+        const action_result = result.response
+        if (action_result === 'signed'){
+          getTransactions('', currentPage, currentOrdering)
+        }else if (action_result === 'executed'){
+          setTransactionStatus('Executed')
+        }else if (action_result === 'failed') {
+          setTransactionStatus('Approved')
+        }
       } else if (result.kind === "bad-data") {
-        showMessage(result?.errors)
+        showMessage(result?.errors || result[0] || result)
       }
     })
       .catch(err => showMessage())
@@ -54,22 +66,32 @@ const TransactionStatus = () => {
   const onColumnOrdering = (ordering) => {
     const {column, order} = ordering
     if (column === '') {
+      setCurrentOrdering('')
       getTransactions(searchQueryRef?.current)
     } else if (order === 'asce') {
+      setCurrentPage(1)
+      setCurrentOrdering(`${column}`)
       getTransactions(searchQueryRef?.current, 1, `${column}`)
     } else {
+      setCurrentPage(1)
+      setCurrentOrdering(`-${column}`)
       getTransactions(searchQueryRef?.current, 1, `-${column}`)
     }
   }
 
   const setDetailToShow = (item) => {
-    setShowPrivacyModal(true)
     setSelectedItem(item)
+    if (item.status === 'Pending' && item.signable) {
+      setShowPrivacyModal(true)
+    } else if (item.status === 'Approved') {
+      setShowErrorModal(true)
+    }
   }
 
   const clearDetail = () => {
     setShowConfirmationModal(false)
     setShowPrivacyModal(false)
+    setShowErrorModal(false)
     setSelectedItem(null)
     setUserPassword('')
   }
@@ -93,15 +115,15 @@ const TransactionStatus = () => {
       type: 'fund_negative',
     },
     {
-      subTitle: ` to be minted to the Positive Mint Adjustment Account Wallet.`,
+      subTitle: ` to be burned from the Negative Adjustment Account Wallet.`,
       type: 'burn_from_negative',
     },
     {
-      subTitle: ` to revert a previous action`,
+      subTitle: ` to be transferred from the Negative Mint Adjustment Account Wallet to the Reserve Wallet.`,
       type: 'revert_fund_negative',
     },
     {
-      subTitle: `  to be burned from the Negative Adjustment Account Wallet.`,
+      subTitle: `  to be minted to the Positive Mint Adjustment Account Wallet.`,
       type: 'mint_to_positive',
     },
     {
@@ -109,7 +131,7 @@ const TransactionStatus = () => {
       type: 'positive_to_user',
     },
     {
-      subTitle: ` burn to revert previous action`,
+      subTitle: ` to be burned from the Positive Mint Adjustment Account Wallet`,
       type: 'revert_mint_to_positive',
     },
   ]
@@ -194,14 +216,28 @@ const TransactionStatus = () => {
           onChange={(evt) => setUserPassword(evt.target.value)}
         />
       </ConfirmDialogInputModal>
-      <ConfirmDialogInputModal
-        title={"Confirm Transaction"}
-        description={selectedAction(selectedItem)}
-        open={ShowConfirmationModal}
-        handleClose={() => clearDetail()}
-        handleConfirm={() => confirmAction()}
+      <ConfirmDialogModal
+          title={"Confirm Transaction"}
+          description={selectedAction(selectedItem)}
+          open={ShowConfirmationModal}
+          handleClose={() => clearDetail()}
+          handleConfirm={() => confirmAction()}
+          confirmText={'Confirm'}
+          cancelText={'Cancel'}
       >
-      </ConfirmDialogInputModal>
+      </ConfirmDialogModal>
+      <ConfirmDialogModal
+          title={"Transaction Latest Error"}
+          description={selectedItem && <pre style={{
+            whiteSpace: 'pre-wrap',
+            wordWrap: 'break-word'
+          }}
+          >{selectedItem.latest_error?.replaceAll(':', '\n')}</pre>}
+          open={ShowErrorModal}
+          cancelText={'Close'}
+          handleClose={() => clearDetail()}
+      >
+      </ConfirmDialogModal>
     </DashboardLayout>
   )
 }

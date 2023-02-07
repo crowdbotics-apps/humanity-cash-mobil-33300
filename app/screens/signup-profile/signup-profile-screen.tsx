@@ -160,7 +160,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			uri:
 				Platform.OS === "android"
 					? imageSource?.uri
-					: imageSource?.uri.replace("file://", ""),
+					: imageSource?.uri?.replace("file://", ""),
 			type: imageSource?.type,
 			name: imageSource?.fileName
 		}
@@ -169,7 +169,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			username: Username,
 			consumer_profile: pic
 		}, keys).then((result: any) => {
-			console.log(' ========>>>>>>>>>>>>>>>>> ', JSON.stringify(result, null, 2))
 			setLoading(false)
 			if (result.kind === "ok") {
 				setUsername('');
@@ -204,6 +203,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				setUsername('');
 				setName('');
 				setLastName('');
+				loginStore.setSelectedAccount('consumer')
 				// setStep('profile_type');
 				setShowThankyouModal(true);
 			} else if (result.kind === "bad-data") {
@@ -373,7 +373,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		<View style={styles.STEP_CONTAINER}>
 			<Text style={styles.STEP_TITLE}>{ProfileType.label} account</Text>
 			<View style={styles.LINE} />
-			<Text style={styles.SIGNUP_PROFILE_SUB_TITLE}>You do not have a business account linked. If you do have a business that accepts BerkShares you can sign up and link your business!</Text>
+			<Text style={styles.SIGNUP_PROFILE_SUB_TITLE}>You do not have a {ProfileType.label} account linked. Create one now and link your personal bank account!</Text>
 		</View>
 	)
 	const renderPicUsername = () => (
@@ -404,7 +404,10 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 				<Text style={styles.INPUT_LABEL_STYLE}>USER NAME*</Text>
 				<Text style={styles.INPUT_LABEL_ERROR}>{UsernameError ? UsernameErrorMsg : ''}</Text>
 			</View>
-			<View style={UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<View style={[
+				UsernameError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER,
+				{backgroundColor: `${ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}25`}
+				]}>
 				<TextInput
 					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
@@ -419,11 +422,14 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		<View style={styles.STEP_CONTAINER}>
 			<Text style={styles.STEP_TITLE}>Personal details</Text>
 			<View style={styles.LINE} />
-			<Text style={styles.STEP_SUB_TITLE}>We use your personal details to set up your Currents wallet. Don’t worry, this information is not shared publicy!</Text>
+			<Text style={styles.STEP_SUB_TITLE}>We use your personal details to set up your personal wallet. Don’t worry, this information is not shared publicy!</Text>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>FIRST NAME</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[
+				styles.INPUT_STYLE_CONTAINER,
+				{backgroundColor: `${ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}25`}
+				]}>
 				<TextInput
 					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
@@ -435,7 +441,10 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>LAST NAME</Text>
 			</View>
-			<View style={styles.INPUT_STYLE_CONTAINER}>
+			<View style={[
+				styles.INPUT_STYLE_CONTAINER,
+				{backgroundColor: `${ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}25`}
+			]}>
 				<TextInput
 					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 					style={styles.INPUT_STYLE}
@@ -585,7 +594,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		<View style={styles.STEP_CONTAINER}>
 			<Text style={styles.STEP_TITLE}>Business owner details</Text>
 			<View style={styles.LINE} />
-			<Text style={styles.STEP_SUB_TITLE}>We use your personal details to set up your BerkShares wallet. Don’t worry, this information is not shared publicy!</Text>
+			<Text style={styles.STEP_SUB_TITLE}>We use your personal details to set up your wallet. Don’t worry, this information is not shared publicy!</Text>
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 				<Text style={styles.INPUT_LABEL_STYLE}>FIRST NAME OF THE BUSINESS OWNER OR EXECUTIVE</Text>
 			</View>
@@ -872,13 +881,16 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	const thankyouModal = () => (
 		<Modal visible={ShowThankyouModal} transparent>
 			<View style={styles.THANK_MODAL}>
-				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Thank you! Welcome to the Currents App. Now it is time to add some Currents to your wallet!</Text>
+				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Welcome! Now it is time to load your wallet.</Text>
 				<View style={styles.CONTAINER}>
 					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
 					<Button
-						onPressIn={() => navigation.navigate('linkBank')}
-						buttonLabel={`Link my ${loginStore.getSelectedAccount === 'consumer' ? 'personal' : 'business'} bank account`}
-						buttonStyle={styles.SUBMIT_BUTTON}
+						onPress={() => navigation.navigate('linkBank')}
+						buttonLabel={`Link my ${ProfileType?.value === 'personal' ? 'personal' : 'business'} bank account`}
+						buttonStyle={[
+							styles.SUBMIT_BUTTON,
+							{backgroundColor: ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}
+						]}
 					/>
 				</View>
 			</View>
@@ -1021,6 +1033,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			{mapInputModal()}
 			{confirmLogoutModal()}
 			{thankyouModal()}
+			{console.log(' ==>>> ', ProfileType)}
 			<Button
 				disabled={ButtonDisabled || Loading}
 				onPress={() => nextButtonHandler()}
@@ -1031,7 +1044,10 @@ IDENTIFICATION NUMBER (ENTER ONE)
 						? `Sign up your ${ProfileType?.label || 'business'}`
 						: 'Next'
 				}
-				buttonStyle={(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON}
+				buttonStyle={[
+					(ButtonDisabled || Loading) ? styles.SUBMIT_BUTTON_DISABLED : styles.SUBMIT_BUTTON,
+					{backgroundColor: ProfileType?.value === 'personal' ? COLOR.PALETTE.blue : COLOR.PALETTE.green}
+				]}
 			/>
 		</Screen>
 	)
