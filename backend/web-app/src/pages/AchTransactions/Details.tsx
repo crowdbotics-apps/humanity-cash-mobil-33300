@@ -16,14 +16,8 @@ const AchTransactionsDetail: React.FC = observer(() => {
         })
         let detailData = []
         detailData.push(data)
-        console.log(detailData, 'useEffect')
         setDataDetail(detailData)
-
-        console.log(data, `//${id}`);
-
     }, [dataCompleted]);
-
-    console.log(dataDetail, 'dataDetaildataDetail--------')
 
     return (
         <div>

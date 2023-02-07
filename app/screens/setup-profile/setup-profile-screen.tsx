@@ -723,15 +723,15 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 			<View style={styles.SELECTS_CONTAINER}>
 				<View style={styles.CONTAINER}>
-					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}>
+					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.45 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>CITY</Text>
 					</View>
 					<View
-						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.65 }]}
+						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.45 }]}
 					>
 							<TextInput
 							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.60 }]}
+							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.40 }]}
 							onChangeText={t => setCity(t)}
 							value={City}
 							placeholder={'City'}
@@ -750,15 +750,15 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					</View>
 				</View>
 				<View style={styles.CONTAINER}>
-					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.2 }]}>
+					<View style={[styles.INPUT_LABEL_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.4 }]}>
 						<Text style={styles.INPUT_LABEL_STYLE}>STATE</Text>
 					</View>
 					<View style={[
 						styles.SELECT_INPUT_STYLE_CONTAINER,
-						{ width: METRICS.screenWidth * 0.25 }
+						{ width: METRICS.screenWidth * 0.45 }
 					]}>
 						<TouchableOpacity
-							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.2 }]}
+							style={[styles.SELECT_ICON, { width: METRICS.screenWidth * 0.4 }]}
 							onPress={() => [setSelectStateOpen(!SelectStateOpen)]}
 						>
 							<ModalSelector
@@ -831,10 +831,12 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 				<Text style={[styles.STEP_TITLE, { marginTop: 80 }]}>Welcome! Now it is time to load your wallet.</Text>
 				<View style={styles.CONTAINER}>
-					<Text onPress={() => [setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100 }]}>Skip for now</Text>
+					<Text onPress={() => [setLoading(true), setShowThankyouModal(false), navigation.navigate("home")]} style={[styles.NEED_HELP_LINK, { marginBottom: 100, height: 50 }]}>Skip for now</Text>
 					<Button
-						// onPress={() => nextButtonHandler()}
+						onPress={() => [setLoading(true), navigation.navigate('linkBank')]}
 						buttonLabel={`Link my ${loginStore.getSelectedAccount === 'consumer' ? 'personal' : 'business'} bank account`}
+						loading={Loading}
+						disabled={Loading}
 						buttonStyle={styles.SUBMIT_BUTTON}
 					/>
 				</View>
@@ -964,6 +966,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 
 			// fetchCity()
 			fetchState()
+		} else if (!isFocused) {
+			loginStore.setSetupData({});
+			setLoading(false)
 		}
 	}, [isFocused])
 

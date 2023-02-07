@@ -38,11 +38,11 @@ export const ForgotPasswordPage: React.FC = observer((props) => {
       api.forgotPassword(data).then((result: any) => {
         setLoading(false)
         if (result.kind === "ok") {
-          console.log(result.response.detail)
+          
           toast.success(result.response.detail, {
             position: toast.POSITION.TOP_CENTER
           });
-          console.log(result)
+          
           // navigate(ROUTES.DASHBOARD, {replace:true})
         } else {
           toast.error(getErrorMessages(result.errors), {

@@ -85,7 +85,7 @@ const SmartContracts: React.FC = observer(() => {
         return (
           <div className={'d-flex flex-row justify-content-end'}>
               <Button className={`${styles.actionButton} pull-right`} onClick={()=>{
-                  console.log("deactivate")
+                  
               }}>
                   Active
               </Button>
@@ -97,7 +97,7 @@ const SmartContracts: React.FC = observer(() => {
 
     const getContracts = ()=> {
         api.getContracts({}).then((response: any) => {
-            console.log(response.data)
+            
             if (response.kind === "ok") {
                 setPrevious(response.data.previous)
                 setNext(response.data.next)
@@ -119,18 +119,18 @@ const SmartContracts: React.FC = observer(() => {
 
             }
         }).catch((error: any) => {
-            console.log(error)
+            
             genericApiError()
         })
     }
 
     const onClickPage = (page:number)=>{
-        console.log("onclick page", page)
+        
         setCurrentPage(page)
     }
 
     const onPreviousPage = ()=>{
-        console.log("onPreviousPage page", Previous)
+        
         if(Previous){
             setCurrentPage(prevState => prevState-1)
         }
@@ -140,7 +140,7 @@ const SmartContracts: React.FC = observer(() => {
 
 
     const onNextPage = ()=>{
-        console.log("onNextPage page", Next)
+        
         if(Next){
             setCurrentPage(prevState => prevState+1)
         }

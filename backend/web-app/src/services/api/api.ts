@@ -76,7 +76,6 @@ export class Api extends ApiBase {
     async genericDelete(path:string) {
         this.simple_delete(path).then(response => {
             if (response.kind === "not-found") {
-                console.log("error deleting event", response)
                 toast.error("Object not found", {
                     position: toast.POSITION.TOP_CENTER
                 });

@@ -351,7 +351,6 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                       /> : null
                     }
                     <View style={styles.SEE_ON_MAP_LABEL}>
-                        {console.log(' ====>>>>>> ', JSON.stringify(SelectedDetail, null ,2))}
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.city + ' ' + SelectedDetail?.zip_code}</Text>

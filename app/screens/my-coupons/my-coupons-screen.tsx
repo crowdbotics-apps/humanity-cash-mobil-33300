@@ -45,7 +45,6 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		loginStore.environment.api
 			.getCoupons({merchant_id: loginStore.merchant_id})
 			.then((result: any) => {
-				console.log(' result ====>>> ', loginStore.merchant_id, JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					runInAction(() => {
 						loginStore.setMerchantCoupons(result?.data?.results);

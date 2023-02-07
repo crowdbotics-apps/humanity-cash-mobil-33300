@@ -53,7 +53,7 @@ const UsersPage: React.FC = observer(() => {
 
 
   useEffect(() => {
-    console.log("useEffect", userStore.access_token, userStore.group, userStore.role)
+    
     userStore.setUp()
     if (userStore.group === UserGroup.BANK.code){
       setColumnsTitles(COLUMN_TITLES.concat(['USERNAME']))
@@ -92,7 +92,7 @@ const UsersPage: React.FC = observer(() => {
     //   params["password"] = Password
     // }
     api.getDwollaUsers(params).then((response: any) => {
-      console.log("dwolla users", response.data)
+      
       if (response.kind === "ok") {
         setPrevious(response.data.previous)
         setNext(response.data.next)
@@ -127,7 +127,7 @@ const UsersPage: React.FC = observer(() => {
         setItems(tableRows)
       }
     }).catch((error: any) => {
-      console.log(error)
+      
       genericApiError()
     })
   }
@@ -138,7 +138,7 @@ const UsersPage: React.FC = observer(() => {
     }
 
     const applyFilter = (data:any)=>{
-        console.log(data)
+        
 
 
     }
@@ -150,12 +150,12 @@ const UsersPage: React.FC = observer(() => {
     }
 
   const onClickPage = (page:number)=>{
-    console.log("onclick page", page)
+    
     setCurrentPage(page)
   }
 
   const onPreviousPage = ()=>{
-    console.log("onPreviousPage page", Previous)
+    
     if(Previous){
       setCurrentPage(prevState => prevState-1)
     }
@@ -165,7 +165,7 @@ const UsersPage: React.FC = observer(() => {
 
 
   const onNextPage = ()=>{
-    console.log("onNextPage page", Next)
+    
     if(Next){
       setCurrentPage(prevState => prevState+1)
     }
@@ -185,11 +185,11 @@ const UsersPage: React.FC = observer(() => {
     }
 
     const onSubmit = ()=>{
-      console.log("onsubmit")
+      
     }
 
     const handleClose = ()=>{
-      console.log("handle close")
+      
       setShowPasswordModal(false)
     }
 

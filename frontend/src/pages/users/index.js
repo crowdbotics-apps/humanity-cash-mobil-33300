@@ -48,7 +48,6 @@ const Users = () => {
   }
 
   const setDetailToShow = (item) => {
-    console.log('item ', item)
     navigate(ROUTES.USER(item.id), {state: {type: item.account_type}})
   }
 

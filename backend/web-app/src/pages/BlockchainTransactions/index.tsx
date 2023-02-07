@@ -47,7 +47,7 @@ const BlockTransactionsPage: React.FC = observer(() => {
 
 
   useEffect(() => {
-    console.log("useEffect", userStore.access_token, userStore.group, userStore.role)
+    
     userStore.setUp()
     if (userStore.group === UserGroup.BANK.code) {
       setColumnsTitles(COLUMN_TITLES.concat(['USERNAME']))
@@ -83,7 +83,7 @@ const BlockTransactionsPage: React.FC = observer(() => {
     }
 
     api.getBlockchainTransaction(CurrentItem.id, params).then((result: any) => {
-      console.log(result)
+      
       if (result.kind === "ok") {
         const data = result.data
         const newArray = []
@@ -166,7 +166,7 @@ const BlockTransactionsPage: React.FC = observer(() => {
         setItems(tableRows)
       }
     }).catch((error: any) => {
-      console.log(error)
+      
       genericApiError()
     })
   }
@@ -177,7 +177,7 @@ const BlockTransactionsPage: React.FC = observer(() => {
   }
 
   const applyFilter = (data: any) => {
-    console.log(data)
+    
 
 
   }
@@ -188,12 +188,12 @@ const BlockTransactionsPage: React.FC = observer(() => {
   }
 
   const onClickPage = (page: number) => {
-    console.log("onclick page", page)
+    
     setCurrentPage(page)
   }
 
   const onPreviousPage = () => {
-    console.log("onPreviousPage page", Previous)
+    
     if (Previous) {
       setCurrentPage(prevState => prevState - 1)
     }
@@ -201,7 +201,7 @@ const BlockTransactionsPage: React.FC = observer(() => {
 
 
   const onNextPage = () => {
-    console.log("onNextPage page", Next)
+    
     if (Next) {
       setCurrentPage(prevState => prevState + 1)
     }
@@ -221,11 +221,11 @@ const BlockTransactionsPage: React.FC = observer(() => {
   }
 
   const onSubmit = () => {
-    console.log("onsubmit")
+    
   }
 
   const handleClose = () => {
-    console.log("handle close")
+    
     setShowPasswordModal(false)
   }
 
