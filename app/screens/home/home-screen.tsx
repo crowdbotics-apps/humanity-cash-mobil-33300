@@ -239,7 +239,7 @@ export const HomeScreen = observer(function HomeScreen() {
 					<Text style={styles.NEWS_TAG}>{DateFormat(n.start_date)}</Text>
 				</View>
 				<View style={styles.DateStyle}>
-					<Text style={styles.MarginTextStyle}>from: {dateFormat(n.start_date)}</Text>
+					<Text style={styles.MarginTextStyle}>From: {dateFormat(n.start_date)}</Text>
 					<Text style={styles.MarginTextStyle}>To: {dateFormat(n.end_date)}</Text>
 				</View>
 				<Text style={styles.NEWS_TITLE}>{n.title}</Text>

@@ -85,6 +85,7 @@ function ForgotPassword() {
             </MDBox>
           <MDBox mb={5} width={{xs: '100%', md: 600}} sx={{alignSelf: 'center'}}>
             <Formik
+              innerRef={formikRef}
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={values => {
