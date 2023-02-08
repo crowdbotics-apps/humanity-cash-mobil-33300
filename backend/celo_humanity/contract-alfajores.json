@@ -1,0 +1,1863 @@
+[
+{
+  "model": "celo_humanity.contract",
+  "pk": 1,
+  "fields": {
+    "contract_name": "Controller",
+    "description": "main humanity contract",
+    "deployed_address": "0x822502B6DEb8D1417E39b5445C15a9D90f30929b",
+    "version": "1.0.2.3",
+    "metadata": {
+      "compiler": {
+        "version": "0.8.7+commit.e28d00a7"
+      },
+      "language": "Solidity",
+      "output": {
+        "abi": [
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "_erc20Token",
+                "type": "address"
+              },
+              {
+                "internalType": "address",
+                "name": "_walletFactory",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_oldCommunityChestAddress",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_newCommunityChestAddress",
+                "type": "address"
+              }
+            ],
+            "name": "CommunityChestUpdated",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_oldFactoryAddress",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_newFactoryAddress",
+                "type": "address"
+              }
+            ],
+            "name": "FactoryUpdated",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_oldHumanityCashAddress",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_newHumanityCashAddress",
+                "type": "address"
+              }
+            ],
+            "name": "HumanityCashUpdated",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "_userId",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_walletAddress",
+                "type": "address"
+              }
+            ],
+            "name": "NewUser",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+              }
+            ],
+            "name": "OwnershipTransferred",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+              }
+            ],
+            "name": "Paused",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_redemptionFeeAddress",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_redemptionFee",
+                "type": "uint256"
+              }
+            ],
+            "name": "RedemptionFee",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_oldRedemptionFeeMinimum",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_newRedemptionFeeMinimum",
+                "type": "uint256"
+              }
+            ],
+            "name": "RedemptionFeeMinimumUpdated",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "int256",
+                "name": "_oldNumerator",
+                "type": "int256"
+              },
+              {
+                "indexed": false,
+                "internalType": "int256",
+                "name": "_oldDenominator",
+                "type": "int256"
+              },
+              {
+                "indexed": false,
+                "internalType": "int256",
+                "name": "_newNumerator",
+                "type": "int256"
+              },
+              {
+                "indexed": false,
+                "internalType": "int256",
+                "name": "_newDenominator",
+                "type": "int256"
+              }
+            ],
+            "name": "RedemptionFeeUpdated",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "previousAdminRole",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "newAdminRole",
+                "type": "bytes32"
+              }
+            ],
+            "name": "RoleAdminChanged",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+              }
+            ],
+            "name": "RoleGranted",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+              }
+            ],
+            "name": "RoleRevoked",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "_fromUserId",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_toAddress",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_amt",
+                "type": "uint256"
+              }
+            ],
+            "name": "RoundUpEvent",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "_fromUserId",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "_toUserId",
+                "type": "bytes32"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_amt",
+                "type": "uint256"
+              }
+            ],
+            "name": "TransferToEvent",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "_fromUserId",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_toAddress",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_amt",
+                "type": "uint256"
+              }
+            ],
+            "name": "TransferToEvent",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "_fromUserId",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "_toUserId",
+                "type": "bytes32"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_amt",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "string",
+                "name": "_memo",
+                "type": "string"
+              }
+            ],
+            "name": "TransferToEventWithMemo",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "_fromUserId",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_toAddress",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_amt",
+                "type": "uint256"
+              },
+              {
+                "indexed": false,
+                "internalType": "string",
+                "name": "_memo",
+                "type": "string"
+              }
+            ],
+            "name": "TransferToEventWithMemo",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": false,
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+              }
+            ],
+            "name": "Unpaused",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "_userId",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_operator",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_value",
+                "type": "uint256"
+              }
+            ],
+            "name": "UserDeposit",
+            "type": "event"
+          },
+          {
+            "anonymous": false,
+            "inputs": [
+              {
+                "indexed": true,
+                "internalType": "bytes32",
+                "name": "_userId",
+                "type": "bytes32"
+              },
+              {
+                "indexed": true,
+                "internalType": "address",
+                "name": "_operator",
+                "type": "address"
+              },
+              {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "_value",
+                "type": "uint256"
+              }
+            ],
+            "name": "UserWithdrawal",
+            "type": "event"
+          },
+          {
+            "inputs": [],
+            "name": "ADMIN_ROLE",
+            "outputs": [
+              {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "COMMUNITY_CHEST",
+            "outputs": [
+              {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "DEFAULT_ADMIN_ROLE",
+            "outputs": [
+              {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "HUMANITY_CASH",
+            "outputs": [
+              {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "OPERATOR_ROLE",
+            "outputs": [
+              {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "_walletAddress",
+                "type": "address"
+              }
+            ],
+            "name": "balanceOfWallet",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "_userId",
+                "type": "bytes32"
+              }
+            ],
+            "name": "balanceOfWallet",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "communityChestAddress",
+            "outputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "_userId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_value",
+                "type": "uint256"
+              }
+            ],
+            "name": "deposit",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "erc20Token",
+            "outputs": [
+              {
+                "internalType": "contract ERC20PresetMinterPauser",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+              }
+            ],
+            "name": "getRoleAdmin",
+            "outputs": [
+              {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+              }
+            ],
+            "name": "getRoleMember",
+            "outputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+              }
+            ],
+            "name": "getRoleMemberCount",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "getVersionNumber",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "pure",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "_userId",
+                "type": "bytes32"
+              }
+            ],
+            "name": "getWalletAddress",
+            "outputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_index",
+                "type": "uint256"
+              }
+            ],
+            "name": "getWalletAddressAtIndex",
+            "outputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "getWalletCount",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+              }
+            ],
+            "name": "grantRole",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+              }
+            ],
+            "name": "hasRole",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "humanityCashAddress",
+            "outputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "_userId",
+                "type": "bytes32"
+              }
+            ],
+            "name": "newWallet",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "owner",
+            "outputs": [
+              {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "pause",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "paused",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "redemptionFeeDenominator",
+            "outputs": [
+              {
+                "internalType": "int256",
+                "name": "",
+                "type": "int256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "redemptionFeeMinimum",
+            "outputs": [
+              {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "redemptionFeeNumerator",
+            "outputs": [
+              {
+                "internalType": "int256",
+                "name": "",
+                "type": "int256"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "renounceOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+              }
+            ],
+            "name": "renounceRole",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "role",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+              }
+            ],
+            "name": "revokeRole",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "_communityChest",
+                "type": "address"
+              }
+            ],
+            "name": "setCommunityChest",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "_humanityCashAddress",
+                "type": "address"
+              }
+            ],
+            "name": "setHumanityCashAddress",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "int256",
+                "name": "_numerator",
+                "type": "int256"
+              },
+              {
+                "internalType": "int256",
+                "name": "_denominator",
+                "type": "int256"
+              }
+            ],
+            "name": "setRedemptionFee",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "uint256",
+                "name": "_redemptionFeeMinimum",
+                "type": "uint256"
+              }
+            ],
+            "name": "setRedemptionFeeMinimum",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "_newFactoryAddress",
+                "type": "address"
+              }
+            ],
+            "name": "setWalletFactory",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes4",
+                "name": "interfaceId",
+                "type": "bytes4"
+              }
+            ],
+            "name": "supportsInterface",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "_fromUserId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "address",
+                "name": "_toAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_roundUpValue",
+                "type": "uint256"
+              }
+            ],
+            "name": "transfer",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "_fromUserId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "_toUserId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_roundUpValue",
+                "type": "uint256"
+              }
+            ],
+            "name": "transfer",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+              }
+            ],
+            "name": "transferContractOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+              }
+            ],
+            "name": "transferOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "userId",
+                "type": "bytes32"
+              }
+            ],
+            "name": "transferWalletOwnership",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "_fromUserId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "bytes32",
+                "name": "_toUserId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_roundUpValue",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "_memo",
+                "type": "string"
+              }
+            ],
+            "name": "transferWithMemo",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "_fromUserId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "address",
+                "name": "_toAddress",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_value",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_roundUpValue",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "_memo",
+                "type": "string"
+              }
+            ],
+            "name": "transferWithMemo",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "unpause",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "address",
+                "name": "_newLogic",
+                "type": "address"
+              }
+            ],
+            "name": "updateWalletImplementation",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "walletFactory",
+            "outputs": [
+              {
+                "internalType": "contract IWalletFactory",
+                "name": "",
+                "type": "address"
+              }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+          },
+          {
+            "inputs": [
+              {
+                "internalType": "bytes32",
+                "name": "_userId",
+                "type": "bytes32"
+              },
+              {
+                "internalType": "uint256",
+                "name": "_value",
+                "type": "uint256"
+              }
+            ],
+            "name": "withdraw",
+            "outputs": [
+              {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+              }
+            ],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          },
+          {
+            "inputs": [],
+            "name": "withdrawToOwner",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+          }
+        ],
+        "devdoc": {
+          "author": "Aaron Boyd <https://github.com/aaronmboyd>Sebastian Gerske <https://github.com/h34d>",
+          "details": "Administrative and orchestrator contract for local currencies",
+          "kind": "dev",
+          "methods": {
+            "balanceOfWallet(address)": {
+              "params": {
+                "_walletAddress": "wallet address"
+              },
+              "returns": {
+                "_0": "uint256 available balance"
+              }
+            },
+            "balanceOfWallet(bytes32)": {
+              "params": {
+                "_userId": "user identifier"
+              },
+              "returns": {
+                "_0": "uint256 available balance"
+              }
+            },
+            "constructor": {
+              "params": {
+                "_erc20Token": "token used"
+              }
+            },
+            "deposit(bytes32,uint256)": {
+              "params": {
+                "_userId": "User identifier",
+                "_value": "Amount to deposit"
+              }
+            },
+            "getRoleAdmin(bytes32)": {
+              "details": "Returns the admin role that controls `role`. See {grantRole} and {revokeRole}. To change a role's admin, use {_setRoleAdmin}."
+            },
+            "getRoleMember(bytes32,uint256)": {
+              "details": "Returns one of the accounts that have `role`. `index` must be a value between 0 and {getRoleMemberCount}, non-inclusive. Role bearers are not sorted in any particular way, and their ordering may change at any point. WARNING: When using {getRoleMember} and {getRoleMemberCount}, make sure you perform all queries on the same block. See the following https://forum.openzeppelin.com/t/iterating-over-elements-on-enumerableset-in-openzeppelin-contracts/2296[forum post] for more information."
+            },
+            "getRoleMemberCount(bytes32)": {
+              "details": "Returns the number of accounts that have `role`. Can be used together with {getRoleMember} to enumerate all bearers of a role."
+            },
+            "getVersionNumber()": {
+              "returns": {
+                "_0": "The storage, major, minor, and patch version of the contract."
+              }
+            },
+            "getWalletAddress(bytes32)": {
+              "params": {
+                "_userId": "user identifier"
+              },
+              "returns": {
+                "_0": "address of user's contract"
+              }
+            },
+            "getWalletAddressAtIndex(uint256)": {
+              "details": "Used for iterating the complete list of wallets"
+            },
+            "grantRole(bytes32,address)": {
+              "details": "Grants `role` to `account`. If `account` had not been already granted `role`, emits a {RoleGranted} event. Requirements: - the caller must have ``role``'s admin role. May emit a {RoleGranted} event."
+            },
+            "hasRole(bytes32,address)": {
+              "details": "Returns `true` if `account` has been granted `role`."
+            },
+            "newWallet(bytes32)": {
+              "params": {
+                "_userId": "user identifier"
+              }
+            },
+            "owner()": {
+              "details": "Returns the address of the current owner."
+            },
+            "pause()": {
+              "details": "Requirements: The contract must not be paused."
+            },
+            "paused()": {
+              "details": "Returns true if the contract is paused, and false otherwise."
+            },
+            "renounceOwnership()": {
+              "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+            },
+            "renounceRole(bytes32,address)": {
+              "details": "Revokes `role` from the calling account. Roles are often managed via {grantRole} and {revokeRole}: this function's purpose is to provide a mechanism for accounts to lose their privileges if they are compromised (such as when a trusted device is misplaced). If the calling account had been revoked `role`, emits a {RoleRevoked} event. Requirements: - the caller must be `account`. May emit a {RoleRevoked} event."
+            },
+            "revokeRole(bytes32,address)": {
+              "details": "Revokes `role` from `account`. If `account` had been granted `role`, emits a {RoleRevoked} event. Requirements: - the caller must have ``role``'s admin role. May emit a {RoleRevoked} event."
+            },
+            "setCommunityChest(address)": {
+              "params": {
+                "_communityChest": "new address"
+              }
+            },
+            "setHumanityCashAddress(address)": {
+              "params": {
+                "_humanityCashAddress": "new address"
+              }
+            },
+            "setRedemptionFee(int256,int256)": {
+              "params": {
+                "_denominator": "Redemption fee denominator",
+                "_numerator": "Redemption fee numerator"
+              }
+            },
+            "setRedemptionFeeMinimum(uint256)": {
+              "params": {
+                "_redemptionFeeMinimum": "Redemption fee minimum"
+              }
+            },
+            "setWalletFactory(address)": {
+              "params": {
+                "_newFactoryAddress": "new factory address"
+              }
+            },
+            "supportsInterface(bytes4)": {
+              "details": "See {IERC165-supportsInterface}."
+            },
+            "transfer(bytes32,address,uint256,uint256)": {
+              "params": {
+                "_fromUserId": "User identifier",
+                "_roundUpValue": "Round up value to transfer (can be zero)",
+                "_toAddress": "Receiver identifier",
+                "_value": "Amount to transfer"
+              }
+            },
+            "transfer(bytes32,bytes32,uint256,uint256)": {
+              "params": {
+                "_fromUserId": "User identifier",
+                "_roundUpValue": "Round up value to transfer (can be zero)",
+                "_toUserId": "Receiver identifier",
+                "_value": "Amount to transfer"
+              }
+            },
+            "transferContractOwnership(address)": {
+              "params": {
+                "newOwner": "new owner of this contract"
+              }
+            },
+            "transferOwnership(address)": {
+              "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+            },
+            "transferWalletOwnership(address,bytes32)": {
+              "params": {
+                "newOwner": "new owner of wallet",
+                "userId": "current owner of the wallet"
+              }
+            },
+            "transferWithMemo(bytes32,address,uint256,uint256,string)": {
+              "params": {
+                "_fromUserId": "User identifier",
+                "_memo": "Memo to send with the transfer",
+                "_roundUpValue": "Round up value to transfer (can be zero)",
+                "_toAddress": "Receiver identifier",
+                "_value": "Amount to transfer"
+              }
+            },
+            "transferWithMemo(bytes32,bytes32,uint256,uint256,string)": {
+              "params": {
+                "_fromUserId": "User identifier",
+                "_memo": "Memo to send with the transfer ",
+                "_roundUpValue": "Round up value to transfer (can be zero)",
+                "_toUserId": "Receiver identifier",
+                "_value": "Amount to transfer"
+              }
+            },
+            "unpause()": {
+              "details": "Requirements: The contract must be paused."
+            },
+            "updateWalletImplementation(address)": {
+              "details": "If the number of wallets is sufficiently large this      function may run out of gas",
+              "params": {
+                "_newLogic": "New implementation logic for wallet proxies"
+              }
+            },
+            "withdraw(bytes32,uint256)": {
+              "params": {
+                "_userId": "User identifier",
+                "_value": "Amount to withdraw"
+              }
+            },
+            "withdrawToOwner()": {
+              "details": "The contract must be pausedSends erc20 to current owner"
+            }
+          },
+          "title": "Controller contract",
+          "version": 1
+        },
+        "userdoc": {
+          "events": {
+            "CommunityChestUpdated(address,address)": {
+              "notice": "Triggered when the Community Chest address is updated"
+            },
+            "FactoryUpdated(address,address)": {
+              "notice": "Triggered when the Wallet Factory is updated"
+            },
+            "HumanityCashUpdated(address,address)": {
+              "notice": "Triggered when the Humanity Cash address is updated"
+            },
+            "NewUser(bytes32,address)": {
+              "notice": "Triggered when a new user has been created"
+            },
+            "RedemptionFee(address,uint256)": {
+              "notice": "Triggered when a redemption (withdrawal) fee is collected"
+            },
+            "RedemptionFeeMinimumUpdated(uint256,uint256)": {
+              "notice": "Triggered when the Redemption Fee Minimum is updated"
+            },
+            "RedemptionFeeUpdated(int256,int256,int256,int256)": {
+              "notice": "Triggered when the Redemption Fee is updated"
+            },
+            "RoundUpEvent(bytes32,address,uint256)": {
+              "notice": "Triggered when a round up has been sent from one account to another"
+            },
+            "TransferToEvent(bytes32,address,uint256)": {
+              "notice": "Triggered when an amount has been transferred from one wallet to another"
+            },
+            "TransferToEvent(bytes32,bytes32,uint256)": {
+              "notice": "Triggered when an amount has been transferred from one wallet to another"
+            },
+            "TransferToEventWithMemo(bytes32,address,uint256,string)": {
+              "notice": "Triggered when an amount has been transferred from one wallet to another"
+            },
+            "TransferToEventWithMemo(bytes32,bytes32,uint256,string)": {
+              "notice": "Triggered when an amount has been transferred from one wallet to another"
+            },
+            "UserDeposit(bytes32,address,uint256)": {
+              "notice": "Triggered when a user has deposited"
+            },
+            "UserWithdrawal(bytes32,address,uint256)": {
+              "notice": "Triggered when a user has withdrawn"
+            }
+          },
+          "kind": "user",
+          "methods": {
+            "balanceOfWallet(address)": {
+              "notice": "Retrieves the available balance of a wallet"
+            },
+            "balanceOfWallet(bytes32)": {
+              "notice": "Retrieves the available balance of a wallet"
+            },
+            "constructor": {
+              "notice": "Used to initialize a new Controller contract"
+            },
+            "deposit(bytes32,uint256)": {
+              "notice": "Deposits tokens in the wallet identified by the given user id"
+            },
+            "getVersionNumber()": {
+              "notice": "Returns the storage, major, minor, and patch version of the contract."
+            },
+            "getWalletAddress(bytes32)": {
+              "notice": "retrieve contract address for a Wallet"
+            },
+            "getWalletAddressAtIndex(uint256)": {
+              "notice": "Get wallet address at index"
+            },
+            "getWalletCount()": {
+              "notice": "Get count of wallets"
+            },
+            "newWallet(bytes32)": {
+              "notice": "create a new user and assign them a wallet contract"
+            },
+            "pause()": {
+              "notice": "Triggers stopped state."
+            },
+            "setCommunityChest(address)": {
+              "notice": "Update community chest address"
+            },
+            "setHumanityCashAddress(address)": {
+              "notice": "Update Humanity Cash Address"
+            },
+            "setRedemptionFee(int256,int256)": {
+              "notice": "Set redemption fee"
+            },
+            "setRedemptionFeeMinimum(uint256)": {
+              "notice": "Set redemption fee minimum"
+            },
+            "setWalletFactory(address)": {
+              "notice": "Public update to a new Wallet Factory"
+            },
+            "transfer(bytes32,address,uint256,uint256)": {
+              "notice": "Transfers a local currency token between two existing wallets"
+            },
+            "transfer(bytes32,bytes32,uint256,uint256)": {
+              "notice": "Transfers a local currency token between two existing wallets"
+            },
+            "transferContractOwnership(address)": {
+              "notice": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+            },
+            "transferWalletOwnership(address,bytes32)": {
+              "notice": "Transfers ownership of the wallet to a new account (`newOwner`). Can only be called by the current owner."
+            },
+            "transferWithMemo(bytes32,address,uint256,uint256,string)": {
+              "notice": "Transfers a local currency token between two existing wallets with an attached memo field"
+            },
+            "transferWithMemo(bytes32,bytes32,uint256,uint256,string)": {
+              "notice": "Transfers a local currency token between two existing wallets with an attached memo"
+            },
+            "unpause()": {
+              "notice": "Returns to normal state."
+            },
+            "updateWalletImplementation(address)": {
+              "notice": "Update implementation address for wallets"
+            },
+            "withdraw(bytes32,uint256)": {
+              "notice": "Withdraws tokens from the wallet identified by the given user id"
+            },
+            "withdrawToOwner()": {
+              "notice": "Emergency withdrawal of all remaining token to the owner account"
+            }
+          },
+          "version": 1
+        }
+      },
+      "settings": {
+        "compilationTarget": {
+          "contracts/Controller.sol": "Controller"
+        },
+        "evmVersion": "london",
+        "libraries": {},
+        "metadata": {
+          "bytecodeHash": "ipfs"
+        },
+        "optimizer": {
+          "enabled": false,
+          "runs": 200
+        },
+        "remappings": []
+      },
+      "sources": {
+        "@openzeppelin/contracts/access/AccessControl.sol": {
+          "keccak256": "0x5b35d8e68aeaccc685239bd9dd79b9ba01a0357930f8a3307ab85511733d9724",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://ba8eb2d22f9321bd4660f6617c181d9611ff30a9b089408b8c6e2216d6d5cdc5",
+            "dweb:/ipfs/QmTSJvhjHfnUV1j4hsqDv8PmLvGBLRs9gHLjTUXrUJ5Y9q"
+          ]
+        },
+        "@openzeppelin/contracts/access/AccessControlEnumerable.sol": {
+          "keccak256": "0x13f5e15f2a0650c0b6aaee2ef19e89eaf4870d6e79662d572a393334c1397247",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://7ee05f28f549a5d6515e152580716b87636ed4bfab9812499a6e3803df88288b",
+            "dweb:/ipfs/QmeEnhdwY1t5Y3YU5a4ffzgXuToydH2PNdNxV9W7dEPRQJ"
+          ]
+        },
+        "@openzeppelin/contracts/access/IAccessControl.sol": {
+          "keccak256": "0x59ce320a585d7e1f163cd70390a0ef2ff9cec832e2aa544293a00692465a7a57",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://bb2c137c343ef0c4c7ce7b18c1d108afdc9d315a04e48307288d2d05adcbde3a",
+            "dweb:/ipfs/QmUxhrAQM3MM3FF5j7AtcXLXguWCJBHJ14BRdVtuoQc8Fh"
+          ]
+        },
+        "@openzeppelin/contracts/access/IAccessControlEnumerable.sol": {
+          "keccak256": "0xba4459ab871dfa300f5212c6c30178b63898c03533a1ede28436f11546626676",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://3dcc7b09bfa6e18aab262ca372f4a9b1fc82e294b430706a4e1378cf58e6a276",
+            "dweb:/ipfs/QmT8oSAcesdctR15HMLhr2a1HRpXymxdjTfdtfTYJcj2N2"
+          ]
+        },
+        "@openzeppelin/contracts/access/Ownable.sol": {
+          "keccak256": "0xa94b34880e3c1b0b931662cb1c09e5dfa6662f31cba80e07c5ee71cd135c9673",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://40fb1b5102468f783961d0af743f91b9980cf66b50d1d12009f6bb1869cea4d2",
+            "dweb:/ipfs/QmYqEbJML4jB1GHbzD4cUZDtJg5wVwNm3vDJq1GbyDus8y"
+          ]
+        },
+        "@openzeppelin/contracts/security/Pausable.sol": {
+          "keccak256": "0x0849d93b16c9940beb286a7864ed02724b248b93e0d80ef6355af5ef15c64773",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://4ddabb16009cd17eaca3143feadf450ac13e72919ebe2ca50e00f61cb78bc004",
+            "dweb:/ipfs/QmSPwPxX7d6TTWakN5jy5wsaGkS1y9TW8fuhGSraMkLk2B"
+          ]
+        },
+        "@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+          "keccak256": "0x0e9621f60b2faabe65549f7ed0f24e8853a45c1b7990d47e8160e523683f3935",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://287a2f8d5814dd0f05f22b740f18ca8321acc21c9bd03a6cb2203ea626e2f3f2",
+            "dweb:/ipfs/QmZRQv9iuwU817VuqkA2WweiaibKii69x9QxYBBEfbNEud"
+          ]
+        },
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+          "keccak256": "0x24b04b8aacaaf1a4a0719117b29c9c3647b1f479c5ac2a60f5ff1bb6d839c238",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://43e46da9d9f49741ecd876a269e71bc7494058d7a8e9478429998adb5bc3eaa0",
+            "dweb:/ipfs/QmUtp4cqzf22C5rJ76AabKADquGWcjsc33yjYXxXC4sDvy"
+          ]
+        },
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+          "keccak256": "0x9750c6b834f7b43000631af5cc30001c5f547b3ceb3635488f140f60e897ea6b",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://5a7d5b1ef5d8d5889ad2ed89d8619c09383b80b72ab226e0fe7bde1636481e34",
+            "dweb:/ipfs/QmebXWgtEfumQGBdVeM6c71McLixYXQP5Bk6kKXuoY4Bmr"
+          ]
+        },
+        "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol": {
+          "keccak256": "0x0d19410453cda55960a818e02bd7c18952a5c8fe7a3036e81f0d599f34487a7b",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://4c0f62d3d5bef22b5ca00cc3903e7de6152cb68d2d22401a463f373cda54c00f",
+            "dweb:/ipfs/QmSfzjZux7LC7NW2f7rjCXTHeFMUCWERqDkhpCTBy7kxTe"
+          ]
+        },
+        "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol": {
+          "keccak256": "0x978847fbff92d66d27d8767402a90ba996970b1936b372406aa17f5492bd8dc5",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://1414cb92779420b50d3e796b47bad6ea800ef1805bc6f9bf35a3ccb4e17db3dc",
+            "dweb:/ipfs/QmaMzwYqLiivfaWSgqeaAPboBtJjVD1hSrH48p7ExJZ7DG"
+          ]
+        },
+        "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+          "keccak256": "0x8de418a5503946cabe331f35fe242d3201a73f67f77aaeb7110acb1f30423aca",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://5a376d3dda2cb70536c0a45c208b29b34ac560c4cb4f513a42079f96ba47d2dd",
+            "dweb:/ipfs/QmZQg6gn1sUpM8wHzwNvSnihumUCAhxD119MpXeKp8B9s8"
+          ]
+        },
+        "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol": {
+          "keccak256": "0xf41ca991f30855bf80ffd11e9347856a517b977f0a6c2d52e6421a99b7840329",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://b2717fd2bdac99daa960a6de500754ea1b932093c946388c381da48658234b95",
+            "dweb:/ipfs/QmP6QVMn6UeA3ByahyJbYQr5M6coHKBKsf3ySZSfbyA8R7"
+          ]
+        },
+        "@openzeppelin/contracts/token/ERC20/presets/ERC20PresetMinterPauser.sol": {
+          "keccak256": "0x2cd54808b851c4db22f459065af0b7a952262741a85a73923e7a660767cd7baa",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://750c4a78e953fe92317bba7166afd0a4b7725723e5822ea1b92ffd4e72d2d36b",
+            "dweb:/ipfs/QmZNyCSrdYXGQfmB6LkbX8R6y4gGZRNh1d2pJobYBpkaRF"
+          ]
+        },
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+          "keccak256": "0x032807210d1d7d218963d7355d62e021a84bf1b3339f4f50be2f63b53cccaf29",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://11756f42121f6541a35a8339ea899ee7514cfaa2e6d740625fcc844419296aa6",
+            "dweb:/ipfs/QmekMuk6BY4DAjzeXr4MSbKdgoqqsZnA8JPtuyWc6CwXHf"
+          ]
+        },
+        "@openzeppelin/contracts/utils/Address.sol": {
+          "keccak256": "0xd6153ce99bcdcce22b124f755e72553295be6abcd63804cfdffceb188b8bef10",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://35c47bece3c03caaa07fab37dd2bb3413bfbca20db7bd9895024390e0a469487",
+            "dweb:/ipfs/QmPGWT2x3QHcKxqe6gRmAkdakhbaRgx3DLzcakHz5M4eXG"
+          ]
+        },
+        "@openzeppelin/contracts/utils/Context.sol": {
+          "keccak256": "0xe2e337e6dde9ef6b680e07338c493ebea1b5fd09b43424112868e9cc1706bca7",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://6df0ddf21ce9f58271bdfaa85cde98b200ef242a05a3f85c2bc10a8294800a92",
+            "dweb:/ipfs/QmRK2Y5Yc6BK7tGKkgsgn3aJEQGi5aakeSPZvS65PV8Xp3"
+          ]
+        },
+        "@openzeppelin/contracts/utils/Strings.sol": {
+          "keccak256": "0xaf159a8b1923ad2a26d516089bceca9bdeaeacd04be50983ea00ba63070f08a3",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://6f2cf1c531122bc7ca96b8c8db6a60deae60441e5223065e792553d4849b5638",
+            "dweb:/ipfs/QmPBdJmBBABMDCfyDjCbdxgiqRavgiSL88SYPGibgbPas9"
+          ]
+        },
+        "@openzeppelin/contracts/utils/introspection/ERC165.sol": {
+          "keccak256": "0xd10975de010d89fd1c78dc5e8a9a7e7f496198085c151648f20cba166b32582b",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://fb0048dee081f6fffa5f74afc3fb328483c2a30504e94a0ddd2a5114d731ec4d",
+            "dweb:/ipfs/QmZptt1nmYoA5SgjwnSgWqgUSDgm4q52Yos3xhnMv3MV43"
+          ]
+        },
+        "@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+          "keccak256": "0x447a5f3ddc18419d41ff92b3773fb86471b1db25773e07f877f548918a185bf1",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://be161e54f24e5c6fae81a12db1a8ae87bc5ae1b0ddc805d82a1440a68455088f",
+            "dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
+          ]
+        },
+        "@openzeppelin/contracts/utils/structs/EnumerableMap.sol": {
+          "keccak256": "0x1b8ac5ffdb80c20c9188267455197d9dcfeef46379aeb1b3a6cc622e879895ad",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://5e531d0792e4774e2edabb34a5bed8e96ac80a84e08ebd5ebf7a0d15185e4f37",
+            "dweb:/ipfs/QmPwWjhL1phGiGfP5R8Kzp3bQuVigkornTcSy9KaQnou1E"
+          ]
+        },
+        "@openzeppelin/contracts/utils/structs/EnumerableSet.sol": {
+          "keccak256": "0x5050943b32b6a8f282573d166b2e9d87ab7eb4dbba4ab6acf36ecb54fe6995e4",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://d4831d777a29ebdf9f2caecd70e74b97bff1b70e53622fd0a02aed01e21c8271",
+            "dweb:/ipfs/QmUqurVVnCc7XkMxb2k23TVQUtuhHZduJ3hTZarTJrqU24"
+          ]
+        },
+        "contracts/Controller.sol": {
+          "keccak256": "0x824cebbbe8644c389aeca7b27b1b1650905cd083eb4d94d1e44152c52d66f350",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://437712b33e3c565112d5baf98d0a8d7a0ca8bbd52635efd73b4048080765b3a6",
+            "dweb:/ipfs/QmScfDDDDowmTBZRBpbMwp3bRnXdsYa2HTSeL5i1MrzwLU"
+          ]
+        },
+        "contracts/interface/IController.sol": {
+          "keccak256": "0x3199b7c2c78637935af1ea976903803c81b698d2ef934855795dfce0a4b530e8",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://364c15f5a3bb9ed8c01e232e5a824c6d395c65c995bc34b6f7dfda6a22729516",
+            "dweb:/ipfs/QmQGePPZcfBV1d22dVxLChWDHsbrStC8HnkXARuBoZ3nSf"
+          ]
+        },
+        "contracts/interface/IVersionedContract.sol": {
+          "keccak256": "0xbfad6e1f0f3e0b50d10adf67ceb8880c62638513891c6db237ff555228f51ce2",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://00aa26905ee1bfc37a1a1172f1fe64a1f938b52eaf3f994cc92363656fd5916a",
+            "dweb:/ipfs/QmVyVnk5Bcwf13H2VXCg7DpMucF7sn6uavnisiHU3gD3iZ"
+          ]
+        },
+        "contracts/interface/IWallet.sol": {
+          "keccak256": "0x153d0a98f75e4476aa2e32441fa5942da8f1a07ffce2c4db14668be433dff279",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://ca19291cedb84cdbd7e301ce58eea8e6425ac71e8ef64eb7a52d13bed33924d2",
+            "dweb:/ipfs/QmXZYknBUXgRCB4UN1amPfPkgNFzGHSXQijJQ51ptotxDH"
+          ]
+        },
+        "contracts/interface/IWalletFactory.sol": {
+          "keccak256": "0xf59c5f5350376b15deaa4362d9a3608d358cf7b485ef9a0a18b4b80044e2c5fa",
+          "license": "MIT",
+          "urls": [
+            "bzz-raw://c046e362695b68128d9625922930bab761992e62ee7841abc35157e931ba3db8",
+            "dweb:/ipfs/QmWnUy4B4EkQ9CGR9Y7nukH86UFiJygm1Kjyajqc2Nfhij"
+          ]
+        },
+        "contracts/lib/ABDKMath64x64.sol": {
+          "keccak256": "0xae091a78b7fbfa309db6ac054bb6ff2a172b04152f46feb85fde8dfee2bf4e87",
+          "license": "BSD-4-Clause",
+          "urls": [
+            "bzz-raw://74c713c9a76b16df9a1a1629ecbd422b43866e841d10a99b526daca44cffa19c",
+            "dweb:/ipfs/QmPHPph8K3GD4kQar54ZtH7XPnxvTKKAN6jd3Rc6QKaZiJ"
+          ]
+        }
+      },
+      "version": 1
+    },
+    "active": true
+  }
+}
+]

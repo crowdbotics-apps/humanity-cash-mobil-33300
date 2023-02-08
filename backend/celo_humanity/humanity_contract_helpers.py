@@ -3,7 +3,7 @@ import json
 
 from celo_humanity.models import Contract, Transaction
 from celo_humanity.web3helpers import get_txn_receipt, get_provider
-from web3.exceptions import BadFunctionCallOutput
+from web3.exceptions import BadFunctionCallOutput, ContractLogicError
 from web3 import Web3
 
 
@@ -12,6 +12,10 @@ class NoWalletException(Exception):
 
 
 class WalletAlreadyCreatedException(Exception):
+    ...
+
+
+class ContractCallException(Exception):
     ...
 
 
@@ -44,20 +48,23 @@ def uid_to_wallet(uid):
 def get_wallet(uid, create=True, profile=None):
     try:
         return get_humanity_contract().proxy.getWalletAddress(uid)
-    except BadFunctionCallOutput:
+    except (BadFunctionCallOutput, ContractLogicError):
         if create:
             txn = get_humanity_contract().proxy.newWallet(uid, transact=True)
-            rcp = get_txn_receipt(txn)
 
             Transaction.objects.create(
                 contract=get_humanity_contract(),
                 transaction_id=txn.hex(),
                 method_or_memo=f'create wallet to user {uid}',
-                receipt=Web3.toJSON(rcp),
+                receipt=None,
                 crypto_wallet_id=uid,
                 type=Transaction.Type.new_wallet,
                 **fromandto_to_kwargs(profile)
             )
+
+            rcp = get_txn_receipt(txn)
+            transaction.receipt = Web3.toJSON(rcp)
+            transaction.save()
         else:
             # raise NoWalletException()
             return None
@@ -73,29 +80,36 @@ def get_wallet_balance(uid, param_types='bytes32'):
 
 
 def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart_profile):
-    txn = get_humanity_contract().proxy.transfer(from_uid,
-                                                 to_uid,
-                                                 usd2crypto(amount),
-                                                 usd2crypto(roundup_amount),
-                                                 transact=True,
-                                                 param_types='bytes32,bytes32,uint256,uint256'
-                                                 )
-    rcp = get_txn_receipt(txn)
+    transaction = None
+    try:
+        txn = get_humanity_contract().proxy.transfer(from_uid,
+                                                     to_uid,
+                                                     usd2crypto(amount),
+                                                     usd2crypto(roundup_amount),
+                                                     transact=True,
+                                                     param_types='bytes32,bytes32,uint256,uint256'
+                                                     )
 
-    transaction = Transaction.objects.create(
-        contract=get_humanity_contract(),
-        transaction_id=txn.hex(),
-        method_or_memo=f'transfer {amount} from user {from_uid} to user {to_uid}, roundup {roundup_amount}',
-        receipt=Web3.toJSON(rcp),
-        crypto_wallet_id=from_uid,
-        amount=amount,
-        counterpart_crypto_wallet_id=to_uid,
-        type=Transaction.Type.transfer,
-        **fromandto_to_kwargs(profile, counterpart_profile)
-    )
+        transaction = Transaction.objects.create(
+            contract=get_humanity_contract(),
+            transaction_id=txn.hex(),
+            method_or_memo=f'transfer {amount} from user {from_uid} to user {to_uid}, roundup {roundup_amount}',
+            receipt=None,
+            crypto_wallet_id=from_uid,
+            amount=amount,
+            counterpart_crypto_wallet_id=to_uid,
+            type=Transaction.Type.transfer,
+            **fromandto_to_kwargs(profile, counterpart_profile)
+        )
 
-    # TODO wrap exceptions
+        rcp = get_txn_receipt(txn)
+        transaction.receipt = Web3.toJSON(rcp)
+        transaction.save()
+    except (BadFunctionCallOutput, ContractLogicError) as exc:
+        raise ContractCallException() from exc
+
     return transaction
+
 
 
 def burn_coin(from_uid, amount, profile=None):
@@ -103,23 +117,30 @@ def burn_coin(from_uid, amount, profile=None):
 
 
 def withdraw_coin(from_uid, amount, profile=None, action_name='withdraw (burn)'):
-    txn = get_humanity_contract().proxy.withdraw(from_uid,
-                                                 usd2crypto(amount),
-                                                 transact=True,
-                                                 )
-    rcp = get_txn_receipt(txn)
+    transaction = None
+    try:
+        txn = get_humanity_contract().proxy.withdraw(from_uid,
+                                                     usd2crypto(amount),
+                                                     transact=True,
+                                                     )
 
-    transaction = Transaction.objects.create(
-        contract=get_humanity_contract(),
-        transaction_id=txn.hex(),
-        amount=amount,
-        method_or_memo=f'{action_name} {amount} from user {from_uid}',
-        receipt=Web3.toJSON(rcp),
-        crypto_wallet_id=from_uid,
-        type=Transaction.Type.withdraw,
-        **fromandto_to_kwargs(profile)
-    )
-    # TODO wrap exceptions
+        transaction = Transaction.objects.create(
+            contract=get_humanity_contract(),
+            transaction_id=txn.hex(),
+            amount=amount,
+            method_or_memo=f'{action_name} {amount} from user {from_uid}',
+            receipt=None,
+            crypto_wallet_id=from_uid,
+            type=Transaction.Type.withdraw,
+            **fromandto_to_kwargs(profile)
+        )
+
+        rcp = get_txn_receipt(txn)
+        transaction.receipt = Web3.toJSON(rcp)
+        transaction.save()
+    except (BadFunctionCallOutput, ContractLogicError) as exc:
+        raise ContractCallException() from exc
+
     return transaction
 
 
@@ -128,23 +149,30 @@ def mint_coin(to_uid, amount, profile=None):
 
 
 def deposit_coin(to_uid, amount, profile=None, action_name='deposit (mint)'):
-    txn = get_humanity_contract().proxy.deposit(to_uid,
-                                                usd2crypto(amount),
-                                                transact=True,
-                                                )
-    rcp = get_txn_receipt(txn)
+    transaction = None
+    try:
+        txn = get_humanity_contract().proxy.deposit(to_uid,
+                                                    usd2crypto(amount),
+                                                    transact=True,
+                                                    )
 
-    transaction = Transaction.objects.create(
-        contract=get_humanity_contract(),
-        transaction_id=txn.hex(),
-        amount=amount,
-        method_or_memo=f'{action_name} {amount} to user {to_uid}',
-        receipt=Web3.toJSON(rcp),
-        crypto_wallet_id=to_uid,
-        type=Transaction.Type.deposit,
-        **fromandto_to_kwargs(counterpart_profile=profile)
-    )
-    # TODO wrap exceptions
+        transaction = Transaction.objects.create(
+            contract=get_humanity_contract(),
+            transaction_id=txn.hex(),
+            amount=amount,
+            method_or_memo=f'{action_name} {amount} to user {to_uid}',
+            receipt=None,
+            crypto_wallet_id=to_uid,
+            type=Transaction.Type.deposit,
+            **fromandto_to_kwargs(counterpart_profile=profile)
+        )
+
+        rcp = get_txn_receipt(txn)
+        transaction.receipt = Web3.toJSON(rcp)
+        transaction.save()
+    except (BadFunctionCallOutput, ContractLogicError) as exc:
+        raise ContractCallException() from exc
+
     return transaction
 
 

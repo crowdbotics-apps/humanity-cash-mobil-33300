@@ -92,6 +92,8 @@ class Transaction(models.Model):
     def confirmations(self):
         if settings.DEBUG:
             return 0
+        if self.receipt is not None:
+            return 1
         from celo_humanity.humanity_contract_helpers import get_transaction_confirmations
         return get_transaction_confirmations(self.transaction_id)
 
