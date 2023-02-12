@@ -16,12 +16,9 @@ def get_provider():
     if web3provider is None:
         web3provider = Web3(load_provider_from_uri(settings.CONTRACT_PROVIDER_URL))
 
-        if settings.CONTRACT_PRIVATE_KEY:
-            account = Account.from_key(settings.CONTRACT_PRIVATE_KEY)
-            web3provider.middleware_onion.inject(geth_poa_middleware, layer=0)
-            web3provider.middleware_onion.add(construct_sign_and_send_raw_middleware(account))
-        elif settings.CONTRACT_MNEMONIC:
-            account = Account.from_mnemonic(settings.CONTRACT_MNEMONIC)
+        account = Account.from_key(settings.CONTRACT_PRIVATE_KEY) if settings.CONTRACT_PRIVATE_KEY else None
+        account = Account.from_mnemonic(settings.CONTRACT_MNEMONIC) if settings.CONTRACT_MNEMONIC else account
+        if account:
             web3provider.middleware_onion.inject(geth_poa_middleware, layer=0)
             web3provider.middleware_onion.add(construct_sign_and_send_raw_middleware(account))
 
