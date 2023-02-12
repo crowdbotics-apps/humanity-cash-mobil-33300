@@ -51,8 +51,8 @@ class ContractProxy(object):
             if signature:
                 method_with_sig = self.contract.get_function_by_signature(signature=signature)
 
-            if kwargs.get('testi', False):
-                del kwargs['testi']
+            if kwargs.get('test_contract_call', False):
+                del kwargs['test_contract_call']
                 return (method_with_sig if method_with_sig else method)(*args, **kwargs)
 
             if transact:
