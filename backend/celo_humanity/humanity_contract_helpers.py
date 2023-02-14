@@ -52,7 +52,7 @@ def get_wallet(uid, create=True, profile=None):
         if create:
             txn = get_humanity_contract().proxy.newWallet(uid, transact=True)
 
-            Transaction.objects.create(
+            transaction = Transaction.objects.create(
                 contract=get_humanity_contract(),
                 transaction_id=txn.hex(),
                 method_or_memo=f'create wallet to user {uid}',
@@ -97,6 +97,7 @@ def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart
             receipt=None,
             crypto_wallet_id=from_uid,
             amount=amount,
+            # roundup_amount=roundup_amount,
             counterpart_crypto_wallet_id=to_uid,
             type=Transaction.Type.transfer,
             **fromandto_to_kwargs(profile, counterpart_profile)
