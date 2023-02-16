@@ -7,4 +7,4 @@ build:
 release:
   image: web
   command:
-    - python3 manage.py migrate
+    - python3 manage.py migrate && python3 manage.py refresh_transaction_receipts
