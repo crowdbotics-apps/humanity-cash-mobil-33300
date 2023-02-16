@@ -6,12 +6,15 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from admin.api.v1.serializers.user_serializer import ResetPasswordSerializer, ResetPasswordConfirmSerializer, \
     UserAdminSerializer, UserDetailAdminSerializer, CustomPasswordResetForm
+from celo_humanity.humanity_contract_helpers import get_humanity_contract
 from home.api.v1.serializers.signup_signin_serializers import VerificationCodeSerializer
 from home.helpers import get_user_by_uidb64, AuthenticatedAPIView, setup_verification_code, send_verification_email
+from users import IsProgramManagerAdmin, IsProgramManagerSuperAdmin
 
 User = get_user_model()
 
@@ -101,3 +104,15 @@ class UserAdminViewSet(AuthenticatedAPIView, ModelViewSet):
                 return self.detail_serializer_class
 
         return super(UserAdminViewSet, self).get_serializer_class()
+
+
+class UpdateContractStateView(AuthenticatedAPIView):
+    permission_classes = [IsProgramManagerSuperAdmin]
+
+    def post(self, request, **kwargs):
+        contract_status = get_humanity_contract().proxy.paused()
+        if contract_status:
+            get_humanity_contract().proxy.unpause()
+        else:
+            get_humanity_contract().proxy.pause()
+        return Response(status=status.HTTP_200_OK)

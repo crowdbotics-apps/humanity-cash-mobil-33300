@@ -137,6 +137,9 @@ export class Api extends ApiBase {
   async getComplianceRecipient(data: any): Promise<Types.ListResult> {
     return this.simple_get(API_VERSION_PREFIX + "/compliance_recipient/", data)
   }
+  async updateContractState(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(API_VERSION_PREFIX + "/update-contract-state/", data)
+  }
 
   async getUserActivity(searchData: string, page: number = 1, ordering: string = '', page_size: number = 25, extraData: any = {}): Promise<Types.SimpleGetResult> {
     const filters = `?page_size=${page_size}&page=${page}&search=${searchData}&ordering=${ordering}`
