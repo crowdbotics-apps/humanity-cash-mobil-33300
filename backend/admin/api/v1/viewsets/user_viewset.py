@@ -112,7 +112,7 @@ class UpdateContractStateView(AuthenticatedAPIView):
     def post(self, request, **kwargs):
         contract_status = get_humanity_contract().proxy.paused()
         if contract_status:
-            get_humanity_contract().proxy.unpause()
+            get_humanity_contract().proxy.unpause(transact=True)
         else:
-            get_humanity_contract().proxy.pause()
+            get_humanity_contract().proxy.pause(transact=True)
         return Response(status=status.HTTP_200_OK)
