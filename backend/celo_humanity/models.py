@@ -1,13 +1,17 @@
+import json
 import logging
 from datetime import datetime
 
 from django.conf import settings
 from django.db import models
 from rest_framework.exceptions import ValidationError
+from web3._utils.encoding import to_json
 
 from base import configs
-from celo_humanity.web3helpers import get_contract, ContractProxy
-
+from celo_humanity.web3helpers import get_contract, ContractProxy, is_json, hextring_object_hook, get_txn_receipt, \
+    MyWeb3JsonEncoder
+from home.utils import flat_map
+from descriptors import cachedclassproperty
 
 # Create your models here.
 
@@ -69,6 +73,7 @@ class Transaction(models.Model):
     friendly_memo = models.CharField(max_length=255, null=False, blank=True)
     receipt_id = models.CharField(max_length=255, null=True, blank=False)
     receipt = models.TextField(null=True)
+    events_in_receipt = models.JSONField(null=True)
     created = models.DateTimeField(auto_now=True)
     amount = models.DecimalField(null=True, decimal_places=2, max_digits=14)
 
@@ -82,6 +87,7 @@ class Transaction(models.Model):
                                              related_name='counterpart_transactions')
     counterpart_merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL,
                                              related_name='counterpart_transactions')
+
     class Meta:
         ordering = ['-id']
 
@@ -124,6 +130,33 @@ class Transaction(models.Model):
     def get_merchant_data(self):
         if hasattr(self, 'merchant'):
             return self.merchant
+
+    @cachedclassproperty
+    def events_to_listen(cls):
+        from celo_humanity.humanity_contract_helpers import get_humanity_contract
+        contract_events = get_humanity_contract().proxy.contract.events
+        return [
+            contract_events.RedemptionFee(),
+            contract_events.RoundUpEvent(),
+        ]
+
+    def process_receipt_events(self, save=True):
+        if not is_json(self.receipt):
+            return
+        receipt = json.loads(self.receipt, object_hook=hextring_object_hook)
+        self.events_in_receipt = json.loads(json.dumps(
+           list(flat_map(lambda evt: evt.processReceipt(receipt), self.events_to_listen)),
+           cls=MyWeb3JsonEncoder,
+        ))
+        if save:
+            self.save()
+
+    def get_receipt(self, save=True):
+        rcp = get_txn_receipt(self.transaction_id)
+        self.receipt = to_json(rcp)
+        if save:
+            self.save()
+        self.process_receipt_events(save)
 
 
 class ACHTransaction(models.Model):
@@ -280,7 +313,6 @@ class ComplianceAction(models.Model):
             if self.amount > get_wallet_balance(configs.POSITIVE_ADJUSTMENT_WALLET_UID):
                 raise ValidationError('Insufficient Positive Adjustment Wallet Balance')
 
-
     def execute(self):
         if self.status != ComplianceAction.Status.approved:
             raise Exception('Action not in approved state (required)')
@@ -357,7 +389,6 @@ class ComplianceActionSignoff(models.Model):
     action = models.ForeignKey(ComplianceAction, null=False, on_delete=models.CASCADE, related_name='signoffs')
     signoff_time = models.DateTimeField(auto_now=True)
     user = models.ForeignKey('users.User', on_delete=models.PROTECT, related_name='signoffs')
-
 
     class Meta:
         constraints = [
