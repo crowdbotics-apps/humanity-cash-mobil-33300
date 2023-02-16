@@ -417,22 +417,22 @@ const AdminWalletControl = () => {
             <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={16}>TOTAL ROUND UP SAVINGS</MDTypography>
             <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23}
                           mt={3}>{money_fmt(communityAmount)}</MDTypography>
-            <MDBox display={'flex'} mt={'auto'} alignItems={'center'}>
-              <MDBox
-                sx={{backgroundColor: 'rgba(252,113,0,0.2)', borderRadius: 4, width: 54, height: 54}}
-                display={'flex'}
-                justifyContent={'center'}
-                alignItems={'center'}
-              >
-                <Icon fontSize="medium" sx={{color: '#ab5b2b'}}>
-                  north
-                </Icon>
-              </MDBox>
-              <MDBox ml={2}>
-                <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={27}>0 $</MDTypography>
-                <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={17}>TRANSFERRED</MDTypography>
-              </MDBox>
-            </MDBox>
+            {/*<MDBox display={'flex'} mt={'auto'} alignItems={'center'}>*/}
+            {/*  <MDBox*/}
+            {/*    sx={{backgroundColor: 'rgba(252,113,0,0.2)', borderRadius: 4, width: 54, height: 54}}*/}
+            {/*    display={'flex'}*/}
+            {/*    justifyContent={'center'}*/}
+            {/*    alignItems={'center'}*/}
+            {/*  >*/}
+            {/*    <Icon fontSize="medium" sx={{color: '#ab5b2b'}}>*/}
+            {/*      north*/}
+            {/*    </Icon>*/}
+            {/*  </MDBox>*/}
+            {/*  <MDBox ml={2}>*/}
+            {/*    <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={27}>0 $</MDTypography>*/}
+            {/*    <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={17}>TRANSFERRED</MDTypography>*/}
+            {/*  </MDBox>*/}
+            {/*</MDBox>*/}
           </MDBox>
           {loginStore.isProgramManagerSuperAdmin &&
           <MDBox display={'flex'} flex={1} p={5} alignItems={'center'}>
@@ -496,23 +496,24 @@ const AdminWalletControl = () => {
           </MDBox>
           {loginStore.isProgramManagerSuperAdmin &&
           <MDBox display={'flex'} flexDirection={'column'} flex={1} p={5} alignItems={'center'}
-                 justifyContent={'space-between'}>
+                 justifyContent={'center'}>
 
-            <MDButton color={"success"} variant={"text"} fullWidth onClick={() => setShowLinkBankModal(true)}>
-              <Icon fontSize="medium" sx={{marginRight: 2, transform: 'scale(1.5)'}}>
-                attachment
-              </Icon>
-              Link Bank Account
-            </MDButton>
+            {/*<MDButton color={"success"} variant={"text"} fullWidth onClick={() => setShowLinkBankModal(true)}>*/}
+            {/*  <Icon fontSize="medium" sx={{marginRight: 2, transform: 'scale(1.5)'}}>*/}
+            {/*    attachment*/}
+            {/*  </Icon>*/}
+            {/*  Link Bank Account*/}
+            {/*</MDButton>*/}
+
                 <MDButton color={"primary"} variant={"contained"} fullWidth onClick={() => {
                   setActionListModal('transfer')
                   setShowRecipientModal(true)
                 }}>
                   Send / Transfer
                 </MDButton>
-                <MDButton color={"primary"} variant={"outlined"} fullWidth disabled>
-                  Reedem to Cash
-                </MDButton>
+                {/*<MDButton color={"primary"} variant={"outlined"} fullWidth disabled>*/}
+                {/*  Reedem to Cash*/}
+                {/*</MDButton>*/}
           </MDBox>
             }
         </MDBox>

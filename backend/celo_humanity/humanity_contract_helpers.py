@@ -1,10 +1,8 @@
 import functools
-import json
 
 from celo_humanity.models import Contract, Transaction
 from celo_humanity.web3helpers import get_txn_receipt, get_provider
 from web3.exceptions import BadFunctionCallOutput, ContractLogicError
-from web3 import Web3
 
 
 class NoWalletException(Exception):
@@ -52,7 +50,7 @@ def get_wallet(uid, create=True, profile=None):
         if create:
             txn = get_humanity_contract().proxy.newWallet(uid, transact=True)
 
-            Transaction.objects.create(
+            transaction = Transaction.objects.create(
                 contract=get_humanity_contract(),
                 transaction_id=txn.hex(),
                 method_or_memo=f'create wallet to user {uid}',
@@ -62,12 +60,10 @@ def get_wallet(uid, create=True, profile=None):
                 **fromandto_to_kwargs(profile)
             )
 
-            rcp = get_txn_receipt(txn)
-            transaction.receipt = Web3.toJSON(rcp)
-            transaction.save()
+            transaction.get_receipt()
         else:
-            # raise NoWalletException()
-            return None
+            raise NoWalletException()
+            # return None
     return get_humanity_contract().proxy.getWalletAddress(uid)
 
 
@@ -97,14 +93,13 @@ def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart
             receipt=None,
             crypto_wallet_id=from_uid,
             amount=amount,
+            # roundup_amount=roundup_amount,
             counterpart_crypto_wallet_id=to_uid,
             type=Transaction.Type.transfer,
             **fromandto_to_kwargs(profile, counterpart_profile)
         )
 
-        rcp = get_txn_receipt(txn)
-        transaction.receipt = Web3.toJSON(rcp)
-        transaction.save()
+        transaction.get_receipt()
     except (BadFunctionCallOutput, ContractLogicError) as exc:
         raise ContractCallException() from exc
 
@@ -135,9 +130,7 @@ def withdraw_coin(from_uid, amount, profile=None, action_name='withdraw (burn)')
             **fromandto_to_kwargs(profile)
         )
 
-        rcp = get_txn_receipt(txn)
-        transaction.receipt = Web3.toJSON(rcp)
-        transaction.save()
+        transaction.get_receipt()
     except (BadFunctionCallOutput, ContractLogicError) as exc:
         raise ContractCallException() from exc
 
@@ -167,9 +160,7 @@ def deposit_coin(to_uid, amount, profile=None, action_name='deposit (mint)'):
             **fromandto_to_kwargs(counterpart_profile=profile)
         )
 
-        rcp = get_txn_receipt(txn)
-        transaction.receipt = Web3.toJSON(rcp)
-        transaction.save()
+        transaction.get_receipt()
     except (BadFunctionCallOutput, ContractLogicError) as exc:
         raise ContractCallException() from exc
 
@@ -195,3 +186,23 @@ def get_transaction_confirmations(txn_id):
         return get_provider().eth.blockNumber - get_txn_receipt(txn_id).blockNumber + 1
     except:
         return -1
+
+
+def get_redemption_fees(wallet=None):
+    transactions = Transaction.objects.filter(type=Transaction.Type.withdraw).all()
+    return sum(
+        crypto2usd(evt['args']['_redemptionFee'])
+        for transaction in transactions if transaction.events_in_receipt is not None
+        for evt in transaction.events_in_receipt
+        if evt['event'] == 'RedemptionFee' and (wallet is None or evt['args']['_redemptionFeeAddress'] == wallet)
+    )
+
+
+def get_roundups_sum(chest_address=None):
+    transactions = Transaction.objects.filter(type=Transaction.Type.transfer).all()
+    return sum(
+        crypto2usd(evt['args']['_amt'])
+        for transaction in transactions if transaction.events_in_receipt is not None
+        for evt in transaction.events_in_receipt
+        if evt['event'] == 'RoundUpEvent' and (chest_address is None or evt['args']['_toAddress'] == chest_address)
+    )
