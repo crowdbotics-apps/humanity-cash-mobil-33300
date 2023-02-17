@@ -3,6 +3,7 @@ import {useEffect, useRef, useState} from "react"
 import {showMessage, useApi} from "../../services/helpers"
 import {dataTableModel, renderTableRow} from "./utils";
 import DataTable from "../../components/DataTable";
+import ConfirmDialogModal from "../../components/ConfirmDialogModal";
 
 const SmartContracts = () => {
   const api = useApi()
@@ -11,6 +12,8 @@ const SmartContracts = () => {
   const [numberOfItems, setNumberOfItems] = useState(0);
   const [numberOfItemsPage, setNumberOfItemsPage] = useState(0);
   const [recordList, setRecordList] = useState({...dataTableModel})
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [showConfirmUpdateModal, setShowConfirmUpdateModal] = useState(null)
   const searchQueryRef = useRef("");
 
   const getContracts = (searchData, page = 1, ordering = "") => {
@@ -28,6 +31,28 @@ const SmartContracts = () => {
       .catch(err => showMessage())
       .finally(() => setLoading(false))
   }
+
+  const updateContractState = () => {
+    setLoading(true)
+    api.updateContractState(selectedItem.id).then((result) => {
+      if (result.kind === 'ok') {
+        clearDetail()
+        getContracts("")
+        showMessage('Contract state updated successfully', 'success')
+      } else {
+        showMessage()
+      }
+    })
+      .catch(err => showMessage())
+      .finally(() => setLoading(false))
+  }
+
+  const clearDetail = () => {
+    setSelectedItem(null)
+    setShowConfirmUpdateModal(false)
+  }
+
+
   const onColumnOrdering = (ordering) => {
     const {column, order} = ordering
     if (column === '') {
@@ -40,7 +65,8 @@ const SmartContracts = () => {
   }
 
   const setDetailToShow = (item) => {
-
+    setSelectedItem(item)
+    setShowConfirmUpdateModal(true)
   }
 
   useEffect(() => {
@@ -53,6 +79,15 @@ const SmartContracts = () => {
       loading={loading}
       searchFunc={getContracts}
     >
+      <ConfirmDialogModal
+        title={'Update contract status'}
+        description={`Do you want to update the state of the contract?`}
+        open={showConfirmUpdateModal}
+        handleClose={() => clearDetail()}
+        handleConfirm={() => updateContractState()}
+        cancelText={'Cancel'}
+        confirmText={'Update'}
+      />
       <DataTable
         table={recordList}
         loading={loading}

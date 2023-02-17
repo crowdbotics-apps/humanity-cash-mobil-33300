@@ -19,6 +19,7 @@ from home.api.v1.viewsets.event_views import EventViewSet
 from home.api.v1.viewsets.notification_views import SetDeviceView, NotificationViewSet
 from home.api.v1.viewsets.signup_signin_views import LoginFacebookView
 from home.api.v1.viewsets.transaction_views import TransactionViewSet
+from admin.api.v1.viewsets.user_viewset import UpdateContractStateView
 from home.api.v1.viewsets.user_views import UserViewSet, ConsumerViewSet, DwollaUserView
 
 router = DefaultRouter()
@@ -37,6 +38,7 @@ router.register('compliance_action', ComplianceActionViewset, 'compliance_action
 router.register('compliance_recipient', ComplianceRecipientSearchViewset, 'compliance_recipient')
 
 urlpatterns = [
+    path('update-contract-state/', UpdateContractStateView.as_view(), name='api.pdate_contract_state'),
     path('set-device/', SetDeviceView.as_view(), name='api.set_device'),
     path('registration/', include([
         path('set-password/', signup_signin_views.SetPasswordView.as_view(), name='set_password'),

@@ -137,6 +137,9 @@ export class Api extends ApiBase {
   async getComplianceRecipient(data: any): Promise<Types.ListResult> {
     return this.simple_get(API_VERSION_PREFIX + "/compliance_recipient/", data)
   }
+  async updateContractState(data: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(API_VERSION_PREFIX + "/update-contract-state/", data)
+  }
 
   async getAdminWalletRecipients(data: any): Promise<Types.ListResult> {
     return this.simple_get(API_VERSION_PREFIX + "/compliance_recipient/lists/", data)
