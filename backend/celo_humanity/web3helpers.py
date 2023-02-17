@@ -80,8 +80,8 @@ class ContractProxy(object):
         return self.contract
 
 
-def get_txn_receipt(txn_hash):
-    return get_provider().eth.wait_for_transaction_receipt(txn_hash)
+def get_txn_receipt(txn_hash, **kwargs):
+    return get_provider().eth.wait_for_transaction_receipt(txn_hash, **kwargs)
 
 
 def text2keccak(text):

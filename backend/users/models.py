@@ -117,6 +117,7 @@ class BaseProfileModel(models.Model):
                     # TODO log when gets a error while create the wallet
 
             self.crypto_wallet_id = new_uid
+            self.get_wallet_address(save=False)
             if save:
                 self.save()
             return new_uid
