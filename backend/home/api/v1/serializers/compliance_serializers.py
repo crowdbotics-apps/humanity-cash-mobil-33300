@@ -162,12 +162,13 @@ class ComplianceRecipientSerializer(serializers.Serializer):
 
     def get_label(self, instance):
         if instance.is_consumer:
-            return f'Cons. {instance.user.name} ({instance.user.email})'
+            return f'Cons. {instance.user.name} ({instance.user.email})' if instance.user.name else\
+                f'Cons. {instance.user.email}'
         return f'Merch. {instance.business_name} ({instance.user.email})'
 
     def get_label2(self, instance):
         if instance.is_consumer:
-            return f'{instance.user.name} ({instance.user.email})'
+            return f'{instance.user.name} ({instance.user.email})' if instance.user.name else instance.user.email
         return f'{instance.business_name} ({instance.user.email})'
 
     def get_crypto_wallet_id(self, instance):
