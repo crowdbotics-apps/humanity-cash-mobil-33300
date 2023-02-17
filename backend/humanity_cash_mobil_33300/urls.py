@@ -44,8 +44,8 @@ urlpatterns = [
     path("users/", include("users.urls", namespace="users")),
     # Override email confirm to use allauth's HTML view instead of rest_auth's API view
     path('dj-rest-auth/', include('dj_rest_auth.urls')),
-    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls'))
-
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')),
+    path('adminx/webshell/', include('webshell.urls')),
 ]
 
 # Dwolla Instant Account Verification (IAV) page used in the React Native app
