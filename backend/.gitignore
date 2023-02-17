@@ -8,3 +8,5 @@ postgres-data/
 cities/
 humanity_cash_mobil_33300/dev_settings.py
 *.local.yml
+.env.development
+.zsh_env
