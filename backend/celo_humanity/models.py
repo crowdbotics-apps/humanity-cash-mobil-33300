@@ -76,6 +76,7 @@ class Transaction(models.Model):
     events_in_receipt = models.JSONField(null=True)
     created = models.DateTimeField(auto_now=True)
     amount = models.DecimalField(null=True, decimal_places=2, max_digits=14)
+    admin_wallet_action = models.BooleanField(null=False, default=False)
 
     crypto_wallet_id = models.CharField(max_length=128, blank=False, null=True)
     counterpart_crypto_wallet_id = models.CharField(max_length=128, blank=False, null=True)
