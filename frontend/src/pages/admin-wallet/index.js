@@ -24,13 +24,13 @@ const AdminWalletControl = () => {
   const formikRef = useRef();
   const [loading, setLoading] = useState(false)
   const [showRecipientModal, setShowRecipientModal] = useState(false)
-  const [showLinkBankModal, setShowLinkBankModal] = useState(false)
+  // const [showLinkBankModal, setShowLinkBankModal] = useState(false)
   const [showChangeRecipientModal, setShowChangeRecipientModal] = useState(false)
-  const [showChangeBankAccountModal, setShowChangeBankAccountModal] = useState(false)
+  // const [showChangeBankAccountModal, setShowChangeBankAccountModal] = useState(false)
   const [showAmountModal, setShowAmountModal] = useState(false)
   const [showConfirmationModal, setShowConfirmationModal] = useState(false)
-  const [communityAmount, setCommunityAmount] = useState(0)
-  const [humanityAmount, setHumanityAmount] = useState(0)
+  const [communityInfo, setCommunityInfo] = useState(null)
+  const [humanityInfo, setHumanityInfo] = useState(null)
   const [recipientSection, setRecipientSection] = useState('people')
   const [actionListModal, setActionListModal] = useState('recipient')
   const [usersPeople, setUsersPeople] = useState([])
@@ -43,26 +43,29 @@ const AdminWalletControl = () => {
 
   const getWalletBalances = () => {
     setLoading(true)
-    api.getWalletBalances().then((result) => {
+    api.getAdminWallet().then((result) => {
       if (result.kind === "ok") {
-        let {community, humanity} = result.data
-        setCommunityAmount(community)
-        setHumanityAmount(humanity)
+        let {community_chest, humanity} = result.data
+        setCommunityInfo(community_chest)
+        setHumanityInfo(humanity)
       }
     })
       .catch(err => showMessage())
       .finally(() => setLoading(false))
   }
 
-  const getDwollaUsers = (searchData, page = 1, ordering = "") => {
+  const getAdminWalletRecipients = (searchData, page = 1, ordering = "") => {
     setLoading(true)
-    api.getDwollaUsers(searchData, page, ordering, 100000).then((result) => {
+    api.getAdminWalletRecipients({search:searchData}).then((result) => {
       if (result.kind === "ok") {
-        const {results} = result.data
-        setUsersBusiness(results.filter(user => user.account_type === 'BUSINESS'))
-        const people_result = results.filter(user => user.account_type === 'PERSONAL')
-        setUsersPeople(people_result)
-        setSearchedUsers(people_result)
+        const {consumers, merchants} = result.data
+        setUsersBusiness(merchants)
+        setUsersPeople(consumers)
+        if (recipientSection === 'people') {
+          setSearchedUsers(consumers)
+        } else {
+          setSearchedUsers(merchants)
+        }
       }
     })
       .catch(err => showMessage())
@@ -74,67 +77,78 @@ const AdminWalletControl = () => {
     setSelectedUser(null)
     setSelectedFormData(null)
     setShowChangeRecipientModal(false)
-    setShowChangeBankAccountModal(false)
-    setShowLinkBankModal(false)
+    //setShowChangeBankAccountModal(false)
+    //setShowLinkBankModal(false)
     setShowAmountModal(false)
     setShowConfirmationModal(false)
     setAmount('')
   }
 
-  const confirmSelectedRecipient = () => {
-    setShowChangeBankAccountModal(true)
-  }
+  // const confirmSelectedRecipient = () => {
+  //   setShowChangeBankAccountModal(true)
+  // }
 
   const confirmActionSelectRecipient = () => {
-    const data = {...selectedUser}
-    showMessage('Recipient updated successfully', 'success')
+    // const data = {...selectedUser}
+    // console.log('set recipient', data)
+    api.adminWalletAction({
+      action: "community_chest_recipient",
+      is_consumer: selectedUser.is_consumer,
+      id: selectedUser.id,
+    }).then(res => {
+      if(res.kind === 'ok'){
+        showMessage('Recipient updated successfully', 'success')
+      }else if (res.kind === 'bad-data') {
+        showMessage('Error: ' + (res?.errors?.non_field_errors?.[0] || 'Invalid request'), 'error')
+      }else{
+        showMessage('Error updating recipient', 'error')
+      }
+      getWalletBalances()
+    })
     clearModalsAction()
   }
 
-  const confirmActionLinkBankAccount = () => {
-    const data = {...selectedFormData}
-    showMessage('Bank account updated successfully', 'success')
-    clearModalsAction()
-  }
+  // const confirmActionLinkBankAccount = () => {
+  //   const data = {...selectedFormData}
+  //   showMessage('Bank account updated successfully', 'success')
+  //   clearModalsAction()
+  // }
 
   const confirmAmountAction = () => {
-    const data = {...selectedUser, amount}
-    showMessage('Money transferred successfully', 'success')
+    api.adminWalletAction({
+      action: "humanity_transfer",
+      is_consumer: selectedUser.is_consumer,
+      id: selectedUser.id,
+      amount: amount
+    }).then(res => {
+    if(res.kind === 'ok'){
+      showMessage('Money transferred successfully', 'success')
+    }else if (res.kind === 'bad-data') {
+      showMessage('Error: ' + (res?.errors?.non_field_errors?.[0] || res?.errors?.[0] || 'Invalid request'), 'error')
+    }else{
+      showMessage('Error transfering money', 'error')
+    }
+    getWalletBalances()
+  })
     clearModalsAction()
   }
 
-
-  const searchFriendInContacts = () => {
-    let usersFilter
-    if (recipientSection === 'people') {
-      usersFilter = [...usersPeople]
-    } else {
-      usersFilter = [...usersBusiness]
-    }
-    const result = usersFilter.filter(obj => {
-      const lowerCaseName = obj.username.toLowerCase()
-      return lowerCaseName.includes(searchBarText.toLowerCase())
-    })
-    setSearchedUsers(result)
-  }
-
-
-  const validationSchema =
-    Yup.object().shape({
-      name: Yup.string().required(),
-      routing_number: Yup.string().required('Routing number is a required field'),
-      account_number: Yup.string().required('Account number is a required field'),
-    })
-
-  const initialValues = {
-    name: "",
-    routing_number: "",
-    account_number: "",
-  };
+  // const validationSchema =
+  //   Yup.object().shape({
+  //     name: Yup.string().required(),
+  //     routing_number: Yup.string().required('Routing number is a required field'),
+  //     account_number: Yup.string().required('Account number is a required field'),
+  //   })
+  //
+  // const initialValues = {
+  //   name: "",
+  //   routing_number: "",
+  //   account_number: "",
+  // };
 
 
   useEffect(() => {
-    searchFriendInContacts()
+    getAdminWalletRecipients(searchBarText)
   }, [searchBarText])
 
   useEffect(() => {
@@ -147,7 +161,7 @@ const AdminWalletControl = () => {
 
   useEffect(() => {
     getWalletBalances()
-    getDwollaUsers('')
+    // getAdminWalletRecipients('')
   }, [])
 
   const renderUserDetail = (item) => {
@@ -159,12 +173,12 @@ const AdminWalletControl = () => {
       >
         <MDAvatar
           bgColor={'light'}
-          src={item.profile_picture}
+          // src={item.profile_picture}
           sx={{width: 50, height: 50, borderRadius: 25, border: '1px solid #3B88B6', backgroundColor: '#EFEFEF'}}>
         </MDAvatar>
         <MDBox flex={1} display={'flex'} flexDirection={'column'} ml={2}>
           <MDTypography sx={{fontWeight: 700}}
-                        fontSize={16}>{item.account_type !== 'BUSINESS' ? 'Username' : 'Business Name'}</MDTypography>
+                        fontSize={16}>{item.label2}</MDTypography>
           <MDTypography sx={{fontWeight: 400}} fontSize={14} color={'gray'}>{item.username}</MDTypography>
         </MDBox>
         { item.id === selectedUser?.id && <Icon fontSize="medium" sx={{color: '#8D955D'}}>
@@ -190,15 +204,15 @@ const AdminWalletControl = () => {
           cancelText={'Cancel'}
           confirmText={'Confirm'}
         />
-        <ConfirmDialogModal
-          title={'Change Bank Account'}
-          description={`Do you want to change the linked bank account?`}
-          open={showChangeBankAccountModal}
-          handleClose={() => setShowChangeBankAccountModal(false)}
-          handleConfirm={() => confirmActionLinkBankAccount()}
-          cancelText={'Cancel'}
-          confirmText={'Confirm'}
-        />
+        {/*<ConfirmDialogModal*/}
+        {/*  title={'Change Bank Account'}*/}
+        {/*  description={`Do you want to change the linked bank account?`}*/}
+        {/*  open={showChangeBankAccountModal}*/}
+        {/*  handleClose={() => setShowChangeBankAccountModal(false)}*/}
+        {/*  handleConfirm={() => confirmActionLinkBankAccount()}*/}
+        {/*  cancelText={'Cancel'}*/}
+        {/*  confirmText={'Confirm'}*/}
+        {/*/>*/}
         <ConfirmDialogInputModal
           title={'Select amount'}
           description={'Amount to transfer'}
@@ -223,7 +237,7 @@ const AdminWalletControl = () => {
 
         <ConfirmDialogInputModal
           title={'Confirm Amount'}
-          description={`Do you want to transfer $${amount} to ${selectedUser?.username}`}
+          description={`Do you want to transfer $${amount} to ${selectedUser?.label2}`}
           open={showConfirmationModal}
           handleClose={() => {
             setShowConfirmationModal(false)
@@ -300,102 +314,102 @@ const AdminWalletControl = () => {
             </MDBox>
           </MDBox>
         </ConfirmDialogInputModal>
-        <ConfirmDialogInputModal
-          title={'Link Bank account'}
-          description={''}
-          hideButtons
-          open={showLinkBankModal}
-        >
-          <Formik
-            innerRef={formikRef}
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={values => {
-              setSelectedFormData(values)
-              setShowChangeBankAccountModal(true)
-            }}
-          >
-            {({errors, isValid}) => (
-              <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>
-                <Field name="name">
-                  {({field}) => {
-                    return (
-                      <MDBox mb={2}>
-                        <MDInput
-                          type="text"
-                          label="NAME"
-                          variant="outlined"
-                          placeholder=""
-                          fullWidth
-                          error={errors.name !== undefined}
-                          helperText={errors.name && errors.name}
-                          {...field}
-                        />
-                      </MDBox>
-                    )
-                  }
-                  }
-                </Field>
-                <Field name="routing_number">
-                  {({field}) => {
-                    return (
-                      <MDBox mb={2}>
-                        <MDInput
-                          type="text"
-                          label="ROUTING NUMBER"
-                          variant="outlined"
-                          placeholder=""
-                          fullWidth
-                          error={errors.routing_number !== undefined}
-                          helperText={errors.routing_number && errors.routing_number}
-                          {...field}
-                        />
-                      </MDBox>
-                    )
-                  }
-                  }
-                </Field>
-                <Field name="account_number">
-                  {({field}) => {
-                    return (
-                      <MDBox mb={2}>
-                        <MDInput
-                          type="text"
-                          label="ACCOUNT NUMBER"
-                          variant="outlined"
-                          placeholder=""
-                          fullWidth
-                          error={errors.account_number !== undefined}
-                          helperText={errors.account_number && errors.account_number}
-                          {...field}
-                        />
-                      </MDBox>
-                    )
-                  }
-                  }
-                </Field>
-                <Grid container display={'flex'} justifyContent={'center'} mt={2}>
-                  <Grid item xs={5}>
-                    <MDButton color="primary" variant={'outlined'} fullWidth onClick={() => setShowLinkBankModal(false)}>
-                      Cancel
-                    </MDButton>
-                  </Grid>
-                  <Grid item xs={5} ml={2}>
-                    <MDButton color="primary" fullWidth type={'submit'} disabled={!isValid}>
-                      Confirm
-                    </MDButton>
-                  </Grid>
-                </Grid>
-              </Form>
-            )}
-          </Formik>
-        </ConfirmDialogInputModal>
+        {/*<ConfirmDialogInputModal*/}
+        {/*  title={'Link Bank account'}*/}
+        {/*  description={''}*/}
+        {/*  hideButtons*/}
+        {/*  open={showLinkBankModal}*/}
+        {/*>*/}
+        {/*  <Formik*/}
+        {/*    innerRef={formikRef}*/}
+        {/*    initialValues={initialValues}*/}
+        {/*    validationSchema={validationSchema}*/}
+        {/*    onSubmit={values => {*/}
+        {/*      setSelectedFormData(values)*/}
+        {/*      setShowChangeBankAccountModal(true)*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    {({errors, isValid}) => (*/}
+        {/*      <Form style={{display: 'flex', flexDirection: 'column', flex: 1}}>*/}
+        {/*        <Field name="name">*/}
+        {/*          {({field}) => {*/}
+        {/*            return (*/}
+        {/*              <MDBox mb={2}>*/}
+        {/*                <MDInput*/}
+        {/*                  type="text"*/}
+        {/*                  label="NAME"*/}
+        {/*                  variant="outlined"*/}
+        {/*                  placeholder=""*/}
+        {/*                  fullWidth*/}
+        {/*                  error={errors.name !== undefined}*/}
+        {/*                  helperText={errors.name && errors.name}*/}
+        {/*                  {...field}*/}
+        {/*                />*/}
+        {/*              </MDBox>*/}
+        {/*            )*/}
+        {/*          }*/}
+        {/*          }*/}
+        {/*        </Field>*/}
+        {/*        <Field name="routing_number">*/}
+        {/*          {({field}) => {*/}
+        {/*            return (*/}
+        {/*              <MDBox mb={2}>*/}
+        {/*                <MDInput*/}
+        {/*                  type="text"*/}
+        {/*                  label="ROUTING NUMBER"*/}
+        {/*                  variant="outlined"*/}
+        {/*                  placeholder=""*/}
+        {/*                  fullWidth*/}
+        {/*                  error={errors.routing_number !== undefined}*/}
+        {/*                  helperText={errors.routing_number && errors.routing_number}*/}
+        {/*                  {...field}*/}
+        {/*                />*/}
+        {/*              </MDBox>*/}
+        {/*            )*/}
+        {/*          }*/}
+        {/*          }*/}
+        {/*        </Field>*/}
+        {/*        <Field name="account_number">*/}
+        {/*          {({field}) => {*/}
+        {/*            return (*/}
+        {/*              <MDBox mb={2}>*/}
+        {/*                <MDInput*/}
+        {/*                  type="text"*/}
+        {/*                  label="ACCOUNT NUMBER"*/}
+        {/*                  variant="outlined"*/}
+        {/*                  placeholder=""*/}
+        {/*                  fullWidth*/}
+        {/*                  error={errors.account_number !== undefined}*/}
+        {/*                  helperText={errors.account_number && errors.account_number}*/}
+        {/*                  {...field}*/}
+        {/*                />*/}
+        {/*              </MDBox>*/}
+        {/*            )*/}
+        {/*          }*/}
+        {/*          }*/}
+        {/*        </Field>*/}
+        {/*        <Grid container display={'flex'} justifyContent={'center'} mt={2}>*/}
+        {/*          <Grid item xs={5}>*/}
+        {/*            <MDButton color="primary" variant={'outlined'} fullWidth onClick={() => setShowLinkBankModal(false)}>*/}
+        {/*              Cancel*/}
+        {/*            </MDButton>*/}
+        {/*          </Grid>*/}
+        {/*          <Grid item xs={5} ml={2}>*/}
+        {/*            <MDButton color="primary" fullWidth type={'submit'} disabled={!isValid}>*/}
+        {/*              Confirm*/}
+        {/*            </MDButton>*/}
+        {/*          </Grid>*/}
+        {/*        </Grid>*/}
+        {/*      </Form>*/}
+        {/*    )}*/}
+        {/*  </Formik>*/}
+        {/*</ConfirmDialogInputModal>*/}
         <MDTypography color={'primary'} sx={{fontWeight: 400}} fontSize={24}>Round Up Change Wallet</MDTypography>
         <MDBox sx={{border: "1px solid #D59B76", borderRadius: 5}} display={'flex'} mt={3}>
           <MDBox flex={1} p={5}>
             <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={16}>ROUND UP CHANGE WALLET</MDTypography>
             <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23} mt={3}>Account Name</MDTypography>
-            <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={19}>**** **** **** ****</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={19}>{communityInfo?.account || '**** **** **** ****'}</MDTypography>
             <MDBox display={'flex'} mt={3} alignItems={'center'}>
               <MDBox
                 sx={{backgroundColor: '#9DA56F', borderRadius: 4, width: 54, height: 54}}
@@ -408,15 +422,14 @@ const AdminWalletControl = () => {
                 </Icon>
               </MDBox>
               <MDBox ml={2}>
-                <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={27}>0 $</MDTypography>
+                <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={27}>{money_fmt(communityInfo?.income || 0)}</MDTypography>
                 <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={17}>ROUND UP INCOME</MDTypography>
               </MDBox>
             </MDBox>
           </MDBox>
           <MDBox display={'flex'} flexDirection={'column'} flex={1} p={5}>
             <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={16}>TOTAL ROUND UP SAVINGS</MDTypography>
-            <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23}
-                          mt={3}>{money_fmt(communityAmount)}</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23} mt={3}>{money_fmt(communityInfo?.balance || 0)}</MDTypography>
             {/*<MDBox display={'flex'} mt={'auto'} alignItems={'center'}>*/}
             {/*  <MDBox*/}
             {/*    sx={{backgroundColor: 'rgba(252,113,0,0.2)', borderRadius: 4, width: 54, height: 54}}*/}
@@ -455,7 +468,7 @@ const AdminWalletControl = () => {
           <MDBox flex={1} p={5}>
             <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={16}>CASH OUT FEES WALLET</MDTypography>
             <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23} mt={3}>Account Name</MDTypography>
-            <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={19}>**** **** **** ****</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={19}>{humanityInfo?.account || '**** **** **** ****'}</MDTypography>
             <MDBox display={'flex'} mt={3} alignItems={'center'}>
               <MDBox
                 sx={{backgroundColor: '#9DA56F', borderRadius: 4, width: 54, height: 54}}
@@ -468,15 +481,14 @@ const AdminWalletControl = () => {
                 </Icon>
               </MDBox>
               <MDBox ml={2}>
-                <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={27}>0 $</MDTypography>
+                <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={27}>{money_fmt(humanityInfo?.income || 0)}</MDTypography>
                 <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={17}>CASH OUT FEES INCOME</MDTypography>
               </MDBox>
             </MDBox>
           </MDBox>
           <MDBox display={'flex'} flexDirection={'column'} flex={1} p={5}>
             <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={16}>CASH OUT FEES SAVINGS</MDTypography>
-            <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23}
-                          mt={3}>{money_fmt(humanityAmount)}</MDTypography>
+            <MDTypography color={'dark'} sx={{fontWeight: 700}} fontSize={23} mt={3}>{money_fmt(humanityInfo?.balance || 0)}</MDTypography>
             <MDBox display={'flex'} mt={'auto'} alignItems={'center'}>
               <MDBox
                 sx={{backgroundColor: 'rgba(252,113,0,0.2)', borderRadius: 4, width: 54, height: 54}}
@@ -489,7 +501,7 @@ const AdminWalletControl = () => {
                 </Icon>
               </MDBox>
               <MDBox ml={2}>
-                <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={27}>0 $</MDTypography>
+                <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={27}>{money_fmt(humanityInfo?.transfered || 0)}</MDTypography>
                 <MDTypography color={'dark'} sx={{fontWeight: 400}} fontSize={17}>TRANSFERRED</MDTypography>
               </MDBox>
             </MDBox>

@@ -148,7 +148,7 @@ export const APIErrorMessage = () => {
 
 export const money_fmt = (monto) => {
   if (monto !== null && monto !== undefined)
-    return numeral(monto).format('$0,0.00')
+    return numeral(monto).format('$ 0,0.00')
   return '-'
 }
 
