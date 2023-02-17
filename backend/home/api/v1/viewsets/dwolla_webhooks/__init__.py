@@ -17,6 +17,6 @@ class DwollaSignatureIsValid(BasePermission):
             settings.DWOLLA_PRODUCTION_WEBHOOK_SECRET
         # Check signature
         hmacsig = hmac.new(secret.encode(), request.body, hashlib.sha256).hexdigest()
-        return hmacsig == request.headers['x-request-signature-sha-256']
+        return hmacsig == request.headers.get('x-request-signature-sha-256', 'invalid')
 
 
