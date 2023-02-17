@@ -119,3 +119,25 @@ class SendQRSerializer(serializers.Serializer):
 class SendReportSerializer(serializers.Serializer):
     start_date = serializers.DateField()
     end_date = serializers.DateField()
+
+
+class AdminWalletActionSerializer(serializers.Serializer):
+    is_consumer = serializers.BooleanField()
+    id = serializers.IntegerField()
+    action = serializers.ChoiceField(choices=['community_chest_recipient', 'humanity_transfer'])
+    amount = serializers.FloatField(required=False)
+
+    class Meta:
+        fields = [
+            'action',
+            'is_consumer',
+            'id',
+            'amount',
+        ]
+
+    def validate(self, attrs):
+        if attrs['action'] == 'humanity_transfer':
+            if attrs['amount'] is None or attrs['amount'] <= 0.5:
+                raise ValidationError("Invalid amount for transfer")
+            attrs['amount'] = int(attrs['amount'] * 100) / 100.0
+        return attrs

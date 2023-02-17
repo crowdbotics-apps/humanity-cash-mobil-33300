@@ -1,5 +1,3 @@
-import datetime
-import json
 import logging
 import traceback
 from decimal import Decimal
@@ -7,31 +5,32 @@ from decimal import Decimal
 from django.conf import settings
 from django.db import IntegrityError, transaction
 from django.db.models import Sum
-from django.db.models.functions import Coalesce
 from django.http import JsonResponse
 from rest_framework import status, mixins, viewsets, filters
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from websockets.exceptions import ConnectionClosedOK
 
 from base import configs
 from celo_humanity.humanity_contract_helpers import get_wallet_balance, get_community_balance, get_humanity_balance, \
-    NoWalletException, get_wallet
+    NoWalletException, get_wallet, get_redemption_fees, get_roundups_sum, get_community_address, set_community_address, \
+    get_humanity_address
 from celo_humanity.models import Transaction, ACHTransaction, ComplianceActionSignoff, ComplianceAction
 from home.api.v1.serializers.compliance_serializers import ComplianceActionReadSerializer, \
     ComplianceActionCreateSerializer, ComplianceActionSignoffSerializer, ComplianceRecipientSerializer, \
     DatedBalanceSerializer
-from home.helpers import AuthenticatedAPIView
+from home.api.v1.serializers.transaction_serializers import AdminWalletActionSerializer
 from home.models import DatedSystemBalance, get_current_system_balance
+from home.utils import may_fail
 from users import IsProgramManagerSuperAdmin
-from users.models import Merchant, Consumer
+from users.models import Merchant, Consumer, get_profile_for_crypto_address
 
 logger = logging.getLogger('compliance')
+
 
 class ComplianceDashboardView(APIView):
     permission_classes = [IsProgramManagerSuperAdmin]
@@ -43,15 +42,53 @@ class ComplianceDashboardView(APIView):
         return Response(serializer.data)
 
 
+class AdminWalletDataView(APIView):
+    permission_classes = [IsProgramManagerSuperAdmin]
+
+    def get(self, request, *args, **kwargs):
+        humanity = get_profile_for_crypto_address(get_humanity_address())
+        community = get_profile_for_crypto_address(get_community_address())
+        return Response(dict(
+            humanity=dict(
+                account=str(humanity) if humanity else 'No profile for address',
+                balance=get_humanity_balance(),
+                income=get_redemption_fees(),
+                transfered=sum(
+                    Transaction.objects.filter(admin_wallet_action=True).values_list('amount', flat=True)
+                ),
+            ),
+            community_chest=dict(
+                account=str(community) if community else 'No profile for address',
+                balance=get_community_balance(),
+                income=get_roundups_sum(),
+            )
+        ))
+
+    @may_fail((Consumer.DoesNotExist, Merchant.DoesNotExist), 'Profile not found')
+    def post(self, request, *args, **kwargs):
+        serializer = AdminWalletActionSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        klass = Consumer if serializer.validated_data['is_consumer'] else Merchant
+        profile = klass.objects.get(pk=serializer.validated_data['id'])
+        if serializer.validated_data['action'] == 'community_chest_recipient':
+            set_community_address(profile.crypto_wallet_address)
+        elif serializer.validated_data['action'] == 'humanity_transfer':
+            profile_from = get_profile_for_crypto_address(get_humanity_address())
+            if profile_from is None:
+                raise ValidationError('Need an account to send a cash out fees transfer')
+            profile_from.transfer(profile, serializer.validated_data['amount'], admin_wallet_action=True)
+        return Response(status=200)
+
+
 class DashboardDataView(APIView):
     permission_classes = [IsProgramManagerSuperAdmin]
 
     def get(self, request, *args, **kwargs):
         try:
             tokens_minted = Transaction.objects.filter(type=Transaction.Type.deposit).aggregate(
-                Sum('amount'))['amount__sum'] or  Decimal(0.0)
+                Sum('amount'))['amount__sum'] or Decimal(0.0)
             tokens_burned = Transaction.objects.filter(type=Transaction.Type.withdraw).aggregate(
-                Sum('amount'))['amount__sum'] or  Decimal(0.0)
+                Sum('amount'))['amount__sum'] or Decimal(0.0)
 
             deposits_settled = ACHTransaction.objects.filter(
                 type=ACHTransaction.Type.deposit,
@@ -84,7 +121,7 @@ class DashboardDataView(APIView):
                     deposits_pending=deposits_pending,
                     withdrawals_pending=withdrawals_pending,
 
-                diff_net_outstanding=deposits_settled - withdrawals_settled + tokens_minted - tokens_burned
+                    diff_net_outstanding=deposits_settled - withdrawals_settled + tokens_minted - tokens_burned
                 ),
                 status=status.HTTP_200_OK)
         except:
@@ -227,3 +264,15 @@ class ComplianceRecipientSearchViewset(viewsets.GenericViewSet):
 
         serializer = self.get_serializer(list(list_consumer[:15]) + list(list_merchant[:15]), many=True)
         return Response(serializer.data)
+
+    @action(detail=False, methods=['get'])
+    def lists(self, request, *args, **kwargs):
+        self.search_fields = self.search_fields_consumer
+        list_consumer = self.filter_queryset(Consumer.objects.all())
+        self.search_fields = self.search_fields_consumer
+        list_merchant = self.filter_queryset(Merchant.objects.all())
+
+        return Response(dict(
+            consumers=self.get_serializer(list(list_consumer[:15]), many=True).data,
+            merchants=self.get_serializer(list(list_merchant[:15]), many=True).data,
+        ))
