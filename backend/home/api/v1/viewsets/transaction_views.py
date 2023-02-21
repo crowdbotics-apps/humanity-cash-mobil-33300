@@ -49,6 +49,13 @@ class TransactionViewSet(
 
     def get_queryset(self):
         qs = super(TransactionViewSet, self).get_queryset()
+        # user = self.request.user
+        # is_consumer = self.request.query_params.get('consumer', 'false')
+        # if not user.role and not user.is_superuser:
+        #     if is_consumer == 'false':
+        #         qs = qs.filter(user=self.request.user.get_consumer_data())
+        #     else:
+        #         qs = qs.filter(user=self.request.user.get_merchant_data())
         if user_id := self.request.GET.get('user', False):
             qs = qs.filter(Q(consumer__user_id=user_id) |
                            Q(merchant__user_id=user_id) |
