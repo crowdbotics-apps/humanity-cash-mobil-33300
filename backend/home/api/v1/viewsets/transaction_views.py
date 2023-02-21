@@ -215,7 +215,7 @@ def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account):
                            ach_transaction=ach_transaction)
 
     except:
-        logger.error(f'Error saving transaction [{dwolla_trn.id}], please contact a system administrator.')
+        logger.exception(f'Error saving transaction [{dwolla_trn.id}], please contact a system administrator.')
 
 
 class SendReportView(AuthenticatedAPIView):
