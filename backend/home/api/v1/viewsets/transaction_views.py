@@ -134,31 +134,31 @@ class WithdrawView(AuthenticatedAPIView):
         dwolla_client = DwollaClient()
         body = json.loads(request.body)
         user_as_consumer = body['user_as_consumer']
-        user_password = body['password']
+        user_password = body.get('password', '')
         user = (Consumer if user_as_consumer else Merchant).objects.get(pk=body['user'])
         amount = float(body.get('amount', 0))
 
-        if user.user.check_password(user_password):
-            if amount <= 0:
-                return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
+        #if user.user.check_pasword(user_password):
+        if amount <= 0:
+            return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
 
-            if amount > user.balance:
-                return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
+        if amount > user.balance:
+            return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
 
-            user.withdraw(amount)
+        user.withdraw(amount)
 
-            destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
-            bank_account = choose_bank_account_for_transaction(credit=False)
-            origin_source = bank_account.dwolla_account
-            if not len(destination_source):
-                raise NoFundingSourceException()
+        destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
+        bank_account = choose_bank_account_for_transaction(credit=False)
+        origin_source = bank_account.dwolla_account
+        if not len(destination_source):
+            raise NoFundingSourceException()
 
-            transfer = dwolla_client.create_transfer(origin_source, destination_source[0]['id'], amount)
-            create_ach_transaction(transfer, True, user, bank_account)
+        transfer = dwolla_client.create_transfer(origin_source, destination_source[0]['id'], amount)
+        create_ach_transaction(transfer, True, user, bank_account)
 
-            return Response(status=status.HTTP_200_OK)
-        else:
-            return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
+        return Response(status=status.HTTP_200_OK)
+        #else:
+        #    return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
 
 
 class DepositView(AuthenticatedAPIView):
