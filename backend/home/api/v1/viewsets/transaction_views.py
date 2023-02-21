@@ -157,8 +157,8 @@ class WithdrawView(AuthenticatedAPIView):
 class DepositView(AuthenticatedAPIView):
     permission_classes = [IsAuthenticated & IsNotCashier]
 
-    @may_fail(Exception, 'Error while depositing, please try again')
-    @may_fail(NoFundingSourceException, 'User doesn´t have a funding source attached')
+    #@may_fail(Exception, 'Error while depositing, please try again')
+    @may_fail(NoFundingSourceException, dict(non_field_errors='User doesn´t have a funding source attached'))
     @may_fail((AttributeError, KeyError, ValueError), 'Invalid request')
     @may_fail((Merchant.DoesNotExist, Consumer.DoesNotExist), 'User profile not found')
     def post(self, request, *args, **kwargs):
