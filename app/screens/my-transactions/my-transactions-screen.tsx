@@ -36,7 +36,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const [DetailModalVisible, setDetailModalVisible] = useState(false)
 	const [DistanceFilter, setDistanceFilter] = useState('')
 	const [SelectOpen, setSelectOpen] = useState(false)
-	const [TransactionType, setTransactionType] = React.useState('All');
+	const [TransactionType, setTransactionType] = useState('All');
 	const [DateFrom, setDateFrom] = useState(new Date())
 	const [OpenFrom, setOpenFrom] = useState(false)
 	const [DateTo, setDateTo] = useState(new Date())
@@ -127,7 +127,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const getFormatedTransactions = () => {
 		let data: any = {}
 		loginStore.getTransactions.map(r => {
-			const date = r.created_at.split('T')[0]
+			const date = r.created.split('T')[0]
 			if (data[date]) {
 				data[date].data.push(r)
 			} else {
@@ -303,7 +303,9 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 									r.data.map((i, key2) => (
 										<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
 											<Image
-												source={{ uri: i.image }}
+												source={{ uri: 
+													i?.consumer_data?.profile_picture || i?.merchant_data?.profile_picture
+												}}
 												resizeMode='cover'
 												style={styles.RETURN_IMAGE}
 											/>
@@ -317,7 +319,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 														? <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.debit}`}</Text>
 														: <Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{`+ C$ ${i.cash_out || ''}`}</Text>
 												} */}
-												<Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.amount}`}</Text>
+												<Text style={styles.RETURN_ITEM_AMOUNT}>{i.amount ? `+ C$ ${i.amount}` : '-'}</Text>
 											</View>
 										</TouchableOpacity>
 									))

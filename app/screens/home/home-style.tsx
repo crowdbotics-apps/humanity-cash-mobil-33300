@@ -1,4 +1,4 @@
-import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
 import { COLOR, METRICS } from '../../theme';
 import styles from "../../components/connect-bank-modal/styles";
 
@@ -18,7 +18,7 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.blue,
     fontSize: 16,
     textDecorationLine: 'underline'
-  }, 
+  },
   AMOUNT: {
     color: COLOR.PALETTE.blue,
     fontSize: 24,
@@ -49,7 +49,7 @@ export default StyleSheet.create({
     fontSize: 16
   },
   CASHIER_BUTTON_BIG: {
-    alignItems:"center",
+    alignItems: "center",
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.lightGray,
     height: 155,
@@ -74,7 +74,7 @@ export default StyleSheet.create({
     textAlignVertical: 'center',
   },
   CASHIER_BUTTON_SMALL: {
-    alignItems:"center",
+    alignItems: "center",
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.lightGray,
     flexDirection: 'row',
@@ -95,8 +95,8 @@ export default StyleSheet.create({
   },
   COUPON_MERCHANT: {
     color: COLOR.PALETTE.pureblack,
-    fontWeight: 'bold',
     fontSize: 12,
+    fontWeight: 'bold',
     marginVertical: 3,
   },
   COUPON_TITLE: {
@@ -104,13 +104,13 @@ export default StyleSheet.create({
     fontSize: 12,
     marginVertical: 3,
   },
-  DateStyle :{
-  display: 'flex',
-   width: METRICS.screenWidth * 0.80,
-   marginTop: 10,
-  flexDirection: 'row',
-  justifyContent: 'space-between'
-},
+  DateStyle: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    width: METRICS.screenWidth * 0.80
+  },
   FAVORITE_ICON: {
 
     bottom: 35,
@@ -127,13 +127,13 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.90,
   },
   ICON_WARNING: {
-    color: '#D2A824',
+    color: COLOR.PALETTE.mustard,
     fontSize: 10,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   ICON_WARNING_CONTAINER: {
-    borderColor: '#D2A824',
+    borderColor: COLOR.PALETTE.mustard,
     borderRadius: 2000,
     borderWidth: 1,
     height: 16,
@@ -204,8 +204,8 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80
   },
   MarginTextStyle: {
-  color: 'black'
-},
+    color: COLOR.PALETTE.gray2,
+  },
   NEED_HELP_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',
@@ -240,16 +240,17 @@ export default StyleSheet.create({
     width: METRICS.screenWidth * 0.80
   },
   NEWS_IMAGE: {
+    borderRadius: 3,
     flex: 1,
-    height: null,
-    width: METRICS.screenWidth * 0.80,
+    marginVertical: 10,
+    width: METRICS.screenWidth * 0.80
   },
- NEWS_TAG: {
+  NEWS_TAG: {
     color: COLOR.PALETTE.gray,
     fontSize: 10
   },
 
-NEWS_TITLE: {
+  NEWS_TITLE: {
     color: COLOR.PALETTE.black,
     fontSize: 18,
     fontWeight: 'bold',
@@ -307,18 +308,18 @@ NEWS_TITLE: {
     marginLeft: 10
   },
   TEXT_WARNING_LINK: {
-    color: '#D2A824', 
-    fontWeight: '700', 
-    textDecorationLine: 'underline', 
+    color: COLOR.PALETTE.mustard,
+    fontWeight: '700',
+    textDecorationLine: 'underline',
   },
   WARNING_CONTAINER: {
     alignItems: 'center',
-    borderLeftColor: '#D2A824', 
-    borderLeftWidth: 4, 
-    borderRadius: 5, 
-    flexDirection: 'row', 
+    borderLeftColor: COLOR.PALETTE.mustard,
+    borderLeftWidth: 4,
+    borderRadius: 5,
+    flexDirection: 'row',
     marginLeft: 10,
-    marginRight: 10, 
-    padding: 15, 
-  }, 
+    marginRight: 10,
+    padding: 15,
+  },
 })
