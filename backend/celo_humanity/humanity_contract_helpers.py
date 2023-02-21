@@ -4,6 +4,8 @@ from celo_humanity.models import Contract, Transaction
 from celo_humanity.web3helpers import get_txn_receipt, get_provider
 from web3.exceptions import BadFunctionCallOutput, ContractLogicError
 
+from home.utils import may_fail
+
 
 class NoWalletException(Exception):
     ...
@@ -75,7 +77,7 @@ def get_wallet_balance(uid, param_types='bytes32'):
     return crypto2usd(amount)
 
 
-def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart_profile):
+def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart_profile, **kwargs_extra):
     transaction = None
     try:
         txn = get_humanity_contract().proxy.transfer(from_uid,
@@ -93,10 +95,10 @@ def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart
             receipt=None,
             crypto_wallet_id=from_uid,
             amount=amount,
-            # roundup_amount=roundup_amount,
             counterpart_crypto_wallet_id=to_uid,
             type=Transaction.Type.transfer,
-            **fromandto_to_kwargs(profile, counterpart_profile)
+            **fromandto_to_kwargs(profile, counterpart_profile),
+            **kwargs_extra,
         )
 
         transaction.get_receipt()
@@ -104,7 +106,6 @@ def transfer_coin(from_uid, to_uid, amount, roundup_amount, profile, counterpart
         raise ContractCallException() from exc
 
     return transaction
-
 
 
 def burn_coin(from_uid, amount, profile=None):
@@ -172,13 +173,35 @@ def get_humanity_balance():
     return get_wallet_balance(wallet, param_types='address')
 
 
+def get_humanity_address():
+    return get_humanity_contract().proxy.humanityCashAddress()
+
+
+@may_fail((BadFunctionCallOutput, ContractLogicError), 'Error setting cash out fees address')
+def set_humanity_address(address):
+    return get_humanity_contract().proxy.setHumanityCashAddress(address, transact=True)
+
+
 def get_humanity_userid():
-    return get_humanity_contract().proxy.HUMANITY_CASH()
+    return get_humanity_contract().proxy.HUMANITY_CASH().hex()
+
+
+def get_communitychest_userid():
+    return get_humanity_contract().proxy.COMMUNITY_CHEST().hex()
 
 
 def get_community_balance():
     wallet = get_humanity_contract().proxy.communityChestAddress()
     return get_wallet_balance(wallet, param_types='address')
+
+
+def get_community_address():
+    return get_humanity_contract().proxy.communityChestAddress()
+
+
+@may_fail((BadFunctionCallOutput, ContractLogicError), 'Error settings community chest address')
+def set_community_address(address):
+    return get_humanity_contract().proxy.setCommunityChest(address, transact=True)
 
 
 def get_transaction_confirmations(txn_id):

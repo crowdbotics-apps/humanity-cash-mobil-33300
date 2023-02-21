@@ -146,6 +146,7 @@ class ComplianceActionSignoffSerializer(serializers.Serializer):
 
 class ComplianceRecipientSerializer(serializers.Serializer):
     label = serializers.SerializerMethodField()
+    label2 = serializers.SerializerMethodField()
     id = serializers.IntegerField()
     is_consumer = serializers.BooleanField()
     crypto_wallet_id = serializers.SerializerMethodField()
@@ -155,16 +156,23 @@ class ComplianceRecipientSerializer(serializers.Serializer):
             'id',
             'is_consumer',
             'label',
+            'label2',
             'crypto_wallet_id',
         ]
 
     def get_label(self, instance):
         if instance.is_consumer:
-            return f'Cons. {instance.user.name} ({instance.user.email})'
+            return f'Cons. {instance.user.name} ({instance.user.email})' if instance.user.name else\
+                f'Cons. {instance.user.email}'
         return f'Merch. {instance.business_name} ({instance.user.email})'
 
+    def get_label2(self, instance):
+        if instance.is_consumer:
+            return f'{instance.user.name} ({instance.user.email})' if instance.user.name else instance.user.email
+        return f'{instance.business_name} ({instance.user.email})'
+
     def get_crypto_wallet_id(self, instance):
-        return uid_to_wallet(instance.crypto_wallet_id) if instance.crypto_wallet_id else '-'
+        return instance.crypto_wallet_address or '-'
 
 
 class BankAccountSerializer(serializers.ModelSerializer):

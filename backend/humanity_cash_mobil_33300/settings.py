@@ -93,6 +93,7 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'cities_light',
     'corsheaders',
+    'webshell',
 ]
 # MODULES_APPS = get_modules()
 
@@ -293,6 +294,7 @@ SWAGGER_SETTINGS = {
     "DEFAULT_INFO": f"{ROOT_URLCONF}.api_info",
 }
 
+CORS_ALLOW_ALL_ORIGINS = DEBUG
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://localhost:3001',
@@ -375,6 +377,6 @@ if not DEBUG:
 
 CONTRACT_PROVIDER_URL = env.str("CONTRACT_PROVIDER_URL", default='ws://127.0.0.1:7545')
 CONTRACT_OWNER_ADDRESS = env.str("CONTRACT_OWNER_ADDRESS", default='0x78dc5D2D739606d31509C31d654056A45185ECb6')
-BLOCKCHAIN_EXPLORER_LINK_TEMPLATE = env.str("CONTRACT_OWNER_ADDRESS", default='https://celoscan.io/address/{address}')
+BLOCKCHAIN_EXPLORER_LINK_TEMPLATE = env.str("BLOCKCHAIN_EXPLORER_LINK_TEMPLATE", default='https://celoscan.io/address/{address}')
 CONTRACT_PRIVATE_KEY = env.str("CONTRACT_PRIVATE_KEY", default=None)
 CONTRACT_MNEMONIC = env.str("CONTRACT_MNEMONIC", default=None)

@@ -13,11 +13,11 @@ class Command(BaseCommand):
         self.stdout.write(self.style.INFO('refreshing transaction receipts'))
 
         try:
-            refreshed = len([t.get_receipt() for t in Transaction.objects.all()])
+            refreshed = len([t.get_receipt(timeout=1) for t in Transaction.objects.all()])
 
             self.stdout.write(self.style.SUCCESS(f'Refreshed {refreshed} transaction receipts from the blockchain!'))
         except:
-            self.stdout.write(self.style.WARNING(f'An error ocurred while refreshing transaction receipts form the blockchain!'))
+            self.stdout.write(self.style.WARNING(f'An error ocurred while refreshing transaction receipts from the blockchain!'))
             traceback.print_exc()
 
         print()
