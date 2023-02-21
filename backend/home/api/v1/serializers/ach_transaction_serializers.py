@@ -32,6 +32,6 @@ class ACHTransactionSerializer(serializers.ModelSerializer):
         return None
 
     def get_merchant_data(self, obj):
-        if obj.get_consumer_data:
+        if obj.get_merchant_data:
             return MerchantMyProfileSerializer().to_representation(obj.get_merchant_data)
         return None
