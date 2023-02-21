@@ -9,13 +9,23 @@ from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from celo_humanity.humanity_contract_helpers import NoWalletException, get_wallet_balance, transfer_coin, get_wallet, \
-    deposit_coin, withdraw_coin, WalletAlreadyCreatedException
+    deposit_coin, withdraw_coin, WalletAlreadyCreatedException, uid_to_wallet
 from celo_humanity.web3helpers import text2keccak
 from users.constants import Industry, UserGroup, UserRole
 
 
 def code_live_time():
     return timezone.now() + timezone.timedelta(hours=1)
+
+
+def get_profile_for_crypto_address(address):
+    consumer = Consumer.objects.filter(crypto_wallet_address=address).first()
+    if consumer:
+        return consumer
+    merchant = Merchant.objects.filter(crypto_wallet_address=address).first()
+    if merchant:
+        return merchant
+    return None
 
 
 class User(AbstractUser):
@@ -87,6 +97,7 @@ class BaseProfileModel(models.Model):
     dwolla_id = models.CharField(max_length=50, null=True, blank=True)
 
     crypto_wallet_id = models.CharField(max_length=128, blank=True, null=True)
+    crypto_wallet_address = models.CharField(max_length=128, blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -112,13 +123,18 @@ class BaseProfileModel(models.Model):
         else:
             raise WalletAlreadyCreatedException()
 
+    def get_wallet_address(self, save=True):
+        self.crypto_wallet_address = uid_to_wallet(self.crypto_wallet_id)
+        if save:
+            self.save()
+
     @property
     def balance(self):
         if self.crypto_wallet_id is None:
             self.new_wallet()
         return get_wallet_balance(self.crypto_wallet_id)
 
-    def transfer(self, other_user, amount, roundup = 0): # other user can be a merchant or an user! yay duck typing!
+    def transfer(self, other_user, amount, roundup = 0, **kwargs_extra): # other user can be a merchant or an user! yay duck typing!
         if not hasattr(other_user, 'crypto_wallet_id') or self.crypto_wallet_id is None or other_user.crypto_wallet_id is None:
             raise InvalidTransferDestinationException()
         # TODO validate ammount or let contract fail and catch?
@@ -128,18 +144,20 @@ class BaseProfileModel(models.Model):
                                     amount,
                                     roundup,
                                     profile=self,
-                                    counterpart_profile=other_user)
+                                    counterpart_profile=other_user,
+                                    **kwargs_extra)
         if transaction:
             from home.helpers import send_notifications
             try:
                 send_notifications([other_user],
-                                   'Withdraw',
+                                   'Transfer',
                                    transaction.method_or_memo,
                                    '',
                                    self.user,
                                    Notification.Types.TRANSACTION,
                                    transaction=transaction)
-            except: print(' User has no devices')
+            except:
+                print(' User has no devices')
     
 
     def deposit(self, amount):
@@ -189,7 +207,7 @@ class Consumer(BaseProfileModel):
         return False
 
     def __str__(self):
-        return f'Customer id: {self.id}'
+        return f'Cons. {self.user.name} ({self.user.email})'
 
 
 class Merchant(BaseProfileModel):
@@ -229,7 +247,7 @@ class Merchant(BaseProfileModel):
         return True
 
     def __str__(self):
-        return f'Merchant id: {self.id}'
+        return f'Merch. {self.business_name} ({self.user.email})'
 
 
 class DwollaUser(models.Model):
