@@ -81,15 +81,16 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
   const sendVerificationCode = () => {
     setLoading(true)
     loginStore.environment.api.forgotPassword({ email: Username }).then(result => {
+      console.log('result  ', result)
       setUsernameError(false)
       setLoading(false)
       if (result.kind === "ok") {
         if (result?.response?.detail) notifyMessage(result.response.detail)
         setStep('code')
       } else if (result.kind === "bad-data") {
-        if (result.errors.email) {
+        if (result?.errors?.length > 0) {
           setUsernameError(true)
-          setUsernameErrorMessage(result.errors.email[0])
+          setUsernameErrorMessage(result?.errors?.[0])
         }
         notifyMessage("Please correct the errors and try again")
       }

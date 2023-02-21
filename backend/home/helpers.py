@@ -19,6 +19,8 @@ from twilio.rest import Client
 import json
 from users.models import UserVerificationCode, Notification
 from onesignal_sdk.client import Client as OneSignalClient
+import functools
+from rest_framework.exceptions import ValidationError
 
 LOGGER = logging.getLogger('django')
 
@@ -128,7 +130,6 @@ def send_qr_code_email(user, qr_code_image):
         LOGGER.exception('QR Code sending failed: {}'.format(e))
 
 
-
 def send_notifications(users, title, message, extra_data, from_user,
                        notification_type,
                        transaction=None,
@@ -219,6 +220,7 @@ def send_email_with_template_attach_element(subject, email, context, template_to
 
     return mail.send()
 
+
 def generate_reset_url(user, request):
     temp_key = default_token_generator.make_token(user)
     url = f"{request.scheme}://{request.get_host()}/set-new-password/{urlsafe_base64_encode(force_bytes(user.pk))}/{temp_key}"
@@ -230,9 +232,22 @@ def send_reset_email(user, request):
     context = {
         "current_site": current_site,
         "user": user,
-        "password_reset_url": generate_reset_url(user,request),
+        "password_reset_url": generate_reset_url(user, request),
         "request": request,
     }
     get_adapter(request).send_mail(
         "account/email/password_reset_key", user.email, context
     )
+
+
+def may_fail(cls_exc, detail, wrapper_exc=ValidationError, *args_outer, **kwargs_outer):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except cls_exc as exc:
+                raise wrapper_exc(detail=detail, *args_outer, **kwargs_outer)
+        return wrapper
+
+    return decorator

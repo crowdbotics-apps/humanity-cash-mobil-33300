@@ -16,6 +16,8 @@ from home.api.v1.serializers.signup_signin_serializers import VerificationCodeSe
 from home.helpers import get_user_by_uidb64, AuthenticatedAPIView, setup_verification_code, send_verification_email
 from users import IsProgramManagerAdmin, IsProgramManagerSuperAdmin
 
+from home.helpers import may_fail
+
 User = get_user_model()
 
 
@@ -37,18 +39,16 @@ def password_reset(request):
 
 
 @api_view(['POST'])
+@may_fail(User.DoesNotExist, "This email isn't registered in the platform")
 def password_reset_mobile(request):
     user = User.objects.get(email=request.data.get('email'), is_active=True)
-    if user:
-        code = setup_verification_code(user)
-        send_verification_email(user, code)
-    return Response(
-        {'detail': 'Password reset e-mail has been sent.'},
-        status=status.HTTP_200_OK
-    )
+    code = setup_verification_code(user)
+    send_verification_email(user, code)
+    return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
+@may_fail(User.DoesNotExist, "This user isn't registered in the platform")
 def verify_reset_code(request):
     user = User.objects.get(email=request.data.get('email'), is_active=True)
     request.user = user
@@ -65,6 +65,7 @@ def verify_reset_code(request):
 
 
 @api_view(['POST'])
+@may_fail(User.DoesNotExist, "This user isn't registered in the platform")
 def password_set(request):
     user = User.objects.get(email=request.data.get('email'), is_active=True)
     password = request.data.get('password')
