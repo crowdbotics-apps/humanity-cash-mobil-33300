@@ -199,7 +199,7 @@ def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account):
                                                         currency=dwolla_trn.amount.currency,
                                                         created_at=datetime.strptime(dwolla_trn.created,
                                                                                      '%Y-%m-%dT%H:%M:%S.%fZ'),
-                                                        customer=profile if profile.is_consumer else None,
+                                                        consumer=profile if profile.is_consumer else None,
                                                         merchant=profile if profile.is_merchant else None,
                                                         type=(
                                                             ACHTransaction.Type.withdraw if withdraw else ACHTransaction.Type.deposit),
