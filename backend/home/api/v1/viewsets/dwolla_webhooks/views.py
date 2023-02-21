@@ -14,7 +14,7 @@ from home.models.dwolla import DwollaEvent
 
 
 class DwollaWebhooksView(APIView):
-    permission_classes = [~IsAuthenticated & DwollaSignatureIsValid]
+    permission_classes = [DwollaSignatureIsValid]
     listeners = dict(
         customer_transfer_completed=transfer_completed_listener,
         customer_transfer_created=transfer_created_listener,
@@ -23,28 +23,30 @@ class DwollaWebhooksView(APIView):
     )
 
     def post(self, request, *args, **kwargs):
-        event = munch.munchify(json.loads(request.body))
-        event_id = event.id
-        if not DwollaEvent.objects.filter(eventId=event_id).exists():
-            event_db = DwollaEvent.objects.create(
-                eventId=event_id,
-                topic=event.topic,
-                resourceId=event.resourceId,
-                timestamp=event.timestamp,
-                resourceLink=event['_links'].resource.href,
-                customerLink=event['_links'].customer.href if 'customer' in event['_links'] else None,
-            )
-            logger.info(f'dwolla event {event} ')
+        try:
+            event = munch.munchify(json.loads(request.body))
+            event_id = event.id
+            if not DwollaEvent.objects.filter(eventId=event_id).exists():
+                event_db = DwollaEvent.objects.create(
+                    eventId=event_id,
+                    topic=event.topic,
+                    resourceId=event.resourceId,
+                    timestamp=event.timestamp,
+                    resourceLink=event['_links'].resource.href,
+                    customerLink=event['_links'].customer.href if 'customer' in event['_links'] else None,
+                )
+                logger.info(f'dwolla event {event} ')
 
-            logger.info(f'dwolla event {event_id}  [  {event.topic}  ] created')
-            if event.topic in self.listeners:
-                try:
-                    self.listeners[event.topic](event, event_db)
-                except:
-                    logger.exception(f'dwolla listener error, event {event_id}, topic {event.topic}')
-        else:
-            logger.warning(f'Duplicated dwolla event: {event_id}, ignoring')
+                logger.info(f'dwolla event {event_id}  [  {event.topic}  ] created')
+                if event.topic in self.listeners:
+                    try:
+                        self.listeners[event.topic](event, event_db)
+                    except:
+                        logger.exception(f'dwolla listener error, event {event_id}, topic {event.topic}')
+            else:
+                logger.warning(f'Duplicated dwolla event: {event_id}, ignoring')
+        except:
+            logger.exception('Dwolla webhook exception')
         return Response(status=status.HTTP_200_OK)
-
 
 

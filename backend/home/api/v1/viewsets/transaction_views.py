@@ -22,10 +22,11 @@ from celo_humanity.models import Transaction, ACHTransaction
 from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers.transaction_serializers import TransactionSerializer, SendQRSerializer, \
     SendReportSerializer
-from home.clients.dwolla_api import DwollaClient
+from home.clients.dwolla_api import DwollaClient, NoFundingSourceException
 from home.helpers import AuthenticatedAPIView, send_notifications, send_email_with_template_attach_element, \
     send_email_with_template
 from home.models.bank import choose_bank_account_for_transaction
+from home.utils import may_fail
 from users.models import Consumer, Merchant, Notification
 
 logger = logging.getLogger('transaction')
@@ -125,83 +126,75 @@ class SendMoneyView(AuthenticatedAPIView):
 class WithdrawView(AuthenticatedAPIView):
     permission_classes = [IsAuthenticated & IsNotCashier]
 
+    @may_fail(Exception, 'Error while withdrawing, please try again')
+    @may_fail(NoFundingSourceException, 'User doesn´t have a funding source attached')
+    @may_fail((AttributeError, KeyError, ValueError), 'Invalid request')
+    @may_fail((Merchant.DoesNotExist, Consumer.DoesNotExist), 'User profile not found')
     def post(self, request, *args, **kwargs):
-        try:
-            dwolla_client = DwollaClient()
-            body = json.loads(request.body)
-            user_as_consumer = body['user_as_consumer']
-            user_password = body['password']
-            user = (Consumer if user_as_consumer else Merchant).objects.get(pk=body['user'])
-            amount = float(body.get('amount', 0))
+        dwolla_client = DwollaClient()
+        body = json.loads(request.body)
+        user_as_consumer = body['user_as_consumer']
+        user_password = body['password']
+        user = (Consumer if user_as_consumer else Merchant).objects.get(pk=body['user'])
+        amount = float(body.get('amount', 0))
 
-            if user.user.check_password(user_password):
-                if amount <= 0:
-                    return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
-
-                if amount > user.balance:
-                    return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
-
-                user.withdraw(amount)
-
-                destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
-                bank_account = choose_bank_account_for_transaction(credit=False)
-                origin_source = bank_account.dwolla_account
-
-                transfer = dwolla_client.create_transfer(origin_source, destination_source, amount)
-                create_ach_transaction(transfer, True, user, bank_account)
-
-                return Response(status=status.HTTP_200_OK)
-            else:
-                return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
-        except (AttributeError, KeyError, ValueError):
-            return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
-        except Merchant.DoesNotExist:
-            return Response('Merchant not found', status=status.HTTP_400_BAD_REQUEST)
-        except Consumer.DoesNotExist:
-            return Response('Consumer not found', status=status.HTTP_400_BAD_REQUEST)
-        except Exception:
-            logger.exception("Error withdrawing money")
-            return Response('Error while withdrawing, please try again', status=status.HTTP_400_BAD_REQUEST)
-
-
-class DepositView(AuthenticatedAPIView):
-    permission_classes = [IsAuthenticated & IsNotCashier]
-
-    def post(self, request, *args, **kwargs):
-        try:
-            dwolla_client = DwollaClient()
-            body = json.loads(request.body)
-            user_as_consumer = body['user_as_consumer']
-            user_password = body['password']
-            user = (Consumer if user_as_consumer else Merchant).objects.get(pk=body['user'])
-            amount = float(body.get('amount', 0))
-
-            # if user.user.check_password(user_password):
+        if user.user.check_password(user_password):
             if amount <= 0:
                 return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
 
             if amount > user.balance:
                 return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
 
-            origin_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
-            bank_account = choose_bank_account_for_transaction(credit=True)
-            destination_source = bank_account.dwolla_account
+            user.withdraw(amount)
 
-            transfer = dwolla_client.create_transfer(origin_source, destination_source, amount)
-            create_ach_transaction(transfer, False, user, bank_account)
+            destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
+            bank_account = choose_bank_account_for_transaction(credit=False)
+            origin_source = bank_account.dwolla_account
+            if not len(destination_source):
+                raise NoFundingSourceException()
+
+            transfer = dwolla_client.create_transfer(origin_source, destination_source[0]['id'], amount)
+            create_ach_transaction(transfer, True, user, bank_account)
 
             return Response(status=status.HTTP_200_OK)
-            # else:
-            #     return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
-        except (AttributeError, KeyError, ValueError):
-            return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
-        except Merchant.DoesNotExist:
-            return Response('Merchant not found', status=status.HTTP_400_BAD_REQUEST)
-        except Consumer.DoesNotExist:
-            return Response('Consumer not found', status=status.HTTP_400_BAD_REQUEST)
-        except Exception:
-            logger.exception("Error depositing money")
-            return Response('Error while depositing, please try again', status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
+
+
+class DepositView(AuthenticatedAPIView):
+    permission_classes = [IsAuthenticated & IsNotCashier]
+
+    #@may_fail(Exception, 'Error while depositing, please try again')
+    @may_fail(NoFundingSourceException, dict(non_field_errors='User doesn´t have a funding source attached'))
+    @may_fail((AttributeError, KeyError, ValueError), 'Invalid request')
+    @may_fail((Merchant.DoesNotExist, Consumer.DoesNotExist), 'User profile not found')
+    def post(self, request, *args, **kwargs):
+        dwolla_client = DwollaClient()
+        body = json.loads(request.body)
+        user_as_consumer = body['user_as_consumer']
+        user_password = body['password']
+        user = (Consumer if user_as_consumer else Merchant).objects.get(pk=body['user'])
+        amount = float(body.get('amount', 0))
+
+        # if user.user.check_password(user_password):
+        if amount <= 0:
+            return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
+
+        if amount > user.balance:
+            return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
+
+        origin_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
+        bank_account = choose_bank_account_for_transaction(credit=True)
+        destination_source = bank_account.dwolla_account
+        if not len(origin_source):
+            raise NoFundingSourceException()
+
+        transfer = dwolla_client.create_transfer(origin_source[0]['id'], destination_source, amount)
+        create_ach_transaction(transfer, False, user, bank_account)
+
+        return Response(status=status.HTTP_200_OK)
+        # else:
+        #     return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
 
 
 def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account):
@@ -213,7 +206,7 @@ def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account):
                                                         currency=dwolla_trn.amount.currency,
                                                         created_at=datetime.strptime(dwolla_trn.created,
                                                                                      '%Y-%m-%dT%H:%M:%S.%fZ'),
-                                                        customer=profile if profile.is_consumer else None,
+                                                        consumer=profile if profile.is_consumer else None,
                                                         merchant=profile if profile.is_merchant else None,
                                                         type=(
                                                             ACHTransaction.Type.withdraw if withdraw else ACHTransaction.Type.deposit),
@@ -229,7 +222,7 @@ def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account):
                            ach_transaction=ach_transaction)
 
     except:
-        logger.error(f'Error saving transaction [{dwolla_trn.id}], please contact a system administrator.')
+        logger.exception(f'Error saving transaction [{dwolla_trn.id}], please contact a system administrator.')
 
 
 class SendReportView(AuthenticatedAPIView):

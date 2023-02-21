@@ -54,14 +54,14 @@ class DwollaClient:
         funding_sources = self.app_token.get(funding_url).body.get('_embedded').get('funding-sources')
         return funding_sources
 
-    def create_transfer(self, source, destination, amount):
+    def create_transfer(self, source_id, destination_id, amount):
         request_body = {
             '_links': {
                 'source': {
-                    'href': source
+                    'href': f'{self.get_base_url()}/funding-sources/{source_id}'
                 },
                 'destination': {
-                    'href': destination
+                    'href': f'{self.get_base_url()}/funding-sources/{destination_id}'
                 }
             },
             'amount': {
@@ -135,3 +135,5 @@ class DwollaClient:
         return req
 
 
+class NoFundingSourceException(Exception):
+    ...
