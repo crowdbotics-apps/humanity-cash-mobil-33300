@@ -1,3 +1,4 @@
+from decimal import Decimal
 from operator import itemgetter
 
 from django.db import models
@@ -78,7 +79,7 @@ def choose_bank_account_for_transaction(credit=True):
         raise NoBankAccountException()
     balances = sorted([(
         # multiply the balance for the adjustment factor, to prioritize certain accounts over others
-        bank.current_balance * (bank.weigth_adjustment_credits if credit else bank.weigth_adjustment_debits),
+        bank.current_balance * Decimal(bank.weigth_adjustment_credits if credit else bank.weigth_adjustment_debits),
         bank
     ) for bank in accounts], key=itemgetter(0))
 

@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import styles from "./forgot-pass-style"
 import { COLOR, IMAGES } from "../../theme"
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
 import { getErrorMessage, notifyMessage } from "../../utils/helpers"
@@ -25,6 +25,8 @@ import TouchID from 'react-native-touch-id'
 export const ForgotPassScreen = observer(function ForgotPassScreen() {
   const navigation = useNavigation()
   const rootStore = useStores()
+  const isFocused = useIsFocused();
+
   const { loginStore } = rootStore
 
   const [Step, setStep] = useState("email")
@@ -40,9 +42,6 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
   const [PasswordErrorMessage, setPasswordErrorMessage] = useState('')
   const [Token, setToken] = useState('')
 
-  // const [PassError, setPassError] = useState(false)
-  // const [PassErrorMessage, setPassErrorMessage] = useState("")
-
   let CodeInp2, CodeInp3, CodeInp4, CodeInp5, CodeInp6
   const [Code1, setCode1] = useState("")
   const [Code2, setCode2] = useState("")
@@ -55,18 +54,43 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
   const [UsernameError, setUsernameError] = useState(false)
   const [UsernameErrorMessage, setUsernameErrorMessage] = useState("")
 
+  useEffect(() => {
+		if (!isFocused) {
+      setStep("email")
+      setUsername("")
+      setPass("")
+      setPassConfirm("")
+      setHidePass(true)
+      setHidePassConfirm(true)
+      setMatchPassword(true)
+      setPasswordError(true)
+      setPasswordErrorMessage('')
+      setToken('')
+      setCode1("")
+      setCode2("")
+      setCode3("")
+      setCode4("")
+      setCode5("")
+      setCode6("")
+      setLoading(false)
+      setUsernameError(false)
+      setUsernameErrorMessage("")
+		}
+	}, [isFocused])
+
   const sendVerificationCode = () => {
     setLoading(true)
     loginStore.environment.api.forgotPassword({ email: Username }).then(result => {
+      console.log('result  ', result)
       setUsernameError(false)
       setLoading(false)
       if (result.kind === "ok") {
         if (result?.response?.detail) notifyMessage(result.response.detail)
         setStep('code')
       } else if (result.kind === "bad-data") {
-        if (result.errors.email) {
+        if (result?.errors?.length > 0) {
           setUsernameError(true)
-          setUsernameErrorMessage(result.errors.email[0])
+          setUsernameErrorMessage(result?.errors?.[0])
         }
         notifyMessage("Please correct the errors and try again")
       }

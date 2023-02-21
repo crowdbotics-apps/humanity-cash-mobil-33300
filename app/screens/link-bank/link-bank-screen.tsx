@@ -68,7 +68,7 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
         <Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.black} />
         <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
       </TouchableOpacity>
-      <Text style={styles.STEP_TITLE}>Select your bank</Text>
+      <Text style={[styles.STEP_TITLE, {color: loginStore.getAccountColor}]}>Select your bank</Text>
       <View style={styles.LINE} />
       <View style={styles.SEARCH_INPUT_CONTAINER}>
         <View style={styles.SEARCH_INPUT_STYLE_CONTAINER}>
@@ -279,12 +279,14 @@ export const LinkBankScreen = observer(function LinkBankScreen() {
           buttonLabel={'Submit'}
           showBottonMenu
           hideButton
+          accountType={loginStore.getSelectedAccount}
         />
         : <Button
           buttonStyle={styles.buttonStyle}
           buttonLabel={'Scan to Pay or Receive'}
           showBottonMenu
           hideButton
+          accountType={loginStore.getSelectedAccount}
         />
       )}
     </Screen>
