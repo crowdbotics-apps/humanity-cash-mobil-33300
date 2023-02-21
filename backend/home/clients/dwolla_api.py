@@ -58,10 +58,10 @@ class DwollaClient:
         request_body = {
             '_links': {
                 'source': {
-                    'href': f'{self.get_base_url()}/{source_id}'
+                    'href': f'{self.get_base_url()}/funding-sources/{source_id}'
                 },
                 'destination': {
-                    'href': f'{self.get_base_url()}/{destination_id}'
+                    'href': f'{self.get_base_url()}/funding-sources/{destination_id}'
                 }
             },
             'amount': {
