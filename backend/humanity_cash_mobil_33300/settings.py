@@ -93,6 +93,7 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'cities_light',
     'corsheaders',
+    'webshell',
 ]
 # MODULES_APPS = get_modules()
 

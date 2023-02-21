@@ -6,6 +6,7 @@ from django.conf import settings
 from django.db import models
 from rest_framework.exceptions import ValidationError
 from web3._utils.encoding import to_json
+from web3.exceptions import TimeExhausted
 
 from base import configs
 from celo_humanity.web3helpers import get_contract, ContractProxy, is_json, hextring_object_hook, get_txn_receipt, \
@@ -152,12 +153,15 @@ class Transaction(models.Model):
         if save:
             self.save()
 
-    def get_receipt(self, save=True):
-        rcp = get_txn_receipt(self.transaction_id)
-        self.receipt = to_json(rcp)
-        if save:
-            self.save()
-        self.process_receipt_events(save)
+    def get_receipt(self, save=True, timeout=10):
+        try:
+            rcp = get_txn_receipt(self.transaction_id, timeout=timeout)
+            self.receipt = to_json(rcp)
+            if save:
+                self.save()
+            self.process_receipt_events(save)
+        except TimeExhausted:
+            print(f'Error getting receipt for txn {self.transaction_id}')
 
 
 class ACHTransaction(models.Model):

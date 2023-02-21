@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+from web3.exceptions import ContractLogicError
 
 from celo_humanity.humanity_contract_helpers import NoWalletException, get_wallet_balance, transfer_coin, get_wallet, \
     deposit_coin, withdraw_coin, WalletAlreadyCreatedException, uid_to_wallet
@@ -117,6 +118,7 @@ class BaseProfileModel(models.Model):
                     # TODO log when gets a error while create the wallet
 
             self.crypto_wallet_id = new_uid
+            self.get_wallet_address(save=False)
             if save:
                 self.save()
             return new_uid
@@ -132,7 +134,12 @@ class BaseProfileModel(models.Model):
     def balance(self):
         if self.crypto_wallet_id is None:
             self.new_wallet()
-        return get_wallet_balance(self.crypto_wallet_id)
+        try:
+            return get_wallet_balance(self.crypto_wallet_id)
+        except ContractLogicError:  # crypto id is invalid
+            self.crypto_wallet_id = None
+            self.new_wallet()
+            return 0
 
     def transfer(self, other_user, amount, roundup = 0, **kwargs_extra): # other user can be a merchant or an user! yay duck typing!
         if not hasattr(other_user, 'crypto_wallet_id') or self.crypto_wallet_id is None or other_user.crypto_wallet_id is None:
