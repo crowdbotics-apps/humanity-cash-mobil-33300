@@ -14,7 +14,7 @@ from home.models.dwolla import DwollaEvent
 
 
 class DwollaWebhooksView(APIView):
-    permission_classes = [~IsAuthenticated & DwollaSignatureIsValid]
+    #permission_classes = [~IsAuthenticated & DwollaSignatureIsValid]
     listeners = dict(
         customer_transfer_completed=transfer_completed_listener,
         customer_transfer_created=transfer_created_listener,
