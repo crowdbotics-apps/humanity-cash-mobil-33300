@@ -169,23 +169,23 @@ class DepositView(AuthenticatedAPIView):
             user = (Consumer if user_as_consumer else Merchant).objects.get(pk=body['user'])
             amount = float(body.get('amount', 0))
 
-            if user.user.check_password(user_password):
-                if amount <= 0:
-                    return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
+            # if user.user.check_password(user_password):
+            if amount <= 0:
+                return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
 
-                if amount > user.balance:
-                    return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
+            if amount > user.balance:
+                return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
 
-                origin_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
-                bank_account = choose_bank_account_for_transaction(credit=True)
-                destination_source = bank_account.dwolla_account
+            origin_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
+            bank_account = choose_bank_account_for_transaction(credit=True)
+            destination_source = bank_account.dwolla_account
 
-                transfer = dwolla_client.create_transfer(origin_source, destination_source, amount)
-                create_ach_transaction(transfer, False, user, bank_account)
+            transfer = dwolla_client.create_transfer(origin_source, destination_source, amount)
+            create_ach_transaction(transfer, False, user, bank_account)
 
-                return Response(status=status.HTTP_200_OK)
-            else:
-                return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
+            return Response(status=status.HTTP_200_OK)
+            # else:
+            #     return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
         except (AttributeError, KeyError, ValueError):
             return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
         except Merchant.DoesNotExist:
