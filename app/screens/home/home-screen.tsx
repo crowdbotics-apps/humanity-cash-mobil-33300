@@ -246,7 +246,7 @@ export const HomeScreen = observer(function HomeScreen() {
 				<Text style={styles.NEWS_BODY}>{n.description}</Text>
 				<Image
 					source={{ uri: n.image }}
-					resizeMode="contain"
+					resizeMode='cover'
 					style={styles.NEWS_IMAGE}
 				/>
 			</View>

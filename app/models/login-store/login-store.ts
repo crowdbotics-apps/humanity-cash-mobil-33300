@@ -76,10 +76,10 @@ export const LoginStoreModel = types
       return self.access_token !== null && self.access_token !== undefined
     },
     get getFundingSources() {
-      return self.funding_sources || []
+      return self.funding_sources ? [...self.funding_sources] : []
     },
     get getTransactions() {
-      return self.transactions || []
+      return self.transactions ? [...self.transactions] : []
     },
     get getStep() {
       return self.currentStep
@@ -91,22 +91,22 @@ export const LoginStoreModel = types
       return self.setupData
     },
     get getEvents() {
-      return self.events || []
+      return self.events ? [...self.events] : []
     },
     get getBusiness() {
-      return self.business || []
+      return self.business ? [...self.business] : []
     },
     get getBusinessDetail() {
-      return self.business_details || {}
+      return self.business_details ? {...self.business_details} : {}
     },
     get getMerchantOfMonth() {
-      return self.merchant_month || {}
+      return self.merchant_month ? {...self.merchant_month} : {}
     },
     get getConsumerCoupons() {
-      return self.consumer_coupons || []
+      return self.consumer_coupons ? [...self.consumer_coupons] : []
     },
     get getMerchantCoupons() {
-      return self.merchant_coupons || []
+      return self.merchant_coupons ? [...self.merchant_coupons] : []
     },
     get getSelectedAccount() {
       return self.selected_account || 'consumer'
@@ -344,7 +344,7 @@ export const LoginStoreModel = types
       self.users = data || {}
     },
     setTransactions(data) {
-      self.transactions = data || []
+      self.transactions = data
     },
     reset() {
       const api = self.environment.api.apisauce
