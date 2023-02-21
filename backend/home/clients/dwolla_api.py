@@ -135,3 +135,5 @@ class DwollaClient:
         return req
 
 
+class NoFundingSourceException(Exception):
+    ...
