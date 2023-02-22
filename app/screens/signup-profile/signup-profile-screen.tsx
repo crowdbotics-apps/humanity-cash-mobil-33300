@@ -931,31 +931,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		}
 	}
 	const nextButtonHandler = () => {
-		const setupData = {
-			Username,
-			imageSource,
-			Name,
-			LastName,
-			BusinessName,
-			BusinessStory,
-			BusinessType,
-			BusinessExecName,
-			BusinessExecLastName,
-			BusinessImageSource,
-			BackBusinessImageSource,
-			BusinessRegName,
-			BusinessIndustryType,
-			IndentifierType,
-			EmployerId,
-			SocialSecurityNumber,
-			Address1,
-			Address2,
-			City,
-			State,
-			PostalCode,
-			PhoneNumber,
-		}
-		loginStore.setSetupData(setupData)
 		switch (Step) {
 			case 'profile_type':
 				setStep(ProfileType.first_step)
@@ -1008,7 +983,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			fetchState()
 		} else if (!isFocused) {
 			setLoading(false)
-			loginStore.setSetupData({});
 		}
 	}, [isFocused])
 

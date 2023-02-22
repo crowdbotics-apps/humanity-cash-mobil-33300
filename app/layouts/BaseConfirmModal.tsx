@@ -4,6 +4,7 @@ import styles from "../screens/qr-scan-generate/qr-style";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import {useStores} from '../models';
 import {IMAGES} from '../theme';
+import { getRandomProfileImage } from "../utils/helpers"
 
 type ModalConfirmProps = {
     children: ReactNode[] | ReactElement,
@@ -13,6 +14,7 @@ type ModalConfirmProps = {
     imgSrc?: string,
     type?: string,
     transparent?: boolean,
+    dark?: boolean,
 }
 
 export const BaseConfirmModal = ({
@@ -22,17 +24,17 @@ export const BaseConfirmModal = ({
   transparent = true,
   imgSrc = '',
   username = '',
-  type='QR'
+  type='QR',
+  dark = false
 }: ModalConfirmProps) => {
 
   const { loginStore } = useStores()
-  const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander];
   const userText = username?.includes('@') ? username.replace('@', '') : username;
-  const profilePictureSrc = imgSrc !== '' ? {uri: imgSrc} : randomImages[Math.round(Math.random() * 3)];
+  const profilePictureSrc = imgSrc ? {uri: imgSrc} : getRandomProfileImage();
   
   return (
     <Modal visible={visible} transparent={transparent}>
-      <Pressable style={styles.ROOT_MODAL} onPress={closeModalAction}>
+      <Pressable style={dark ? styles.DARK_ROOT_MODAL : styles.ROOT_MODAL} onPress={closeModalAction}>
         <TouchableOpacity
           onPress={closeModalAction}
           style={styles.CLOSE_MODAL_BUTTON}

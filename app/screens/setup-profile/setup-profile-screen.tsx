@@ -302,7 +302,6 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				if (result.kind === "ok") {
 					loginStore.setSelectedAccount('merchant')
 					setShowThankyouModal(true)
-					loginStore.setSetupData({});
 				} else if (result.kind === "bad-data") {
 					const key = Object.keys(result?.errors)[0]
 					const msg = `${key}: ${result?.errors?.[key][0]}`
@@ -877,32 +876,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 		}
 	}
 	const nextButtonHandler = () => {
-		const setupData = {
-			Username,
-			imageSource,
-			Name,
-			LastName,
-			BusinessName,
-			BusinessStory,
-			BusinessType,
-			BusinessExecName,
-			BusinessExecLastName,
-			BusinessImageSource,
-			BackBusinessImageSource,
-			BusinessRegName,
-			BusinessIndustryType,
-			IndentifierType,
-			EmployerId,
-			SocialSecurityNumber,
-			Address1,
-			Address2,
-			City,
-			State,
-			PostalCode,
-			PhoneNumber,
-		}
-		// city and state picker || map
-		loginStore.setSetupData(setupData)
 		switch (Step) {
 			case 'pic_username':
 				setupConsumer()
@@ -933,41 +906,9 @@ IDENTIFICATION NUMBER (ENTER ONE)
 	useEffect(() => {
 		if (isFocused) {
 			loginStore.setRandomProfilePictureIndex(RandonPic)
-
-			const data = loginStore.getSetupData
-			if (data?.Username) {
-				setUsername(data.Username)
-				setButtonDisabled(false)
-			}
-			if (data?.imageSource) setImageSource(data.imageSource)
-			if (data?.Name) setName(data.Name)
-			if (data?.LastName) setLastName(data.LastName)
-			if (data?.BusinessName) {
-				setBusinessName(data.BusinessName)
-				setButtonDisabled(false)
-			}
-			if (data?.BusinessStory) setBusinessStory(data.BusinessStory)
-			if (data?.BusinessType) setBusinessType(data.BusinessType)
-			if (data?.BusinessExecName) setBusinessExecName(data.BusinessExecName)
-			if (data?.BusinessExecLastName) setBusinessExecLastName(data.BusinessExecLastName)
-			if (data?.BusinessImageSource) setBusinessImageSource(data.BusinessImageSource)
-			if (data?.BackBusinessImageSource) setBackBusinessImageSource(data.BackBusinessImageSource)
-			if (data?.BusinessRegName) setBusinessRegName(data.BusinessRegName)
-			if (data?.BusinessIndustryType) setBusinessIndustryType(data.BusinessIndustryType)
-			if (data?.IndentifierType) setIndentifierType(data.IndentifierType)
-			if (data?.EmployerId) setEmployerId(data.EmployerId)
-			if (data?.SocialSecurityNumber) setSocialSecurityNumber(data.SocialSecurityNumber)
-			if (data?.Address1) setAddress1(data.Address1)
-			if (data?.Address2) setAddress2(data.Address2)
-			if (data?.City) setCity(data.City)
-			if (data?.State) setState(data.State)
-			if (data?.PostalCode) setPostalCode(data.PostalCode)
-			if (data?.PhoneNumber) setPhoneNumber(data.PhoneNumber)
-
 			// fetchCity()
 			fetchState()
 		} else if (!isFocused) {
-			loginStore.setSetupData({});
 			setLoading(false)
 		}
 	}, [isFocused])

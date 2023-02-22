@@ -60,6 +60,13 @@ export default StyleSheet.create({
     paddingHorizontal: '10%'
   },
   CONTAINER: {},
+  DARK_ROOT_MODAL: {
+    alignItems: 'center',
+    backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
+    flex: 1,
+    justifyContent: 'space-around',
+
+  },
   FORGOT_PASSWORD_CONTAINER: {
     alignItems: 'center',
     alignSelf: 'center',

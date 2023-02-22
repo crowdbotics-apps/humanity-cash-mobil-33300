@@ -291,7 +291,7 @@ export default StyleSheet.create({
   },
   ROOT_MODAL: {
     alignItems: 'center',
-    backgroundColor: COLOR.PALETTE.modalBackgroundColor,
+    backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
     flex: 1,
     justifyContent: 'space-around'
   },
@@ -413,7 +413,7 @@ export default StyleSheet.create({
 
   USER_IMAGE_CONTAINER: {
     alignItems: 'center',
-    backgroundColor: COLOR.PALETTE.transparent,
+    backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 35,
     bottom: 35,
     height: 70,

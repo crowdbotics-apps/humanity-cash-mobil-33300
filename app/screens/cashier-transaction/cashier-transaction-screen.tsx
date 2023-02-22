@@ -2,53 +2,29 @@ import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, ConnectBankModal } from "../../components";
-import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
+import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, RefreshControl } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import styles from './cashier-transaction';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
-import { CheckBox } from 'react-native-elements'
+import { runInAction } from "mobx"
+import { notifyMessage } from "../../utils/helpers"
+import moment from "moment";
 
 export const CashierTransactionScreen = observer(function CashierTransactionScreen() {
 	const navigation = useNavigation()
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 	const isFocused = useIsFocused();
-	const returns = {
-		TODAY: [
-			{
-				item: 'Customer sale',
-				time: '7 min ago',
-				amount: '10.00',
-			},
-			{
-				item: 'Carr Hardware',
-				time: '3:51, Jun 17, 2021',
-				amount: '10.00',
-			},
-			{
-				item: 'Cash out',
-				time: '4:51, Jun 17, 2021',
-				amount: '10.00',
-			},
-		],
-		YESTERDAY: [
-			{
-				item: 'Customer return',
-				time: '3:51, Jun 16, 2021',
-				amount: '10.00',
-			},
-		]
-	}
 
-	const [ShowIndex, setShowIndex] = useState(true)
+
 	const [Search, setSearch] = useState('')
-	const [ShowFilter, setShowFilter] = useState(false)
-
+	const [refreshing, setRefreshing] = useState(false);
 	const [SelectedReturn, setSelectedReturn] = useState({})
 	const [DetailModalVisible, setDetailModalVisible] = useState(false)
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
+	const [TransactionData, setTransactionData] = useState([])
 
 	const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
 		if (initialData === [] || !initialData) return []
@@ -56,20 +32,68 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 		if (filter === '' || !filter) return initialData
 		let data = []
 		initialData.map(d => {
-		  keys.map(k => {
-			try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
-			catch { }
-		  })
+			keys.map(k => {
+				try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
+				catch { }
+			})
 		})
 		return data
-	  }
+	}
 
 	useEffect(() => {
-		if (isFocused) {
-			// if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
-			// else setShowBankModal(false)
-		}
+		if (isFocused) getTransactions()
 	}, [isFocused])
+
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		getTransactions()
+	}, []);
+
+	const getTransactions = () => {
+		loginStore.environment.api
+			.getMobileTransactions({ selected_account: loginStore.selected_account })
+			.then((result: any) => {
+				setRefreshing(false)
+				if (result.kind === "ok") {
+					runInAction(() => {
+						let temp = []
+						if (Array.isArray(result?.data)) {
+							result?.data.map((r: any) => {
+								if (!temp.find(t => t.id === r.id)) {
+									r.ach = false
+									temp.push(r)
+								}
+							})
+
+							setTransactionData(temp)
+						}
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
+
+	const getFormatedTransactions = () => {
+		let data: any = {}
+		TransactionData.map(r => {
+			const date = r.created.split('T')[0]
+			if (data[date]) {
+				data[date].data.push(r)
+			} else {
+				data[date] = {
+					label: date,
+					data: [r]
+				}
+			}
+		})
+		return data
+	}
+
 
 	const bankModal = () =>
 		<ConnectBankModal
@@ -78,11 +102,6 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
 			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
 		/>
-
-	const Filters = () => <View style={styles.FILTER_CONTAINER}>
-		<Text style={styles.CLEAR_FILTERS}>Clear filters</Text>
-		<View style={styles.LINE} />
-	</View>
 
 	const ReturnDetailModal = () => <Modal transparent visible={DetailModalVisible}>
 		<View style={styles.ROOT_MODAL}>
@@ -143,21 +162,24 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 					/>
 				</View>
 			</View>
-			{ShowFilter && Filters()}
-			{Object.keys(returns).map((r, key) => ([
-				<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r}</Text>,
-				getDataFiltered(returns[r], ['item'], Search).map((i, key2) => (
+			{Object.values(getFormatedTransactions()).map((r: any, key) => ([
+				<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r.label}</Text>,
+				getDataFiltered(r.data, ['item'], Search).map((i, key2) => (
 					<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
+
+						{console.log(' item ===>>>  ', JSON.stringify(i, null, 2))}
+
 						<View style={{ marginLeft: 15 }}>
-							<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.item}</Text>
-							<Text style={styles.RETURN_ITEM_TIME}>{i.time}</Text>
+							<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.type}</Text>
+							<Text style={styles.RETURN_ITEM_TIME}>{moment(i?.created).format('llll')}</Text>
 						</View>
 						<View style={styles.CONTAINER}>
-							{!i.credit
-								? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`+ C$ ${i.amount}`}</Text>
-								: <Text style={styles.RETURN_ITEM_AMOUNT}>{`+ C$ ${i.amount}`}</Text>
+							{i.type === 'Deposit'
+								? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ +${i.amount}`}</Text>
+								: i.type === 'Transfer'
+									? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ ${i.credit ? '+' : '-'}${i.amount}`}</Text>
+									: <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ -${i.amount || ''}`}</Text>
 							}
-
 						</View>
 					</TouchableOpacity>
 				))
@@ -181,7 +203,16 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 				</TouchableOpacity>
 			</View>
 			<KeyboardAvoidingView enabled style={styles.ROOT}>
-				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+				<ScrollView
+				showsVerticalScrollIndicator={false} 
+				refreshControl={
+					<RefreshControl
+						refreshing={refreshing}
+						onRefresh={onRefresh}
+						enabled={true}
+					/>
+				}
+				>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
 							{ReturnIndex()}
@@ -191,7 +222,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 			</KeyboardAvoidingView>
 			{bankModal()}
 			{ReturnDetailModal()}
-			
+
 		</Screen>
 	)
 })

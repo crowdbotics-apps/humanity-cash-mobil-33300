@@ -194,7 +194,6 @@ export const SignupScreen = observer(function SignupScreen() {
   }
   const resetData = () => {
     loginStore.setStep('')
-    loginStore.setSignupData({})
     setStep('email')
     setEmail('')
     setPhone('')
@@ -500,8 +499,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     }
   }
   const nextButtonHandler = () => {
-    const signupData = { Email, Phone, Code1, Code2, Code3, Code4, Code5, Code6, }
-    loginStore.setSignupData(signupData)
     switch (Step) {
       case "email":
         register()
@@ -530,18 +527,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
   }
 
   const sendCodeAgainHandler = () => sendVerificationCode()
-
-  useEffect(() => {
-    const data = loginStore.getSignupData
-    if (data?.Email) setEmail(data.Email)
-    if (data?.Phone) setPhone(data.Phone)
-    if (data?.Code1) setCode1(data.Code1)
-    if (data?.Code2) setCode2(data.Code2)
-    if (data?.Code3) setCode3(data.Code3)
-    if (data?.Code4) setCode4(data.Code4)
-    if (data?.Code5) setCode5(data.Code5)
-    if (data?.Code6) setCode6(data.Code6)
-  }, [])
 
   useEffect(() => {
 		if (isFocused) resetData()

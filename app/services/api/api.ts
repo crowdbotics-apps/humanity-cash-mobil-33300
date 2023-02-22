@@ -180,6 +180,10 @@ export class Api extends ApiBase {
     return this.simple_post(apiv1 + "/send-money/", data)
   }
 
+  async sendReturn(data?: any): Promise<Types.SimplePostResult> {
+    return this.simple_post(apiv1 + "/send-return/", data)
+  }
+
   async getBalanceData(): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/balances/")
   }
