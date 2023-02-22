@@ -1,4 +1,5 @@
 import base64
+from decimal import Decimal
 from email.mime.image import MIMEImage
 
 from django.conf import settings
@@ -169,7 +170,7 @@ class WithdrawView(AuthenticatedAPIView):
 
         transaction = user.withdraw(amount)
 
-        amount -= calculate_redemption_fee(amount)
+        amount -= Decimal(calculate_redemption_fee(amount))
 
         destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
         bank_account = choose_bank_account_for_transaction(credit=False)
