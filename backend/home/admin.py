@@ -30,7 +30,7 @@ class EventAdmin(admin.ModelAdmin):
 
 @admin.register(DwollaEvent)
 class DwollaEventAdmin(admin.ModelAdmin):
-    ...
+    list_display = ['id', 'topic', 'resourceId']
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
@@ -43,7 +43,7 @@ class UserDeviceAdmin(admin.ModelAdmin):
 
 @admin.register(BankAccount)
 class BankAccountAdmin(admin.ModelAdmin):
-    ...
+    list_display = ['id', 'name', 'bank_name', 'current_balance']
 
 
 @admin.register(DatedSystemBalance)

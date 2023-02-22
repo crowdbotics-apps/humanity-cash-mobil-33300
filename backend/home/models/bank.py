@@ -70,6 +70,9 @@ class BankAccount(models.Model):
         credits, debits = self.credits_and_debits
         return self.initial_balance + credits - debits
 
+    def __str__(self):
+        return f'{self.name} ({self.bank_name})'
+
 
 def choose_bank_account_for_transaction(credit=True):
     accounts = BankAccount.objects

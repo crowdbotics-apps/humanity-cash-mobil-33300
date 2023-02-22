@@ -16,7 +16,7 @@ class TransactionAdmin(admin.ModelAdmin):
 
 @admin.register(ACHTransaction)
 class ACHTransactionAdmin(admin.ModelAdmin):
-    ...
+    list_display = ['id', 'transaction_id', 'type', 'status', 'bank_account', 'amount']
 
 
 @admin.register(ComplianceAction)
