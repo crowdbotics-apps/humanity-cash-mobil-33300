@@ -1,5 +1,6 @@
 import hashlib
 import hmac
+import json
 import logging
 
 from django.conf import settings
@@ -17,6 +18,9 @@ class DwollaSignatureIsValid(BasePermission):
             settings.DWOLLA_PRODUCTION_WEBHOOK_SECRET
         # Check signature
         hmacsig = hmac.new(secret.encode(), request.body, hashlib.sha256).hexdigest()
-        return hmacsig == request.headers.get('x-request-signature-sha-256', 'invalid')
+        valid = hmacsig == request.headers.get('x-request-signature-sha-256', 'invalid')
+        if not valid:
+            logger.error(f'invalid webhook access: secret: {secret}, headers: {json.dumps(request.headers)}')
+        return valid
 
 

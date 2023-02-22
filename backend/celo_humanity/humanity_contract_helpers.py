@@ -229,3 +229,10 @@ def get_roundups_sum(chest_address=None):
         for evt in transaction.events_in_receipt
         if evt['event'] == 'RoundUpEvent' and (chest_address is None or evt['args']['_toAddress'] == chest_address)
     )
+
+
+def calculate_redemption_fee(amount):
+    proxy = get_humanity_contract().proxy
+    fee_min = crypto2usd(proxy.redemptionFeeMinimum())
+    prc = proxy.redemptionFeeNumerator() / proxy.redemptionFeeDenominator()
+    return max(fee_min, amount * prc)
