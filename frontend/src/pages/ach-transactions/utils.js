@@ -73,6 +73,6 @@ export const renderTableRow = (item) => {
   item.type = badgeBoxType(item)
   item.status = badgeBoxStatus(item)
   item.created_at = (dateBox(item.created_at))
-  item.confirmed_at = (dateBox(item.confirmed_at))
+  item.confirmed_at = item.confirmed_at ? dateBox(item.confirmed_at) : '-'
   return item
 }
