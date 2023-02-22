@@ -24,6 +24,7 @@ class TransactionMobileSerializer(serializers.Serializer):
     amount = serializers.DecimalField(6, 2)
     counterpart_data = serializers.SerializerMethodField()
     created = serializers.SerializerMethodField()
+    credit = serializers.SerializerMethodField()
 
     class Meta:
         fields = (
