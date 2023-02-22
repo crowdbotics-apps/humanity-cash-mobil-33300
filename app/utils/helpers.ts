@@ -4,6 +4,7 @@ import Toast from "react-native-toast-message"
 import { Platform, ToastAndroid, Alert } from "react-native"
 import { checkMultiple, requestMultiple, PERMISSIONS } from "react-native-permissions"
 import numeral from "numeral";
+import {IMAGES} from '../theme';
 
 export const formatPhoneNumber = phoneNumberString => {
   const cleaned = ('' + phoneNumberString).replace(/\D/g, '');
@@ -14,6 +15,11 @@ export const formatPhoneNumber = phoneNumberString => {
     return [intlCode, '(', match[2], ') ', match[3], '-', match[4]].join('');
   }
   return null;
+}
+
+export const getRandomProfileImage = () => {
+  const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander];
+  return randomImages[Math.round(Math.random() * 3)];
 }
 
 export const notifyMessage = (msg: any, type = "error") => {

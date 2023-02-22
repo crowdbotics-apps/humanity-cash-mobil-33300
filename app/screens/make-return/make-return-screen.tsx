@@ -56,11 +56,11 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
             "amount": Amount,
             "roundup": 0,
         }
-        console.log(' =========>>>>>>>>>>>>>>>>> ', JSON.stringify(data, null, 2))
+        console.log(' data ', JSON.stringify(data, null, 2))
         loginStore.environment.api
             .sendMoney(data)
             .then((result: any) => {
-                console.log('req =========>>>>>>>>>>>>>>>>> ', JSON.stringify(result, null, 2))
+                console.log('req data ', JSON.stringify(result, null, 2))
                 setLoading(false)
                 if (result.kind === "ok") {
                     setTransactionSucceed(true)

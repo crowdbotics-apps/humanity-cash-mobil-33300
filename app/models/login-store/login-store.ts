@@ -84,12 +84,6 @@ export const LoginStoreModel = types
     get getStep() {
       return self.currentStep
     },
-    get getSignupData() {
-      return self.signupData
-    },
-    get getSetupData() {
-      return self.setupData
-    },
     get getEvents() {
       return self.events ? [...self.events] : []
     },
@@ -305,12 +299,6 @@ export const LoginStoreModel = types
     },
     setStep(step) {
       self.currentStep = step
-    },
-    setSignupData(data) {
-      self.signupData = data
-    },
-    setSetupData(data) {
-      self.setupData = data
     },
     setApiToken(tokenProvided) {
       const api = self.environment.api.apisauce

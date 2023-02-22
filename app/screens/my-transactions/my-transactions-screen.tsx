@@ -13,9 +13,10 @@ import { CheckBox } from 'react-native-elements'
 import DatePicker from 'react-native-date-picker'
 import Entypo from "react-native-vector-icons/Entypo"
 import { runInAction } from "mobx"
-import { notifyMessage } from "../../utils/helpers"
+import { notifyMessage, getRandomProfileImage } from "../../utils/helpers"
 import QRCode from 'react-native-qrcode-svg'
 import { BaseConfirmModal as UserModal } from '../../layouts'
+import moment from "moment";
 
 export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const navigation = useNavigation()
@@ -48,40 +49,14 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
 
+	const [TransactionData, setTransactionData] = useState([])
+
 	useEffect(() => {
 		if (isFocused) {
-			loginStore.setTransactions([])
 			getTransactions()
-			getACHTransactions()
 		}
 	}, [isFocused])
 
-	const getACHTransactions = () => {
-		loginStore.environment.api
-			.getACHTransactions({ selected_account: loginStore.selected_account })
-			.then((result: any) => {
-				if (result.kind === "ok") {
-					runInAction(() => {
-						let temp = loginStore.getTransactions
-						if (Array.isArray(result?.data?.results)) {
-							result?.data?.results.map((r: any) => {
-								if (!temp.find(t => t.id === r.id)) {
-									r.ach = true
-									temp.push(r)
-								}
-							})
-							loginStore.setTransactions(temp)
-						}
-					})
-				} else if (result.kind === "bad-data") {
-					const key = Object.keys(result?.errors)[0]
-					const msg = `${key}: ${result?.errors?.[key][0]}`
-					notifyMessage(msg)
-				} else {
-					notifyMessage(null)
-				}
-			})
-	}
 
 	const getTransactions = () => {
 		loginStore.environment.api
@@ -89,15 +64,15 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 			.then((result: any) => {
 				if (result.kind === "ok") {
 					runInAction(() => {
-						let temp = loginStore.getTransactions
-						if (Array.isArray(result?.data?.results)) {
-							result?.data?.results.map((r: any) => {
+						let temp = []
+						if (Array.isArray(result?.data)) {
+							result?.data.map((r: any) => {
 								if (!temp.find(t => t.id === r.id)) {
 									r.ach = false
 									temp.push(r)
 								}
 							})
-							loginStore.setTransactions(temp)
+							setTransactionData(temp)
 						}
 					})
 				} else if (result.kind === "bad-data") {
@@ -131,7 +106,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 
 	const getFormatedTransactions = () => {
 		let data: any = {}
-		loginStore.getTransactions.map(r => {
+		TransactionData.map(r => {
 			const date = r.created.split('T')[0]
 			if (data[date]) {
 				data[date].data.push(r)
@@ -234,19 +209,24 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 					onPress={() => setDetailModalVisible(false)}
 					style={styles.CLOSE_MODAL_BUTTON}
 				>
-					<Text style={styles.BACK_BUTON_LABEL}>{`Close `}</Text>
-					<Icon name={"close"} size={20} color={'#0D0E21'} />
+					<Text style={[styles.BACK_BUTON_LABEL, { color: 'white' }]}>{`Close `}</Text>
+					<Icon name={"close"} size={20} color={'white'} />
 				</TouchableOpacity>
 
 				<View style={styles.MODAL_CONTAINER}>
 					<View style={styles.USER_IMAGE_CONTAINER}>
 						<Image
 							resizeMode="cover"
-							source={{ uri: SelectedReturn.image }}
+							source={SelectedReturn?.counterpart_data?.profile_picture
+								? { uri: SelectedReturn?.counterpart_data?.profile_picture }
+								: getRandomProfileImage()
+							}
 							style={styles.USER_IMAGE}
 						/>
 					</View>
-					<Text style={[styles.RETURN_ITEM_MODAL, { color: loginStore.getAccountColor }]}>{SelectedReturn.item}</Text>
+					{/* <Text style={[styles.RETURN_ITEM_MODAL, { color: loginStore.getAccountColor }]}>{SelectedReturn.item}</Text> */}
+
+					<Text style={[styles.RETURN_ITEM_MODAL, { color: loginStore.getAccountColor }]}>{SelectedReturn?.counterpart_data?.name}</Text>
 					<View style={styles.RETURN_CONTAINER}>
 						<Text style={[styles.RETURN_AMOUNT, { color: loginStore.getAccountColor }]}>C$ {SelectedReturn.amount}</Text>
 						<View style={styles.RETURN_DETAIL_CONTAINER}>
@@ -259,13 +239,11 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 						</View>
 						<View style={styles.RETURN_DETAIL_CONTAINER}>
 							<Text style={styles.RETURN_DETAIL_LABEL}>DATE</Text>
-							<Text style={styles.RETURN_DETAIL_LABEL}>4:22 , JUN 17, 2021</Text>
+							<Text style={styles.RETURN_DETAIL_LABEL}>{moment(SelectedReturn?.created).format('llll')}</Text>
 						</View>
 					</View>
-					<Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor }]}>{loginStore.ProfileData.username}</Text>
-					{SelectedReturn.type === 'Transfer' &&
-						<Text onPress={() => setReturnQR(true)} style={styles.LINK}>I want to make a return</Text>
-					}
+					<Text onPress={() => setReturnQR(true)} style={styles.LINK}>{SelectedReturn.type === 'Transfer' ? 'I want to make a return' : ' '}</Text>
+
 				</View>
 
 				<View />
@@ -328,19 +306,18 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 									getDataFiltered(r.data, ['amount', 'type'], Search).map((i, key2) =>
 										<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
 											<Image
-												source={{ uri: i?.consumer_data?.profile_picture || i?.merchant_data?.profile_picture }}
+												source={i?.counterpart_data?.profile_picture ? { uri: i?.counterpart_data?.profile_picture } : getRandomProfileImage()}
 												resizeMode='cover'
 												style={styles.RETURN_IMAGE}
 											/>
 											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.type}</Text>
 											<View style={styles.CONTAINER}>
 												{i.type === 'Deposit'
-													? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ ${i.amount}`}</Text>
+													? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ +${i.amount}`}</Text>
 													: i.type === 'Transfer'
-														? <Text style={styles.RETURN_ITEM_AMOUNT}>{`C$ ${i.amount}`}</Text>
-														: <Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{`C$ ${i.amount || ''}`}</Text>
+														? <Text style={styles.RETURN_ITEM_AMOUNT}>{`C$ ${i.credit ? '+' : '-'}${i.amount}`}</Text>
+														: <Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{`C$ -${i.amount || ''}`}</Text>
 												}
-												{/* <Text style={styles.RETURN_ITEM_AMOUNT}>{i.amount ? `+ C$ ${i.amount}` : '-'}</Text> */}
 											</View>
 										</TouchableOpacity>
 									),
