@@ -21,9 +21,16 @@ class ACHTransactionViewSet(mixins.ListModelMixin,
     search_fields = ['transaction_id', 'ach_id', 'status', 'type']
 
     def get_queryset(self):
+        user = self.request.user
         qs = super(ACHTransactionViewSet, self).get_queryset()
-        status = self.request.query_params.get('status')
+        status = self.request.query_params.get('status', None)
         if status is not None:
             qs = qs.filter(status=status)
+        is_merchant = self.request.query_params.get('selected_account', 'merchant')
+        if not user.role and not user.is_superuser:
+            if is_merchant == 'merchant':
+                qs = qs.filter(merchant=self.request.user.get_merchant_data())
+            else:
+                qs = qs.filter(consumer=self.request.user.get_consumer_data())
         return qs
 
