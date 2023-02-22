@@ -17,7 +17,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from base import configs
+from celo_humanity.humanity_contract_helpers import calculate_redemption_fee
 from celo_humanity.models import Transaction, ACHTransaction
 from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers.ach_transaction_serializers import ACHTransactionSerializer
@@ -32,11 +32,6 @@ from users.models import Consumer, Merchant, Notification
 
 logger = logging.getLogger('transaction')
 
-
-# class LargeResultsSetPagination(PageNumberPagination):
-#     page_size = 1000
-#     page_size_query_param = 'page_size'
-#     max_page_size = 10000
 
 class TransactionViewSet(
     mixins.ListModelMixin,
@@ -177,6 +172,8 @@ class WithdrawView(AuthenticatedAPIView):
             return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
 
         user.withdraw(amount)
+
+        amount -= calculate_redemption_fee(amount)
 
         destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
         bank_account = choose_bank_account_for_transaction(credit=False)
