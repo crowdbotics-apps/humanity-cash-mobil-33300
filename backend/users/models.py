@@ -197,7 +197,7 @@ class BaseProfileModel(models.Model):
                                self.user,
                                Notification.Types.TRANSACTION,
                                transaction=transaction)
-
+            return transaction
 
 
 class Consumer(BaseProfileModel):

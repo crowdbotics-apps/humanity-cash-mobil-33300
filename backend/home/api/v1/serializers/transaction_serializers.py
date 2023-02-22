@@ -16,6 +16,55 @@ from users.constants import UserGroup, UserRole
 
 User = get_user_model()
 
+
+class TransactionMobileSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    transaction_id = serializers.CharField(min_length=255)
+    type = serializers.CharField(min_length=255)
+    from_address = serializers.CharField(min_length=255)
+    to_address = serializers.CharField(min_length=255)
+    created = serializers.CharField(min_length=255)
+    amount = serializers.DecimalField(6, 2)
+    consumer_data = serializers.SerializerMethodField()
+    merchant_data = serializers.SerializerMethodField()
+
+    class Meta:
+        fields = (
+            'id',
+            'transaction_id',
+            'type',
+            'amount',
+            'consumer_data',
+            'merchant_data',
+            'created',
+            'from_address',
+            'to_address',
+        )
+
+    def get_consumer_data(self, obj):
+        if hasattr(obj, 'counterpart_consumer') and obj.counterpart_consumer:
+            return None
+        return None
+
+    def get_merchant_data(self, obj):
+        if hasattr(obj, 'counterpart_merchant'):
+            return None
+        return None
+
+    def get_from_address(self, obj):
+        if obj.consumer_id:
+            return uid_to_wallet(obj.consumer.crypto_wallet_id)
+        if obj.merchant_id:
+            return uid_to_wallet(obj.merchant.crypto_wallet_id)
+        return '-'
+
+    def get_to_address(self, obj):
+        if obj.counterpart_consumer_id:
+            return uid_to_wallet(obj.counterpart_consumer.crypto_wallet_id)
+        if obj.counterpart_merchant_id:
+            return uid_to_wallet(obj.counterpart_merchant.crypto_wallet_id)
+        return '-'
+
 class TransactionSerializer(serializers.ModelSerializer):
     from_address = serializers.SerializerMethodField()
     to_address = serializers.SerializerMethodField()
