@@ -349,11 +349,11 @@ LOGGING = {
         'level': 'WARNING',
     },
     'loggers': {
-        'dwolla': {
-            'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            'propagate': True,
-        },
+        # 'dwolla': {
+        #     'handlers': ['console'],
+        #     'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        #     'propagate': True,
+        # },
     },
 }
 
