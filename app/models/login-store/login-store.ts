@@ -132,7 +132,8 @@ export const LoginStoreModel = types
     get getProfilesId() {
       return {
         merchant: self.merchant_id,
-        consumer: self.consumer_id
+        consumer: self.consumer_id,
+        cashier: self.consumer_id,
       }
     },
     get getAllData() {

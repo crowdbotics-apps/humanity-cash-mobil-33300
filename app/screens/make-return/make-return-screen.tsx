@@ -18,6 +18,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import QRCode from 'react-native-qrcode-svg'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { BaseConfirmModal as UserModal } from '../../layouts'
+import moment from 'moment';
 
 // steps = ['scan', 'confirm', 'pending', 'finish']
 
@@ -51,13 +52,15 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
             "to": QR?.to,
             "from_is_consumer": loginStore.getSelectedAccount === 'consumer',
             "to_is_consumer": QR?.to_is_consumer,
-            "password": null,
-            "amount": props?.route?.params?.QR ? Amount : QR?.amount,
+            // "password": null,
+            "amount": Amount,
             "roundup": 0,
         }
+        console.log(' =========>>>>>>>>>>>>>>>>> ', JSON.stringify(data, null, 2))
         loginStore.environment.api
             .sendMoney(data)
             .then((result: any) => {
+                console.log('req =========>>>>>>>>>>>>>>>>> ', JSON.stringify(result, null, 2))
                 setLoading(false)
                 if (result.kind === "ok") {
                     setTransactionSucceed(true)
@@ -67,12 +70,17 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
                     setStep('finish')
                     const errors = result.errors
                     setTransactionErrorMsg(errors)
+                } else {
+                    setTransactionSucceed(false)
+                    setStep('finish')
+                    setTransactionErrorMsg('There was an error. ')
                 }
             }).catch((err) => notifyMessage(err))
     }
 
     const renderConfirmation = <>
         <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>My profile</Text>
+        
         <View style={styles.LINE} />
         <Text style={styles.STEP_SUB_TITLE}>TRANSACTION DETAILS.</Text>
         <Text style={[styles.RETURN_ITEM_MODAL, { color: loginStore.getAccountColor }]}>{QR?.item}</Text>
@@ -80,15 +88,15 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
             <Text style={[styles.RETURN_AMOUNT, { color: loginStore.getAccountColor }]}>C$ {QR?.amount}</Text>
             <View style={styles.RETURN_DETAIL_CONTAINER}>
                 <Text style={styles.RETURN_DETAIL_LABEL}>TRANSACTION ID</Text>
-                <Text style={styles.RETURN_DETAIL_LABEL}>0567882HDJH2JE20</Text>
+                <Text style={styles.RETURN_DETAIL_LABEL}>{QR?.transaction_id}</Text>
             </View>
             <View style={styles.RETURN_DETAIL_CONTAINER}>
                 <Text style={styles.RETURN_DETAIL_LABEL}>TYPE</Text>
-                <Text style={styles.RETURN_DETAIL_LABEL}>CUSTOMER SALE</Text>
+                <Text style={styles.RETURN_DETAIL_LABEL}>{QR?.type}</Text>
             </View>
             <View style={styles.RETURN_DETAIL_CONTAINER}>
                 <Text style={styles.RETURN_DETAIL_LABEL}>DATE</Text>
-                <Text style={styles.RETURN_DETAIL_LABEL}>4:22 , JUN 17, 2021</Text>
+                <Text style={styles.RETURN_DETAIL_LABEL}>{moment(QR?.created).format('llll')}</Text>
             </View>
         </View>
         <View style={{ flex: 1, justifyContent: 'space-between' }}>

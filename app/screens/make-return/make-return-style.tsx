@@ -225,7 +225,7 @@ export default StyleSheet.create({
   RETURN_CONTAINER_MODAL: {
     alignSelf: 'center',
     backgroundColor: COLOR.PALETTE.whiteTextInput,
-    height: 140,
+    height: 180,
     marginVertical: 10,
     width: METRICS.screenWidth * 0.95,
   },
@@ -234,11 +234,13 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: METRICS.screenWidth * 0.85,
+    marginTop: 10
   },
   RETURN_DETAIL_LABEL: { 
     color: COLOR.PALETTE.black,
     fontSize: 10,
     fontWeight: 'bold',
+    maxWidth: METRICS.screenWidth * 0.4
   },
   RETURN_ITEM_MODAL: {
     // bottom: 30,
