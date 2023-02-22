@@ -166,6 +166,11 @@ class Transaction(models.Model):
         except TimeExhausted:
             print(f'Error getting receipt for txn {self.transaction_id}')
 
+    @property
+    def balance_left_to_return(self):
+        returned = sum(Transaction.objects.filter(original_transaction=self).values_list('amount', flat=True))
+        return self.amount - returned
+
 
 class ACHTransaction(models.Model):
     class Type(models.TextChoices):

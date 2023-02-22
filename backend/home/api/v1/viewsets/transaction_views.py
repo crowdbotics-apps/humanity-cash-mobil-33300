@@ -17,10 +17,11 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from celo_humanity.humanity_contract_helpers import calculate_redemption_fee
 from celo_humanity.models import Transaction, ACHTransaction
-from home.api.v1.cashier_permission import IsNotCashier
+from home.api.v1.cashier_permission import IsNotCashier, IsCashier
 from home.api.v1.serializers.ach_transaction_serializers import ACHTransactionSerializer
 from home.api.v1.serializers.transaction_serializers import TransactionSerializer, SendQRSerializer, \
     SendReportSerializer, TransactionMobileSerializer
@@ -96,60 +97,85 @@ class TransactionMobileViewSet(viewsets.GenericViewSet):
         return Response(serializer.data)
 
 
+class SendReturnTransactionView(APIView):
+    permission_classes = [IsCashier | IsAuthenticated]
+
+    # @may_fail(Exception, 'Error while transfering, please try again')
+    @may_fail((AttributeError, KeyError, ValueError), 'Invalid request')
+    @may_fail((Merchant.DoesNotExist, Consumer.DoesNotExist), 'User profile not found')
+    @may_fail(Transaction.DoesNotExist, 'Transaction not found')
+    def post(self, request, *args, **kwargs):
+        body = json.loads(request.body)
+        trn_id = body['transaction_id']
+
+        from_ = Merchant.objects.get(user=request.user)
+        original_transaction = Transaction.objects.get(pk=trn_id)
+        to_ = original_transaction.profile
+
+        if from_ != original_transaction.counterpart_profile:
+            raise ValidationError('The transaction does not belongs to the current merchant')
+
+        if from_ == to_:
+            raise ValidationError('Source and destination must be different people or profile')
+
+        amount = float(body.get('amount', 0))
+
+        if amount < 0.1:
+            raise ValidationError('Invalid amount')
+
+        if amount > from_.balance:
+            raise ValidationError('User balance insufficient for operation')
+
+        if amount > original_transaction.balance_left_to_return:
+            raise ValidationError('Amount to refund is greater than the amount left to refund in original transaction')
+
+        from_.transfer(to_, amount, 0, original_transaction=original_transaction)
+
+        return Response(status=status.HTTP_200_OK)
+
 
 class SendMoneyView(AuthenticatedAPIView):
     permission_classes = [IsAuthenticated & IsNotCashier]
 
+    # @may_fail(Exception, 'Error while transfering, please try again')
+    @may_fail((AttributeError, KeyError, ValueError), 'Invalid request')
+    @may_fail((Merchant.DoesNotExist, Consumer.DoesNotExist), 'User profile not found')
     def post(self, request, *args, **kwargs):
-        try:
-            body = json.loads(request.body)
-            from_is_consumer = body['from_is_consumer']
-            to_is_consumer = body['to_is_consumer']
+        body = json.loads(request.body)
+        from_is_consumer = body['from_is_consumer']
+        to_is_consumer = body['to_is_consumer']
 
-            from_ = (Consumer if from_is_consumer else Merchant).objects.get(pk=body['from'])
-            to_ = (Consumer if to_is_consumer else Merchant).objects.get(pk=body['to'])
+        from_ = (Consumer if from_is_consumer else Merchant).objects.get(pk=body['from'])
+        to_ = (Consumer if to_is_consumer else Merchant).objects.get(pk=body['to'])
 
-            if from_ == to_:
-                return Response('Source and destination must be different people or profile',
-                                status=status.HTTP_400_BAD_REQUEST)
+        if from_ == to_:
+            raise ValidationError('Source and destination must be different people or profile')
 
-            if from_.user_id != request.user.id:
-                return Response('The user does not match with the operation source',
-                                status=status.HTTP_400_BAD_REQUEST)
+        if from_.user_id != request.user.id:
+            raise ValidationError('The user does not match with the operation source')
 
-            from_password = body['password']
-            amount = float(body.get('amount', 0))
-            roundup = float(body.get('roundup', 0))
-            # if from_.user.check_password(from_password) or from_password is None:
-            total = amount + roundup
-            if amount <= 0 or roundup < 0 or total < 0.01:
-                return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
+        from_password = body['password']
+        amount = float(body.get('amount', 0))
+        roundup = float(body.get('roundup', 0))
+        # if from_.user.check_password(from_password) or from_password is None:
+        total = amount + roundup
+        if amount <= 0 or roundup < 0 or total < 0.1:
+            raise ValidationError('Invalid amounts')
 
-            if total > from_.balance:
-                return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
+        if total > from_.balance:
+            raise ValidationError('User balance insufficient for operation')
 
-            from_.transfer(to_, amount, roundup)
+        from_.transfer(to_, amount, roundup)
 
-            return Response(status=status.HTTP_200_OK)
-            # else:
-            #    return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
-
-        except (AttributeError, KeyError, ValueError):
-            return Response('Invalid request', status=status.HTTP_400_BAD_REQUEST)
-        except Merchant.DoesNotExist:
-            return Response('Merchant not found', status=status.HTTP_400_BAD_REQUEST)
-        except Consumer.DoesNotExist:
-            return Response('Consumer not found', status=status.HTTP_400_BAD_REQUEST)
-        except Exception:
-            logger.exception("Error transfering money")
-            return Response('Error while transfering, please try again', status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)
+        # else:
+        #    return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
 
 
 class WithdrawView(AuthenticatedAPIView):
     permission_classes = [IsAuthenticated & IsNotCashier]
 
     # @may_fail(Exception, 'Error while withdrawing, please try again')
-    @may_fail(NoFundingSourceException, 'User doesn´t have a funding source attached')
     @may_fail((AttributeError, KeyError, ValueError), 'Invalid request')
     @may_fail((Merchant.DoesNotExist, Consumer.DoesNotExist), 'User profile not found')
     def post(self, request, *args, **kwargs):
@@ -162,13 +188,13 @@ class WithdrawView(AuthenticatedAPIView):
 
         #if user.user.check_pasword(user_password):
         if amount <= 0:
-            return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
+            raise ValidationError('Invalid amounts')
 
         if amount > user.balance:
-            return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
+            raise ValidationError('User balance insufficient for operation')
 
         if user.is_consumer and amount > 5:
-            return Response('Maximum amount for withdraw: 5 C$', status=status.HTTP_400_BAD_REQUEST)
+            raise ValidationError('Maximum amount for withdraw: 5 C$')
 
         transaction = user.withdraw(amount)
 
@@ -178,7 +204,7 @@ class WithdrawView(AuthenticatedAPIView):
         bank_account = choose_bank_account_for_transaction(credit=False)
         origin_source = bank_account.dwolla_account
         if not len(destination_source):
-            raise NoFundingSourceException()
+            raise ValidationError('User doesn´t have a funding source attached')
 
         transfer = dwolla_client.create_transfer(origin_source, destination_source[0]['id'], amount)
         create_ach_transaction(transfer, True, user, bank_account, transaction)
@@ -191,8 +217,7 @@ class WithdrawView(AuthenticatedAPIView):
 class DepositView(AuthenticatedAPIView):
     permission_classes = [IsAuthenticated & IsNotCashier]
 
-    #@may_fail(Exception, 'Error while depositing, please try again')
-    @may_fail(NoFundingSourceException, dict(non_field_errors='User doesn´t have a funding source attached'))
+    # @may_fail(Exception, 'Error while depositing, please try again')
     @may_fail((AttributeError, KeyError, ValueError), 'Invalid request')
     @may_fail((Merchant.DoesNotExist, Consumer.DoesNotExist), 'User profile not found')
     def post(self, request, *args, **kwargs):
@@ -205,16 +230,16 @@ class DepositView(AuthenticatedAPIView):
 
         # if user.user.check_password(user_password):
         if amount <= 0:
-            return Response('Invalid amounts', status=status.HTTP_400_BAD_REQUEST)
+            raise ValidationError('Invalid amounts')
 
         if amount > user.balance:
-            return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
+            raise ValidationError('User balance insufficient for operation')
 
         origin_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
         bank_account = choose_bank_account_for_transaction(credit=True)
         destination_source = bank_account.dwolla_account
-        if not len(origin_source):
-            raise NoFundingSourceException()
+        if not len(destination_source):
+            raise ValidationError('User doesn´t have a funding source attached')
 
         transfer = dwolla_client.create_transfer(origin_source[0]['id'], destination_source, amount)
         create_ach_transaction(transfer, False, user, bank_account)

@@ -88,6 +88,7 @@ urlpatterns = [
     path('community-chest/', base_views.CommunityChestView.as_view(), name='communitychest_info'),
     path('cashier-mode/', setup_profile_views.SetCashierModeView.as_view(), name='cashiermode'),
     path('send-money/', transaction_views.SendMoneyView.as_view(), name='send_money'),
+    path('send-return/', transaction_views.SendReturnTransactionView.as_view(), name='send_return'),
     path('withdraw/', transaction_views.WithdrawView.as_view(), name='withdraw'),
     path('deposit/', transaction_views.DepositView.as_view(), name='deposit'),
     path('send-qr/', transaction_views.SendQRView.as_view(), name='send_qr'),
