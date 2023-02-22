@@ -22,9 +22,9 @@ from celo_humanity.humanity_contract_helpers import get_wallet_balance, get_comm
 from celo_humanity.models import Transaction, ACHTransaction, ComplianceActionSignoff, ComplianceAction
 from home.api.v1.serializers.compliance_serializers import ComplianceActionReadSerializer, \
     ComplianceActionCreateSerializer, ComplianceActionSignoffSerializer, ComplianceRecipientSerializer, \
-    DatedBalanceSerializer
+    DatedBalanceSerializer, BankAccountSerializer
 from home.api.v1.serializers.transaction_serializers import AdminWalletActionSerializer
-from home.models import DatedSystemBalance, get_current_system_balance
+from home.models import DatedSystemBalance, get_current_system_balance, BankAccount
 from home.utils import may_fail
 from users import IsProgramManagerSuperAdmin
 from users.models import Merchant, Consumer, get_profile_for_crypto_address
@@ -39,7 +39,10 @@ class ComplianceDashboardView(APIView):
         today = get_current_system_balance()
         balances = [today] + list(DatedSystemBalance.objects.order_by('-created')[:10])
         serializer = DatedBalanceSerializer(instance=balances, many=True)
-        return Response(serializer.data)
+        return Response(dict(
+            banks=BankAccountSerializer(instance=BankAccount.objects.order_by('bank_order').all(), many=True).data,
+            balances=serializer.data
+        ))
 
 
 class AdminWalletDataView(APIView):
