@@ -30,6 +30,6 @@ class DwollaEvent(TimeStampedModel):
     resourceId = models.CharField(max_length=200)
     resourceLink = models.CharField(max_length=200)
     customerLink = models.CharField(max_length=200, null=True)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(null=True)
 
 

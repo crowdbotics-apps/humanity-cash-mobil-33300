@@ -31,7 +31,7 @@ class DwollaWebhooksView(APIView):
                     eventId=event_id,
                     topic=event.topic,
                     resourceId=event.resourceId,
-                    timestamp=event.timestamp,
+                    timestamp=event.get('created', event.get('timestamp', None)),
                     resourceLink=event['_links'].resource.href,
                     customerLink=event['_links'].customer.href if 'customer' in event['_links'] else None,
                 )
