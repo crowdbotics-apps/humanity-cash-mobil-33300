@@ -48,6 +48,7 @@ class TransactionMobileSerializer(serializers.Serializer):
                 return False, 'ACH'
             else:
                 return True, 'ACH'
+
     def get_counterpart_data(self, obj):
         is_credit, type_of_transaction = self.transaction_is_credit(obj)
         if type_of_transaction == 'TRN':
@@ -59,12 +60,14 @@ class TransactionMobileSerializer(serializers.Serializer):
                         "profile_picture": consumer.profile_picture.url if consumer.profile_picture else None,
                         "name": consumer.user.get_full_name(),
                         "id": consumer.id,
+                        "merchant": False,
                     }
                 else:
                     return  {
                         "profile_picture": merchant.profile_picture.url if merchant.profile_picture else None,
                         "name": merchant.business_name,
                         "id": merchant.id,
+                        "merchant": True,
                     }
             else:
                 consumer = obj.counterpart_consumer
@@ -74,12 +77,14 @@ class TransactionMobileSerializer(serializers.Serializer):
                         "profile_picture": consumer.profile_picture.url if consumer.profile_picture else None,
                         "name": consumer.user.get_full_name(),
                         "id": consumer.id,
+                        "merchant": False,
                     }
                 else:
                     return  {
                         "profile_picture": merchant.profile_picture.url if merchant.profile_picture else None,
                         "name": merchant.business_name,
                         "id": merchant.id,
+                        "merchant": True,
                     }
         return None
 
@@ -92,6 +97,7 @@ class TransactionMobileSerializer(serializers.Serializer):
         if type_of_transaction == 'ACH':
             return obj.created_at
         return obj.created
+
 class TransactionSerializer(serializers.ModelSerializer):
     from_address = serializers.SerializerMethodField()
     to_address = serializers.SerializerMethodField()
