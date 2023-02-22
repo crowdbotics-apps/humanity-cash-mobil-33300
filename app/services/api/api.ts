@@ -196,6 +196,10 @@ export class Api extends ApiBase {
     return this.simple_get(apiv1 + "/ach_transaction/", data)
   }
 
+  async getMobileTransactions(data?: any): Promise<Types.SimpleGetResult> {
+    return this.simple_get(apiv1 + "/transaction_mobile/", data)
+  }
+
   async getTransactions(data?: any): Promise<Types.SimpleGetResult> {
     return this.simple_get(apiv1 + "/transaction/", data)
   }

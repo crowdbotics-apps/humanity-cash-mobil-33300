@@ -58,7 +58,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 
 	const getACHTransactions = () => {
 		loginStore.environment.api
-			.getACHTransactions()
+			.getACHTransactions({selected_account: loginStore.selected_account})
 			.then((result: any) => {
 				if (result.kind === "ok") {
 					runInAction(() => {
@@ -85,7 +85,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 
 	const getTransactions = () => {
 		loginStore.environment.api
-			.getTransactions()
+			.getTransactions({selected_account: loginStore.selected_account})
 			.then((result: any) => {
 				if (result.kind === "ok") {
 					runInAction(() => {
@@ -303,7 +303,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 									r.data.map((i, key2) => (
 										<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
 											<Image
-												source={{ uri: 
+												source={{ uri:
 													i?.consumer_data?.profile_picture || i?.merchant_data?.profile_picture
 												}}
 												resizeMode='cover'
