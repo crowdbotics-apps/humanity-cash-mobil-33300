@@ -171,6 +171,9 @@ class WithdrawView(AuthenticatedAPIView):
         if amount > user.balance:
             return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
 
+        if user.is_consumer and amount > 5:
+            return Response('Maximum amount for withdraw: 5 C$', status=status.HTTP_400_BAD_REQUEST)
+
         user.withdraw(amount)
 
         amount -= calculate_redemption_fee(amount)
