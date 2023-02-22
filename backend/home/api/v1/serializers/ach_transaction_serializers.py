@@ -12,14 +12,17 @@ class ACHTransactionSerializer(serializers.ModelSerializer):
     status = serializers.SerializerMethodField()
     consumer_data = serializers.SerializerMethodField()
     merchant_data = serializers.SerializerMethodField()
+    created = serializers.SerializerMethodField()
 
     class Meta:
         model = ACHTransaction
         fields = [
             'id', 'transaction_id', 'created_at', 'ach_id', 'status', 'type', 'consumer', 'merchant', 'confirmed_at',
-            'amount', 'consumer_data', 'merchant_data'
+            'amount', 'consumer_data', 'merchant_data', 'created'
         ]
 
+    def get_created(self, obj):
+        return obj.created_at
     def get_status(self, obj):
         status = obj.status
         if obj.status == ACHTransaction.Status.processed:

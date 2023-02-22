@@ -18,7 +18,7 @@ from home.api.v1.viewsets.dwolla_webhooks import views as dwolla_webhooks_views
 from home.api.v1.viewsets.event_views import EventViewSet
 from home.api.v1.viewsets.notification_views import SetDeviceView, NotificationViewSet
 from home.api.v1.viewsets.signup_signin_views import LoginFacebookView
-from home.api.v1.viewsets.transaction_views import TransactionViewSet
+from home.api.v1.viewsets.transaction_views import TransactionViewSet, TransactionMobileViewSet
 from admin.api.v1.viewsets.user_viewset import UpdateContractStateView
 from home.api.v1.viewsets.user_views import UserViewSet, ConsumerViewSet, DwollaUserView
 
@@ -28,6 +28,7 @@ router.register("user", UserViewSet, basename="user")
 router.register("transaction", TransactionViewSet, basename="transaction")
 router.register("contract", ContractViewSet, basename="contract")
 router.register("ach_transaction", ACHTransactionViewSet, basename="ach_transaction")
+router.register("transaction_mobile", TransactionMobileViewSet, basename="transaction_mobile")
 router.register("consumer", ConsumerViewSet, basename="consumer")
 router.register("dwolla_user", DwollaUserView, basename="dwolla_user")
 router.register("coupons", CouponsView, basename="coupons")
