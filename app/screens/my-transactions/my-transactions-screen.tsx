@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, TextInputComponent, ConnectBankModal } from "../../components";
-import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image } from "react-native";
+import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, Platform, KeyboardAvoidingView, ScrollView, Image, RefreshControl } from "react-native";
 import { COLOR, IMAGES, METRICS } from "../../theme";
 import styles from './my-transactions-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
@@ -44,7 +44,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const [OpenFrom, setOpenFrom] = useState(false)
 	const [DateTo, setDateTo] = useState(new Date())
 	const [OpenTo, setOpenTo] = useState(false)
-
+	const [refreshing, setRefreshing] = useState(false);
 	const [ReturnQR, setReturnQR] = useState(false)
 
 	const [ShowBankModal, setShowBankModal] = useState(false)
@@ -57,11 +57,16 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		}
 	}, [isFocused])
 
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		getTransactions()
+	}, []);
 
 	const getTransactions = () => {
 		loginStore.environment.api
 			.getMobileTransactions({ selected_account: loginStore.selected_account })
 			.then((result: any) => {
+				setRefreshing(false)
 				if (result.kind === "ok") {
 					runInAction(() => {
 						let temp = []
@@ -189,12 +194,14 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const ReturnDetailModal = () => ReturnQR
 		? <UserModal
 			visible={DetailModalVisible}
+			dark
 			closeModalAction={() => [setDetailModalVisible(false), setReturnQR(false)]}
 			username={loginStore.getSelectedAccount === 'consumer' ? loginStore.ProfileData.full_name : loginStore.getAllData.business_name}
-			imgSrc={loginStore.ProfileData.profile_picture}
+			imgSrc={SelectedReturn?.counterpart_data?.profile_picture}
 		>
 			<QRCode
 				value={JSON.stringify({
+					...SelectedReturn,
 					to: loginStore?.getProfilesId[loginStore.getSelectedAccount],
 					to_is_consumer: loginStore.getSelectedAccount === 'consumer',
 					amount: SelectedReturn.amount
@@ -273,7 +280,16 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 				</TouchableOpacity>
 			</View>
 			<KeyboardAvoidingView enabled style={styles.ROOT}>
-				<ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+				<ScrollView
+					showsVerticalScrollIndicator={false}
+					refreshControl={
+						<RefreshControl
+							refreshing={refreshing}
+							onRefresh={onRefresh}
+							enabled={true}
+						/>
+					}
+				>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
 							<View style={styles.STEP_CONTAINER}>

@@ -15,9 +15,6 @@ import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { getErrorMessage, notifyMessage } from "../../utils/helpers"
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import QRCode from 'react-native-qrcode-svg'
-import Ionicons from "react-native-vector-icons/Ionicons"
-import { BaseConfirmModal as UserModal } from '../../layouts'
 import moment from 'moment';
 
 // steps = ['scan', 'confirm', 'pending', 'finish']
@@ -27,8 +24,6 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
     const rootStore = useStores()
     const isFocused = useIsFocused();
     const { loginStore } = rootStore
-
-    const userToPay = useRef(null);
 
     const [Step, setStep] = useState('scan')
     const [QR, setQR] = useState(null)
@@ -48,19 +43,20 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
         setStep('pending')
         setTransactionErrorMsg('')
         const data = {
-            "from": loginStore?.getProfilesId[loginStore.getSelectedAccount],
-            "to": QR?.to,
-            "from_is_consumer": loginStore.getSelectedAccount === 'consumer',
-            "to_is_consumer": QR?.to_is_consumer,
-            // "password": null,
-            "amount": Amount,
-            "roundup": 0,
+            // "from": loginStore?.getProfilesId[loginStore.getSelectedAccount],
+            // "to": QR?.to,
+            // "from_is_consumer": loginStore.getSelectedAccount === 'consumer',
+            // "to_is_consumer": QR?.to_is_consumer,
+            // // "password": null,
+            // "amount": Amount,
+            // "roundup": 0,
+            transaction_id: QR?.id,
+            amount: Amount,
         }
         console.log(' data ', JSON.stringify(data, null, 2))
         loginStore.environment.api
-            .sendMoney(data)
+            .sendReturn(data)
             .then((result: any) => {
-                console.log('req data ', JSON.stringify(result, null, 2))
                 setLoading(false)
                 if (result.kind === "ok") {
                     setTransactionSucceed(true)
@@ -80,7 +76,6 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
 
     const renderConfirmation = <>
         <Text style={[styles.STEP_TITLE, { color: loginStore.getAccountColor }]}>My profile</Text>
-        
         <View style={styles.LINE} />
         <Text style={styles.STEP_SUB_TITLE}>TRANSACTION DETAILS.</Text>
         <Text style={[styles.RETURN_ITEM_MODAL, { color: loginStore.getAccountColor }]}>{QR?.item}</Text>
@@ -188,6 +183,17 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
 
     useEffect(() => {
         if (isFocused) setStep('scan')
+        else {
+            setStep('scan')
+            setQR(null)
+            setAmount('0')
+            setLoading(false)
+            setTransactionSucceed(true)
+            setTransactionErrorMsg('')
+            setPayerSetAmount(true)
+            setButtonDisabled(false)
+            setAmountError(false)
+        }
     }, [isFocused])
 
     const renderStep = () => {
