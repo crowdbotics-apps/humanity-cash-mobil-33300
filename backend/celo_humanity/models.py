@@ -187,10 +187,9 @@ class ACHTransaction(models.Model):
     confirmed_at = models.DateTimeField(null=True, blank=True)
     amount = models.DecimalField(default=0.0, decimal_places=2, max_digits=14)
     currency = models.CharField(max_length=5, null=True, blank=True)
-    account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
     bank_account = models.ForeignKey('home.BankAccount', null=True, on_delete=models.SET_NULL,
                                      related_name='ach_transactions', blank=True)
-
+    crypto_transaction = models.ForeignKey(Transaction, on_delete=models.SET_NULL, null=True, blank=True, related_name='ach_transactions')
     class Meta:
         ordering = ['-id']
 

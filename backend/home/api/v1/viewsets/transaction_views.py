@@ -22,7 +22,7 @@ from celo_humanity.models import Transaction, ACHTransaction
 from home.api.v1.cashier_permission import IsNotCashier
 from home.api.v1.serializers.ach_transaction_serializers import ACHTransactionSerializer
 from home.api.v1.serializers.transaction_serializers import TransactionSerializer, SendQRSerializer, \
-    SendReportSerializer
+    SendReportSerializer, TransactionMobileSerializer
 from home.clients.dwolla_api import DwollaClient, NoFundingSourceException
 from home.helpers import AuthenticatedAPIView, send_notifications, send_email_with_template_attach_element, \
     send_email_with_template
@@ -76,34 +76,27 @@ class TransactionViewSet(
             raise ValidationError('Invalid request')
 
 
-class TransactionMobileViewSet(
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet
-):
-    # serializer_class = TransactionSerializer
-    # serializer_class = ACHTransactionSerializer
+class TransactionMobileViewSet(viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticated]
-    pagination_class = PageNumberPagination
     filter_backends = [filters.SearchFilter]
-    search_fields = ['transaction_id']
+    serializer_class = TransactionMobileSerializer
 
-
-    def get_queryset(self):
+    def list(self, request, *args, **kwargs):
         blockchain_transactions = Transaction.objects.all()
-        ach_transactions = ACHTransaction.objects.all()
-        user = self.request.user
-        is_merchant = self.request.query_params.get('selected_account', 'merchant')
+        ach_transactions = ACHTransaction.objects.filter(status=ACHTransaction.Status.pending)
+        user = request.user
+        is_merchant = request.query_params.get('selected_account', 'merchant')
         if not user.role and not user.is_superuser:
             if is_merchant == 'merchant':
-                blockchain_transactions = blockchain_transactions.filter(merchant=self.request.user.get_merchant_data)
-                ach_transactions = ach_transactions.filter(merchant=self.request.user.get_merchant_data)
+                blockchain_transactions = blockchain_transactions.filter(merchant=request.user.get_merchant_data)
+                ach_transactions = ach_transactions.filter(merchant=request.user.get_merchant_data)
             else:
-                blockchain_transactions = blockchain_transactions.filter(consumer=self.request.user.get_consumer_data)
-                ach_transactions = ach_transactions.filter(consumer=self.request.user.get_consumer_data)
-        formated_blockchain_transactions = TransactionSerializer(blockchain_transactions, many=True).data
-        formated_ach_transactions = ACHTransactionSerializer(ach_transactions, many=True).data
-        merged_dict = {key: value for (key, value) in (formated_blockchain_transactions.items() + formated_ach_transactions.items())}
-        return json.dumps(merged_dict)
+                blockchain_transactions = blockchain_transactions.filter(consumer=request.user.get_consumer_data)
+                ach_transactions = ach_transactions.filter(consumer=request.user.get_consumer_data)
+
+        serializer = self.get_serializer(list(ach_transactions) + list(blockchain_transactions), many=True)
+        return Response(serializer.data)
+
 
 
 class SendMoneyView(AuthenticatedAPIView):
@@ -176,7 +169,7 @@ class WithdrawView(AuthenticatedAPIView):
         if amount > user.balance:
             return Response('User balance insufficient for operation', status=status.HTTP_400_BAD_REQUEST)
 
-        user.withdraw(amount)
+        transaction = user.withdraw(amount)
 
         destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
         bank_account = choose_bank_account_for_transaction(credit=False)
@@ -185,7 +178,7 @@ class WithdrawView(AuthenticatedAPIView):
             raise NoFundingSourceException()
 
         transfer = dwolla_client.create_transfer(origin_source, destination_source[0]['id'], amount)
-        create_ach_transaction(transfer, True, user, bank_account)
+        create_ach_transaction(transfer, True, user, bank_account, transaction)
 
         return Response(status=status.HTTP_200_OK)
         #else:
@@ -228,7 +221,7 @@ class DepositView(AuthenticatedAPIView):
         #     return Response('Invalid password', status=status.HTTP_401_UNAUTHORIZED)
 
 
-def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account):
+def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account, transaction = None):
     try:
         ach_transaction = ACHTransaction.objects.create(transaction_id=dwolla_trn.id,
                                                         amount=dwolla_trn.amount.value,
@@ -241,7 +234,8 @@ def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account):
                                                         merchant=profile if profile.is_merchant else None,
                                                         type=(
                                                             ACHTransaction.Type.withdraw if withdraw else ACHTransaction.Type.deposit),
-                                                        bank_account=bank_account
+                                                        bank_account=bank_account,
+                                                        transaction=transaction
                                                         )
 
         send_notifications([profile.user],

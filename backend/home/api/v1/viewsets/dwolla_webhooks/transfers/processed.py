@@ -35,7 +35,9 @@ def transfer_completed_listener(event, event_db):
                 if profile:
                     logger.info(f'transaction {transfer.id} processed, starting minting process')
                     try:
-                        profile.deposit(transfer.amount.value)
+                        transaction = profile.deposit(transfer.amount.value)
+                        ach_transaction.crypto_transaction = transaction
+                        ach_transaction.save()
                         logger.info(f'minted {transfer.amount.value} for {profile} successfully')
                     except:
                         logger.exception(
