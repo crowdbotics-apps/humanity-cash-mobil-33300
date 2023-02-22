@@ -145,7 +145,7 @@ class SendMoneyView(AuthenticatedAPIView):
 class WithdrawView(AuthenticatedAPIView):
     permission_classes = [IsAuthenticated & IsNotCashier]
 
-    @may_fail(Exception, 'Error while withdrawing, please try again')
+    # @may_fail(Exception, 'Error while withdrawing, please try again')
     @may_fail(NoFundingSourceException, 'User doesn´t have a funding source attached')
     @may_fail((AttributeError, KeyError, ValueError), 'Invalid request')
     @may_fail((Merchant.DoesNotExist, Consumer.DoesNotExist), 'User profile not found')
