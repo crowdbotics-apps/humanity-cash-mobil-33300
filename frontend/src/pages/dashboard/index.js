@@ -98,7 +98,7 @@ const Dashboard = () => {
       {Header: "TOKENS ISSUED", accessor: "outstanding", disableOrdering: true},
       {Header: "RESERVE >= TOKENS?", accessor: "positive_result", disableOrdering: true},
       {Header: "DIFFERENCE", accessor: "diference", disableOrdering: true},
-      {Header: "COMMENTS", accessor: "comments", disableOrdering: true},
+      //{Header: "COMMENTS", accessor: "comments", disableOrdering: true},
     )
 
     return { rows: data, columns}
