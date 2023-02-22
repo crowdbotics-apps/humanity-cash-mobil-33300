@@ -235,7 +235,7 @@ def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account, transact
                                                         type=(
                                                             ACHTransaction.Type.withdraw if withdraw else ACHTransaction.Type.deposit),
                                                         bank_account=bank_account,
-                                                        transaction=transaction
+                                                        crypto_transaction=transaction
                                                         )
 
         send_notifications([profile.user],
