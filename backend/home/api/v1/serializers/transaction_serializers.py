@@ -55,13 +55,13 @@ class TransactionMobileSerializer(serializers.Serializer):
                 merchant = obj.merchant
                 if consumer:
                     return  {
-                        "profile_picture": consumer.profile_picture,
+                        "profile_picture": consumer.profile_picture.url if consumer.profile_picture else None,
                         "name": consumer.user.get_full_name(),
                         "id": consumer.id,
                     }
                 else:
                     return  {
-                        "profile_picture": merchant.profile_picture,
+                        "profile_picture": merchant.profile_picture.url if merchant.profile_picture else None,
                         "name": merchant.business_name,
                         "id": merchant.id,
                     }
@@ -70,13 +70,13 @@ class TransactionMobileSerializer(serializers.Serializer):
                 merchant = obj.counterpart_merchant
                 if consumer:
                     return  {
-                        "profile_picture": consumer.profile_picture,
+                        "profile_picture": consumer.profile_picture.url if consumer.profile_picture else None,
                         "name": consumer.user.get_full_name(),
                         "id": consumer.id,
                     }
                 else:
                     return  {
-                        "profile_picture": merchant.profile_picture,
+                        "profile_picture": merchant.profile_picture.url if merchant.profile_picture else None,
                         "name": merchant.business_name,
                         "id": merchant.id,
                     }
