@@ -20,6 +20,7 @@ from rest_framework.response import Response
 from base import configs
 from celo_humanity.models import Transaction, ACHTransaction
 from home.api.v1.cashier_permission import IsNotCashier
+from home.api.v1.serializers.ach_transaction_serializers import ACHTransactionSerializer
 from home.api.v1.serializers.transaction_serializers import TransactionSerializer, SendQRSerializer, \
     SendReportSerializer
 from home.clients.dwolla_api import DwollaClient, NoFundingSourceException
@@ -54,9 +55,9 @@ class TransactionViewSet(
         is_merchant = self.request.query_params.get('selected_account', 'merchant')
         if not user.role and not user.is_superuser:
             if is_merchant == 'merchant':
-                qs = qs.filter(merchant=self.request.user.get_merchant_data())
+                qs = qs.filter(merchant=self.request.user.get_merchant_data)
             else:
-                qs = qs.filter(consumer=self.request.user.get_consumer_data())
+                qs = qs.filter(consumer=self.request.user.get_consumer_data)
         if user_id := self.request.GET.get('user', False):
             qs = qs.filter(Q(consumer__user_id=user_id) |
                            Q(merchant__user_id=user_id) |
@@ -73,6 +74,36 @@ class TransactionViewSet(
             return Response(data, status=status.HTTP_200_OK)
         except (AttributeError, KeyError, ValueError):
             raise ValidationError('Invalid request')
+
+
+class TransactionMobileViewSet(
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    # serializer_class = TransactionSerializer
+    # serializer_class = ACHTransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PageNumberPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['transaction_id']
+
+
+    def get_queryset(self):
+        blockchain_transactions = Transaction.objects.all()
+        ach_transactions = ACHTransaction.objects.all()
+        user = self.request.user
+        is_merchant = self.request.query_params.get('selected_account', 'merchant')
+        if not user.role and not user.is_superuser:
+            if is_merchant == 'merchant':
+                blockchain_transactions = blockchain_transactions.filter(merchant=self.request.user.get_merchant_data)
+                ach_transactions = ach_transactions.filter(merchant=self.request.user.get_merchant_data)
+            else:
+                blockchain_transactions = blockchain_transactions.filter(consumer=self.request.user.get_consumer_data)
+                ach_transactions = ach_transactions.filter(consumer=self.request.user.get_consumer_data)
+        formated_blockchain_transactions = TransactionSerializer(blockchain_transactions, many=True).data
+        formated_ach_transactions = ACHTransactionSerializer(ach_transactions, many=True).data
+        merged_dict = {key: value for (key, value) in (formated_blockchain_transactions.items() + formated_ach_transactions.items())}
+        return json.dumps(merged_dict)
 
 
 class SendMoneyView(AuthenticatedAPIView):
