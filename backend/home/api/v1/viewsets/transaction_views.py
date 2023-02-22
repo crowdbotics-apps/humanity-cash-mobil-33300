@@ -170,7 +170,7 @@ class WithdrawView(AuthenticatedAPIView):
 
         transaction = user.withdraw(amount)
 
-        amount -= Decimal(calculate_redemption_fee(amount))
+        amount -= float(calculate_redemption_fee(amount))
 
         destination_source = dwolla_client.get_funding_sources_by_customer(user.dwolla_id)
         bank_account = choose_bank_account_for_transaction(credit=False)
