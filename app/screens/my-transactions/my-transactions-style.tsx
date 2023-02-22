@@ -181,8 +181,12 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: COLOR.PALETTE.lighterGreen,
     borderRadius: 20,
-    height: 350,
+    height: 400,
     justifyContent: 'space-between',
+    shadowColor: COLOR.PALETTE.black,
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
     width: METRICS.screenWidth * 0.80,
   },
   MODAL_CONTENT: {
@@ -206,7 +210,7 @@ export default StyleSheet.create({
   },
   RETURN_CONTAINER: {
     alignSelf: 'center',
-    height: 140,
+    height: 150,
     marginVertical: 10,
     width: METRICS.screenWidth * 0.75,
   },
@@ -219,7 +223,8 @@ export default StyleSheet.create({
   RETURN_DETAIL_LABEL: { 
     color: COLOR.PALETTE.black,
     fontSize: 10,
-    marginTop: 5
+    marginTop: 5,
+    maxWidth: METRICS.screenWidth * 0.4
   },
   RETURN_IMAGE: {
     borderRadius: 30,

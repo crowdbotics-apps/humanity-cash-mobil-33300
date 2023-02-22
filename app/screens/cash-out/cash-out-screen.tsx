@@ -35,7 +35,7 @@ const optionalConfigObject = {
 	passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
 };
 
-const maxAmount = 5000
+const maxAmount = 5
 const feePercentage = 1.5
 
 export const CashOutScreen = observer(function CashOutScreen() {
@@ -117,7 +117,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 	const passModal = () => (
 		<Modal visible={ShowPassModal} transparent>
 			<View style={styles.ROOT_MODAL_PASS}>
-				
+
 				<View style={styles.CONTAINER}>
 					<TouchableOpacity onPress={() => setShowPassModal(false)} style={styles.BACK_BUTON_CONTAINER}>
 						<Icon name={"close"} size={23} color={COLOR.PALETTE.black} />
@@ -137,20 +137,20 @@ export const CashOutScreen = observer(function CashOutScreen() {
 								value={Pass}
 								secureTextEntry={HidePass}
 								placeholder={"*********"}
-								/>
+							/>
 							<TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
 								<Ionicons name="eye" color={"#39534480"} size={20} />
 							</TouchableOpacity>
 						</View>
 					</View>
-				</View>	
+				</View>
 				<KeyboardAvoidingView style={styles.CONTAINER}>
 					<Button
 						buttonStyle={{
 							backgroundColor: !Pass || Pass === '' ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor,
 						}}
 						disabled={!Pass || Pass === ''}
-						onPress={() => [setShowModal(true), setPass(''), setShowPassModal(false)]} 
+						onPress={() => [setShowModal(true), setPass(''), setShowPassModal(false)]}
 						buttonLabel={'Confirm'}
 					/>
 				</KeyboardAvoidingView>
@@ -218,7 +218,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 					}
 
 				</View>,
-				]: <View style={styles.ROOT_MODAL}>
+				] : <View style={styles.ROOT_MODAL}>
 					<View style={[styles.HEADER_ACTIONS, { marginTop: 35 }]}>
 						<TouchableOpacity onPress={() => setShowModal(false)} style={styles.CLOSE_MODAL_BUTTON}>
 							<Icon name={"arrow-back"} size={23} color={COLOR.PALETTE.white} style={{ marginLeft: 10 }} />
@@ -247,18 +247,14 @@ export const CashOutScreen = observer(function CashOutScreen() {
 		</Modal>
 	)
 
-	useEffect(() => {
-		if (Amount && (Number(Amount) > 0 ))
-		setAmountError(!(Number(Amount) > 0));
-	  }, [Amount]);
 
-	  const bankModal = () =>
-	  <ConnectBankModal
-		  visible={ShowBankModal}
-		  buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
-		  buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
-		  onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
-	  />
+	const bankModal = () =>
+		<ConnectBankModal
+			visible={ShowBankModal}
+			buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
+			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
+		/>
 
 	return (
 		<Screen
@@ -276,7 +272,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 					{!ShowModal &&
 						<TouchableOpacity onPress={() => navigation.navigate("home")} style={[styles.BACK_BUTON_CONTAINER, { marginTop: 10 }]}>
 							<Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
-							<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor}]}>{` Home`}</Text>
+							<Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
 						</TouchableOpacity>
 					}
 				</View>
@@ -302,6 +298,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
 								temp = temp.replace(",", ".")
 								// review max amount
+
 								if (CheckMaxAmount && parseInt(temp) > maxAmount) setAmountError(true)
 								else setAmountError(false)
 								// calculate fee
@@ -338,7 +335,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 				buttonStyle={{ backgroundColor: (AmountError || !Amount || Number(Amount) === 0) ? `${loginStore.getAccountColor}50` : loginStore.getAccountColor }}
 				disabled={(AmountError || !Amount || Number(Amount) === 0)}
 				// onPress={() => setShowPassModal(true)} // remove to skip password
-				onPress={() => [setShowModal(true), setPass(''), setShowPassModal(false)]} 
+				onPress={() => [setShowModal(true), setPass(''), setShowPassModal(false)]}
 				buttonLabel={'Confirm'}
 			/>
 		</Screen>

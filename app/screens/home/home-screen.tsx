@@ -286,7 +286,7 @@ export const HomeScreen = observer(function HomeScreen() {
 								source={IMAGES.currentDollarIcon}
 								style={styles.AMOUNT_ICON}
 							/>
-							<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>0</Text>
+							<Text style={[styles.AMOUNT, { color: loginStore.getAccountColor }]}>{loginStore?.balance?.[loginStore.getSelectedAccount] || 0}</Text>
 						</View>
 					</View>
 					<View style={styles.LINE} />

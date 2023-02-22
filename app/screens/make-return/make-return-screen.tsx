@@ -186,7 +186,8 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
         let step
         switch (Step) {
             case 'scan':
-                step = <QRCodeScanner onRead={e => readQRAction(e.data)} />
+                step = <QRCodeScanner 
+                 onRead={e => readQRAction(e.data)} />
                 break;
             case 'confirm':
                 step = renderConfirmation
@@ -198,6 +199,8 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
                 step = renderFinish
                 break;
             default:
+                step = <QRCodeScanner 
+                 onRead={e => readQRAction(e.data)} />
                 break;
         }
         return step

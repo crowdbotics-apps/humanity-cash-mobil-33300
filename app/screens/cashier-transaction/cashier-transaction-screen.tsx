@@ -118,7 +118,6 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 					</View>
 				</View>
 				<Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor }]}>{loginStore.ProfileData.username}</Text>
-				<Text style={styles.LINK}>I want to make a return</Text>
 			</View>
 			<View />
 		</View>
