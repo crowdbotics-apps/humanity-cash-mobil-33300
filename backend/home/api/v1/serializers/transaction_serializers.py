@@ -84,7 +84,7 @@ class TransactionMobileSerializer(serializers.Serializer):
         return None
 
     def get_credit(self, obj):
-        is_credit,  = self.transaction_is_credit(obj)
+        is_credit, _ = self.transaction_is_credit(obj)
         return is_credit
 
     def get_created(self, obj):
