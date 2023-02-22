@@ -90,6 +90,9 @@ class Transaction(models.Model):
     counterpart_merchant = models.ForeignKey('users.Merchant', null=True, on_delete=models.SET_NULL,
                                              related_name='counterpart_transactions')
 
+    original_transaction = models.ForeignKey('self', null=True, blank=True, related_name='return_transactions',
+                                             on_delete=models.SET_NULL)
+
     class Meta:
         ordering = ['-id']
 

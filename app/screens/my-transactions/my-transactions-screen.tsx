@@ -16,6 +16,7 @@ import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import QRCode from 'react-native-qrcode-svg'
 import { BaseConfirmModal as UserModal } from '../../layouts'
+import moment from "moment";
 
 export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const navigation = useNavigation()
@@ -220,6 +221,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		>
 			<QRCode
 				value={JSON.stringify({
+					...SelectedReturn,
 					to: loginStore?.getProfilesId[loginStore.getSelectedAccount],
 					to_is_consumer: loginStore.getSelectedAccount === 'consumer',
 					amount: SelectedReturn.amount
@@ -259,10 +261,10 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 						</View>
 						<View style={styles.RETURN_DETAIL_CONTAINER}>
 							<Text style={styles.RETURN_DETAIL_LABEL}>DATE</Text>
-							<Text style={styles.RETURN_DETAIL_LABEL}>4:22 , JUN 17, 2021</Text>
+							<Text style={styles.RETURN_DETAIL_LABEL}>{moment(SelectedReturn.created).format('llll')}</Text>
 						</View>
 					</View>
-					<Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor }]}>{loginStore.ProfileData.username}</Text>
+					<Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor, marginTop: 15 }]}>{loginStore.ProfileData.username}</Text>
 					{SelectedReturn.type === 'Transfer' &&
 						<Text onPress={() => setReturnQR(true)} style={styles.LINK}>I want to make a return</Text>
 					}
