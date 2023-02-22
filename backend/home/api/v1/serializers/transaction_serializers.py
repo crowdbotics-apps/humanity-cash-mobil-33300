@@ -6,7 +6,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from celo_humanity.humanity_contract_helpers import uid_to_wallet
-from celo_humanity.models import Transaction
+from celo_humanity.models import Transaction, ACHTransaction
 import json
 from rest_framework import status
 
@@ -21,12 +21,9 @@ class TransactionMobileSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     transaction_id = serializers.CharField(min_length=255)
     type = serializers.CharField(min_length=255)
-    from_address = serializers.CharField(min_length=255)
-    to_address = serializers.CharField(min_length=255)
     created = serializers.CharField(min_length=255)
     amount = serializers.DecimalField(6, 2)
-    consumer_data = serializers.SerializerMethodField()
-    merchant_data = serializers.SerializerMethodField()
+    counterpart_data = serializers.SerializerMethodField()
 
     class Meta:
         fields = (
@@ -34,37 +31,66 @@ class TransactionMobileSerializer(serializers.Serializer):
             'transaction_id',
             'type',
             'amount',
-            'consumer_data',
-            'merchant_data',
+            'counterpart_data',
             'created',
-            'from_address',
-            'to_address',
+            'credit'
         )
-
-    def get_consumer_data(self, obj):
-        if hasattr(obj, 'counterpart_consumer') and obj.counterpart_consumer:
-            return None
+    @staticmethod
+    def transaction_is_credit(obj):
+        if hasattr(obj, 'counterpart_consumer') or hasattr(obj, 'counterpart_merchant'):
+            if obj.counterpart_consumer or obj.counterpart_merchant:
+                return False, 'TRN'
+            else:
+                return True, 'TRN'
+        else:
+            if obj.type == ACHTransaction.Type.withdraw:
+                return False, 'ACH'
+            else:
+                return True, 'ACH'
+    def get_counterpart_data(self, obj):
+        is_credit, type_of_transaction = self.transaction_is_credit(obj)
+        if type_of_transaction == 'TRN':
+            if is_credit:
+                consumer = obj.consumer
+                merchant = obj.merchant
+                if consumer:
+                    return  {
+                        "profile_picture": consumer.profile_picture,
+                        "name": consumer.user.get_full_name(),
+                        "id": consumer.id,
+                    }
+                else:
+                    return  {
+                        "profile_picture": merchant.profile_picture,
+                        "name": merchant.business_name,
+                        "id": merchant.id,
+                    }
+            else:
+                consumer = obj.counterpart_consumer
+                merchant = obj.counterpart_merchant
+                if consumer:
+                    return  {
+                        "profile_picture": consumer.profile_picture,
+                        "name": consumer.user.get_full_name(),
+                        "id": consumer.id,
+                    }
+                else:
+                    return  {
+                        "profile_picture": merchant.profile_picture,
+                        "name": merchant.business_name,
+                        "id": merchant.id,
+                    }
         return None
 
-    def get_merchant_data(self, obj):
-        if hasattr(obj, 'counterpart_merchant'):
-            return None
-        return None
+    def get_credit(self, obj):
+        is_credit,  = self.transaction_is_credit(obj)
+        return is_credit
 
-    def get_from_address(self, obj):
-        if obj.consumer_id:
-            return uid_to_wallet(obj.consumer.crypto_wallet_id)
-        if obj.merchant_id:
-            return uid_to_wallet(obj.merchant.crypto_wallet_id)
-        return '-'
-
-    def get_to_address(self, obj):
-        if obj.counterpart_consumer_id:
-            return uid_to_wallet(obj.counterpart_consumer.crypto_wallet_id)
-        if obj.counterpart_merchant_id:
-            return uid_to_wallet(obj.counterpart_merchant.crypto_wallet_id)
-        return '-'
-
+    def get_created(self, obj):
+        _, type_of_transaction = self.transaction_is_credit(obj)
+        if type_of_transaction == 'ACH':
+            return obj.created_at
+        return obj.created
 class TransactionSerializer(serializers.ModelSerializer):
     from_address = serializers.SerializerMethodField()
     to_address = serializers.SerializerMethodField()
