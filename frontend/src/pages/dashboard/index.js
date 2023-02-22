@@ -42,7 +42,7 @@ const Dashboard = () => {
       let row = {
         tokens_burned: d.tokens_burned,
         tokens_minted: d.tokens_minted,
-        outstanding: parseFloat(d.tokens_burned) - parseFloat(d.tokens_minted),
+        outstanding: parseFloat(d.tokens_minted) - parseFloat(d.tokens_burned),
         date: d.date,
         date_title: <MDBox style={{ color: "var(--green-dark)", fontWeight: "bold", height: 50, alignItems: 'center', display: 'flex' }}>
           {d.id ? moment(d.date).format('MMMM DD, YYYY'): 'Current'}</MDBox>,
