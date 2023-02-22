@@ -44,7 +44,7 @@ class DwollaWebhooksView(APIView):
                 except:
                     logger.exception(f'dwolla listener error, event {event_id}, topic {event.topic}')
         else:
-            logger.warning(f'Duplicated dwolla event: {event_id}, ignoring')
+            logger.error(f'Duplicated dwolla event: {event_id}, ignoring')
         # except:
         #     logger.exception('Dwolla webhook exception')
         return Response(status=status.HTTP_200_OK)
