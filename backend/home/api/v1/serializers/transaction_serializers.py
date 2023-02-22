@@ -21,9 +21,9 @@ class TransactionMobileSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     transaction_id = serializers.CharField(min_length=255)
     type = serializers.CharField(min_length=255)
-    created = serializers.CharField(min_length=255)
     amount = serializers.DecimalField(6, 2)
     counterpart_data = serializers.SerializerMethodField()
+    created = serializers.SerializerMethodField()
 
     class Meta:
         fields = (
