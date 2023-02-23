@@ -166,9 +166,6 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 				<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r.label}</Text>,
 				getDataFiltered(r.data, ['item'], Search).map((i, key2) => (
 					<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
-
-						{console.log(' item ===>>>  ', JSON.stringify(i, null, 2))}
-
 						<View style={{ marginLeft: 15 }}>
 							<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.type}</Text>
 							<Text style={styles.RETURN_ITEM_TIME}>{moment(i?.created).format('llll')}</Text>
