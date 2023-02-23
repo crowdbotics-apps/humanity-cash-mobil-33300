@@ -29,17 +29,23 @@ const Dashboard = () => {
   const getFormatedData = (initialData) => {
     // init columns
     let columns = [{Header: "", accessor: "date_title", disableOrdering: true}]
+    let { banks, balances } = initialData
+
+    banks.forEach((b) => {
+      // add bank name to columns
+      columns.push({Header: b.name, accessor: `bank_${b.id}`, disableOrdering: true})
+    })
 
     let data = []
     // init row
-    initialData.map(d => {
+    balances.forEach(d => {
       let row = {
         tokens_burned: d.tokens_burned,
         tokens_minted: d.tokens_minted,
-        outstanding: parseFloat(d.tokens_burned) - parseFloat(d.tokens_minted),
+        outstanding: parseFloat(d.tokens_minted) - parseFloat(d.tokens_burned),
         date: d.date,
         date_title: <MDBox style={{ color: "var(--green-dark)", fontWeight: "bold", height: 50, alignItems: 'center', display: 'flex' }}>
-          {moment(d.date).format('MMMM DD, YYYY')}</MDBox>,
+          {d.id ? moment(d.date).format('MMMM DD, YYYY'): 'Current'}</MDBox>,
         comments: d.comments,
       }
       // banks net diference
@@ -56,20 +62,20 @@ const Dashboard = () => {
       let totalBanksCredit = 0
       let totalBanksDebit = 0
 
-      d.banks.map((b) => {
-        // add bank name to columns
-        columns.push({ Header: b.name, accessor: `bank_${b.id}`, disableOrdering: true })
+      banks.forEach((b) => {
+        const credits = parseFloat(d.details?.[b.id]?.credits_settled || '0')
+        const debits = parseFloat(d.details?.[b.id]?.debits_settled || '0')
         // bank net difference
-        row[`bank_${b.id}`] = parseFloat(d.details[b.id].credits_settled) - parseFloat(d.details[b.id].debits_settled)
+        row[`bank_${b.id}`] = credits - debits
 
         // set amount detail by bank
-        col_children[0][`bank_${b.id}`] = parseFloat(d.details[b.id].credits_settled)
-        col_children[1][`bank_${b.id}`] = parseFloat(d.details[b.id].debits_settled)
+        col_children[0][`bank_${b.id}`] = credits
+        col_children[1][`bank_${b.id}`] = debits
         col_children[2][`bank_${b.id}`] = row[`bank_${b.id}`]
 
         // banks net difference
-        totalBanksCredit += parseFloat(d.details[b.id].credits_settled)
-        totalBanksDebit += parseFloat(d.details[b.id].debits_settled)
+        totalBanksCredit += credits
+        totalBanksDebit += debits
         banksTotal += row[`bank_${b.id}`]
       })
       // finish row
@@ -84,7 +90,6 @@ const Dashboard = () => {
 
       row['children'] = col_children
 
-      //
       data.push(row)
     })
 
@@ -93,7 +98,7 @@ const Dashboard = () => {
       {Header: "TOKENS ISSUED", accessor: "outstanding", disableOrdering: true},
       {Header: "RESERVE >= TOKENS?", accessor: "positive_result", disableOrdering: true},
       {Header: "DIFFERENCE", accessor: "diference", disableOrdering: true},
-      {Header: "COMMENTS", accessor: "comments", disableOrdering: true},
+      //{Header: "COMMENTS", accessor: "comments", disableOrdering: true},
     )
 
     return { rows: data, columns}
