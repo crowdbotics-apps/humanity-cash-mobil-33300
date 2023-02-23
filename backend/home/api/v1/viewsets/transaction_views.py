@@ -297,8 +297,8 @@ class SendReportView(AuthenticatedAPIView):
                 day=data['end_date'].day,
             )
             user = self.request.user
-            transactions = Transaction.objects.filter(
-                merchant__user=user,
+            transactions = Transaction.objects.filter(Q(counterpart_merchant__user=user) | Q(merchant__user=user))
+            transactions = transactions.filter(
                 created__lte=end_date,
                 created__gte=start_date
             )
