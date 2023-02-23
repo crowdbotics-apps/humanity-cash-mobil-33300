@@ -10,17 +10,17 @@ services:
     volumes:
       - ./:/opt/webapp
     ports:
-      - "8300:${PORT}"
+      - "8000:${PORT}"
   postgres:
     environment:
       POSTGRES_PASSWORD: <postgres_pwd>
     volumes:
       - postgres-data-humanity:/var/lib/postgresql/data
     ports:
-      - "7432:5432"
+      - "5432:5432"
   redis:
     ports:
-      - "8379:6379"
+      - "6379:6379"
 
 volumes:
   postgres-data-humanity:
