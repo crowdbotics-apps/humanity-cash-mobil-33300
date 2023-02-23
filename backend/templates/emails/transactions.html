@@ -214,7 +214,7 @@
               </p>
             </div>
           </td>
-          <td class="field_text field_text_info">{{ transaction.amount }}</td>
+          <td class="field_text field_text_info">{{ transaction.amount|default_if_none:"" }}</td>
           <td class="field_text field_text_info">{{ transaction.type }}</td>
         </tr>
         {% endfor %}
