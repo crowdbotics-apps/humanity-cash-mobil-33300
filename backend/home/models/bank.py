@@ -47,15 +47,17 @@ class BankAccount(models.Model):
             debits_pending=debits_pending,
             debits_settled=debits_settled,
         ).get()
+        dec0 = Decimal(0)
         return (
-            account_balance.credits_pending or 0,
-            account_balance.credits_settled or 0,
-            account_balance.debits_pending or 0,
-            account_balance.debits_settled or 0,
+            account_balance.credits_pending or dec0,
+            (account_balance.credits_settled or dec0) + account_balance.initial_balance,
+            account_balance.debits_pending or dec0,
+            account_balance.debits_settled or dec0,
         )
 
     @property
     def credits_and_debits(self):
+        dec0 = Decimal(0)
         validstatus = Q(ach_transactions__status__in=[ACHTransaction.Status.pending,
                                                       ACHTransaction.Status.processed])
         credits = Sum('ach_transactions__amount',
@@ -63,7 +65,7 @@ class BankAccount(models.Model):
         debits = Sum('ach_transactions__amount',
                      filter=Q(ach_transactions__type=ACHTransaction.Type.withdraw) & validstatus)
         account_balance = BankAccount.objects.filter(pk=self.id).annotate(credits=credits, debits=debits).get()
-        return account_balance.credits or 0, account_balance.debits or 0
+        return (account_balance.credits or dec0) + account_balance.initial_balance, account_balance.debits or dec0
 
     @property
     def current_balance(self):
