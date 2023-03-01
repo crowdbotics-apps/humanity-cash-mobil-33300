@@ -352,14 +352,13 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                       /> : null
                     }
                     <View style={styles.SEE_ON_MAP_LABEL}>
-                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>
-                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>
-                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.city + ', ' + SelectedDetail?.zip_code}</Text>
-                      <Text style={styles.SEE_ON_MAP_LABEL}>{formatPhoneNumber(SelectedDetail?.phone_number)}</Text>
+                      {SelectedDetail?.address_1 ? <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text> : null}
+                      {SelectedDetail?.address_2 ? <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text> : null}
+                      {SelectedDetail?.city ? <Text style={styles.SEE_ON_MAP_LABEL}>{`${SelectedDetail?.city}, ${SelectedDetail?.state || ''} ${SelectedDetail?.zip_code}`}</Text> : null}
+                      {SelectedDetail?.phone_number ? <Text style={styles.SEE_ON_MAP_LABEL}>{formatPhoneNumber(SelectedDetail?.phone_number)}</Text> : null}
                     </View>
                   </View>
                 </View>
-
 
                 <View style={styles.INDUSTRY_CONTAINER}>
                   <Text style={styles.INDUSTRY_TITLE}>ALL ACTIVE COUPONS</Text>
