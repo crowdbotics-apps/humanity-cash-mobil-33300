@@ -62,7 +62,7 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
       .getBusiness()
       .then((result: any) => {
         if (result.kind === "ok") {
-          
+
           runInAction(() => {
             loginStore.setBusiness(result.data?.merchants)
             loginStore.setMerchantMonth(result.data?.merchant_month)
@@ -352,11 +352,11 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                       /> : null
                     }
                     <View style={[styles.SEE_ON_MAP_LABEL, {marginTop: 10}]}>
-                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>
-                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>
+                      {SelectedDetail?.address_1 && <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>}
+                      {SelectedDetail?.address_2 && <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>}
                       {SelectedDetail?.state && <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.state}</Text> }
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.city + ', ' + SelectedDetail?.zip_code}</Text>
-                      <Text style={styles.SEE_ON_MAP_LABEL}>{formatPhoneNumber(SelectedDetail?.phone_number)}</Text>
+                      {SelectedDetail?.phone_number && <Text style={styles.SEE_ON_MAP_LABEL}>{formatPhoneNumber(SelectedDetail?.phone_number)}</Text>}
                     </View>
                   </View>
                 </View>
