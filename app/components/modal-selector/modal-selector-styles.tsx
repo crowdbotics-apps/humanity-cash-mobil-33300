@@ -96,6 +96,7 @@ export default StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
+    width: '100%',
   },
   FEEDBACK_SELECTOR_TEXT_CONTAINER: {
     alignItems: "center",

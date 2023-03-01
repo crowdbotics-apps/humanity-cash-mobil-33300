@@ -351,16 +351,14 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                         style={{ marginRight: 8 }}
                       /> : null
                     }
-                    <View style={[styles.SEE_ON_MAP_LABEL, {marginTop: 10}]}>
-                      {SelectedDetail?.address_1 && <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>}
-                      {SelectedDetail?.address_2 && <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>}
-                      {SelectedDetail?.state && <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.state}</Text> }
-                      <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.city + ', ' + SelectedDetail?.zip_code}</Text>
-                      {SelectedDetail?.phone_number && <Text style={styles.SEE_ON_MAP_LABEL}>{formatPhoneNumber(SelectedDetail?.phone_number)}</Text>}
+                    <View style={styles.SEE_ON_MAP_LABEL}>
+                      {SelectedDetail?.address_1 ? <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text> : null}
+                      {SelectedDetail?.address_2 ? <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text> : null}
+                      {SelectedDetail?.city ? <Text style={styles.SEE_ON_MAP_LABEL}>{`${SelectedDetail?.city}, ${SelectedDetail?.state || ''} ${SelectedDetail?.zip_code}`}</Text> : null}
+                      {SelectedDetail?.phone_number ? <Text style={styles.SEE_ON_MAP_LABEL}>{formatPhoneNumber(SelectedDetail?.phone_number)}</Text> : null}
                     </View>
                   </View>
                 </View>
-
 
                 <View style={styles.INDUSTRY_CONTAINER}>
                   <Text style={styles.INDUSTRY_TITLE}>ALL ACTIVE COUPONS</Text>

@@ -290,6 +290,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			address_1: Address1,
 			address_2: Address2,
 			city: City,
+			state: State?.id,
 			instagram: InstagramLink,
 			facebook: FacebookLink,
 			twitter: TwitterLink,
@@ -735,17 +736,6 @@ IDENTIFICATION NUMBER (ENTER ONE)
 							value={City}
 							placeholder={'City'}
 						/>
-						{/* <ModalSelector
-							options={Citys}
-							action={setCity}
-							title={""}
-							value={City}
-							visible={SelectCityOpen}
-							setVisible={setSelectCityOpen}
-							displaySelector
-							closeOnClick
-							searchAction={fetchCity}
-						/> */}
 					</View>
 				</View>
 				<View style={styles.CONTAINER}>
