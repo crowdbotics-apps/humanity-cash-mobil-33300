@@ -351,9 +351,10 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                         style={{ marginRight: 8 }}
                       /> : null
                     }
-                    <View style={styles.SEE_ON_MAP_LABEL}>
+                    <View style={[styles.SEE_ON_MAP_LABEL, {marginTop: 10}]}>
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>
+                      {SelectedDetail?.state && <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.state}</Text> }
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.city + ', ' + SelectedDetail?.zip_code}</Text>
                       <Text style={styles.SEE_ON_MAP_LABEL}>{formatPhoneNumber(SelectedDetail?.phone_number)}</Text>
                     </View>

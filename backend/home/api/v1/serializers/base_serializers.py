@@ -34,6 +34,7 @@ class WhereToSpendListSerializer(serializers.ModelSerializer):
 
 class BusinessDetailsSerializer(serializers.ModelSerializer):
     coupons = CounponCreateSerializer(many=True)
+    state = serializers.CharField(source='state.name', allow_null=True)
 
     class Meta:
         model = Merchant

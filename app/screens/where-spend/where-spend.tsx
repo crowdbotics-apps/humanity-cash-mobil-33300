@@ -33,7 +33,7 @@ export default StyleSheet.create({
   DETAIL_LINKS: {
     alignItems: 'center',
     flexDirection: 'row',
-    height: 80,
+    minHeight: 80,
     marginBottom: 10,
     width: METRICS.screenWidth * 0.80,
   },
@@ -51,9 +51,9 @@ export default StyleSheet.create({
     right: 10,
   },
   FAVORITE_ICON: {
-    bottom: 35, 
+    bottom: 35,
     height: 25,
-    left: 3, 
+    left: 3,
     position: 'absolute',
   },
   FILTER_CONTAINER: {
@@ -174,8 +174,9 @@ export default StyleSheet.create({
     color: COLOR.PALETTE.blue,
     flex: 1,
     fontSize: 16,
-    // height: '80%',
+    height: 80,
     justifyContent: 'space-evenly',
+
     textAlign: 'right',
   },
   STEP_SUB_TITLE: {
