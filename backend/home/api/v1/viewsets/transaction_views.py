@@ -86,11 +86,11 @@ class TransactionMobileViewSet(viewsets.GenericViewSet):
         if not user.role and not user.is_superuser:
             if is_merchant == 'merchant':
                 merchant = request.user.get_merchant_data
-                blockchain_transactions = blockchain_transactions.filter(Q(merchant=merchant) | Q(counterpart_merchant=merchant))
+                blockchain_transactions = blockchain_transactions.filter(merchant=merchant)
                 ach_transactions = ach_transactions.filter(merchant=request.user.get_merchant_data)
             else:
                 consumer = request.user.get_consumer_data
-                blockchain_transactions = blockchain_transactions.filter(Q(consumer=consumer) | Q(counterpart_consumer=consumer))
+                blockchain_transactions = blockchain_transactions.filter(consumer=consumer)
                 ach_transactions = ach_transactions.filter(consumer=request.user.get_consumer_data)
 
         serializer = self.get_serializer(list(ach_transactions) + list(blockchain_transactions), many=True)
