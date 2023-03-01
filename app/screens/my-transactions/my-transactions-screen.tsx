@@ -40,9 +40,9 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const [DistanceFilter, setDistanceFilter] = useState('')
 	const [SelectOpen, setSelectOpen] = useState(false)
 	const [TransactionType, setTransactionType] = useState('All');
-	const [DateFrom, setDateFrom] = useState(new Date())
+	const [DateFrom, setDateFrom] = useState(new Date((new Date).getFullYear(), 0, 1))
 	const [OpenFrom, setOpenFrom] = useState(false)
-	const [DateTo, setDateTo] = useState(new Date())
+	const [DateTo, setDateTo] = useState(new Date((new Date).getFullYear(), 11, 31))
 	const [OpenTo, setOpenTo] = useState(false)
 	const [refreshing, setRefreshing] = useState(false);
 	const [ReturnQR, setReturnQR] = useState(false)
@@ -54,6 +54,7 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	useEffect(() => {
 		if (isFocused) {
 			getTransactions()
+			getBalanceData()
 		}
 	}, [isFocused])
 
@@ -62,6 +63,23 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		getTransactions()
 	}, []);
 
+	const getBalanceData = () => {
+		loginStore.environment.api
+			.getBalanceData()
+			.then((result: any) => {
+				if (result.kind === "ok") {
+					runInAction(() => {
+						loginStore.setBalanceData(result.data)
+					})
+				} else if (result.kind === "bad-data") {
+					const key = Object.keys(result?.errors)[0]
+					const msg = `${key}: ${result?.errors?.[key][0]}`
+					notifyMessage(msg)
+				} else {
+					notifyMessage(null)
+				}
+			})
+	}
 	const getTransactions = () => {
 		loginStore.environment.api
 			.getMobileTransactions({ selected_account: loginStore.selected_account })
@@ -93,19 +111,20 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 	const getDataFiltered = (initialData: Array<any>, keys: Array<string>, filter: any) => {
 		if (initialData === [] || !initialData) return []
 		if (keys === [] || !keys) return initialData
-		if (filter === '' || !filter) return initialData
-		let data = []
-		initialData.map(d => {
-			keys.map(k => {
-				try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
-				catch { }
+		let data = initialData
+
+		if (filter !== '' || filter) {
+			initialData.map(d => {
+				keys.map(k => {
+					try { if (d[k].toLocaleLowerCase().includes(filter.toLocaleLowerCase())) data.push(d) }
+					catch { }
+				})
 			})
-		})
-		// added
-		if (TransactionType !== 'All' && TransactionType !== '')
-			data = data.filter(d => d.type_of_promo === TransactionType)
+		}
+		if (TransactionType !== 'All' && TransactionType !== '' && TransactionType?.value)
+			data = data.filter(d => d.type === TransactionType?.value)
 		if (DateFrom && DateTo)
-			data = data.filter(d => (DateFrom <= new Date(d.start_date) && new Date(d.end_date) <= DateTo))
+			data = data.filter(d => (DateFrom <= new Date(d.created) && new Date(d.created) <= DateTo))
 		return data
 	}
 
@@ -124,72 +143,6 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		})
 		return data
 	}
-
-	const Filters = () => <View style={styles.FILTER_CONTAINER}>
-		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-			<Text style={styles.INPUT_LABEL_STYLE}>START DATE</Text>
-			<Text style={styles.INPUT_LABEL_STYLE}>END DATE</Text>
-		</View>
-		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-			<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
-				<TextInput
-					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-					onFocus={() => setOpenFrom(true)}
-					style={styles.SMALL_INPUT_STYLE}
-					keyboardType='numeric'
-					value={`${DateFrom.toLocaleDateString()}`}
-					placeholder={`MM/DD/YY`}
-				/>
-				<DatePicker
-					modal
-					open={OpenFrom}
-					date={DateFrom}
-					onConfirm={(date) => {
-						setOpenFrom(false)
-						setDateFrom(date)
-					}}
-					onCancel={() => setOpenFrom(false)}
-				/>
-			</View>
-			<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
-				<TextInput
-					placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-					style={styles.SMALL_INPUT_STYLE}
-					onFocus={() => setOpenTo(true)}
-					keyboardType='numeric'
-					value={`${DateTo.toLocaleDateString()}`}
-					placeholder={`MM/DD/YY`}
-				/>
-				<DatePicker
-					modal
-					open={OpenTo}
-					date={DateTo}
-					onConfirm={(date) => {
-						setOpenTo(false)
-						setDateTo(date)
-					}}
-					onCancel={() => setOpenTo(false)}
-				/>
-			</View>
-		</View>
-
-		<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-			<Text style={styles.INPUT_LABEL_STYLE}>TYPE OF TRANSACTIONS</Text>
-		</View>
-		<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
-			<TouchableOpacity style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType('')]}>
-				<Text style={styles.SELECT_LABEL}>{TransactionType?.label || 'All'}</Text>
-				<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
-			</TouchableOpacity>
-			{SelectOpen && transactionTypes.map((t, key) => (
-				<TouchableOpacity key={key + 'btype'} style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType(t)]}>
-					<Text style={styles.SELECT_LABEL}>{t.label}</Text>
-				</TouchableOpacity>
-			))}
-		</View>
-		<Text onPress={() => setDistanceFilter('')} style={styles.CLEAR_FILTERS}>Clear filters</Text>
-		<View style={styles.LINE} />
-	</View>
 
 	const ReturnDetailModal = () => ReturnQR
 		? <UserModal
@@ -236,6 +189,10 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 					<Text style={[styles.RETURN_ITEM_MODAL, { color: loginStore.getAccountColor }]}>{SelectedReturn?.counterpart_data?.name}</Text>
 					<View style={styles.RETURN_CONTAINER}>
 						<Text style={[styles.RETURN_AMOUNT, { color: loginStore.getAccountColor }]}>C$ {SelectedReturn.amount}</Text>
+						<View style={styles.RETURN_DETAIL_CONTAINER}>
+						<Text style={styles.RETURN_DETAIL_LABEL}>COUNTERPART NAME</Text>
+						<Text style={styles.RETURN_DETAIL_LABEL}>{SelectedReturn?.counterpart_data?.name}</Text>
+					</View>
 						<View style={styles.RETURN_DETAIL_CONTAINER}>
 							<Text style={styles.RETURN_DETAIL_LABEL}>TRANSACTION ID</Text>
 							<Text style={styles.RETURN_DETAIL_LABEL}>{SelectedReturn.transaction_id}</Text>
@@ -316,29 +273,101 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 										<Text>Filter</Text>
 									</TouchableOpacity>
 								</View>
-								{ShowFilter && Filters()}
-								{Object.values(getFormatedTransactions()).map((r: any, key) => ([
-									<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r.label}</Text>,
-									getDataFiltered(r.data, ['amount', 'type'], Search).map((i, key2) =>
-										<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
-											<Image
-												source={i?.counterpart_data?.profile_picture ? { uri: i?.counterpart_data?.profile_picture } : getRandomProfileImage()}
-												resizeMode='cover'
-												style={styles.RETURN_IMAGE}
+								{ShowFilter && <View style={styles.FILTER_CONTAINER}>
+									<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+										<Text style={styles.INPUT_LABEL_STYLE}>START DATE</Text>
+										<Text style={styles.INPUT_LABEL_STYLE}>END DATE</Text>
+									</View>
+									<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+										<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
+											<TextInput
+												placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+												onFocus={() => setOpenFrom(true)}
+												style={styles.SMALL_INPUT_STYLE}
+												keyboardType='numeric'
+												value={`${DateFrom.toLocaleDateString()}`}
+												placeholder={`MM/DD/YY`}
 											/>
-											<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.type}</Text>
-											<View style={styles.CONTAINER}>
-												{i.type === 'Deposit'
-													? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ +${i.amount}`}</Text>
-													: i.type === 'Transfer'
-														? <Text style={styles.RETURN_ITEM_AMOUNT}>{`C$ ${i.credit ? '+' : '-'}${i.amount}`}</Text>
-														: <Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{`C$ -${i.amount || ''}`}</Text>
-												}
-											</View>
+											<DatePicker
+												modal
+												open={OpenFrom}
+												date={DateFrom}
+												onConfirm={(date) => {
+													setOpenFrom(false)
+													setDateFrom(date)
+												}}
+												onCancel={() => setOpenFrom(false)}
+											/>
+										</View>
+										<View style={styles.SMALL_INPUT_STYLE_CONTAINER}>
+											<TextInput
+												placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+												style={styles.SMALL_INPUT_STYLE}
+												onFocus={() => setOpenTo(true)}
+												keyboardType='numeric'
+												value={`${DateTo.toLocaleDateString()}`}
+												placeholder={`MM/DD/YY`}
+											/>
+											<DatePicker
+												modal
+												open={OpenTo}
+												date={DateTo}
+												onConfirm={(date) => {
+													setOpenTo(false)
+													setDateTo(date)
+												}}
+												onCancel={() => setOpenTo(false)}
+											/>
+										</View>
+									</View>
+
+									<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+										<Text style={styles.INPUT_LABEL_STYLE}>TYPE OF TRANSACTIONS</Text>
+									</View>
+									<View style={SelectOpen ? styles.SELECT_INPUT_STYLE_CONTAINER_OPEN : styles.SELECT_INPUT_STYLE_CONTAINER}>
+										<TouchableOpacity style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType('')]}>
+											<Text style={styles.SELECT_LABEL}>{TransactionType?.label || 'All'}</Text>
+											<Entypo name={SelectOpen ? "chevron-up" : "chevron-down"} size={23} color={'black'} style={{ marginRight: 20 }} />
 										</TouchableOpacity>
-									),
-									<View key={key + '_line'} style={styles.LINE} />
-								]))}
+										{SelectOpen && transactionTypes.map((t, key) => (
+											<TouchableOpacity key={key + 'btype'} style={styles.SELECT_ICON} onPress={() => [setSelectOpen(!SelectOpen), setTransactionType(t)]}>
+												<Text style={styles.SELECT_LABEL}>{t.label}</Text>
+											</TouchableOpacity>
+										))}
+									</View>
+									<Text onPress={() => setDistanceFilter('')} style={styles.CLEAR_FILTERS}>Clear filters</Text>
+									<View style={styles.LINE} />
+								</View>}
+								{Object.values(getFormatedTransactions()).map((r: any, key) => {
+									let data = getDataFiltered(r.data, ['amount', 'type'], Search)
+									if (Array.isArray(data) && data.length > 0) {
+										return (
+											[
+												<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r.label}</Text>,
+												data.map((i, key2) =>
+													<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
+														<Image
+															source={i?.counterpart_data?.profile_picture ? { uri: i?.counterpart_data?.profile_picture } : getRandomProfileImage()}
+															resizeMode='cover'
+															style={styles.RETURN_IMAGE}
+														/>
+														<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.type}</Text>
+														<View style={styles.CONTAINER}>
+															{i.type === 'Deposit'
+																? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ +${i.amount}`}</Text>
+																: i.type === 'Transfer'
+																	? <Text style={styles.RETURN_ITEM_AMOUNT}>{`C$ ${i.credit ? '+' : '-'}${i.amount}`}</Text>
+																	: <Text style={styles.RETURN_ITEM_AMOUNT_CASH_OUT}>{`C$ -${i.amount || ''}`}</Text>
+															}
+														</View>
+													</TouchableOpacity>
+												),
+
+												<View key={key + '_line'} style={styles.LINE} />
+											]
+										)
+									}
+								})}
 								<View style={{ height: 100 }} />
 							</View>
 						</View>
