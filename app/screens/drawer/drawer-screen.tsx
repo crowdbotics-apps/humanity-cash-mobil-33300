@@ -283,8 +283,17 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
   const [ChangeAccountOpen, setChangeAccountOpen] = useState(false)
   const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
 
+  const getBalanceData = () => {
+		loginStore.environment.api
+			.getBalanceData()
+			.then((result: any) => {
+				if (result.kind === "ok") loginStore.setBalanceData(result.data)
+			})
+	}
+
   useEffect(() => {
     if (!isDrawerOpen) setChangeAccountOpen(false)
+    if (isDrawerOpen) getBalanceData()
   }, [isDrawerOpen])
 
   useEffect(() => {

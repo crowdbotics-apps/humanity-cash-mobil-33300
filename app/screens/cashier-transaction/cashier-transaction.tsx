@@ -217,7 +217,8 @@ export default StyleSheet.create({
   RETURN_DETAIL_LABEL: { 
     color: COLOR.PALETTE.black,
     fontSize: 10,
-    fontWeight: 'bold',
+    marginTop: 5,
+    maxWidth: METRICS.screenWidth * 0.4
   },
   RETURN_ITEM: {
     alignItems: 'center',

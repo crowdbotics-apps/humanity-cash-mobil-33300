@@ -213,6 +213,10 @@ class Consumer(BaseProfileModel):
     def is_merchant(self):
         return False
 
+    @property
+    def display_name(self):
+        return self.user.get_full_name()
+
     def __str__(self):
         return f'Cons. {self.user.name} ({self.user.email})'
 
@@ -252,6 +256,10 @@ class Merchant(BaseProfileModel):
     @property
     def is_merchant(self):
         return True
+
+    @property
+    def display_name(self):
+        return self.business_name
 
     def __str__(self):
         return f'Merch. {self.business_name} ({self.user.email})'
