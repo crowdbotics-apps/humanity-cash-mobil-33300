@@ -78,22 +78,25 @@ class TransactionMobileViewSet(viewsets.GenericViewSet):
     filter_backends = [filters.SearchFilter]
     serializer_class = TransactionMobileSerializer
 
+    @may_fail(KeyError, 'Invalid request')
     def list(self, request, *args, **kwargs):
-        blockchain_transactions = Transaction.objects.all()
-        ach_transactions = ACHTransaction.objects.filter(status=ACHTransaction.Status.pending)
-        user = request.user
-        is_merchant = request.query_params.get('selected_account', 'merchant')
-        if not user.role and not user.is_superuser:
-            if is_merchant == 'merchant':
-                merchant = request.user.get_merchant_data
-                blockchain_transactions = blockchain_transactions.filter(merchant=merchant)
-                ach_transactions = ach_transactions.filter(merchant=request.user.get_merchant_data)
-            else:
-                consumer = request.user.get_consumer_data
-                blockchain_transactions = blockchain_transactions.filter(consumer=consumer)
-                ach_transactions = ach_transactions.filter(consumer=request.user.get_consumer_data)
+        klass = dict(consumer=Consumer, merchant=Merchant)[request.query_params['selected_account']]
+        profile = klass.objects.filter(user=request.user)
 
-        serializer = self.get_serializer(list(ach_transactions) + list(blockchain_transactions), many=True)
+        blockchain_transactions = Transaction.objects.exclude(type=Transaction.Type.new_wallet)
+        ach_transactions = ACHTransaction.objects.filter(status=ACHTransaction.Status.pending)
+        if profile.is_merchant:
+            blockchain_transactions = blockchain_transactions.filter(Q(merchant=profile) | Q(counterpart_merchant=profile))
+            ach_transactions = ach_transactions.filter(merchant=profile)
+        else:
+            blockchain_transactions = blockchain_transactions.filter(Q(consumer=profile) | Q(counterpart_consumer=profile))
+            ach_transactions = ach_transactions.filter(consumer=profile)
+
+        serializer = self.get_serializer(
+            list(ach_transactions) + list(blockchain_transactions),
+            many=True,
+            main_profile=profile
+        )
         return Response(serializer.data)
 
 

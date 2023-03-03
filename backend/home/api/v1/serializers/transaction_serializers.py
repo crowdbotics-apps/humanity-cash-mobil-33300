@@ -36,67 +36,40 @@ class TransactionMobileSerializer(serializers.Serializer):
             'created',
             'credit'
         )
-    @staticmethod
-    def transaction_is_credit(obj):
-        if hasattr(obj, 'counterpart_consumer') or hasattr(obj, 'counterpart_merchant'):
-            if obj.counterpart_consumer or obj.counterpart_merchant:
-                return False, 'TRN'
+
+    def __init__(self, main_profile, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.main_profile = main_profile
+
+    def transaction_is_credit(self, obj):
+        if isinstance(obj, Transaction):
+            if obj.type == Transaction.Type.transfer:
+                return obj.counterpart_profile == self.main_profile
             else:
-                return True, 'TRN'
-        else:
-            if obj.type == ACHTransaction.Type.withdraw:
-                return False, 'ACH'
-            else:
-                return True, 'ACH'
+                return obj.type == Transaction.Type.deposit
+        else:  # is ACHTransaction
+            return obj.type == ACHTransaction.Type.deposit
 
     def get_counterpart_data(self, obj):
-        is_credit, type_of_transaction = self.transaction_is_credit(obj)
-        if type_of_transaction == 'TRN':
-            if is_credit:
-                consumer = obj.consumer
-                merchant = obj.merchant
-                if consumer:
-                    return  {
-                        "profile_picture": consumer.profile_picture.url if consumer.profile_picture else None,
-                        "name": consumer.user.get_full_name(),
-                        "id": consumer.id,
-                        "merchant": False,
-                    }
-                else:
-                    return  {
-                        "profile_picture": merchant.profile_picture.url if merchant.profile_picture else None,
-                        "name": merchant.business_name,
-                        "id": merchant.id,
-                        "merchant": True,
-                    }
-            else:
-                consumer = obj.counterpart_consumer
-                merchant = obj.counterpart_merchant
-                if consumer:
-                    return  {
-                        "profile_picture": consumer.profile_picture.url if consumer.profile_picture else None,
-                        "name": consumer.user.get_full_name(),
-                        "id": consumer.id,
-                        "merchant": False,
-                    }
-                else:
-                    return  {
-                        "profile_picture": merchant.profile_picture.url if merchant.profile_picture else None,
-                        "name": merchant.business_name,
-                        "id": merchant.id,
-                        "merchant": True,
-                    }
-        return None
+        if isinstance(obj, Transaction):
+            if obj.type == Transaction.Type.transfer:
+                counterpart = obj.profile if obj.counterpart_profile == self.main_profile else obj.counterpart_profile
+
+                return dict(
+                    profile_picture=counterpart.profile_picture.url if counterpart.profile_picture else None,
+                    name=counterpart.display_name,
+                    id=counterpart.id,
+                    merchant=counterpart.is_merchant,
+                )
+        else:
+            return None  # is ACHTransaction, or is blockchain transaction but is deposit / withdraw
 
     def get_credit(self, obj):
-        is_credit, _ = self.transaction_is_credit(obj)
-        return is_credit
+        return self.transaction_is_credit(obj)
 
     def get_created(self, obj):
-        _, type_of_transaction = self.transaction_is_credit(obj)
-        if type_of_transaction == 'ACH':
-            return obj.created_at
-        return obj.created
+        return obj.created_at if isinstance(obj, ACHTransaction) else obj.created
+
 
 class TransactionSerializer(serializers.ModelSerializer):
     from_address = serializers.SerializerMethodField()
