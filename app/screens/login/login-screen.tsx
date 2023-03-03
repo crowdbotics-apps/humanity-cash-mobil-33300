@@ -35,7 +35,7 @@ export const LoginScreen = observer(function LoginScreen() {
   const [PassErrorMessage, setPassErrorMessage] = useState("")
 
   useEffect(() => {
-    if (!isFocused) {
+    if (isFocused) {
       setUsername('')
       setPass('')
     }
@@ -55,8 +55,8 @@ export const LoginScreen = observer(function LoginScreen() {
             loginStore.setUser(result.response)
             loginStore.setApiToken(result.response.access_token)
             loginStore.setSelectedAccount((
-              result?.response?.user?.first_name !== '' 
-              && result?.response?.user?.first_name 
+              result?.response?.user?.first_name !== ''
+              && result?.response?.user?.first_name
               && result?.response?.user?.consumer_data
               ) ? 'consumer' : 'merchant'
             )

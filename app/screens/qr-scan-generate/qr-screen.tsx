@@ -179,6 +179,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
   )
 
   const readQRAction = (data: any) => {
+
     let dataJson
     try {
       dataJson = JSON.parse(data)
@@ -192,8 +193,9 @@ export const QRScreen = observer(function QRScreen(props: any) {
       return
     }
     setQR(dataJson)
+    setAmount(dataJson?.amount)
     if (dataJson.amount) {
-      setStep('pass')
+      setStep('amount')
       setShowConfirmationModal(true)
     } else setStep('amount')
   }
@@ -225,13 +227,29 @@ export const QRScreen = observer(function QRScreen(props: any) {
               username: userInfo?.to_username ?? '',
               photo: userInfo?.to_profile_photo ?? '',
             }
-            // if (props?.route?.params?.skip_pass) setSkipPass(true) // remove to always skip pass
           } catch (error) {
             alert(error)
           }
         }
       }
-    } else setStep('tabs')
+    } else {
+      setStep('tabs')
+      setQR(null)
+      setAmount('0')
+      setRoundedAmount(0);
+      setLoading(false)
+      setSkipPass(true)
+      setPass('')
+      setHidePass(true)
+      setTransactionSucceed(true)
+      setTransactionErrorMsg('')
+      setPayerSetAmount(true)
+      setButtonDisabled(false)
+      setScanQR(false)
+      setShowQR(false)
+      setShowConfirmationModal(false)
+      setAmountError(false)
+    }
   }, [isFocused])
 
   const inputQR = () => <View style={{ flex: 1, justifyContent: 'space-between' }}>

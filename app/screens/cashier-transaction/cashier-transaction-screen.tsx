@@ -113,27 +113,24 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 				<Icon name={"close"} size={20} color={'#0D0E21'} />
 			</TouchableOpacity>
 			<View style={styles.MODAL_CONTAINER}>
-				{/* <View style={styles.USER_IMAGE_CONTAINER}>
-			<Image
-				resizeMode="cover"
-				source={{ uri: SelectedReturn.image }}
-				style={styles.USER_IMAGE}
-			/>
-		</View> */}
 				<Text style={[styles.RETURN_ITEM_MODAL, { color: loginStore.getAccountColor }]}>{SelectedReturn.item}</Text>
 				<View style={styles.RETURN_CONTAINER_MODAL}>
 					<Text style={[styles.RETURN_AMOUNT, { color: loginStore.getAccountColor }]}>C$ {SelectedReturn.amount}</Text>
 					<View style={styles.RETURN_DETAIL_CONTAINER}>
+						<Text style={styles.RETURN_DETAIL_LABEL}>COUNTERPART NAME</Text>
+						<Text style={styles.RETURN_DETAIL_LABEL}>{SelectedReturn?.counterpart_data?.name}</Text>
+					</View>
+					<View style={styles.RETURN_DETAIL_CONTAINER}>
 						<Text style={styles.RETURN_DETAIL_LABEL}>TRANSACTION ID</Text>
-						<Text style={styles.RETURN_DETAIL_LABEL}>0567882HDJH2JE20</Text>
+						<Text style={styles.RETURN_DETAIL_LABEL}>{SelectedReturn.transaction_id}</Text>
 					</View>
 					<View style={styles.RETURN_DETAIL_CONTAINER}>
 						<Text style={styles.RETURN_DETAIL_LABEL}>TYPE</Text>
-						<Text style={styles.RETURN_DETAIL_LABEL}>CUSTOMER SALE</Text>
+						<Text style={styles.RETURN_DETAIL_LABEL}>{SelectedReturn.type}</Text>
 					</View>
 					<View style={styles.RETURN_DETAIL_CONTAINER}>
 						<Text style={styles.RETURN_DETAIL_LABEL}>DATE</Text>
-						<Text style={styles.RETURN_DETAIL_LABEL}>4:22 , JUN 17, 2021</Text>
+						<Text style={styles.RETURN_DETAIL_LABEL}>{moment(SelectedReturn?.created).format('llll')}</Text>
 					</View>
 				</View>
 				<Text style={[styles.STEP_SUB_TITLE, { color: loginStore.getAccountColor }]}>{loginStore.ProfileData.username}</Text>
@@ -162,25 +159,31 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 					/>
 				</View>
 			</View>
-			{Object.values(getFormatedTransactions()).map((r: any, key) => ([
-				<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r.label}</Text>,
-				getDataFiltered(r.data, ['item'], Search).map((i, key2) => (
-					<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
-						<View style={{ marginLeft: 15 }}>
-							<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.type}</Text>
-							<Text style={styles.RETURN_ITEM_TIME}>{moment(i?.created).format('llll')}</Text>
-						</View>
-						<View style={styles.CONTAINER}>
-							{i.type === 'Deposit'
-								? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ +${i.amount}`}</Text>
-								: i.type === 'Transfer'
-									? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ ${i.credit ? '+' : '-'}${i.amount}`}</Text>
-									: <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ -${i.amount || ''}`}</Text>
-							}
-						</View>
-					</TouchableOpacity>
-				))
-			]))}
+			{Object.values(getFormatedTransactions()).map((r: any, key) => {
+				let data = getDataFiltered(r.data, ['amount', 'type'], Search)
+				if (Array.isArray(data) && data.length > 0) {
+					return ([
+						<Text key={key + '_label'} style={styles.RETURNS_LABEL}>{r.label}</Text>,
+						data.map((i, key2) => (
+							<TouchableOpacity onPress={() => [setSelectedReturn(i), setDetailModalVisible(true)]} key={key2 + '_values'} style={styles.RETURN_ITEM}>
+								<View style={{ marginLeft: 15 }}>
+									<Text style={styles.RETURN_ITEM_CUSTOMER}>{i.type}</Text>
+									<Text style={styles.RETURN_ITEM_TIME}>{moment(i?.created).format('llll')}</Text>
+								</View>
+								<View style={styles.CONTAINER}>
+									{i.type === 'Deposit'
+										? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ +${i.amount}`}</Text>
+										: i.type === 'Transfer'
+											? <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ ${i.credit ? '+' : '-'}${i.amount}`}</Text>
+											: <Text style={styles.RETURN_ITEM_AMOUNT_CREDIT}>{`C$ -${i.amount || ''}`}</Text>
+									}
+								</View>
+							</TouchableOpacity>
+						))
+
+					])
+				}
+			})}
 			<View style={{ height: 100 }} />
 		</View>
 
@@ -201,14 +204,14 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 			</View>
 			<KeyboardAvoidingView enabled style={styles.ROOT}>
 				<ScrollView
-				showsVerticalScrollIndicator={false} 
-				refreshControl={
-					<RefreshControl
-						refreshing={refreshing}
-						onRefresh={onRefresh}
-						enabled={true}
-					/>
-				}
+					showsVerticalScrollIndicator={false}
+					refreshControl={
+						<RefreshControl
+							refreshing={refreshing}
+							onRefresh={onRefresh}
+							enabled={true}
+						/>
+					}
 				>
 					<View style={styles.ROOT_CONTAINER}>
 						<View style={styles.CONTAINER}>
