@@ -215,7 +215,8 @@ class Consumer(BaseProfileModel):
 
     @property
     def display_name(self):
-        return self.user.get_full_name()
+        fname = self.user.get_full_name()
+        return fname or self.user.email
 
     def __str__(self):
         return f'Cons. {self.user.name} ({self.user.email})'
