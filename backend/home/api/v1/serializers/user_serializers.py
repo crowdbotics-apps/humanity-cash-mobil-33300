@@ -150,7 +150,9 @@ class DwollaUserDetailSerializer(serializers.ModelSerializer):
             return '-'
 
     def get_blockchain_transactions(self, obj):
-        transactions = obj.profile.transactions.all()
+        transactions = (
+                obj.profile.transactions.all() | obj.profile.counterpart_transactions.all()
+        ).distinct().order_by('-created')
         return TransactionSerializer(
             instance=transactions, many=True, context={'request': self.context['request']}
         ).data
