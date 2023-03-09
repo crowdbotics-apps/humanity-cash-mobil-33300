@@ -79,9 +79,10 @@ class TransactionMobileViewSet(viewsets.GenericViewSet):
     serializer_class = TransactionMobileSerializer
 
     @may_fail(KeyError, 'Invalid request')
+    @may_fail((Merchant.DoesNotExist, Consumer.DoesNotExist), 'User profile not found')
     def list(self, request, *args, **kwargs):
         klass = dict(consumer=Consumer, merchant=Merchant)[request.query_params['selected_account']]
-        profile = klass.objects.filter(user=request.user)
+        profile = klass.objects.get(user=request.user)
 
         blockchain_transactions = Transaction.objects.exclude(type=Transaction.Type.new_wallet)
         ach_transactions = ACHTransaction.objects.filter(status=ACHTransaction.Status.pending)

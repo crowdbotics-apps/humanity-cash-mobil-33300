@@ -37,7 +37,7 @@ class TransactionMobileSerializer(serializers.Serializer):
             'credit'
         )
 
-    def __init__(self, main_profile, *args, **kwargs):
+    def __init__(self, *args, main_profile=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.main_profile = main_profile
 

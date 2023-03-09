@@ -82,31 +82,17 @@ class DwollaUserSerializer(serializers.ModelSerializer):
 
     def get_balance(self, obj):
         try:
-            user = User.objects.get(pk=obj.pk)
-            if hasattr(user, 'merchant'):
-                return user.merchant.balance
-
-            if hasattr(user, 'consumer'):
-                return user.consumer.balance
-        except (TimeoutError, NoWalletException, RuntimeError, ConnectionClosedOK) as error:
+            return obj.profile.balance
+        except (TimeoutError, NoWalletException, RuntimeError, ConnectionClosedOK,
+                Merchant.DoesNotExist, Consumer.DoesNotExist) as error:
             logger.exception('Contract Error: {}'.format(error))
             return '-'
 
     def get_username(self, obj):
-        user = User.objects.get(pk=obj.pk)
-        if hasattr(user, 'merchant'):
-            return user.merchant.business_name
-        if hasattr(user, 'consumer'):
-            return user.username
+        return obj.profile.display_name
 
     def get_profile_picture(self, obj):
-        user = User.objects.get(pk=obj.pk)
-        if hasattr(user, 'merchant'):
-            return user.merchant.profile_picture.url if user.merchant.profile_picture else None
-        if hasattr(user, 'consumer'):
-            return user.consumer.profile_picture.url if user.consumer.profile_picture else None
-
-
+        return obj.profile.profile_picture.url if obj.profile.profile_picture else None
 
 
 class DwollaUserDetailVerifySerializer(serializers.Serializer):
@@ -114,12 +100,18 @@ class DwollaUserDetailVerifySerializer(serializers.Serializer):
     type = serializers.CharField()
 
     class Meta:
-        fields = ('password',)
+        fields = ('password', 'type')
 
     def validate_password(self, value):
         if not self.context['request'].user.check_password(value):
             raise ValidationError('User password is incorrect')
         return value
+
+    def validate_type(self, value):
+        if value not in ['BUSINESS', 'PERSONAL']:
+            raise ValidationError('incorrect profile selected')
+        return value
+
 
 
 class ConsumerDetailUserSerializer(serializers.ModelSerializer):
@@ -151,45 +143,29 @@ class DwollaUserDetailSerializer(serializers.ModelSerializer):
 
     def get_balance(self, obj):
         try:
-            user_type = self.context.get('request').data['type']
-            user = User.objects.get(pk=obj.pk)
-            if hasattr(user, 'merchant') and user_type == 'BUSSINES':
-                return user.merchant.balance
-            if hasattr(user, 'consumer') and user_type == 'PERSONAL':
-                return user.consumer.balance
-        except (TimeoutError, NoWalletException) as error:
+            return obj.profile.balance
+        except (TimeoutError, NoWalletException, RuntimeError, ConnectionClosedOK,
+                Merchant.DoesNotExist, Consumer.DoesNotExist) as error:
+            logger.exception('Contract Error: {}'.format(error))
             return '-'
 
     def get_blockchain_transactions(self, obj):
-        user_type = self.context.get('request').data['type']
-        user = User.objects.get(pk=obj.pk)
-        transactions = []
-        if hasattr(user, 'merchant') and user_type == 'BUSSINES':
-            transactions = user.merchant.transactions.all()
-        if hasattr(user, 'consumer') and user_type == 'PERSONAL':
-            transactions = user.consumer.transactions.all()
-        return TransactionSerializer(instance=transactions, many=True, context={'request': self.context['request']}).data
+        transactions = obj.profile.transactions.all()
+        return TransactionSerializer(
+            instance=transactions, many=True, context={'request': self.context['request']}
+        ).data
 
     def get_ach_transactions(self, obj):
-        user_type = self.context.get('request').data['type']
-        user = User.objects.get(pk=obj.pk)
-        transactions = []
-        if hasattr(user, 'merchant') and user_type == 'BUSSINES':
-            transactions = user.merchant.ach_transactions.all()
-        if hasattr(user, 'consumer') and user_type == 'PERSONAL':
-            transactions = user.consumer.ach_transactions.all()
-        return ACHTransactionSerializer(instance=transactions, many=True, context={'request': self.context['request']}).data
+        transactions = obj.profile.ach_transactions.all()
+        return ACHTransactionSerializer(
+            instance=transactions, many=True, context={'request': self.context['request']}
+        ).data
 
     def get_full_name(self, obj):
         user = User.objects.get(pk=obj.pk)
         return user.get_full_name()
 
     def get_profile(self, obj):
-        user_type = self.context.get('request').data['type']
-        user = User.objects.get(pk=obj.pk)
-        if hasattr(user, 'merchant') and user_type == 'BUSSINES':
-            return MerchantDetailUserSerializer(user.merchant).data
-
-        if hasattr(user, 'consumer') and user_type == 'PERSONAL':
-            return ConsumerDetailUserSerializer(user.consumer).data
-        return None
+        profile = obj.profile
+        serializer_class = MerchantDetailUserSerializer if profile.is_merchant else ConsumerDetailUserSerializer
+        return serializer_class(instance=profile).data
