@@ -27,9 +27,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
             if user:
                 raise serializers.ValidationError("A user is already registered with this e-mail address.")
         else:
-            email = get_adapter().clean_email(email)
-            user = User.objects.filter(username=email).exists()
-            if email and (email_address_exists(email) or user):
+            user = User.objects.filter(username=email, role__isnull=False).exists()
+            if user:
                 raise serializers.ValidationError("A user is already registered with this e-mail address.")
         return email
 
@@ -43,15 +42,23 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return role
 
     def create(self, validated_data):
-        user = User(
-            group=validated_data.get('group'),
-            role=validated_data.get('role'),
-            email=validated_data.get('email'),
-            username=validated_data.get('email'),
-            name=validated_data.get('name'),
-            is_admin=True,
-            verified_email=True
-        )
+        user = User.objects.filter(username=validated_data.get('email')).first()
+        if not user:
+            user = User(
+                group=validated_data.get('group'),
+                role=validated_data.get('role'),
+                email=validated_data.get('email'),
+                username=validated_data.get('email'),
+                name=validated_data.get('name'),
+                is_admin=True,
+                verified_email=True
+            )
+        else:
+            user.group = validated_data.get('group')
+            user.role = validated_data.get('role')
+            user.name = validated_data.get('name')
+            user.is_admin = True
+            user.verified_email = True
         user.save()
         request = self.context.get('request')
         send_email_with_template(

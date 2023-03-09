@@ -44,11 +44,16 @@ function SignIn() {
     setLoading(true)
     api.login(data.email, data.password).then((result) => {
       if (result.kind === "ok") {
-        runInAction(() => {
-          loginStore.setUser(result.response.user)
-          loginStore.setApiToken(result.response.access_token)
-        })
-        navigate(ROUTES.DASHBOARD)
+        const {response} = result
+        if ((response.user.role !== null && response.user.group !== null) || response.user.is_superuser ) {
+          runInAction(() => {
+            loginStore.setUser(response.user)
+            loginStore.setApiToken(response.access_token)
+          })
+          navigate(ROUTES.DASHBOARD)
+        } else {
+          showMessage('Invalid credentials')
+        }
       } else {
         if (result.kind === "bad-data") {
           if (result.errors.non_field_errors) {

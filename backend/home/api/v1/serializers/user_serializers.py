@@ -115,7 +115,7 @@ class DwollaUserDetailVerifySerializer(serializers.Serializer):
 
 
 class ConsumerDetailUserSerializer(serializers.ModelSerializer):
-    state = serializers.CharField(source='state.name_ascii')
+    state = serializers.CharField(source='state.name_ascii', allow_null=True)
 
     class Meta:
         model = Consumer
@@ -123,7 +123,7 @@ class ConsumerDetailUserSerializer(serializers.ModelSerializer):
 
 
 class MerchantDetailUserSerializer(serializers.ModelSerializer):
-    state = serializers.CharField(source='state.name_ascii')
+    state = serializers.CharField(source='state.name_ascii', allow_null=True)
 
     class Meta:
         model = Merchant
@@ -150,7 +150,9 @@ class DwollaUserDetailSerializer(serializers.ModelSerializer):
             return '-'
 
     def get_blockchain_transactions(self, obj):
-        transactions = obj.profile.transactions.all()
+        transactions = (
+                obj.profile.transactions.all() | obj.profile.counterpart_transactions.all()
+        ).distinct().order_by('-created')
         return TransactionSerializer(
             instance=transactions, many=True, context={'request': self.context['request']}
         ).data
