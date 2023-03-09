@@ -193,7 +193,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
       return
     }
     setQR(dataJson)
-    setAmount(dataJson?.amount)
+    setAmount(dataJson?.amount || '0')
     if (dataJson.amount) {
       setStep('amount')
       setShowConfirmationModal(true)
