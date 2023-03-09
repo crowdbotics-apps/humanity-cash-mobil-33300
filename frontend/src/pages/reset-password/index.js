@@ -48,7 +48,7 @@ function ResetPassword() {
     setLoading(true)
     api.resetPassword(form).then((result) => {
       if (result.kind === "ok") {
-        showMessage('Password reset successful', 'success')
+        showMessage('Password set successful', 'success')
         navigate(ROUTES.LOGIN)
       } else if(result.kind === "bad-data") {
         if (result.errors.token) {
