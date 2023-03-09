@@ -43,15 +43,23 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return role
 
     def create(self, validated_data):
-        user = User(
-            group=validated_data.get('group'),
-            role=validated_data.get('role'),
-            email=validated_data.get('email'),
-            username=validated_data.get('email'),
-            name=validated_data.get('name'),
-            is_admin=True,
-            verified_email=True
-        )
+        user = User.objects.filter(username=validated_data.get('email')).first()
+        if not user:
+            user = User(
+                group=validated_data.get('group'),
+                role=validated_data.get('role'),
+                email=validated_data.get('email'),
+                username=validated_data.get('email'),
+                name=validated_data.get('name'),
+                is_admin=True,
+                verified_email=True
+            )
+        else:
+            user.group = validated_data.get('group')
+            user.role = validated_data.get('role')
+            user.name = validated_data.get('name')
+            user.is_admin = True
+            user.verified_email = True
         user.save()
         request = self.context.get('request')
         send_email_with_template(

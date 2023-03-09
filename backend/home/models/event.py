@@ -36,6 +36,6 @@ class Event(TimeStampedModel):
         return self.title
 
     class Meta:
-        ordering = ['start_date']
+        ordering = ['created']
 
 
