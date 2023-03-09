@@ -159,7 +159,7 @@ export class Api extends ApiBase {
   }
 
   async getUsers(): Promise<Types.SimpleGetResult> {
-    return this.simple_get(apiv1 + "/user/?limit=999")
+    return this.simple_get(apiv1 + "/user/?limit=999&ordering=email")
   }
 
   // DWOLLA
