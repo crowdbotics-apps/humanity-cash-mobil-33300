@@ -1,6 +1,7 @@
 import time
 
 from cities_light.models import Region
+from descriptors import cachedproperty
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
 from django.urls import reverse
@@ -278,9 +279,22 @@ class DwollaUser(models.Model):
     address = models.CharField(max_length=150, null=True, blank=True)
 
     class Meta:
+        # this table is an SQL view on top of the users_user table in the database
+        # see users/migrations/0019_auto_20220928_1947.py for more details
         db_table = "dwolla_user"
         managed = False
         ordering = ['-id']
+
+    @cachedproperty
+    def is_personal(self):
+        # in the future this can be optimized in the SQL view
+        return self.account_type == 'PERSONAL'
+
+    @cachedproperty
+    def profile(self):
+        # in the future this can be optimized in the SQL view
+        klass = Consumer if self.is_personal else Merchant
+        return klass.objects.get(user_id=self.id)
 
 
 class Coupon(models.Model):

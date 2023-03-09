@@ -82,31 +82,17 @@ class DwollaUserSerializer(serializers.ModelSerializer):
 
     def get_balance(self, obj):
         try:
-            user = User.objects.get(pk=obj.pk)
-            if hasattr(user, 'merchant'):
-                return user.merchant.balance
-
-            if hasattr(user, 'consumer'):
-                return user.consumer.balance
-        except (TimeoutError, NoWalletException, RuntimeError, ConnectionClosedOK) as error:
+            return obj.profile.balance
+        except (TimeoutError, NoWalletException, RuntimeError, ConnectionClosedOK,
+                Merchant.DoesNotExist, Consumer.DoesNotExist) as error:
             logger.exception('Contract Error: {}'.format(error))
             return '-'
 
     def get_username(self, obj):
-        user = User.objects.get(pk=obj.pk)
-        if hasattr(user, 'merchant'):
-            return user.merchant.business_name
-        if hasattr(user, 'consumer'):
-            return user.username
+        return obj.profile.display_name
 
     def get_profile_picture(self, obj):
-        user = User.objects.get(pk=obj.pk)
-        if hasattr(user, 'merchant'):
-            return user.merchant.profile_picture.url if user.merchant.profile_picture else None
-        if hasattr(user, 'consumer'):
-            return user.consumer.profile_picture.url if user.consumer.profile_picture else None
-
-
+        return obj.profile.profile_picture.url if obj.profile.profile_picture else None
 
 
 class DwollaUserDetailVerifySerializer(serializers.Serializer):
