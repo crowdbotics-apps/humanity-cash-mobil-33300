@@ -115,7 +115,7 @@ class DwollaUserDetailVerifySerializer(serializers.Serializer):
 
 
 class ConsumerDetailUserSerializer(serializers.ModelSerializer):
-    state = serializers.CharField(source='state.name_ascii')
+    state = serializers.CharField(source='state.name_ascii', allow_null=True)
 
     class Meta:
         model = Consumer
@@ -123,7 +123,7 @@ class ConsumerDetailUserSerializer(serializers.ModelSerializer):
 
 
 class MerchantDetailUserSerializer(serializers.ModelSerializer):
-    state = serializers.CharField(source='state.name_ascii')
+    state = serializers.CharField(source='state.name_ascii', allow_null=True)
 
     class Meta:
         model = Merchant
