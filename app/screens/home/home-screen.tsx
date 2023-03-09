@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Button, Screen, Text, ConfirmCouponModal } from "../../components";
-import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback, BackHandler, FlatList, RefreshControl } from "react-native";
+import { Image, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, Modal, TouchableWithoutFeedback, BackHandler, Linking, RefreshControl } from "react-native";
 import { COLOR, IMAGES } from "../../theme";
 import styles from "./home-style";
 import { useStores } from "../../models";
@@ -244,8 +244,10 @@ export const HomeScreen = observer(function HomeScreen() {
 				</View>
 				<Text style={styles.NEWS_TITLE}>{n.title}</Text>
 				<Text style={styles.NEWS_BODY}>{n.description}</Text>
+				{n?.link ? <Text onPress={() => Linking.openURL(n?.link)} style={[styles.NEWS_BODY, {color: 'blue', textDecorationLine: 'underline'}]}>Link</Text> : null}
+				{n?.location ? <Text style={styles.NEWS_BODY}>{n.location}</Text> : null}
 				<Image
-					source={{ uri: n.image }}
+					source={ n.image ? { uri: n.image } : IMAGES.noImage}
 					resizeMode='cover'
 					style={styles.NEWS_IMAGE}
 				/>
