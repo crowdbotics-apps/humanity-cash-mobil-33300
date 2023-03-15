@@ -18,6 +18,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import QRCode from 'react-native-qrcode-svg'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { BaseConfirmModal as UserModal } from '../../layouts'
+import { runInAction } from "mobx"
 
 import TouchID from 'react-native-touch-id'
 
@@ -200,6 +201,37 @@ export const QRScreen = observer(function QRScreen(props: any) {
     } else setStep('amount')
   }
 
+
+  const getBalanceData = () => {
+    loginStore.environment.api
+        .getBalanceData()
+        .then((result: any) => {
+          if (result.kind === "ok") {
+            if (loginStore?.balance?.[loginStore.getSelectedAccount] !== result.data?.[loginStore.getSelectedAccount]) {
+              setShowQR(false)
+              setPayerSetAmount(false)
+              loginStore.setBalanceData(result.data)
+              navigation.navigate('myTransactions')
+            }
+          } else if (result.kind === "bad-data") {
+            const key = Object.keys(result?.errors)[0]
+            const msg = `${key}: ${result?.errors?.[key][0]}`
+            notifyMessage(msg)
+          } else {
+            notifyMessage(null)
+          }
+        })
+  }
+
+  useEffect(() => {
+    const checkTransactionLoop = setInterval(() => {
+      if (!ShowQR) clearInterval(checkTransactionLoop)
+      getBalanceData()
+    }, 10000);
+    return () => clearInterval(checkTransactionLoop);
+
+  },[ShowQR])
+
   useEffect(() => {
     if (Number(Amount) > 0) {
       if (parseFloat(Amount) % 1 !== 0) {
@@ -252,6 +284,8 @@ export const QRScreen = observer(function QRScreen(props: any) {
     }
   }, [isFocused])
 
+
+
   const inputQR = () => <View style={{ flex: 1, justifyContent: 'space-between' }}>
     <View>
       <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
@@ -278,7 +312,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
       </View>
     </View>
     <View>
-      <TouchableOpacity style={styles.NEED_HELP_CONTAINER} onPress={() => [setShowQR(true), setPayerSetAmount(true)]}>
+      <TouchableOpacity style={styles.NEED_HELP_CONTAINER} onPress={() => [setShowQR(true), setPayerSetAmount(true), setAmount(0)]}>
         <Text style={styles.NEED_HELP_LINK}>Let the payer choose the amount</Text>
       </TouchableOpacity>
       <Button
@@ -396,7 +430,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
       <Button
         buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
         loading={Loading}
-        onPress={() => setStep('amount')}
+        onPress={() => TransactionSucceed ? navigation.navigate('home') : setStep('amount')}
         buttonLabel={'Close'}
       />
     </View>
