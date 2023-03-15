@@ -352,11 +352,11 @@ export const WhereSpendScreen = observer(function WhereSpendScreen() {
                       /> : null
                     }
                     <View style={[styles.SEE_ON_MAP_LABEL, {marginTop: 10}]}>
-                      {SelectedDetail?.address_1 && <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text>}
-                      {SelectedDetail?.address_2 && <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text>}
-                      {SelectedDetail?.state && <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.state}</Text> }
+                      {SelectedDetail?.address_1 ? <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_1}</Text> : null}
+                      {SelectedDetail?.address_2 ? <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.address_2}</Text> : null}
+                      {SelectedDetail?.state ? <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.state}</Text> : null}
                       <Text style={styles.SEE_ON_MAP_LABEL}>{SelectedDetail?.city + ', ' + SelectedDetail?.zip_code}</Text>
-                      {SelectedDetail?.phone_number && <Text style={styles.SEE_ON_MAP_LABEL}>{formatPhoneNumber(SelectedDetail?.phone_number)}</Text>}
+                      {SelectedDetail?.phone_number ? <Text style={styles.SEE_ON_MAP_LABEL}>{formatPhoneNumber(SelectedDetail?.phone_number)}</Text> : null}
                     </View>
                   </View>
                 </View>
