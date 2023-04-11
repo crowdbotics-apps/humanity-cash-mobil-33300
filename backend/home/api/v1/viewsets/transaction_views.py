@@ -311,9 +311,9 @@ class SendReportView(AuthenticatedAPIView):
             )
             for transaction in transactions:
                 if transaction.transaction_is_credit(profile):
-                    transaction.amount_format = 'C$ +' + transaction.amount
+                    transaction.amount_format = 'C$ +' + str(transaction.amount)
                 else:
-                    transaction.amount_format = 'C$ -' + transaction.amount
+                    transaction.amount_format = 'C$ -' + str(transaction.amount)
 
             send_email_with_template(
                 subject='Humanity Cash Transaction Report',
