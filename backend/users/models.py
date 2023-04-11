@@ -384,10 +384,7 @@ class UserDevice(models.Model):
         return "{} - {}".format(self.device_id, self.user.username)
 
 
-
 class Notification(models.Model):
-
-
 
     class Actions(models.IntegerChoices):
         READ = 10, 'Read notification'
@@ -397,8 +394,6 @@ class Notification(models.Model):
     class Types(models.IntegerChoices):
         ADMIN = 10, 'Notifications sent by the admin'
         TRANSACTION = 20, 'Notifications for transactions'
-
-
 
     target = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications_to_user")
     from_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,
