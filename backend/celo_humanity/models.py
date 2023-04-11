@@ -171,6 +171,12 @@ class Transaction(models.Model):
         returned = sum(Transaction.objects.filter(original_transaction=self).values_list('amount', flat=True))
         return self.amount - returned
 
+    def transaction_is_credit(self, profile):
+        if self.type == Transaction.Type.transfer:
+            return self.counterpart_profile == profile
+        else:
+            return self.type == Transaction.Type.deposit
+
 
 class ACHTransaction(models.Model):
     class Type(models.TextChoices):
