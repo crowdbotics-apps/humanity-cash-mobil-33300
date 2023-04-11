@@ -154,7 +154,9 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
             <Button
                 buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
                 loading={Loading}
-                onPress={() => setStep('scan')}
+                onPress={() => {
+                    navigation.navigate("home")
+                }}
                 buttonLabel={'Close'}
             />
         </View>
@@ -200,7 +202,7 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
         let step
         switch (Step) {
             case 'scan':
-                step = <QRCodeScanner 
+                step = <QRCodeScanner
                  onRead={e => readQRAction(e.data)} />
                 break;
             case 'confirm':
@@ -213,7 +215,7 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
                 step = renderFinish
                 break;
             default:
-                step = <QRCodeScanner 
+                step = <QRCodeScanner
                  onRead={e => readQRAction(e.data)} />
                 break;
         }

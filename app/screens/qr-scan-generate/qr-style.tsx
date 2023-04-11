@@ -91,6 +91,7 @@ export default StyleSheet.create({
     height: 55,
     marginLeft: 3,
     width: METRICS.screenWidth * 0.85,
+    color: 'black'
   },
   INPUT_STYLE_CONTAINER: {
     alignItems: 'center',

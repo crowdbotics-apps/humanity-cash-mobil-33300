@@ -15,6 +15,7 @@ type ModalConfirmProps = {
     type?: string,
     transparent?: boolean,
     dark?: boolean,
+    disable?: boolean,
 }
 
 export const BaseConfirmModal = ({
@@ -25,24 +26,26 @@ export const BaseConfirmModal = ({
   imgSrc = '',
   username = '',
   type='QR',
-  dark = false
+  dark = false,
+  disable = false
 }: ModalConfirmProps) => {
 
   const { loginStore } = useStores()
   const userText = username?.includes('@') ? username.replace('@', '') : username;
   const profilePictureSrc = imgSrc ? {uri: imgSrc} : getRandomProfileImage();
-  
+
   return (
     <Modal visible={visible} transparent={transparent}>
-      <Pressable style={dark ? styles.DARK_ROOT_MODAL : styles.ROOT_MODAL} onPress={closeModalAction}>
+      <Pressable style={dark ? styles.DARK_ROOT_MODAL : styles.ROOT_MODAL} onPress={closeModalAction} disabled={disable}>
         <TouchableOpacity
           onPress={closeModalAction}
           style={styles.CLOSE_MODAL_BUTTON}
+          disabled={disable}
         >
           <Text style={styles.BACK_BUTON_LABEL}>{`Close`}</Text>
           <Icon name={"close"} size={20} color={"#0D0E21"} />
         </TouchableOpacity>
-        <Pressable 
+        <Pressable
           style={[styles.MODAL_CONTAINER, type !== 'QR' && styles.MODAL_CONTAINER_CONFIRMATION]}
           onPress={() => null}
         >
@@ -53,8 +56,8 @@ export const BaseConfirmModal = ({
               style={styles.USER_IMAGE}
             />
           </View>
-          <Text 
-            style={[type === 'QR' ? styles.STEP_SUB_TITLE : styles.STEP_SUB_TITLE_USERNAME, 
+          <Text
+            style={[type === 'QR' ? styles.STEP_SUB_TITLE : styles.STEP_SUB_TITLE_USERNAME,
               { color: loginStore.getAccountColor }
             ]}
           >

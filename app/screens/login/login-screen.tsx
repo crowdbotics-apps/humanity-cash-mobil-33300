@@ -46,6 +46,8 @@ export const LoginScreen = observer(function LoginScreen() {
     loginStore.environment.api
       .login({ email: Username, password: Pass })
       .then((result: any) => {
+        console.log('{ email: Username, password: Pass } ', { email: Username, password: Pass })
+        console.log('result ', result)
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
@@ -90,7 +92,10 @@ export const LoginScreen = observer(function LoginScreen() {
           loginStore.reset()
           notifyMessage(null)
         }
-      }).catch((err) => notifyMessage(getErrorMessage(err)))
+      }).catch((err) => {
+      notifyMessage(getErrorMessage(err))
+      console.log('err ', err)
+    })
   }
 
   const loginGoogle = async () => {
