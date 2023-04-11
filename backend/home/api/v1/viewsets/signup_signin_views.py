@@ -38,7 +38,6 @@ class SetPasswordView(AuthenticatedAPIView):
             errors['password'] = list(e.messages)
         if errors:
             raise serializers.ValidationError(errors)
-        logger.error('Registration ')
         logger.error('email: %s', user.email)
         logger.error('password: %s', password)
         user.set_password(password)

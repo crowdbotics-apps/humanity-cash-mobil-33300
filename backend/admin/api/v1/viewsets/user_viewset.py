@@ -75,7 +75,6 @@ def password_set(request):
     if user.check_password(password):
         return Response({"password": "The new password cannot be the same as the old one"}, status=status.HTTP_400_BAD_REQUEST)
     user.set_password(password)
-    logger.error('password_set')
     logger.error(password)
     user.save()
     request.user = user
@@ -90,7 +89,6 @@ def password_reset_confirm(request):
     if serializer.is_valid(raise_exception=True):
         user = get_user_by_uidb64(serializer.data['uidb64'])
         user.set_password(serializer.data['new_password1'])
-        logger.error('password reset confirm')
         logger.error('password: %s', serializer.data['new_password1'])
         user.save()
     return Response(
