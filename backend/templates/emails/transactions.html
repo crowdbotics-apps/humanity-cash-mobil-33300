@@ -198,8 +198,8 @@
             {% for transaction in transactions %}
                 <tr class="fields fields_text">
                     <td class="field_text">{{ transaction.transaction_id }}</td>
-                    <td class="field_text">{{ transaction.profile.crypto_wallet_id }}</td>
-                    <td class="field_text">{{ transaction.counterpart_profile.crypto_wallet_id }}</td>
+                    <td class="field_text">{{ transaction.from_name }}</td>
+                    <td class="field_text">{{ transaction.to_name }}</td>
                     <td class="field_text">{{ transaction.profile.crypto_wallet_address }}</td>
                     <td class="field_text">{{ transaction.counterpart_profile.crypto_wallet_address }}</td>
                     <td class="field_text">{{ transaction.type }}</td>
