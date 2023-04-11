@@ -1,3 +1,4 @@
+import logging
 import random
 
 import dj_rest_auth.serializers
@@ -18,6 +19,7 @@ from home.helpers import send_verification_email, setup_verification_code, send_
 from users.models import UserVerificationCode, Consumer
 
 User = get_user_model()
+logger = logging.getLogger('django')
 
 
 class SignupSerializer(serializers.ModelSerializer):
