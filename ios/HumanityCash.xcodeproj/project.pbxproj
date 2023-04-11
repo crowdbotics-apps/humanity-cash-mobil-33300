@@ -853,7 +853,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HumanityCash/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.6;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -885,7 +885,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 6YKR59QXKM;
 				INFOPLIST_FILE = HumanityCash/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.6;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
