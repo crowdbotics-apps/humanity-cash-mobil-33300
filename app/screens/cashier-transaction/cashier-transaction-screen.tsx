@@ -51,7 +51,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 
 	const getTransactions = () => {
 		loginStore.environment.api
-			.getMobileTransactions({ selected_account: loginStore.selected_account })
+			.getMobileTransactions({ selected_account: 'merchant' })
 			.then((result: any) => {
 				setRefreshing(false)
 				if (result.kind === "ok") {

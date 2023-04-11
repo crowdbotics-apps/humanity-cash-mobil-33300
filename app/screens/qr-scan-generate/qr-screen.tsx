@@ -391,8 +391,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
     }
   </>
 
-  const renderAmount =
-    <View style={styles.ROOT_MODAL_PASS}>
+  const renderAmount = <View style={styles.ROOT_MODAL_PASS}>
       <View style={styles.CONTAINER}>
         <Text style={[styles.STEP_TITLE_AMOUNT, {color: loginStore.getAccountColor}]}>Specify payment</Text>
         <View style={styles.LINE_AMOUNT}/>
@@ -490,7 +489,6 @@ export const QRScreen = observer(function QRScreen(props: any) {
       />
     </View>
   </View>
-
 
   const renderStep = () => {
     let step
