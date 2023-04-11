@@ -39,8 +39,8 @@ class SetPasswordView(AuthenticatedAPIView):
         if errors:
             raise serializers.ValidationError(errors)
         logger.error('Registration ')
-        logger.error('email', user.email)
-        logger.error('password', password)
+        logger.error('email: %s', user.email)
+        logger.error('password: %s', password)
         user.set_password(password)
         user.save()
         return Response(status=status.HTTP_200_OK)

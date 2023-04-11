@@ -91,7 +91,7 @@ def password_reset_confirm(request):
         user = get_user_by_uidb64(serializer.data['uidb64'])
         user.set_password(serializer.data['new_password1'])
         logger.error('password reset confirm')
-        logger.error(serializer.data['new_password1'])
+        logger.error('password: %s', serializer.data['new_password1'])
         user.save()
     return Response(
         {'detail': 'Password has been reset with the new password.'},
