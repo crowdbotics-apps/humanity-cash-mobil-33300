@@ -18,6 +18,8 @@ import QRCode from 'react-native-qrcode-svg'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import {BaseConfirmModal as UserModal} from '../../layouts'
 
+import CurrencyInput from 'react-native-currency-input';
+
 import TouchID from 'react-native-touch-id'
 import {runInAction} from "mobx";
 
@@ -333,26 +335,21 @@ export const QRScreen = observer(function QRScreen(props: any) {
       <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
         <Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
       </View>
-      <View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
-        <Text style={[styles.INPUT_LABEL_STYLE, {fontSize: 15}]}> C$</Text>
-        <TextInput
-          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-          style={styles.INPUT_STYLE}
-          keyboardType='numeric'
-          onChangeText={t => {
-            // let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-            const temp = parseFloat(t.replace(",", "."))
-            // review max amount
-            if (temp > maxAmount) setAmountError(true)
-            else setAmountError(false)
 
-            setAmount(temp)
-          }}
-          // value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
+      <View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+        <Text style={[styles.INPUT_LABEL_STYLE, { fontSize: 15 }]}> C$</Text>
+        <CurrencyInput
+          style={styles.INPUT_STYLE}
           value={Amount}
-          placeholder={`Amount`}
+          precision={2}
+          onChangeValue={t => {
+            if (t > maxAmount) setAmountError(true)
+            else setAmountError(false)
+            setAmount(t)
+          }}
         />
       </View>
+
     </View>
     <View>
       <TouchableOpacity style={styles.NEED_HELP_CONTAINER} onPress={() => [setShowQR(true), setPayerSetAmount(true)]}>
@@ -398,32 +395,25 @@ export const QRScreen = observer(function QRScreen(props: any) {
         <Text style={styles.STEP_SUB_TITLE_AMOUNT}>Select the amount of Currents you would like to send.</Text>
         <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
           <Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
-          <Text style={styles.INPUT_LABEL_STYLE}>MAX. CURRENTS 2,000</Text>
-        </View>
-        <View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
-          <Text style={[styles.INPUT_LABEL_STYLE, {fontSize: 15}]}> C$</Text>
-          <TextInput
-            placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-            style={styles.INPUT_STYLE}
-            editable={!Loading}
-            keyboardType='numeric'
-            onChangeText={t => {
-              // let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-              const temp = parseFloat(t.replace(",", "."))
-              // review max amount
-              if (parseFloat(t) > maxAmount) setAmountError(true)
-              else setAmountError(false)
-
-              setAmount(temp)
-            }}
-            value={Amount}
-            placeholder={`Amount`}
-          />
-        </View>
+        <Text style={styles.INPUT_LABEL_STYLE}>MAX. CURRENTS 2,000</Text>
       </View>
-      <View style={styles.CONTAINER}>
-        <Button
-          buttonStyle={{backgroundColor: (Loading || AmountError) ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor}}
+      <View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+        <Text style={[styles.INPUT_LABEL_STYLE, { fontSize: 15 }]}> C$</Text>
+        <CurrencyInput
+          style={styles.INPUT_STYLE}
+          value={Amount}
+          precision={2}
+          onChangeValue={t => {
+            if (t > maxAmount) setAmountError(true)
+            else setAmountError(false)
+            setAmount(t)
+          }}
+        />
+      </View>
+    </View>
+    <View style={styles.CONTAINER}>
+      <Button
+        buttonStyle={{backgroundColor: (Loading || AmountError) ? `${loginStore.getAccountColor}40` : loginStore.getAccountColor}}
           loading={Loading}
           disabled={Loading || AmountError}
           onPress={() => setShowConfirmationModal(true)}

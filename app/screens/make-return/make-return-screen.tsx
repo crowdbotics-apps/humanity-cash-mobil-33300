@@ -1,21 +1,16 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { View, TouchableOpacity, Modal, TextInput, ActivityIndicator } from 'react-native';
-import {
-    Text,
-    Button,
-    CustomSwitch,
-    Screen,
-    ConnectBankModal
-} from '../../components';
+import { View, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { Text, Button, Screen } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from './make-return-style';
 import { COLOR } from '../../theme';
 import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { useStores } from "../../models"
-import { getErrorMessage, notifyMessage } from "../../utils/helpers"
+import { notifyMessage } from "../../utils/helpers"
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import moment from 'moment';
+import CurrencyInput from 'react-native-currency-input';
 
 // steps = ['scan', 'confirm', 'pending', 'finish']
 
@@ -27,7 +22,7 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
 
     const [Step, setStep] = useState('scan')
     const [QR, setQR] = useState(null)
-    const [Amount, setAmount] = useState('0')
+    const [Amount, setAmount] = useState(0)
     const [Loading, setLoading] = useState(false)
 
     const [TransactionSucceed, setTransactionSucceed] = useState(true)
@@ -43,13 +38,6 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
         setStep('pending')
         setTransactionErrorMsg('')
         const data = {
-            // "from": loginStore?.getProfilesId[loginStore.getSelectedAccount],
-            // "to": QR?.to,
-            // "from_is_consumer": loginStore.getSelectedAccount === 'consumer',
-            // "to_is_consumer": QR?.to_is_consumer,
-            // // "password": null,
-            // "amount": Amount,
-            // "roundup": 0,
             transaction_id: QR?.id,
             amount: Amount,
         }
@@ -100,26 +88,21 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
                     <Text style={styles.INPUT_LABEL_STYLE}>RETURN AMOUNT</Text>
                     <Text style={styles.INPUT_LABEL_ERROR}>{AmountError ? 'MAX. TOTAL TRANSACTION AMOUNT' : ''}</Text>
                 </View>
-                <View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
-                    {/* <Text style={styles.INPUT_LABEL_STYLE}> C$</Text> */}
-                    <TextInput
-                        placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-                        style={styles.INPUT_STYLE}
-                        keyboardType='numeric'
-                        onChangeText={t => {
-                            let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-                            temp = temp.replace(",", ".")
-                            // review max amount
-                            const maxAmount = QR?.amount || 0
-                            if (parseFloat(temp) > maxAmount) setAmountError(true)
-                            else setAmountError(false)
 
-                            setAmount(temp)
+                <View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+                    <Text style={[styles.INPUT_LABEL_STYLE, { fontSize: 15, marginLeft: 15 }]}> C$</Text>
+                    <CurrencyInput
+                        style={styles.INPUT_STYLE}
+                        value={Amount}
+                        precision={2}
+                        onChangeValue={t => {
+                            const maxAmount = QR?.amount || 0
+                            if (t > maxAmount) setAmountError(true)
+                            else setAmountError(false)
+                            setAmount(t)
                         }}
-                        value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
-                        placeholder={`Amount`}
                     />
-                </View>
+                </View>  
             </View>
             <Button
                 buttonStyle={{
@@ -188,7 +171,7 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
         else {
             setStep('scan')
             setQR(null)
-            setAmount('0')
+            setAmount(0)
             setLoading(false)
             setTransactionSucceed(true)
             setTransactionErrorMsg('')
