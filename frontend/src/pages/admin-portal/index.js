@@ -45,8 +45,6 @@ const AdminPortal = () => {
   const [showUserFormModal, setShowUserFormModal] = useState(false)
   const [showUserDeleteModal, setShowUserDeleteModal] = useState(false)
   const [showUserSendEmailModal, setShowSendEmailModal] = useState(false)
-  const [roles, setRoles] = useState([])
-  const [selectedGroup, setSelectedGroup] = useState(null)
   const [selectedItem, setSelectedItem] = useState(null)
   const [Checked, setChecked] = useState('')
 
@@ -148,11 +146,6 @@ const AdminPortal = () => {
     const user = {...item, group, role}
     setSelectedItem(user)
     setShowUserFormModal(true)
-    if (item.group_raw === 'BANK') {
-      setRoles(rolesBank)
-    } else {
-      setRoles(rolesManager)
-    }
   }
 
   const setDetailToShow = (item) => {
@@ -170,7 +163,6 @@ const AdminPortal = () => {
     setShowSendEmailModal(false)
     setShowUserDeleteModal(false)
     setSelectedItem(null)
-    setRoles([])
   }
 
   const confirmAction = () => {
@@ -184,7 +176,7 @@ const AdminPortal = () => {
       name: Yup.string().required(),
       email: Yup.string().email().required(),
       group: Yup.object().required(),
-      role: Yup.object().required(),
+      role: Yup.object().required().nullable(),
     })
 
   const initialValues = {
@@ -230,17 +222,6 @@ const AdminPortal = () => {
     },
     apply: () => getAdminUsers(Checked),
   }
-
-  useEffect(() => {
-    if (selectedGroup) {
-      if (selectedGroup.id === 'BANK') {
-        setRoles(rolesBank)
-      } else {
-        setRoles(rolesManager)
-      }
-    }
-
-  }, [selectedGroup])
 
   useEffect(() => {
     getAdminUsers("")
@@ -366,32 +347,46 @@ const AdminPortal = () => {
                         labelFieldName={"title"}
                         field={field}
                         setFieldValue={(field, value) => {
+                          setFieldValue('role', "")
                           setFieldValue(field, value)
                         }}
                         initialValue={initialValues.group}
                         touched={touched}
                         errors={errors}
                         label={"GROUP"}
-                        onChange={(e, val) => setSelectedGroup(val)}
                       />
                     )}
                   </Field>
                 </MDBox>
                 <MDBox sx={{width: "50%"}} ml={1}>
                   <Field name="role">
-                    {({field}) => (
-                      <AutocompleteFormik
-                        options={roles}
-                        labelFieldName={"title"}
-                        field={field}
-                        disabled={values.group === ''}
-                        setFieldValue={(field, value) => setFieldValue(field, value)}
-                        initialValue={initialValues.role}
-                        touched={touched}
-                        errors={errors}
-                        label={"ROLE"}
-                      />
-                    )}
+                    {({field}) => {
+
+                      let roles = []
+                      if (values?.group?.id === 'BANK') {
+                        roles = rolesBank
+                      } else if (values?.group?.id === 'MANAGER'){
+                        roles = rolesManager
+                      } else {
+                        roles = []
+                      }
+
+                      return (
+                        <AutocompleteFormik
+                          options={roles}
+                          labelFieldName={"title"}
+                          field={field}
+                          disabled={values.group === ''}
+                          setFieldValue={(field, value) => setFieldValue(field, value)}
+                          initialValue={values.role}
+                          defaultValue={values.role}
+                          value={values.role}
+                          touched={touched}
+                          errors={errors}
+                          label={"ROLE"}
+                        />
+                      )
+                    }}
                   </Field>
                 </MDBox>
               </MDBox>
