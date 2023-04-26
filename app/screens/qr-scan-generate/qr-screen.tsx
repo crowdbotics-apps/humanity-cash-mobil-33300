@@ -67,24 +67,6 @@ export const QRScreen = observer(function QRScreen(props: any) {
 
   const [AmountError, setAmountError] = useState(false)
 
-  const getBalanceData = () => {
-    loginStore.environment.api
-      .getBalanceData()
-      .then((result: any) => {
-        if (result.kind === "ok") {
-          runInAction(() => {
-            loginStore.setBalanceData(result.data)
-          })
-        } else if (result.kind === "bad-data") {
-          const key = Object.keys(result?.errors)[0]
-          const msg = `${key}: ${result?.errors?.[key][0]}`
-          notifyMessage(msg)
-        } else {
-          notifyMessage(null)
-        }
-      })
-  }
-
   const pressHandler = (round) => {
     if (loginStore.ProfileData.allow_touch_id) {
       TouchID.authenticate('tto check the user', optionalConfigObject)
@@ -276,7 +258,6 @@ export const QRScreen = observer(function QRScreen(props: any) {
       setStep('amount')
     }
   }
-
 
   const getBalanceData = () => {
     loginStore.environment.api
