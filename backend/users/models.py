@@ -57,6 +57,7 @@ class User(AbstractUser):
     google_token = models.TextField('Google Token', blank=True, null=True)
     phone_number = PhoneNumberField('Phone Number', max_length=50, null=True, blank=True)
     is_admin = models.BooleanField(default=False)
+    email = models.EmailField(_('email address'), blank=True, unique=True)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})
@@ -384,10 +385,7 @@ class UserDevice(models.Model):
         return "{} - {}".format(self.device_id, self.user.username)
 
 
-
 class Notification(models.Model):
-
-
 
     class Actions(models.IntegerChoices):
         READ = 10, 'Read notification'
@@ -397,8 +395,6 @@ class Notification(models.Model):
     class Types(models.IntegerChoices):
         ADMIN = 10, 'Notifications sent by the admin'
         TRANSACTION = 20, 'Notifications for transactions'
-
-
 
     target = models.ForeignKey(User, on_delete=models.CASCADE, related_name="notifications_to_user")
     from_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,

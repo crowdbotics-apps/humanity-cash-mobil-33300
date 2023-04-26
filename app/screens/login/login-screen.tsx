@@ -15,7 +15,8 @@ import { appleAuth } from '@invertase/react-native-apple-authentication'
 
 import { AccessToken, LoginManager } from 'react-native-fbsdk-next'
 
-import TouchID from 'react-native-touch-id'
+import { Field, FormikProvider, useFormik } from "formik"
+import * as Yup from "yup"
 
 export const LoginScreen = observer(function LoginScreen() {
   const navigation = useNavigation()
@@ -38,14 +39,36 @@ export const LoginScreen = observer(function LoginScreen() {
     if (isFocused) {
       setUsername('')
       setPass('')
+      formik.resetForm()
     }
   }, [isFocused])
 
-  const login = () => {
+  const initialValues = { email: "", password: "" }
+
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email("Please enter valid email")
+      .required("Email is required")
+      .label("Email"),
+    password: Yup.string()
+      .required("Password is required")
+      .label("Password"),
+  })
+
+  const formik = useFormik({
+    initialValues,
+    validateOnChange: false,
+    validationSchema,
+    onSubmit: (values) => login(values),
+  })
+
+  const login = (data = {}) => {
     setLoading(true)
     loginStore.environment.api
-      .login({ email: Username, password: Pass })
+      .login(data)
       .then((result: any) => {
+        console.log('{ email: Username, password: Pass } ', { email: Username, password: Pass })
+        console.log('result ', result)
         setLoading(false)
         if (result.kind === "ok") {
           runInAction(() => {
@@ -90,7 +113,10 @@ export const LoginScreen = observer(function LoginScreen() {
           loginStore.reset()
           notifyMessage(null)
         }
-      }).catch((err) => notifyMessage(getErrorMessage(err)))
+      }).catch((err) => {
+      notifyMessage(getErrorMessage(err))
+      console.log('err ', err)
+    })
   }
 
   const loginGoogle = async () => {
@@ -212,16 +238,6 @@ export const LoginScreen = observer(function LoginScreen() {
     passcodeFallback: false, // iOS - allows the device to fall back to using the passcode, if faceid/touch is not available. this does not mean that if touchid/faceid fails the first few times it will revert to passcode, rather that if the former are not enrolled, then it will use the passcode.
   };
 
-  const pressHandler = () => {
-    TouchID.authenticate('to check the user', optionalConfigObject)
-      .then(success => {
-        Alert.alert('Authenticated Successfully');
-      })
-      .catch(error => {
-        Alert.alert('Authentication Failed');
-      });
-  }
-
   const socialMediaLogin = <View style={styles.LOGIN_OPTIONS_CONTAINER}>
     <Text style={styles.LOGIN_TYPES_LABEL}>Or Log In using</Text>
     <View style={styles.STEP_CONTAINER}>
@@ -258,6 +274,8 @@ export const LoginScreen = observer(function LoginScreen() {
       style={styles.ROOT}
       showHeader
     >
+      <FormikProvider value={formik}>
+
       <TouchableOpacity
         onPress={() => navigation.navigate("splash")}
         style={styles.BACK_BUTON_CONTAINER}
@@ -271,6 +289,10 @@ export const LoginScreen = observer(function LoginScreen() {
             <Text style={styles.STEP_TITLE}>Log in</Text>
             <Text style={styles.STEP_SUB_TITLE}>{"Welcome back"}</Text>
           </View>
+
+
+            
+
           <TextInputComponent
             label='EMAIL ADDRESS OR USER NAME'
             errorLabel={UsernameError
@@ -279,16 +301,16 @@ export const LoginScreen = observer(function LoginScreen() {
                 : UsernameErrorMessage
               : ""}
             error={UsernameError}
-            onChangeText={t => setUsername(t)}
-            value={Username}
+            onChangeText={formik.handleChange('email')}
+            value={formik.values.email}
             placeholder={"EMAIL ADDRESS OR USER NAME"}
           />
           <TextInputComponent
             label='PASSWORD'
             errorLabel={PassError ? PassErrorMessage : ""}
             error={PassError}
-            onChangeText={t => setPass(t)}
-            value={Pass}
+            onChangeText={formik.handleChange('password')}
+            value={formik.values.password}
             placeholder={"*********"}
             secureTextEntry={HidePass}
             inputStyle={styles.PASS_INPUT_STYLE}
@@ -308,11 +330,31 @@ export const LoginScreen = observer(function LoginScreen() {
         buttonStyle={{
           backgroundColor: Loading ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green
         }}
-        onPress={() => login()}
+        // onPress={() => login()}
+        onPress={() => {
+          if (formik?.errors?.email) {
+            setUsernameError(true)
+            setUsernameErrorMessage(formik?.errors?.email)
+          } else {
+            setUsernameError(false)
+            setUsernameErrorMessage('')
+          }
+
+          if (formik?.errors?.password) {
+            setPassError(true)
+            setPassErrorMessage(formik?.errors?.password)
+          } else {
+            setPassError(false)
+            setPassErrorMessage('')
+          }
+          formik.handleSubmit()
+        }}
         buttonLabel={"Log in"}
         disabled={Loading}
         loading={Loading}
       />
+      
+      </FormikProvider>
     </Screen>
   )
 })

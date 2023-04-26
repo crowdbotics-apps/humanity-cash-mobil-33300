@@ -127,7 +127,7 @@ export const LoginStoreModel = types
       return {
         merchant: self.merchant_id,
         consumer: self.consumer_id,
-        cashier: self.consumer_id,
+        cashier: self.merchant_id,
       }
     },
     get getAllData() {

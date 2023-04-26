@@ -55,14 +55,15 @@ class TransactionMobileSerializer(serializers.Serializer):
             if obj.type == Transaction.Type.transfer:
                 counterpart = obj.profile if obj.counterpart_profile == self.main_profile else obj.counterpart_profile
 
-                return dict(
-                    profile_picture=counterpart.profile_picture.url if counterpart.profile_picture else None,
-                    name=counterpart.display_name,
-                    id=counterpart.id,
-                    merchant=counterpart.is_merchant,
-                )
-        else:
-            return None  # is ACHTransaction, or is blockchain transaction but is deposit / withdraw
+                if counterpart:
+                    return dict(
+                        profile_picture=counterpart.profile_picture.url if hasattr(counterpart,
+                                                                                   'profile_picture') and counterpart.profile_picture else None,
+                        name=counterpart.display_name,
+                        id=counterpart.id,
+                        merchant=counterpart.is_merchant,
+                    )
+        return None  # is ACHTransaction, or is blockchain transaction but is deposit / withdraw
 
     def get_credit(self, obj):
         return self.transaction_is_credit(obj)

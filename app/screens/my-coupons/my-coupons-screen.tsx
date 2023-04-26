@@ -11,6 +11,7 @@ import DatePicker from 'react-native-date-picker'
 import Entypo from "react-native-vector-icons/Entypo"
 import {runInAction} from "mobx"
 import {notifyMessage} from "../../utils/helpers"
+import moment from 'moment'
 
 export const MyCouponsScreen = observer(function MyCouponsScreen() {
 	const navigation = useNavigation()
@@ -189,15 +190,6 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 		  buttonAction={() => setCouponsModalConfig({showCouponModalInfo: false, couponSelected: null})}
 		/>
 
-	const dateFormat = (date) => {
-		let dateFormated = ''
-		if (date && date.split('-')) {
-			const t = date.split('-')
-			dateFormated = `${t[2]}/${t[1]}/${t[0]}`
-		}
-		return dateFormated
-	}
-
 	return (
 		<Screen
 			showHeader
@@ -257,7 +249,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 										<View style={styles.DATE_INFO_CONTAINER}>
 											<Text key={key + '_label'} style={styles.RETURNS_LABEL}>
 												{(i.start_date && i.end_date)
-													? `${dateFormat(i.start_date)} - ${dateFormat(i.end_date)}`
+													? `${moment(i.start_date).format('L')} - ${moment(i.end_date).format('L')}`
 													: '-'
 												}
 											</Text>

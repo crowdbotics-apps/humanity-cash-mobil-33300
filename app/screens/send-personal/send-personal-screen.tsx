@@ -11,6 +11,7 @@ import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import CurrencyInput from 'react-native-currency-input';
 
 const maxAmount = 2000
 
@@ -19,7 +20,7 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 	const rootStore = useStores()
 	const { loginStore } = rootStore
 	const [ButtonDisabled, setButtonDisabled] = useState(false)
-	const [Amount, setAmount] = useState('0')
+	const [Amount, setAmount] = useState(0)
 	const [ShowModal, setShowModal] = useState(false)
 	const [TransactionConfirm, setTransactionConfirm] = useState(false)
 	const [TransactionFinished, setTransactionFinished] = useState(false)
@@ -59,7 +60,8 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 				} else if (result.kind === "bad-data") {
 					setSucess(false)
 					setTransactionFinished(true)
-					const errors = result.errors
+					let errors = result.errors
+					if (Array.isArray(errors)) errors = errors[0]
 					notifyMessage(errors)
 				} else if (result.kind === "unauthorized") {
 					setSucess(false)
@@ -93,7 +95,8 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 				} else if (result.kind === "bad-data") {
 					setSucess(false)
 					setTransactionFinished(true)
-					const errors = result.errors
+					let errors = result.errors
+					if (Array.isArray(errors)) errors = errors[0]
 					notifyMessage(errors)
 				} else if (result.kind === "unauthorized") {
 					setSucess(false)
@@ -259,7 +262,9 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 	)
 
 	useEffect(() => {
-		setButtonDisabled(!(Number(Amount) > 0));
+		setButtonDisabled(!(Amount > 0) || Amount > maxAmount)
+		if (Amount > maxAmount) setAmountError(true)
+		else setAmountError(false)
 	}, [Amount]);
 
 	const renderSelect = () => <View style={styles.STEP_CONTAINER}>
@@ -292,22 +297,16 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 			<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 			<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
 		</View>
-		<View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
-			<TextInput
-				style={styles.INPUT_STYLE}
-				keyboardType='numeric'
-				onChangeText={t => {
-					let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-					temp = temp.replace(",", ".")
-					// review max amount
-					if (parseInt(temp) > maxAmount) setAmountError(true)
-					else setAmountError(false)
 
-					setAmount(temp)
-				}}
-				value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
-				placeholder={`Amount`}
-				placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+		<View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+			<Text style={[styles.INPUT_LABEL_STYLE, { fontSize: 15, marginLeft: 15 }]}> C$</Text>
+			<CurrencyInput
+				style={styles.INPUT_STYLE}
+				value={Amount}
+				precision={2}
+				delimiter=","
+          		separator="."
+				onChangeValue={t => setAmount(t)}
 			/>
 		</View>
 

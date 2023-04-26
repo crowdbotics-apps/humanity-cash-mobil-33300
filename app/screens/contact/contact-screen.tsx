@@ -103,22 +103,16 @@ export const ContactScreen = observer(function ContactScreen() {
   const getUsers = () => {
     loginStore.environment.api.getUsers().then((result: any) => {
       if (result.kind === "ok") {
-        runInAction(() => {
-          loginStore.setUsers(formatUsersData(result.data?.results))
-        })
+        runInAction(() => loginStore.setUsers(formatUsersData(result.data?.results)))
       } else if (result.kind === "bad-data") {
         const key = Object.keys(result?.errors)[0]
         const msg = `${key}: ${result?.errors?.[key][0]}`
         notifyMessage(msg)
-      } else {
-        notifyMessage(null)
-      }
+      } else notifyMessage(null)
     })
   }
 
-  const OnEmptyContactList = () => (
-    <View style={styles.EMPTY_CONTACTS}><Text>No contacts to show</Text></View> 
-  )
+  const OnEmptyContactList = () => <View style={styles.EMPTY_CONTACTS}><Text>No contacts to show</Text></View> 
 
   const peopleData = getDataFiltered(loginStore.getUsers.consumers, ["first_name", "last_name", "business_name"], Search);
   const businessData = getDataFiltered( loginStore.getUsers.merchants, ["first_name", "last_name", "business_name"], Search);
@@ -140,9 +134,7 @@ export const ContactScreen = observer(function ContactScreen() {
               <View style={styles.HEADER_ACTIONS}>
                 <TouchableOpacity style={styles.HEADER} onPress={() => navigation.navigate('home')}>
                   <Icon name={"arrow-back"} size={23} color={loginStore.getAccountColor} />
-                  <Text
-                    style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}
-                  >{` Home`}</Text>
+                  <Text style={[styles.BACK_BUTON_LABEL, { color: loginStore.getAccountColor }]}>{` Home`}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -164,9 +156,7 @@ export const ContactScreen = observer(function ContactScreen() {
                     />
                   </View>
                 </View>
-                <View
-                  style={{ width: METRICS.screenWidth * 0.95, alignSelf: "center", marginTop: 10 }}
-                >
+                <View style={{ width: METRICS.screenWidth * 0.95, alignSelf: "center", marginTop: 10 }}>
                   <Tab
                     value={TabIndex}
                     onChange={(e) => setTabIndex(e)}
@@ -203,9 +193,7 @@ export const ContactScreen = observer(function ContactScreen() {
         </View>
         {ShowIndex && (
           <Button
-            buttonStyle={{
-              backgroundColor: loginStore.getAccountColor,
-            }}
+            buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
             buttonLabelPre={
               <Icon
                 key={"button_adornment"}

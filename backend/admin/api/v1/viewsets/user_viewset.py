@@ -1,3 +1,5 @@
+import logging
+
 from allauth.account.forms import default_token_generator
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
@@ -19,6 +21,7 @@ from users import IsProgramManagerAdmin, IsProgramManagerSuperAdmin
 from home.helpers import may_fail
 
 User = get_user_model()
+logger = logging.getLogger('django')
 
 
 @api_view(['POST'])
@@ -72,6 +75,7 @@ def password_set(request):
     if user.check_password(password):
         return Response({"password": "The new password cannot be the same as the old one"}, status=status.HTTP_400_BAD_REQUEST)
     user.set_password(password)
+    logger.error(password)
     user.save()
     request.user = user
     return Response(status=status.HTTP_200_OK)
@@ -85,6 +89,7 @@ def password_reset_confirm(request):
     if serializer.is_valid(raise_exception=True):
         user = get_user_by_uidb64(serializer.data['uidb64'])
         user.set_password(serializer.data['new_password1'])
+        logger.error('password: %s', serializer.data['new_password1'])
         user.save()
     return Response(
         {'detail': 'Password has been reset with the new password.'},

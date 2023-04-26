@@ -2,24 +2,14 @@ import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, ConnectBankModal } from "../../components";
-import {
-	ActivityIndicator,
-	TextInput,
-	TouchableOpacity,
-	View,
-	Modal,
-	Platform,
-	KeyboardAvoidingView,
-	Alert
-} from "react-native";
-import { COLOR, IMAGES, METRICS } from "../../theme";
-import { ButtonIcon } from "../../components/button-icon/button-icon";
+import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, KeyboardAvoidingView, Alert } from "react-native";
+import { COLOR } from "../../theme";
 import styles from './load-wallet-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
-import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import CurrencyInput from 'react-native-currency-input'
 
 import TouchID from 'react-native-touch-id'
 
@@ -42,7 +32,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const { loginStore } = rootStore
 	const isFocused = useIsFocused();
 	const [ButtonDisabled, setButtonDisabled] = useState(false)
-	const [Amount, setAmount] = useState('0')
+	const [Amount, setAmount] = useState(0)
 	const [ShowModal, setShowModal] = useState(false)
 	const [TransactionConfirm, setTransactionConfirm] = useState(false)
 	const [TransactionFinished, setTransactionFinished] = useState(false)
@@ -92,14 +82,9 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 		loginStore.environment.api
 			.postDeposit(data)
 			.then((result: any) => {
-				console.log('result == ', result)
 				setTransactionFinished(true)
-				if (result.kind === "ok") {
-					setSucess(true)
-					// runInAction(() => {
-					// 	loginStore.setConsumerUser(result.data)
-					// })
-				} else if (result.kind === "bad-data") {
+				if (result.kind === "ok") setSucess(true)
+				else if (result.kind === "bad-data") {
 					setSucess(false)
 					const msg = result?.errors
 					setResponseMenssage(msg)
@@ -253,7 +238,9 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	)
 
 	useEffect(() => {
-		setButtonDisabled(!(Number(Amount) > 0));
+		setButtonDisabled(!(Amount > 0) || Amount > maxAmount)
+		if (Amount > maxAmount) setAmountError(true)
+		else setAmountError(false)
 	}, [Amount]);
 
 	return (
@@ -319,24 +306,19 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 						<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ 2,000</Text>
 					</View>
-					<View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
-						<TextInput
-							style={styles.INPUT_STYLE}
-							keyboardType='numeric'
-							onChangeText={t => {
-								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-								temp = temp.replace(",", ".")
-								// review max amount
-								if (parseFloat(temp) > maxAmount) setAmountError(true)
-								else setAmountError(false)
 
-								setAmount(temp)
-							}}
-							value={(Amount && Amount.split(' ')[0] === `C$ `) ? Amount : `C$ ` + Amount}
-							placeholder={`Amount`}
-							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+					<View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+						<Text style={[styles.INPUT_LABEL_STYLE, { fontSize: 15, marginLeft: 15 }]}> C$</Text>
+						<CurrencyInput
+							style={styles.INPUT_STYLE}
+							value={Amount}
+							precision={2}
+							delimiter=","
+          					separator="."
+							onChangeValue={t => setAmount(t)}
 						/>
 					</View>
+
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.COSTS_LABEL}>Total costs</Text>
 						<Text style={styles.COSTS_LABEL}>{`$ ${Amount}`}</Text>

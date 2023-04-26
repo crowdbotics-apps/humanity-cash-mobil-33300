@@ -10,6 +10,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers";
 import { profileTypes } from '../drawer/drawer-screen'
+import moment from 'moment'
 
 export const HomeScreen = observer(function HomeScreen() {
 	const [ShowConfirmLogoutModal, setShowConfirmLogoutModal] = useState(false);
@@ -221,16 +222,6 @@ export const HomeScreen = observer(function HomeScreen() {
 		</Modal>
 	)
 
-	const dateFormat = (date) => {
-		let dateFormated = ''
-		if (date && date.split('-') && date.split('T')) {
-			const d = date.split('T')
-			const t = d[0].split('-')
-			dateFormated = `${t[2]}/${t[1]}/${t[0]}`
-		}
-		return dateFormated
-	}
-
 	const renderNews = () =>
 		loginStore.getEvents.map((n, key) =>
 			<View key={key + '_new'} style={styles.NEWS_CONTAINER}>
@@ -239,8 +230,8 @@ export const HomeScreen = observer(function HomeScreen() {
 					<Text style={styles.NEWS_TAG}>{DateFormat(n.start_date)}</Text>
 				</View>
 				<View style={styles.DateStyle}>
-					<Text style={styles.MarginTextStyle}>From: {dateFormat(n.start_date)}</Text>
-					<Text style={styles.MarginTextStyle}>To: {dateFormat(n.end_date)}</Text>
+					<Text style={styles.MarginTextStyle}>From: {moment(n.start_date).format('L')}</Text>
+					<Text style={styles.MarginTextStyle}>To: {moment(n.end_date).format('L')}</Text>
 				</View>
 				<Text style={styles.NEWS_TITLE}>{n.title}</Text>
 				<Text style={styles.NEWS_BODY}>{n.description}</Text>

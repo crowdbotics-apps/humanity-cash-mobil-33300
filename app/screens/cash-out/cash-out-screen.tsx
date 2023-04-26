@@ -2,24 +2,14 @@ import { observer } from "mobx-react-lite";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Screen, Text, ConnectBankModal } from "../../components";
-import {
-	ActivityIndicator,
-	TextInput,
-	TouchableOpacity,
-	View,
-	Modal,
-	Platform,
-	KeyboardAvoidingView,
-	Alert
-} from "react-native";
-import { COLOR, IMAGES, METRICS } from "../../theme";
-import { ButtonIcon } from "../../components/button-icon/button-icon";
+import { ActivityIndicator, TextInput, TouchableOpacity, View, Modal, KeyboardAvoidingView, Alert } from "react-native";
+import { COLOR } from "../../theme";
 import styles from './cash-out-style';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models";
-import { runInAction } from "mobx"
 import { notifyMessage } from "../../utils/helpers"
 import Ionicons from "react-native-vector-icons/Ionicons"
+import CurrencyInput from 'react-native-currency-input'
 
 import TouchID from 'react-native-touch-id'
 
@@ -44,7 +34,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 	const { loginStore } = rootStore
 	const isFocused = useIsFocused();
 	const [CheckMaxAmount, setCheckMaxAmount] = useState(false)
-	const [Amount, setAmount] = useState('0')
+	const [Amount, setAmount] = useState(0)
 	const [Fee, setFee] = useState(0.50)
 	const [ShowModal, setShowModal] = useState(false)
 	const [AmountError, setAmountError] = useState(false)
@@ -99,12 +89,10 @@ export const CashOutScreen = observer(function CashOutScreen() {
 				setTransactionFinished(true)
 				if (result.kind === "ok") {
 					setSucess(true)
-					// runInAction(() => {
-					// 	loginStore.setConsumerUser(result.data)
-					// })
 				} else if (result.kind === "bad-data") {
 					setSucess(false)
-					const msg = result?.errors
+					let msg = result?.errors
+					if (Array.isArray(msg)) msg = msg[0]
 					setResponseMenssage(msg)
 					notifyMessage(msg)
 				} else {
@@ -283,36 +271,34 @@ export const CashOutScreen = observer(function CashOutScreen() {
 						{`Select the amount of Currents you would like to redeem to USD. You can only cash out when your balance is C$ 5.00 or less and you cannot exceed your balance. `}
 					</Text>
 
-
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.INPUT_LABEL_STYLE}>AMOUNT</Text>
 						{CheckMaxAmount &&
 							<Text style={styles.INPUT_LABEL_STYLE}>MAX. C$ {maxAmount}</Text>
 						}
 					</View>
+
 					<View style={AmountError ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
-						<TextInput
+						<Text style={[styles.INPUT_LABEL_STYLE, { fontSize: 15, marginLeft: 15 }]}> C$</Text>
+						<CurrencyInput
 							style={styles.INPUT_STYLE}
-							keyboardType='numeric'
-							onChangeText={t => {
-								let temp = t.replace('C', '').replace('$', '').replace(' ', '')
-								temp = temp.replace(",", ".")
-								// review max amount
-
-								if (CheckMaxAmount && parseInt(temp) > maxAmount) setAmountError(true)
-								else setAmountError(false)
+							value={Amount}
+							precision={2}
+							delimiter=","
+          					separator="."
+							onChangeValue={t => {
 								// calculate fee
-								const tempFee = (parseFloat(temp) * feePercentage) / 100
+								const tempFee = (t * feePercentage) / 100
 								if (tempFee > 0.50) setFee(tempFee)
-								else setFee(0.50)
+								
+								if ((CheckMaxAmount && t > maxAmount) || ((t - Fee) < 0) ) setAmountError(true)
+								else setAmountError(false)
 
-								setAmount(temp)
+								setAmount(t)
 							}}
-							value={(Amount && Amount.split(' ')[0] == `C$ `) ? Amount : `C$ ` + Amount}
-							placeholder={`Amount`}
-							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 						/>
 					</View>
+
 					<View style={styles.INPUT_LABEL_ERROR_STYLE_CONTAINER}>
 						<Text style={styles.INPUT_LABEL_ERROR}>{AmountError ? 'CANNOT EXCEED BALANCE AND/OR MAXIMUM CASHOUT' : ''}</Text>
 					</View>
@@ -323,7 +309,7 @@ export const CashOutScreen = observer(function CashOutScreen() {
 					</View>
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.COSTS_LABEL}>Net cash out</Text>
-						<Text style={styles.COSTS_LABEL}>{`$  ${parseFloat(Amount) > 0 ? (parseFloat(Amount) - Fee).toFixed(2) : 0}`}</Text>
+						<Text style={styles.COSTS_LABEL}>{`$  ${Amount > 0 ? (Amount - Fee).toFixed(2) : 0}`}</Text>
 					</View>
 
 				</View>

@@ -2,225 +2,226 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Humanity Cash</title>
-  <style>
-    @import url(http://fonts.googleapis.com/css?family=Roboto);
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Humanity Cash</title>
+    <style>
+        @import url(http://fonts.googleapis.com/css?family=Roboto);
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    body {
-      align-items: center;
-      background-color: black;
-      display: flex;
-      font-family: Roboto, Arial, sans-serif;
-      height: 100vh;
-      justify-content: center;
-    }
+        body {
+            align-items: center;
+            background-color: black;
+            display: flex;
+            font-family: Roboto, Arial, sans-serif;
+            height: 100vh;
+            justify-content: center;
+        }
 
-    .main_content {
-      background-color: white;
-      height: 90%;
-      width: 70%;
-    }
+        .main_content {
+            background-color: white;
+            height: 90%;
+            width: 70%;
+        }
 
-    .table_content {
-      overflow-x: auto;
-      margin-left: 20px;
-      margin-right: 20px;
-    }
+        .table_content {
+            overflow-x: auto;
+            margin-left: 20px;
+            margin-right: 20px;
+        }
 
-    header {
-      align-items: center;
-      background-color: #3b88b6;
-      display: flex;
-      justify-content: flex-start;
-      height: 15%;
-      padding-left: 5%;
-      width: 100%;
-    }
+        header {
+            align-items: center;
+            background-color: #3b88b6;
+            display: flex;
+            justify-content: flex-start;
+            height: 15%;
+            padding-left: 5%;
+            width: 100%;
+        }
 
-    .logo {
-      width: 10rem;
-      height: 10rem;
-    }
+        .logo {
+            width: 10rem;
+            height: 10rem;
+        }
 
-    .message_section {
-      padding: 5% 7% 2% 7%;
-      font-size: 1rem;
-    }
+        .message_section {
+            padding: 5% 7% 2% 7%;
+            font-size: 1rem;
+        }
 
-    h3 {
-      color: #3b88b6;
-      font-weight: bold;
-    }
+        h3 {
+            color: #3b88b6;
+            font-weight: bold;
+        }
 
-    .message {
-      padding-top: 3%;
-    }
+        .message {
+            padding-top: 3%;
+        }
 
-    .qr_container {
-      display: flex;
-      justify-content: center;
-      margin-top: 5%;
-    }
+        .qr_container {
+            display: flex;
+            justify-content: center;
+            margin-top: 5%;
+        }
 
-    .qr {
-      width: 20rem;
-      height: 20rem;
-    }
+        .qr {
+            width: 20rem;
+            height: 20rem;
+        }
 
-    table {
+        table {
 
-      width: 100%;
-      margin-top: 3%;
-    }
+            width: 100%;
+            margin-top: 3%;
+        }
 
-    .fields_header {
-      align-items: center;
-      display: flex;
-      grid-template-columns: repeat(5, 2fr) 1fr 1.5fr 1fr 1.5fr;
-      justify-content: center;
-      margin: 0 2%;
-      padding: 0 2%;
+        .fields_header {
+            align-items: center;
+            display: flex;
+            grid-template-columns: repeat(5, 2fr) 1fr 1.5fr 1fr 1.5fr;
+            justify-content: center;
+            margin: 0 2%;
+            padding: 0 2%;
 
-      border-bottom: 2px solid #9a7a65;
-      grid-template-columns: repeat(5, 2fr) 1fr 1.5fr 1fr 1.5fr;
-      word-break: break-all;
-      grid-template-rows: auto;
-      align-items: baseline;
-      word-wrap: break-word;
-      margin-bottom: 1px;
-    }
+            border-bottom: 2px solid #9a7a65;
+            grid-template-columns: repeat(5, 2fr) 1fr 1.5fr 1fr 1.5fr;
+            word-break: break-all;
+            grid-template-rows: auto;
+            align-items: baseline;
+            word-wrap: break-word;
+            margin-bottom: 1px;
+        }
 
-    .fields {
-      align-items: center;
-      display: flex;
-      grid-template-columns: repeat(5, 2fr) 1fr 1.5fr 1fr 1.5fr;
-      justify-content: center;
-      margin: 0 2%;
-      padding: 0 2%;
-    }
+        .fields {
+            align-items: center;
+            display: flex;
+            grid-template-columns: repeat(5, 2fr) 1fr 1.5fr 1fr 1.5fr;
+            justify-content: center;
+            margin: 0 2%;
+            padding: 0 2%;
+        }
 
-    .field {
-      align-items: center;
-      color: #7a7a7a;
-      font-size: 0.75rem;
-      height: fit-content;
-      text-align: start;
-      flex-wrap: wrap;
-      width: 150px;
-      min-width: 150px;
-      font-weight: 900;
-      margin-bottom: 10px;
-      
-      margin-top: 3px;
-    }
+        .field {
+            align-items: center;
+            color: #7a7a7a;
+            font-size: 0.75rem;
+            height: fit-content;
+            text-align: start;
+            flex-wrap: wrap;
+            width: 150px;
+            min-width: 150px;
+            font-weight: 900;
+            margin-bottom: 10px;
 
-    .fields_text {
-      border-bottom: 1px solid #e5c1a9;
-      grid-template-columns: repeat(5, 2fr) 1fr 1.5fr 1fr 1.5fr;
-      word-break: break-all;
-      grid-template-rows: auto;
-      align-items: baseline;
-      word-wrap: break-word;
-    }
+            margin-top: 3px;
+        }
 
-    .field_text {
-      align-items: center;
-      color: #5397bf;
-      font-size: 0.75rem;
-      height: fit-content;
-      text-align: start;
-      flex-wrap: wrap;
-      cursor: pointer;
-      width: 150px;
-      min-width: 150px;
+        .fields_text {
+            border-bottom: 1px solid #e5c1a9;
+            grid-template-columns: repeat(5, 2fr) 1fr 1.5fr 1fr 1.5fr;
+            word-break: break-all;
+            grid-template-rows: auto;
+            align-items: baseline;
+            word-wrap: break-word;
+        }
 
-      
-      margin-top: 3px;
-      /* max-width: 90%; */
-
-    }
+        .field_text {
+            align-items: center;
+            color: #5397bf;
+            font-size: 0.75rem;
+            height: fit-content;
+            text-align: start;
+            flex-wrap: wrap;
+            cursor: pointer;
+            width: 150px;
+            min-width: 150px;
 
 
-    .field_text_info {
-      cursor: text;
-      color: black;
-      font-weight: bolder;
-    }
+            margin-top: 3px;
+            /* max-width: 90%; */
 
-    .field_text_info_date {
-      font-size: 0.7rem;
+        }
 
-    }
 
-    .field_text_info_hour {
-      color: #797979;
-      font-size: 0.6rem;
-      padding-top: 10%;
-      font-weight: bolder;
-    }
-  </style>
+        .field_text_info {
+            cursor: text;
+            color: black;
+            font-weight: bolder;
+        }
+
+        .field_text_info_date {
+            font-size: 0.7rem;
+
+        }
+
+        .field_text_info_hour {
+            color: #797979;
+            font-size: 0.6rem;
+            padding-top: 10%;
+            font-weight: bolder;
+        }
+    </style>
 </head>
 
 <body>
-  <main class="main_content">
+<main class="main_content">
     <header>
-      <img src="https://humanity-cash-mobil-33300.botics.co/static/media/logo.5cc67da0625287621410.png"
-        alt="humanity_logo">
+        <img src="https://humanity-cash-mobil-33300.botics.co/static/media/logo.5cc67da0625287621410.png"
+             alt="humanity_logo">
     </header>
     <section class="message_section">
-      <h3>Hi {{ username }}</h3>
-      <div class="message">
-        {{ message }}
-      </div>
+        <h3>Hi {{ username }}</h3>
+        <div class="message">
+            {{ message }}
+        </div>
     </section>
     <div class="table_content">
-      <table>
-        <tr class="fields_header">
-          <th class="field">HASH</th>
-          <th class="field">FROM</th>
-          <th class="field">TO</th>
-          <th class="field">FROM ADDRESS</th>
-          <th class="field">TO ADDRESS</th>
-          <th class="field">TYPE</th>
-          <th class="field">CREATED AT</th>
-          <th class="field">AMOUNT</th>
-          <th class="field block">BLOCKS CONFIRMED</th>
-        </tr>
-        {% for transaction in transactions %}
-        <tr class="fields fields_text">
-          <td class="field_text">{{ transaction.transaction_id }}</td>
-          <td class="field_text">{{ transaction.profile.crypto_wallet_id }}</td>
-          <td class="field_text">{{ transaction.counterpart_profile.crypto_wallet_id }}</td>
-          <td class="field_text">{{ transaction.profile.crypto_wallet_address }}</td>
-          <td class="field_text">{{ transaction.counterpart_profile.crypto_wallet_address }}</td>
-          <td class="field_text">{{ transaction.type }}</td>
-          <td class="field_text field_text_info">
-            <div>
-              <p class="field_text_info_date">
-                {{ transaction.created|date:'d-m-y' }}
-              </p>
+        <table>
+            <tr class="fields_header">
+                <th class="field">HASH</th>
+                <th class="field">FROM</th>
+                <th class="field">TO</th>
+                <th class="field">FROM ADDRESS</th>
+                <th class="field">TO ADDRESS</th>
+                <th class="field">TYPE</th>
+                <th class="field">CREATED AT</th>
+                <th class="field">AMOUNT</th>
+                <th class="field block">BLOCKS CONFIRMED</th>
+            </tr>
+            {% for transaction in transactions %}
+                <tr class="fields fields_text">
+                    <td class="field_text">{{ transaction.transaction_id }}</td>
+                    <td class="field_text">{{ transaction.from_name }}</td>
+                    <td class="field_text">{{ transaction.to_name }}</td>
+                    <td class="field_text">{{ transaction.profile.crypto_wallet_address }}</td>
+                    <td class="field_text">{{ transaction.counterpart_profile.crypto_wallet_address }}</td>
+                    <td class="field_text">{{ transaction.type }}</td>
+                    <td class="field_text field_text_info">
+                        <div>
+                            <p class="field_text_info_date">
+                                {{ transaction.created|date:'d-m-y' }}
+                            </p>
 
-              <p class="field_text_info_hour">
-                {{ transaction.created|date:'h:i a' }}
-              </p>
-            </div>
-          </td>
-          <td class="field_text field_text_info">{{ transaction.amount|default_if_none:"" }}</td>
-          <td class="field_text field_text_info">{{ transaction.type }}</td>
-        </tr>
-        {% endfor %}
-      </table>
+                            <p class="field_text_info_hour">
+                                {{ transaction.created|date:'h:i a' }}
+                            </p>
+                        </div>
+                    </td>
+                    {#          <td class="field_text field_text_info">{{ transaction.amount|default_if_none:"" }}</td>#}
+                    <td class="field_text field_text_info">{{ transaction.amount_format }}</td>
+                    <td class="field_text field_text_info">{{ transaction.type }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
-  </main>
+</main>
 </body>
 
 </html>

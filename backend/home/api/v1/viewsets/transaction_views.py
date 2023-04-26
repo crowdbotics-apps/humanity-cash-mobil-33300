@@ -283,7 +283,7 @@ def create_ach_transaction(dwolla_trn, withdraw, profile, bank_account, transact
 
 
 class SendReportView(AuthenticatedAPIView):
-
+    @may_fail(Merchant.DoesNotExist, 'INVALID REQUEST')
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
@@ -301,11 +301,22 @@ class SendReportView(AuthenticatedAPIView):
                 day=data['end_date'].day,
             )
             user = self.request.user
+
+            profile = Merchant.objects.get(user=user)
+
             transactions = Transaction.objects.filter(Q(counterpart_merchant__user=user) | Q(merchant__user=user))
             transactions = transactions.filter(
                 created__lte=end_date,
                 created__gte=start_date
             )
+            for transaction in transactions:
+                transaction.to_name = transaction.counterpart_profile.display_name
+                transaction.from_name = transaction.profile.display_name
+                if transaction.transaction_is_credit(profile):
+                    transaction.amount_format = 'C$ +' + str(transaction.amount)
+                else:
+                    transaction.amount_format = 'C$ -' + str(transaction.amount)
+
             send_email_with_template(
                 subject='Humanity Cash Transaction Report',
                 email=user.email,

@@ -51,7 +51,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 
 	const getTransactions = () => {
 		loginStore.environment.api
-			.getMobileTransactions({ selected_account: loginStore.selected_account })
+			.getMobileTransactions({ selected_account: 'merchant' })
 			.then((result: any) => {
 				setRefreshing(false)
 				if (result.kind === "ok") {
@@ -81,7 +81,7 @@ export const CashierTransactionScreen = observer(function CashierTransactionScre
 	const getFormatedTransactions = () => {
 		let data: any = {}
 		TransactionData.map(r => {
-			const date = r.created.split('T')[0]
+			const date = moment(r.created.split('T')[0]).format('L')
 			if (data[date]) {
 				data[date].data.push(r)
 			} else {

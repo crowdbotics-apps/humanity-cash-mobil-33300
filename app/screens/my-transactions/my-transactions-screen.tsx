@@ -58,6 +58,29 @@ export const MyTransactionsScreen = observer(function MyTransactionsScreen() {
 		}
 	}, [isFocused])
 
+	useEffect(() => {
+		if (DetailModalVisible && ReturnQR) {
+			const intervalId = setInterval(() => {
+				loginStore.environment.api
+					.getBalanceData()
+					.then((result: any) => {
+						if (result.kind === "ok") {
+							const currentBalance = loginStore?.balance?.[loginStore.getSelectedAccount] || 0
+							const newBalance = result.data?.[loginStore.getSelectedAccount] || 0
+							if (currentBalance !== newBalance) {
+								setDetailModalVisible(false)
+								setReturnQR(false)
+								loginStore.setBalanceData(result.data)
+								getTransactions()
+								notifyMessage('You receive a transaction')
+							}
+						}
+					})
+			}, 5000)
+			return () => clearInterval(intervalId); 
+		}
+	  }, [DetailModalVisible, ReturnQR])
+
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 		getTransactions()
