@@ -39,10 +39,11 @@ export const LoginScreen = observer(function LoginScreen() {
     if (isFocused) {
       setUsername('')
       setPass('')
+      formik.resetForm()
     }
   }, [isFocused])
 
-  const initialValues: LoginInitialValues = { email: "", password: "" }
+  const initialValues = { email: "", password: "" }
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -61,7 +62,7 @@ export const LoginScreen = observer(function LoginScreen() {
     onSubmit: (values) => login(values),
   })
 
-  const login = (data:any = {}) => {
+  const login = (data = {}) => {
     setLoading(true)
     loginStore.environment.api
       .login(data)
@@ -346,7 +347,7 @@ export const LoginScreen = observer(function LoginScreen() {
             setPassError(false)
             setPassErrorMessage('')
           }
-          formik.handleSubmit(formik.values)
+          formik.handleSubmit()
         }}
         buttonLabel={"Log in"}
         disabled={Loading}

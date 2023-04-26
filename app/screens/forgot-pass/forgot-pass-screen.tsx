@@ -9,18 +9,10 @@ import { COLOR, IMAGES } from "../../theme"
 import { useNavigation, useIsFocused } from "@react-navigation/native"
 import { useStores } from "../../models"
 import { runInAction } from "mobx"
-import { getErrorMessage, notifyMessage } from "../../utils/helpers"
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin'
-import {
-  appleAuth
-} from '@invertase/react-native-apple-authentication'
+import { notifyMessage } from "../../utils/helpers"
 
-import { AccessToken, LoginManager } from 'react-native-fbsdk-next'
-
-import TouchID from 'react-native-touch-id'
+import { FormikProvider, useFormik } from "formik"
+import * as Yup from "yup"
 
 export const ForgotPassScreen = observer(function ForgotPassScreen() {
   const navigation = useNavigation()
@@ -33,12 +25,12 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
 
   const [Username, setUsername] = useState("")
 
-  const [Pass, setPass] = useState("")
-  const [PassConfirm, setPassConfirm] = useState("")
+  // const [Pass, setPass] = useState("")
+  // const [PassConfirm, setPassConfirm] = useState("")
   const [HidePass, setHidePass] = useState(true)
   const [HidePassConfirm, setHidePassConfirm] = useState(true)
   const [MatchPassword, setMatchPassword] = useState(true)
-  const [PasswordError, setPasswordError] = useState(true)
+  const [PasswordError, setPasswordError] = useState(false)
   const [PasswordErrorMessage, setPasswordErrorMessage] = useState('')
   const [Token, setToken] = useState('')
 
@@ -58,12 +50,12 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
 		if (!isFocused) {
       setStep("email")
       setUsername("")
-      setPass("")
-      setPassConfirm("")
+      // setPass("")
+      // setPassConfirm("")
       setHidePass(true)
       setHidePassConfirm(true)
       setMatchPassword(true)
-      setPasswordError(true)
+      setPasswordError(false)
       setPasswordErrorMessage('')
       setToken('')
       setCode1("")
@@ -75,13 +67,31 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
       setLoading(false)
       setUsernameError(false)
       setUsernameErrorMessage("")
+      formik.resetForm()
 		}
 	}, [isFocused])
+
+
+  const initialValues = { password: "", password_confirm: "" }
+
+  const validationSchema = Yup.object().shape({
+    password: Yup.string()
+      .required("Password is required"),
+      password_confirm: Yup.string()
+      .required("Password confirmation is required"),
+  })
+
+  const formik = useFormik({
+    initialValues,
+    validateOnChange: false,
+    validationSchema,
+    onSubmit: (values) => setPassword(values),
+  })
+
 
   const sendVerificationCode = () => {
     setLoading(true)
     loginStore.environment.api.forgotPassword({ email: Username }).then(result => {
-      console.log('result  ', result)
       setUsernameError(false)
       setLoading(false)
       if (result.kind === "ok") {
@@ -97,18 +107,18 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
     })
   }
 
-  const setPassword = () => {
-    if (!Pass) {
-      notifyMessage("Password can't be blank")
-      return
-    }
-    if (Pass !== PassConfirm) {
-      notifyMessage("Password don't match")
-      return
-    }
+  const setPassword = (data) => {
+    // if (!Pass) {
+    //   notifyMessage("Password can't be blank")
+    //   return
+    // }
+    // if (Pass !== PassConfirm) {
+    //   notifyMessage("Password don't match")
+    //   return
+    // }
     setLoading(true)
     loginStore.environment.api
-      .passwordSet({ password: Pass, password_confirm: PassConfirm, token: Token, email: Username })
+      .passwordSet({ ...data, token: Token, email: Username })
       .then(result => {
         setLoading(false)
         if (result.kind === "ok") {
@@ -140,7 +150,6 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
           setCode4("")
           setCode5("")
           setCode6("")
-          notifyMessage("Email verified", "success")
           setToken(result.response.token)
           setStep("new_pass")
         } else if (result.kind === "bad-data") {
@@ -255,53 +264,58 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
       <Text style={styles.STEP_SUB_TITLE}>
         {"Create a password to secure your account."}
       </Text>
+        <FormikProvider value={formik}>
 
-      <View style={styles.PASS_REQUIREMENTS_CONTAINER}>
-        <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
-        <Text style={styles.PASS_REQUIREMENTS}>
-          AT LEAST 12 CHARACTERS LONG, 1 NUMBER AND 1 SYMBOL
-        </Text>
+          <View style={styles.PASS_REQUIREMENTS_CONTAINER}>
+            <Text style={styles.INPUT_LABEL_STYLE}>PASSWORD</Text>
+            <Text style={styles.PASS_REQUIREMENTS}>
+              AT LEAST 12 CHARACTERS LONG, 1 NUMBER AND 1 SYMBOL
+            </Text>
+          </View>
+          {/* green */}
+          <View style={(!MatchPassword || PasswordError) ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+            <TextInput
+              style={styles.PASS_INPUT_STYLE}
+              // onChangeText={t => [setPass(t)]}
+              // value={Pass}
+              onChangeText={formik.handleChange('password')}
+              value={formik.values.password}
+              secureTextEntry={HidePass}
+              placeholder={"*********"}
+              placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+            />
+            <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
+              <Ionicons name="eye" color={"#39534440"} size={20} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
+            <Text style={styles.INPUT_LABEL_STYLE}>CONFIRM PASSWORD</Text>
+            <Text style={styles.INPUT_LABEL_ERROR}>
+              {!MatchPassword
+                ? "NO MATCH"
+                : PasswordError
+                  ? PasswordErrorMessage
+                  : ""
+              }
+            </Text>
+          </View>
+          <View style={(!MatchPassword || PasswordError) ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
+            <TextInput
+              style={styles.PASS_INPUT_STYLE}
+              // onChangeText={t => [setPassConfirm(t)]}
+              // value={PassConfirm}
+              onChangeText={formik.handleChange('password_confirm')}
+              value={formik.values.password_confirm}
+              placeholder={"*********"}
+              secureTextEntry={HidePassConfirm}
+              placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
+            />
+            <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePassConfirm(!HidePassConfirm)}>
+              <Ionicons name="eye" color={"#39534440"} size={20} />
+            </TouchableOpacity>
+          </View>
+        </FormikProvider>
       </View>
-      {/* green */}
-
-      <View style={styles.INPUT_STYLE_CONTAINER}>
-        <TextInput
-          style={styles.PASS_INPUT_STYLE}
-          onChangeText={t => [setPass(t)]}
-          value={Pass}
-          secureTextEntry={HidePass}
-          placeholder={"*********"}
-          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-        />
-        <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePass(!HidePass)}>
-          <Ionicons name="eye" color={"#39534440"} size={20} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-        <Text style={styles.INPUT_LABEL_STYLE}>CONFIRM PASSWORD</Text>
-        <Text style={styles.INPUT_LABEL_ERROR}>
-          {!MatchPassword
-            ? "NO MATCH"
-            : PasswordError
-              ? PasswordErrorMessage
-              : ""
-          }
-        </Text>
-      </View>
-      <View style={(!MatchPassword || PasswordError) ? styles.INPUT_STYLE_CONTAINER_ERROR : styles.INPUT_STYLE_CONTAINER}>
-        <TextInput
-          style={styles.PASS_INPUT_STYLE}
-          onChangeText={t => [setPassConfirm(t)]}
-          value={PassConfirm}
-          placeholder={"*********"}
-          secureTextEntry={HidePassConfirm}
-          placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
-        />
-        <TouchableOpacity style={styles.SHOW_PASS_CONTAINER} onPress={() => setHidePassConfirm(!HidePassConfirm)}>
-          <Ionicons name="eye" color={"#39534440"} size={20} />
-        </TouchableOpacity>
-      </View>
-    </View>
     }
 
     if (Step === 'sucess') {
@@ -334,10 +348,19 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
     if (Step === 'new_pass') {
       setPasswordError(false)
       setPasswordErrorMessage('')
-      if (Pass !== PassConfirm) {
+
+      if (formik?.errors?.password) {
+        setPasswordError(true)
+        setPasswordErrorMessage(formik?.errors?.password)
+      } else {
+        setPasswordError(false)
+        setPasswordErrorMessage('')
+      }
+
+      if (formik?.values.password !== formik?.values.password_confirm) {
         setMatchPassword(false)
       } else {
-        setPassword()
+        formik.handleSubmit()
         setMatchPassword(true)
       }
     }
@@ -351,15 +374,13 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
       showHeader
     >
       <View style={styles.HEADER_ACTIONS}>
-
         {Step !== "code"
-            ? <View style={styles.BACK_BUTON_CONTAINER} />
-            : <TouchableOpacity onPress={() => setStep('email')} style={styles.BACK_BUTON_CONTAINER}>
-              <Icon name={"arrow-back"} size={23} color={'black'} />
-              <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
-            </TouchableOpacity>
+          ? <View style={styles.BACK_BUTON_CONTAINER} />
+          : <TouchableOpacity onPress={() => setStep('email')} style={styles.BACK_BUTON_CONTAINER}>
+            <Icon name={"arrow-back"} size={23} color={'black'} />
+            <Text style={styles.BACK_BUTON_LABEL}>{` Back`}</Text>
+          </TouchableOpacity>
         }
-
         {Step !== "code"
           // @ts-ignore
           ? <TouchableOpacity onPress={() => navigation.navigate('login')} style={styles.BACK_BUTON_CONTAINER}>
@@ -373,21 +394,16 @@ export const ForgotPassScreen = observer(function ForgotPassScreen() {
 
       <ScrollView bounces={false}>
         {renderStep()}
-
       </ScrollView>
-
-        { Step === "code" && (
-            <View style={styles.NEED_HELP_CONTAINER}>
-              <Text onPress={() => sendVerificationCode()} style={styles.NEED_HELP_LINK}>
-                Send code again
-              </Text>
-            </View>
-        )}
-
+      {Step === "code" && (
+        <View style={styles.NEED_HELP_CONTAINER}>
+          <Text onPress={() => sendVerificationCode()} style={styles.NEED_HELP_LINK}>
+            Send code again
+          </Text>
+        </View>
+      )}
       <Button
-        buttonStyle={{
-          backgroundColor: Loading ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green
-        }}
+        buttonStyle={{ backgroundColor: Loading ? `${COLOR.PALETTE.green}40` : COLOR.PALETTE.green }}
         onPress={() => NextButtonHandler()}
         buttonLabel={"Next"}
         disabled={Loading}
