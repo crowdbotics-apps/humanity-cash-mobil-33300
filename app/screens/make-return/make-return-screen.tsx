@@ -95,6 +95,8 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
                         style={styles.INPUT_STYLE}
                         value={Amount}
                         precision={2}
+                        delimiter=","
+                        separator="."
                         onChangeValue={t => {
                             const maxAmount = QR?.amount || 0
                             if (t > maxAmount) setAmountError(true)

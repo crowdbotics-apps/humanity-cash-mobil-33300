@@ -342,6 +342,8 @@ export const QRScreen = observer(function QRScreen(props: any) {
           style={styles.INPUT_STYLE}
           value={Amount}
           precision={2}
+          delimiter=","
+          separator="."
           onChangeValue={t => {
             if (t > maxAmount) setAmountError(true)
             else setAmountError(false)
@@ -403,6 +405,8 @@ export const QRScreen = observer(function QRScreen(props: any) {
           style={styles.INPUT_STYLE}
           value={Amount}
           precision={2}
+          delimiter=","
+          separator="."
           onChangeValue={t => {
             if (t > maxAmount) setAmountError(true)
             else setAmountError(false)

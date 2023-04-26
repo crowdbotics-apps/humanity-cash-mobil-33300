@@ -57,6 +57,7 @@ class User(AbstractUser):
     google_token = models.TextField('Google Token', blank=True, null=True)
     phone_number = PhoneNumberField('Phone Number', max_length=50, null=True, blank=True)
     is_admin = models.BooleanField(default=False)
+    email = models.EmailField(_('email address'), blank=True, unique=True)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})

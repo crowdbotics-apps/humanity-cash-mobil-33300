@@ -304,6 +304,8 @@ export const SendPersonalScreen = observer(function SendPersonalScreen() {
 				style={styles.INPUT_STYLE}
 				value={Amount}
 				precision={2}
+				delimiter=","
+          		separator="."
 				onChangeValue={t => setAmount(t)}
 			/>
 		</View>

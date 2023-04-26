@@ -33,8 +33,8 @@ export default StyleSheet.create({
   DETAIL_LINKS: {
     alignItems: 'center',
     flexDirection: 'row',
-    minHeight: 80,
     marginBottom: 10,
+    minHeight: 80,
     width: METRICS.screenWidth * 0.80,
   },
   DISTANCES_CONTAINER: {
@@ -172,12 +172,14 @@ export default StyleSheet.create({
   },
   SEE_ON_MAP_LABEL: {
     color: COLOR.PALETTE.blue,
-    flex: 1,
     fontSize: 16,
-    height: 110,
-    justifyContent: 'space-evenly',
-
+    marginVertical: 2,
     textAlign: 'right',
+  },
+  SEE_ON_MAP_LABEL_CONTAINER: {
+    flex: 1,
+    justifyContent: 'space-evenly',
+    maxHeight: 110,
   },
   STEP_SUB_TITLE: {
     color: COLOR.PALETTE.black,

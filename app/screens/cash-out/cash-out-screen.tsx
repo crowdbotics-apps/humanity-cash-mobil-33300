@@ -284,6 +284,8 @@ export const CashOutScreen = observer(function CashOutScreen() {
 							style={styles.INPUT_STYLE}
 							value={Amount}
 							precision={2}
+							delimiter=","
+          					separator="."
 							onChangeValue={t => {
 								// calculate fee
 								const tempFee = (t * feePercentage) / 100

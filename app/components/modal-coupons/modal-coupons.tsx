@@ -3,7 +3,8 @@ import {Text, View, Modal, TouchableOpacity, ViewStyle, TextStyle, Pressable} fr
 import {useStores} from "../../models";
 import { addConsumerCoupon, deleteConsumerCoupon } from '../../utils/coupons';
 import Icon from "react-native-vector-icons/MaterialIcons";
-import styles from "../connect-bank-modal/styles";
+import styles from "../connect-bank-modal/styles"
+import moment from 'moment'
 
 type ConnectBankModalProps = {
     visible?: boolean,
@@ -75,15 +76,6 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
         .then(() => [setLoading(false), props.setCouponsConfig({...props.couponsConfig, ShowConfirmCoupon: !props.visible})])
     }
 
-    const dateFormat = (date) => {
-        let dateFormated = ''
-        if (date && date.split('-')) {
-            const t = date.split('-')
-            dateFormated = `${t[2]}/${t[1]}/${t[0]}`
-        }
-        return dateFormated
-    }
-
     return (
         <Modal
           visible
@@ -98,8 +90,8 @@ export function ConfirmCouponModal(props: ConnectBankModalProps) {
                 <View style={ContainerStyle}>
                     <Pressable style={[styles.MODAL_CONTENT, ContentStyle]} onPress={() => ''}>
                         <View style={DateStyle}>
-                            <Text style={MarginTextStyle}>Valid from: {dateFormat(couponSelected?.start_date)}</Text>
-                            <Text style={MarginTextStyle}>To: {dateFormat(couponSelected?.end_date)}</Text>
+                            <Text style={MarginTextStyle}>Valid from: {moment(couponSelected?.start_date).format('L')}</Text>
+                            <Text style={MarginTextStyle}>To: {moment(couponSelected?.end_date).format('L')}</Text>
                         </View>
                         <Text style={TitleStyle}>{couponSelected?.title}</Text>
                         <Text style={MarginTextStyle}>Business Name: {couponSelected?.merchant?.business_name}</Text>

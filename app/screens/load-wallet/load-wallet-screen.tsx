@@ -313,6 +313,8 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 							style={styles.INPUT_STYLE}
 							value={Amount}
 							precision={2}
+							delimiter=","
+          					separator="."
 							onChangeValue={t => setAmount(t)}
 						/>
 					</View>
