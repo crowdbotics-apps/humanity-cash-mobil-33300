@@ -44,6 +44,7 @@
     "expo": "~44.0.6",
     "expo-localization": "12.0.1",
     "expo-modules-core": "^0.6.5",
+    "formik": "^2.2.9",
     "i18n-js": "3.8.0",
     "mobx": "6.1.8",
     "mobx-react-lite": "3.2.0",
@@ -74,7 +75,8 @@
     "react-native-touch-id": "^4.4.1",
     "react-native-vector-icons": "^9.1.0",
     "react-native-webview": "^11.23.1",
-    "validate.js": "0.13.1"
+    "validate.js": "0.13.1",
+    "yup": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
