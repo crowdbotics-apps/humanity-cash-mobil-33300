@@ -27,7 +27,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { IMAGES, METRICS, COLOR } from "../../theme"
 import Entypo from "react-native-vector-icons/Entypo"
 import { useStores } from "../../models"
-import {Masks} from "react-native-mask-input";
+import { Masks } from "react-native-mask-input";
 import { getErrorMessage, getImageFileFromSource, notifyMessage } from "../../utils/helpers"
 
 
@@ -92,7 +92,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [BusinessName, setBusinessName] = React.useState('');
 	const [BusinessStory, setBusinessStory] = React.useState('');
 	const [BusinessType, setBusinessType] = React.useState('');
-	const [SelectOpen, setSelectOpen] = useState(false)
+	const [SelectOpen, setSelectOpen] = React.useState(false)
 	const [BusinessExecName, setBusinessExecName] = React.useState('');
 	const [BusinessExecLastName, setBusinessExecLastName] = React.useState('');
 	const [BusinessImageSource, setBusinessImageSource] = React.useState<any>(null);
@@ -100,19 +100,18 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 
 	const [BusinessRegName, setBusinessRegName] = React.useState('');
 	const [BusinessIndustryType, setBusinessIndustryType] = React.useState('');
-	const [SelectIndustryOpen, setSelectIndustryOpen] = useState(false)
+	const [SelectIndustryOpen, setSelectIndustryOpen] = React.useState(false)
 	const [FacebookLink, setFacebookLink] = React.useState('');
 	const [InstagramLink, setInstagramLink] = React.useState('');
 	const [TwitterLink, setTwitterLink] = React.useState('');
 	const [BusinessWebsite, setBusinessWebsite] = React.useState('');
 
-	const [IndentifierType, setIndentifierType] = useState('')
+	const [IndentifierType, setIndentifierType] = React.useState('')
 	const [EmployerId, setEmployerId] = React.useState('');
 	const [SocialSecurityNumber, setSocialSecurityNumber] = React.useState('');
 
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
-	// const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
 	const [States, setStates] = React.useState([]);
 	const [State, setState] = React.useState('');
@@ -120,6 +119,36 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [SelectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
+
+	const clearStates = () => {
+		setBusinessName('')
+		setBusinessStory('')
+		setBusinessType('')
+		setSelectOpen(false)
+		setBusinessExecName('')
+		setBusinessExecLastName('')
+		setBusinessImageSource(null)
+		setBackBusinessImageSource(null)
+		setBusinessRegName('')
+		setBusinessIndustryType('')
+		setSelectIndustryOpen(false)
+		setFacebookLink('')
+		setInstagramLink('')
+		setTwitterLink('')
+		setBusinessWebsite('')
+		setIndentifierType('')
+		setEmployerId('')
+		setSocialSecurityNumber('')
+		setAddress1('')
+		setAddress2('')
+		setCity('')
+		setStates([])
+		setState('')
+		setSelectStateOpen(false)
+		setSelectCityOpen(false)
+		setPostalCode('')
+		setPhoneNumber('')
+	}
 
 	function selectImage(type: string) {
 		const options: any = {
@@ -256,12 +285,12 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 				} else {
 					notifyMessage(null)
 				}
-			}).finally(() => 	setLoading(false))
+			}).finally(() => setLoading(false))
 	}
 	const setupMerchantDetail = () => {
 		setLoading(true)
 		loginStore.environment.api.setupMerchantDetail({ type_of_business: BusinessType })
-		.then((result: any) => {
+			.then((result: any) => {
 				setLoading(false)
 				if (result.kind === "ok") {
 					setStep('business_exec')
@@ -563,7 +592,7 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 			</View>
 
 			<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
-			<Text style={styles.INPUT_LABEL_STYLE}>WEBSITE (OPTIONAL)</Text>
+				<Text style={styles.INPUT_LABEL_STYLE}>WEBSITE (OPTIONAL)</Text>
 			</View>
 			<View style={styles.INPUT_STYLE_CONTAINER}>
 				<TextInput
@@ -729,7 +758,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 					<View
 						style={[styles.INPUT_STYLE_CONTAINER, { width: METRICS.screenWidth * 0.45 }]}
 					>
-							<TextInput
+						<TextInput
 							placeholderTextColor={COLOR.PALETTE.placeholderTextColor}
 							style={[styles.INPUT_STYLE, { width: METRICS.screenWidth * 0.40 }]}
 							onChangeText={t => setCity(t)}
@@ -900,6 +929,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			fetchState()
 		} else if (!isFocused) {
 			setLoading(false)
+			clearStates()
 		}
 	}, [isFocused])
 

@@ -112,7 +112,6 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 
 	const [Address1, setAddress1] = React.useState('');
 	const [Address2, setAddress2] = React.useState('');
-	// const [Citys, setCitys] = React.useState([]);
 	const [City, setCity] = React.useState('');
 	const [States, setStates] = React.useState([]);
 	const [State, setState] = React.useState('');
@@ -120,6 +119,35 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	const [SelectCityOpen, setSelectCityOpen] = React.useState(false);
 	const [PostalCode, setPostalCode] = React.useState('');
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
+
+	const cleanStates = () => {
+		setBusinessName('')
+		setBusinessStory('')
+		setBusinessType('')
+		setSelectOpen(false)
+		setBusinessExecName('')
+		setBusinessExecLastName('')
+		setBusinessImageSource(null)
+		setBackBusinessImageSource(null)
+		setBusinessRegName('')
+		setBusinessIndustryType('')
+		setSelectIndustryOpen(false)
+		setFacebookLink('')
+		setInstagramLink('')
+		setTwitterLink('')
+		setIndentifierType('')
+		setEmployerId('')
+		setSocialSecurityNumber('')
+		setAddress1('')
+		setAddress2('')
+		setCity('')
+		setStates([])
+		setState('')
+		setSelectStateOpen(false)
+		setSelectCityOpen(false)
+		setPostalCode('')
+		setPhoneNumber('')
+	}
 
 	function selectImage(type: string) {
 		const options: any = {
@@ -983,6 +1011,7 @@ IDENTIFICATION NUMBER (ENTER ONE)
 			fetchState()
 		} else if (!isFocused) {
 			setLoading(false)
+			cleanStates()
 		}
 	}, [isFocused])
 
