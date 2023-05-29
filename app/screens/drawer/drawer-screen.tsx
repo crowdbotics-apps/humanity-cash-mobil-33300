@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
-import { View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity, Image, Modal, TouchableWithoutFeedback } from 'react-native';
 import { Text, Screen } from '../../components';
 import Icon from "react-native-vector-icons/MaterialIcons"
 import styles from './drawer-style';
@@ -119,7 +119,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         <Text style={styles.MENU_ITEM_LABEL}>Receive payment / Scan to pay</Text>
       </TouchableOpacity>,
 
-      <TouchableOpacity key={'merchant_transactions'} onPress={() => props.navigation.navigate("makeReturn")} style={styles.MENU_ITEM_CONTAINER}>
+      <TouchableOpacity key={'merchant_transactions'} onPress={() => setShowMakeReturnModal(true)} style={styles.MENU_ITEM_CONTAINER}>
         <Image
           resizeMode="contain"
           source={IMAGES.make_a_return}
@@ -127,14 +127,14 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
         />
         <Text style={styles.MENU_ITEM_LABEL}>Make a return</Text>
       </TouchableOpacity>,
- <TouchableOpacity key={'marchant_transactions'} onPress={() => props.navigation.navigate("myTransactions")} style={styles.MENU_ITEM_CONTAINER}>
- <Image
-   resizeMode="contain"
-   source={IMAGES.receive_payment}
-   style={styles.MENU_ITEM_ICON}
- />
- <Text style={styles.MENU_ITEM_LABEL}>My Transactions</Text>
-</TouchableOpacity>,
+      <TouchableOpacity key={'marchant_transactions'} onPress={() => props.navigation.navigate("myTransactions")} style={styles.MENU_ITEM_CONTAINER}>
+        <Image
+          resizeMode="contain"
+          source={IMAGES.receive_payment}
+          style={styles.MENU_ITEM_ICON}
+        />
+        <Text style={styles.MENU_ITEM_LABEL}>My Transactions</Text>
+      </TouchableOpacity>,
       <TouchableOpacity key={'merchant_wallet'} onPress={() => props.navigation.navigate("loadWallet")} style={styles.MENU_ITEM_CONTAINER}>
         <Image
           resizeMode="contain"
@@ -280,14 +280,23 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
     ],
   }
 
+  const [ShowMakeReturnModal, setShowMakeReturnModal] = useState(false);
   const [ChangeAccountOpen, setChangeAccountOpen] = useState(false)
   const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
 
   const getBalanceData = () => {
+    loginStore.environment.api
+      .getBalanceData()
+      .then((result: any) => {
+        if (result.kind === "ok") loginStore.setBalanceData(result.data)
+      })
+  }
+
+  const getFundingSources = (selectedAccount) => {
 		loginStore.environment.api
-			.getBalanceData()
+			.getFundingSources({ "user_type": selectedAccount })
 			.then((result: any) => {
-				if (result.kind === "ok") loginStore.setBalanceData(result.data)
+				if (result.kind === "ok") loginStore.setFundingSources(result.data)
 			})
 	}
 
@@ -301,6 +310,27 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
       loginStore.setRandomProfilePictureIndex(Math.round(Math.random() * 3))
     }
   }, [])
+
+  const makeReturnModal = () => (
+		<Modal visible={ShowMakeReturnModal} transparent>
+			<TouchableWithoutFeedback onPress={() => setShowMakeReturnModal(false)}>
+				<View style={styles.ROOT_MODAL}>
+					<View style={[styles.MODAL_RETURN_CONTENT, { backgroundColor: loginStore.getAccountColor }]}>
+						<Text style={[styles.STEP_TITLE_BLACK, { color: 'white' }]}>Scan the customer’s return receipt QR code.</Text>
+						<Text style={styles.STEP_SUB_TITLE_MODAL}>The customer needs to provide the transaction receipt, and select “Make a Return” in order to generate a QR Code. Scan this QR code in order to make a refund to the customer.</Text>
+						<TouchableOpacity
+							style={[styles.MODAL_BUTTON, { backgroundColor: 'white' }]}
+							onPress={() => [
+								props.navigation.navigate('makeReturn'),
+								setShowMakeReturnModal(false)
+							]}>
+							<Text style={[styles.SUBMIT_BUTTON_LABEL, { color: 'black' }]}>Scan</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</TouchableWithoutFeedback>
+		</Modal>
+	)
 
   return (
     <Screen
@@ -325,6 +355,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                   key={'consumer_profile'}
                   style={[styles.USER_CONTAINER_CHANGE, { display: loginStore?.getProfilesId.consumer ? 'flex' : 'none' }]}
                   onPress={() => [
+                    getFundingSources('consumer'),
                     loginStore.setSelectedAccount('consumer'),
                     props.navigation.navigate("home"),
                     props.navigation.closeDrawer(),
@@ -352,6 +383,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 key={'merchant_profile'}
                 style={styles.USER_CONTAINER_CHANGE}
                 onPress={() => [
+                  getFundingSources('merchant'),
                   loginStore.setSelectedAccount('merchant'),
                   props.navigation.navigate("home"),
                   props.navigation.closeDrawer(),
@@ -377,6 +409,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
                 key={'cashier_profile'}
                 style={styles.USER_CONTAINER_CHANGE}
                 onPress={() => [
+                  getFundingSources('merchant'),
                   loginStore.setSelectedAccount('cashier'),
                   props.navigation.navigate("home"),
                   props.navigation.closeDrawer(),
@@ -461,6 +494,7 @@ export const DrawerScreen = observer(function DrawerScreen(props) {
           </TouchableOpacity>
         </View>
       </View>
+      {makeReturnModal()}
     </Screen>
   )
 })

@@ -95,5 +95,46 @@ export default StyleSheet.create({
   USER_NAME_BLACK: {
     color: COLOR.PALETTE.black,
     fontSize: 16
-  }
+  },
+  ROOT_MODAL: {
+    alignItems: 'center',
+    backgroundColor: COLOR.PALETTE.modalBackgroundDarkColor,
+    flex: 1,
+    justifyContent: 'space-around'
+  },
+  STEP_SUB_TITLE_MODAL: {
+    color: COLOR.PALETTE.black,
+    fontSize: 16,
+    marginLeft: 10,
+    width: METRICS.screenWidth * 0.7,
+  },
+  MODAL_BUTTON: {
+    alignSelf: 'center',
+    backgroundColor: COLOR.PALETTE.green,
+    borderRadius: 27.5,
+    height: 55,
+    justifyContent: 'center',
+    // marginBottom: 20,
+    width: METRICS.screenWidth * 0.70
+  },
+  MODAL_RETURN_CONTENT: {
+    backgroundColor: COLOR.PALETTE.white,
+    borderRadius: 8,
+    height: 350,
+    justifyContent: 'space-evenly',
+    padding: 10,
+    width: METRICS.screenWidth * 0.80
+  },
+  STEP_TITLE_BLACK: {
+    color: COLOR.PALETTE.black,
+    fontSize: 32,
+    marginLeft: 10,
+    width: METRICS.screenWidth * 0.7,
+  },
+  SUBMIT_BUTTON_LABEL: {
+    color: COLOR.PALETTE.white,
+    fontSize: 16,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
 })

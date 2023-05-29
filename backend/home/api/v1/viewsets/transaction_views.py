@@ -329,7 +329,7 @@ class SendReportView(AuthenticatedAPIView):
             )
         except Exception as error:
             logger.exception(error)
-            return Response('Error while depositing, please try again', status=status.HTTP_400_BAD_REQUEST)
+            return Response('Error generating report, please try again', status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
 
 

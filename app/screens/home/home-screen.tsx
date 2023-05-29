@@ -189,7 +189,6 @@ export const HomeScreen = observer(function HomeScreen() {
 							style={[styles.MODAL_BUTTON, { backgroundColor: loginStore.getAccountColor }]}
 							onPress={() => [
 								setShowConfirmLogoutModal(false),
-								loginStore.setSelectedAccount('merchant'),
 								loginStore.reset(),
 								navigation.navigate("login")
 							]}>
