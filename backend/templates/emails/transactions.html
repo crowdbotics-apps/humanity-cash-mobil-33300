@@ -200,8 +200,22 @@
                     <td class="field_text">{{ transaction.transaction_id }}</td>
                     <td class="field_text">{{ transaction.from_name }}</td>
                     <td class="field_text">{{ transaction.to_name }}</td>
-                    <td class="field_text">{{ transaction.profile.crypto_wallet_address }}</td>
-                    <td class="field_text">{{ transaction.counterpart_profile.crypto_wallet_address }}</td>
+
+                    <td class="field_text">
+                         {% if transaction.profile %}
+                            {{ transaction.profile.crypto_wallet_address }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td class="field_text">
+                        {% if transaction.counterpart_profile %}
+                            {{ transaction.counterpart_profile.crypto_wallet_address }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+
                     <td class="field_text">{{ transaction.type }}</td>
                     <td class="field_text field_text_info">
                         <div>

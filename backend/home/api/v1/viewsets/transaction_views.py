@@ -310,8 +310,14 @@ class SendReportView(AuthenticatedAPIView):
                 created__gte=start_date
             )
             for transaction in transactions:
-                transaction.to_name = transaction.counterpart_profile.display_name
-                transaction.from_name = transaction.profile.display_name
+                if transaction.counterpart_profile is not None:
+                    transaction.to_name = transaction.counterpart_profile.display_name
+                else:
+                    transaction.to_name = 'N/A'
+                if transaction.profile is not None:
+                    transaction.from_name = transaction.profile.display_name
+                else:
+                    transaction.from_name = 'N/A'
                 if transaction.transaction_is_credit(profile):
                     transaction.amount_format = 'C$ +' + str(transaction.amount)
                 else:
