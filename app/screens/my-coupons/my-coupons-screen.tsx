@@ -178,7 +178,7 @@ export const MyCouponsScreen = observer(function MyCouponsScreen() {
 			visible={ShowBankModal}
 			buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
 			// @ts-ignore
-			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+			buttonAction={() => {navigation.navigate("linkBank"); setShowBankModal(false)}}
 			// @ts-ignore
 			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
 		/>

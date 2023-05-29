@@ -104,7 +104,7 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 		<ConnectBankModal
 			visible={ShowBankModal}
 			buttonStyle={{ backgroundColor: loginStore.getAccountColor }}
-			buttonAction={() => [navigation.navigate("linkBank"), setShowBankModal(false)]}
+			buttonAction={() => {navigation.navigate("linkBank"); setShowBankModal(false)}}
 			onPressHome={() => [navigation.navigate("home"), setShowBankModal(false)]}
 		/>
 
