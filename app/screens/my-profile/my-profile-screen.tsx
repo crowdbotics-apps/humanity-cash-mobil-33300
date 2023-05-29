@@ -453,8 +453,13 @@ export const MyProfileScreen = observer(function MyProfileScreen() {
 			first_name: Name,
 			last_name: LastName,
 		}
+		
 		const consumerKeys = imageSource?.uri !== null ? ["consumer_profile"] : []
 		const keys = BusinessImageSource?.uri === null ? [] : ["profile_picture"]
+
+		if (consumerData.consumer_profile === null) delete consumerData.consumer_profile
+		if (MerchantData.profile_picture === null) delete MerchantData.profile_picture
+
 		if (BackBusinessImageSource?.uri !== null) keys.push("background_picture")
 		loginStore.getSelectedAccount === 'merchant'
 			? loginStore.environment.api

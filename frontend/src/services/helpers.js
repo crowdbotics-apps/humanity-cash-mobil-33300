@@ -223,3 +223,10 @@ export  const createdColumn = (opts) => {
     </div>
   )
 }
+
+export const checkDuplicatesInArray = (arrayOfValues, keyToCheck) => {
+  let seen = new Set();
+  return arrayOfValues.some(function(currentObject) {
+    return seen.size === seen.add(currentObject[keyToCheck]).size;
+  });
+}

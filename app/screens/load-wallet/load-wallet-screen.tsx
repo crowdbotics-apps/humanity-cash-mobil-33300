@@ -32,7 +32,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 	const { loginStore } = rootStore
 	const isFocused = useIsFocused();
 	const [ButtonDisabled, setButtonDisabled] = useState(false)
-	const [Amount, setAmount] = useState(0)
+	const [Amount, setAmount] = useState()
 	const [ShowModal, setShowModal] = useState(false)
 	const [TransactionConfirm, setTransactionConfirm] = useState(false)
 	const [TransactionFinished, setTransactionFinished] = useState(false)
@@ -321,7 +321,7 @@ export const LoadWalletScreen = observer(function LoadWalletScreen() {
 
 					<View style={styles.INPUT_LABEL_STYLE_CONTAINER}>
 						<Text style={styles.COSTS_LABEL}>Total costs</Text>
-						<Text style={styles.COSTS_LABEL}>{`$ ${Amount}`}</Text>
+						<Text style={styles.COSTS_LABEL}>{`$ ${Amount || 0}`}</Text>
 					</View>
 				</View>
 				{ConfirmModal()}

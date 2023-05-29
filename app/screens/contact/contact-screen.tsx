@@ -18,7 +18,7 @@ import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models"
 import {Tab} from "react-native-elements"
 import { runInAction } from "mobx"
-import { notifyMessage } from "../../utils/helpers"
+import { notifyMessage, checkDuplicatesInArray } from "../../utils/helpers"
 
 const randomImages = [IMAGES.avBass, IMAGES.avBee, IMAGES.avBird, IMAGES.avSalamander]
 
@@ -82,6 +82,7 @@ export const ContactScreen = observer(function ContactScreen() {
         })
       if (user.merchant_data) merchants.push({ ...user.merchant_data, username: user.username })
     })
+
     return { consumers, merchants }
   }
 
@@ -97,6 +98,7 @@ export const ContactScreen = observer(function ContactScreen() {
         } catch {}
       })
     })
+    data = [...new Map(data.map(item => [item.id, item])).values()]
     return data
   }
 

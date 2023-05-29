@@ -121,6 +121,20 @@ export const SetupProfileScreen = observer(function SetupProfileScreen() {
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
 	const clearStates = () => {
+		setLoading(false)
+		setStep('profile_type')
+		setButtonDisabled(false)
+		setShowConfirmLogoutModal(false)
+		setShowThankyouModal(false)
+		setProfileType('personal')
+		setRandonPic(Math.round(Math.random() * 3))
+		setUsername('')
+		setImageSource(null);
+		setUsernameError(false)
+		setUsernameErrorMsg('')
+		setName('')
+		setLastName('')
+
 		setBusinessName('')
 		setBusinessStory('')
 		setBusinessType('')

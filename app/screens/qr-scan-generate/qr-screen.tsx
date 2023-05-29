@@ -48,7 +48,7 @@ export const QRScreen = observer(function QRScreen(props: any) {
 
   const [Step, setStep] = useState('tabs')
   const [QR, setQR] = useState(null)
-  const [Amount, setAmount] = useState(0)
+  const [Amount, setAmount] = useState()
   const [RoundedAmount, setRoundedAmount] = useState(0);
   const [Loading, setLoading] = useState(false)
   const [SkipPass, setSkipPass] = useState(true) // set true to skip pass

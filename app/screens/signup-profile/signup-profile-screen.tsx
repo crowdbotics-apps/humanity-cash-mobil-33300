@@ -121,6 +121,19 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 	const [PhoneNumber, setPhoneNumber] = React.useState('');
 
 	const cleanStates = () => {
+		setLoading(false)
+		setStep('profile_type')
+		setButtonDisabled(false)
+		setShowConfirmLogoutModal(false)
+		setShowThankyouModal(false)
+		setProfileType({})
+		setRandonPic(Math.round(Math.random() * 3))
+		setShowMapInputModal(false)
+		setMapInputAddress(1)
+		setMapLocation({ lat: null, lng: null })
+		setLatitud(null)
+		setLongitud(null)
+
 		setBusinessName('')
 		setBusinessStory('')
 		setBusinessType('')
@@ -147,6 +160,7 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 		setSelectCityOpen(false)
 		setPostalCode('')
 		setPhoneNumber('')
+		setLoading
 	}
 
 	function selectImage(type: string) {
@@ -193,11 +207,16 @@ export const SignupProfileScreen = observer(function SignupProfileScreen(props: 
 			type: imageSource?.type,
 			name: imageSource?.fileName
 		}
-		const keys = imageSource === null ? [] : ["consumer_profile"]
-		loginStore.environment.api.setupConsumer({
+		let data = {
 			username: Username,
 			consumer_profile: pic
-		}, keys).then((result: any) => {
+		}
+		let keys
+		if (imageSource === null) {
+			delete data.consumer_profile
+			keys = []
+		} else keys = ["consumer_profile"]
+		loginStore.environment.api.setupConsumer(data, keys).then((result: any) => {
 			setLoading(false)
 			if (result.kind === "ok") {
 				setUsername('');

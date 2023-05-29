@@ -84,7 +84,6 @@ export const MakeReportScreen = observer(function MakeReportScreen() {
 		})
 			.then((result: any) => {
 				setLoading(false)
-				console.log(' MakeReport ====>>>> ', JSON.stringify(result, null, 2))
 				if (result.kind === "ok") {
 					notifyMessage('The reports have been sent to your email')
 				} else if (result.kind === "bad-data") {

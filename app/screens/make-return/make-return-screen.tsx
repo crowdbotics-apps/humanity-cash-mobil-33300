@@ -22,7 +22,7 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
 
     const [Step, setStep] = useState('scan')
     const [QR, setQR] = useState(null)
-    const [Amount, setAmount] = useState(0)
+    const [Amount, setAmount] = useState()
     const [Loading, setLoading] = useState(false)
 
     const [TransactionSucceed, setTransactionSucceed] = useState(true)
@@ -41,7 +41,6 @@ export const MakeRetun = observer(function MakeRetun(props: any) {
             transaction_id: QR?.id,
             amount: Amount,
         }
-        console.log(' data ', JSON.stringify(data, null, 2))
         loginStore.environment.api
             .sendReturn(data)
             .then((result: any) => {

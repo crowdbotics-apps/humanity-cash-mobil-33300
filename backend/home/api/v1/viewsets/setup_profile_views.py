@@ -142,7 +142,9 @@ class ConsumerMyProfileAPIView(AuthenticatedAPIView, RetrieveUpdateAPIView):
         if consumer_profile:
             consumer_profile = data.pop('consumer_profile')
         consumer = Consumer.objects.filter(user=instance).first()
+        data._mutable = True
         data['consumer'] = consumer.id
+        data._mutable = False
         serializer = self.get_serializer(instance, data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
