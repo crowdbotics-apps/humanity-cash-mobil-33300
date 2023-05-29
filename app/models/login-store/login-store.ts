@@ -1,6 +1,13 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { withEnvironment, withRootStore } from ".."
 import { COLOR } from '../../theme'
+import numeral from "numeral";
+
+const moneyFMT = (amount) => {
+  if (amount !== null && amount !== undefined)
+    return numeral(amount).format('0,0.00')
+  return '-'
+}
 
 /**
  * Model description here for TypeScript hints.
@@ -119,8 +126,8 @@ export const LoginStoreModel = types
     },
     get balance() {
       return {
-        merchant: self.merchant_balance || 0,
-        consumer: self.consumer_balance || 0
+        merchant: moneyFMT(self.merchant_balance || 0),
+        consumer: moneyFMT(self.consumer_balance || 0)
       }
     },
     get getProfilesId() {

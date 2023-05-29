@@ -115,6 +115,7 @@ export const ReturnScreen = observer(function ReturnScreen() {
 
 	useEffect(() => {
 		if (isFocused) {
+			setShowScanModal(true)
 			if (!loginStore.getBillingData.billing_data_added) setShowBankModal(true)
 			else setShowBankModal(false)
 		}
